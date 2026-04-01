@@ -14,9 +14,8 @@ return new class extends Migration {
         Schema::create('kecamatan', function (Blueprint $table) {
             $table->id('id_kecamatan');
             $table->string('nama_kecamatan', 100);
-            
-            // Fix: Ganti timestamps() jadi ini biar otomatis ngisi jam 
-            // pas lu pakai DB::table()->insert() di bawah
+
+
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
