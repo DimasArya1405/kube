@@ -28,7 +28,6 @@ return new class extends Migration
                 ->onUpdate('cascade');
         });
 
-        // Insert full 284 data desa
         DB::table('desa_kelurahan')->insert([
             ['id_desa_kelurahan' => 1, 'nama_desa_kelurahan' => 'Adipala', 'id_kecamatan' => 1],
             ['id_desa_kelurahan' => 2, 'nama_desa_kelurahan' => 'Adiraja', 'id_kecamatan' => 1],
