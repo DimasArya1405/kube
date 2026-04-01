@@ -29,11 +29,11 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->foreign('id_cluster')
-                ->references('id_cluster')
-                ->on('cluster')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+            // $table->foreign('id_cluster')
+            //     ->references('id_cluster')
+            //     ->on('cluster')
+            //     ->onDelete('cascade')
+            //     ->onUpdate('cascade');
         });
     }
 
