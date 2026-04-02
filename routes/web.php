@@ -267,10 +267,6 @@ Route::get('/kepala_dinas/dashboard', [KepalaDinasController::class, 'dashboard'
     Route::get('/get-kube/{id}', [PrediksiController::class, 'getKube']);
     Route::get('/get-kube-detail/{id}', [PrediksiController::class, 'getDetail']);
 
-    // Route::get('/admin/koordinator', [KoordinatorController::class, 'index'])->name('koordinator.index');
-    // Route::post('/admin/koordinator/store', [KoordinatorController::class, 'store'])->name('koordinator.store');
-    // Route::delete('/admin/koordinator/{id}', [KoordinatorController::class, 'destroy'])->name('koordinator.delete');
-
     // PELATIHAN
     Route::get('/pelatihan', [PelatihanController::class, 'index'])->name('pelatihan.index');
     Route::post('/pelatihan', [PelatihanController::class, 'store'])->name('pelatihan.store');
@@ -278,11 +274,6 @@ Route::get('/kepala_dinas/dashboard', [KepalaDinasController::class, 'dashboard'
     Route::put('/pelatihan/{id}', [PelatihanController::class, 'update'])->name('mitra.update');
     Route::get('/pelatihan/export-excel', [PelatihanController::class, 'exportExcel'])->name('pelatihan.excel');
     Route::get('/pelatihan/export-pdf', [PelatihanController::class, 'exportPdf'])->name('pelatihan.pdf');
-
-
-
-
-
 
     // KELOLA MITRA & KOLABORASI
     Route::get('/admin/mitra', [MitraController::class, 'index'])->name('mitra.index');
@@ -384,38 +375,13 @@ Route::get('/kepala_dinas/dashboard', [KepalaDinasController::class, 'dashboard'
             Route::patch('/pendamping/kunjungan_pendamping/{id}/selesai', [KunjunganPendampingController::class, 'selesai'])->name('kunjungan.selesai');
         });
 
-    // Route::get('/pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'index'])->name('kunjungan.index');
-    // Route::post('pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'store'])->name('kunjungan.store');
-    // Route::get('/pendamping/kunjungan_pendamping/{id}/edit', [KunjunganPendampingController::class, 'edit'])->name('kunjungan.edit');
-    // Route::put('/pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'update'])->name('kunjungan.update');
-    // Route::get('/pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'show'])->name('kunjungan.show');
-    // Route::delete('pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'destroy'])->name('kunjungan.delete');
-
-    Route::get('/kategori-kube', function () {
-        return view('coming-soon');
-    })->name('kategorikube.index');
-
     // KUNJUNGAN PENDAMPING
-
-    Route::prefix('pendamping')
-        ->middleware(['role:pendamping'])
-        ->group(function () {
-
-            Route::get('/kunjungan_pendamping', [KunjunganPendampingController::class, 'index'])->name('kunjungan.index');
-            Route::post('/kunjungan_pendamping', [KunjunganPendampingController::class, 'store'])->name('kunjungan.store');
-            Route::get('/kunjungan_pendamping/{id}/edit', [KunjunganPendampingController::class, 'edit'])->name('kunjungan.edit');
-            Route::put('/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'update'])->name('kunjungan.update');
-            Route::get('/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'show'])->name('kunjungan.show');
-            Route::delete('/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'destroy'])->name('kunjungan.delete');
-            Route::patch('/pendamping/kunjungan_pendamping/{id}/selesai', [KunjunganPendampingController::class, 'selesai'])->name('kunjungan.selesai');
-        });
-
-    // Route::get('/pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'index'])->name('kunjungan.index');
-    // Route::post('pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'store'])->name('kunjungan.store');
-    // Route::get('/pendamping/kunjungan_pendamping/{id}/edit', [KunjunganPendampingController::class, 'edit'])->name('kunjungan.edit');
-    // Route::put('/pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'update'])->name('kunjungan.update');
-    // Route::get('/pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'show'])->name('kunjungan.show');
-    // Route::delete('pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'destroy'])->name('kunjungan.delete');
+    Route::get('/pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'index'])->name('kunjungan.index');
+    Route::post('pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'store'])->name('kunjungan.store');
+    Route::get('/pendamping/kunjungan_pendamping/{id}/edit', [KunjunganPendampingController::class, 'edit'])->name('kunjungan.edit');
+    Route::put('/pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'update'])->name('kunjungan.update');
+    Route::get('/pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'show'])->name('kunjungan.show');
+    Route::delete('pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'destroy'])->name('kunjungan.delete');
 
     // LAPORAN KECAMATAN
     Route::get('/admin/laporan-kecamatan', [LaporanKecamatanController::class, 'index'])->name('laporan.kecamatan');
