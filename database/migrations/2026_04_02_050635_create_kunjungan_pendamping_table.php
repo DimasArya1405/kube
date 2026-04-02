@@ -28,16 +28,16 @@ return new class extends Migration
 
             $table->timestamps();
 
-            // Foreign Key
-            $table->foreign('id_pendamping')
-                ->references('id')
-                ->on('pendamping')
-                ->onDelete('cascade');
+            // // Foreign Key
+            // $table->foreign('id_pendamping')
+            //     ->references('id')
+            //     ->on('pendamping')
+            //     ->onDelete('cascade');
 
-            $table->foreign('id_kube')
-                ->references('id')
-                ->on('kube')
-                ->onDelete('cascade');
+            // $table->foreign('id_kube')
+            //     ->references('id')
+            //     ->on('kube')
+            //     ->onDelete('cascade');
         });
     }
 
