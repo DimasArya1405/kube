@@ -23,11 +23,11 @@ return new class extends Migration
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
 
-            $table->foreign('id_kube')
-                  ->references('id_kube')
-                  ->on('kube')
-                  ->onDelete('cascade')
-                  ->onUpdate('cascade');
+            // $table->foreign('id_kube')
+            //       ->references('id_kube')
+            //       ->on('kube')
+            //       ->onDelete('cascade')
+            //       ->onUpdate('cascade');
 
             // $table->foreign('id_pendamping')
             //       ->references('id_pendamping')

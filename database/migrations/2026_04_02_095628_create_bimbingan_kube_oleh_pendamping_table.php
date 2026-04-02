@@ -39,8 +39,8 @@ return new class extends Migration
             $table->timestamps(); // created_at & updated_at
 
             // Foreign Key
-            $table->foreign('id_pendamping')->references('id')->on('pembagian_pendamping')->onDelete('cascade');
-            $table->foreign('id_kube')->references('id')->on('kube')->onDelete('cascade');
+            // $table->foreign('id_pendamping')->references('id')->on('pembagian_pendamping')->onDelete('cascade');
+            // $table->foreign('id_kube')->references('id')->on('kube')->onDelete('cascade');
 
             // Kalau ada tabel jadwal, aktifkan ini:
             // $table->foreign('id_jadwal')->references('id')->on('jadwal')->onDelete('cascade');
