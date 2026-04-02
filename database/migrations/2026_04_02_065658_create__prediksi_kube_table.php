@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('_prediksi_kube', function (Blueprint $table) {
+        Schema::create('prediksi_kube', function (Blueprint $table) {
 
             // PRIMARY KEY INT(9)
             $table->integer('id_prediksi')->length(9)->autoIncrement()->primary();
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->decimal('omset_sesudah', 12, 2)->nullable();
 
             // WAKTU
-            $table->tinyInteger('bulan')->length(2); // 1-12
+            $table->tinyInteger('bulan')->length(2); // 1 - 12
             $table->year('tahun');
 
             // Q1
@@ -54,7 +54,7 @@ return new class extends Migration
             // HASIL
             $table->enum('hasil_prediksi', ['berhasil', 'gagal']);
 
-            // TIMESTAMP
+            // TIMESTAMP MANUAL
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
@@ -62,6 +62,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('_prediksi_kube');
+        Schema::dropIfExists('prediksi_kube');
     }
 };
