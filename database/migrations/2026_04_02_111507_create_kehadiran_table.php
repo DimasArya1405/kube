@@ -20,15 +20,15 @@ return new class extends Migration
             $table->timestamps();
 
             // Constraints
-            $table->foreign('id_pelatihan')
-                  ->references('id_pelatihan')
-                  ->on('pelatihan')
-                  ->onDelete('cascade');
+            // $table->foreign('id_pelatihan')
+            //       ->references('id_pelatihan')
+            //       ->on('pelatihan')
+            //       ->onDelete('cascade');
 
-            $table->foreign('id_anggota')
-                  ->references('id_anggota')
-                  ->on('anggota_kube')
-                  ->onDelete('cascade');
+            // $table->foreign('id_anggota')
+            //       ->references('id_anggota')
+            //       ->on('anggota_kube')
+            //       ->onDelete('cascade');
         });
     }
 
