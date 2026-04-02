@@ -32,9 +32,9 @@ return new class extends Migration
             $table->timestamps();
 
             // Foreign Key Constraints
-            $table->foreign('id_pendamping')->references('id_pendamping')->on('pendamping')->onDelete('cascade');
-            $table->foreign('id_kube')->references('id_kube')->on('kube')->onDelete('cascade');
-            $table->foreign('id_mitra')->references('id_mitra')->on('mitra')->onDelete('cascade');
+            // $table->foreign('id_pendamping')->references('id_pendamping')->on('pendamping')->onDelete('cascade');
+            // $table->foreign('id_kube')->references('id_kube')->on('kube')->onDelete('cascade');
+            // $table->foreign('id_mitra')->references('id_mitra')->on('mitra')->onDelete('cascade');
         });
     }
 
