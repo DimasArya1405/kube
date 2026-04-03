@@ -7,6 +7,9 @@ use App\Http\Controllers\DashboardController;
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/', function () {
+    return redirect('/login');
+});
 
 // LOGOUT
 Route::post('/logout', [AuthController::class, 'logout']);
