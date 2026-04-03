@@ -149,7 +149,7 @@ button:hover {
         <div class="right">
 
             <h3>Selamat Datang</h3>
-            <p>Silakan masuk untuk melanjutkan</p>
+            <p>Silahkan masuk untuk melanjutkan</p>
 
             @if(session('error'))
                 <p style="color:red">{{ session('error') }}</p>
