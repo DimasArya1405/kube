@@ -5,7 +5,7 @@
           ? 'bg-indigo-800 text-white border-l-4 border-white shadow-inner' 
           : 'text-indigo-100 hover:bg-indigo-600 hover:text-white' }}">
         <i data-lucide="layout-grid" class="w-5 h-5"></i>
-        <span class="font-medium">Dashboard Statistik</span>
+        <span class="font-medium">Dashboard</span>
     </a>
 
     <div class="relative">
@@ -60,7 +60,7 @@
         <button onclick="toggleDropdown('monevMenu', 'monevIcon')" class="w-full flex items-center justify-between px-4 py-3 hover:bg-indigo-600 rounded-xl transition-all text-indigo-100 hover:text-white group">
             <div class="flex items-center gap-3">
                 <i data-lucide="activity" class="w-5 h-5"></i>
-                <span class="font-medium text-sm">Monev & Bimbingan</span>
+                <span class="font-medium text-sm text-start">Monev & Bimbingan</span>
             </div>
             <i data-lucide="chevron-down" id="monevIcon" class="w-4 h-4 transition-transform duration-300"></i>
         </button>
@@ -77,7 +77,7 @@
         <button onclick="toggleDropdown('analisisMenu', 'analisisIcon')" class="w-full flex items-center justify-between px-4 py-3 hover:bg-indigo-600 rounded-xl transition-all text-indigo-100 hover:text-white group">
             <div class="flex items-center gap-3">
                 <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
-                <span class="font-medium text-sm">Analisis Akreditasi</span>
+                <span class="font-medium text-sm text-start">Analisis Akreditasi</span>
             </div>
             <i data-lucide="chevron-down" id="analisisIcon" class="w-4 h-4 transition-transform duration-300"></i>
         </button>
