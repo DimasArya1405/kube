@@ -12,15 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('rekap_kube', function (Blueprint $table) {
-            $table->increments('id_rekap'); // INT(9) PK Auto Increment
-            $table->unsignedTinyInteger('periode_bulan'); // Bulan rekap (1-12)
-            $table->unsignedSmallInteger('periode_tahun'); // Tahun periode rekap
-            $table->string('kecamatan', 100); // Nama kecamatan
-            $table->unsignedSmallInteger('total_kube'); // Jumlah seluruh KUBE
-            $table->unsignedSmallInteger('total_aktif'); // Jumlah KUBE aktif
-            $table->unsignedSmallInteger('total_tidak_aktif'); // Jumlah KUBE tidak aktif
-            $table->year('tahun_anggaran'); // Tahun anggaran laporan
-            $table->timestamp('created_at')->useCurrent(); // Tanggal data dibuat
+            $table->increments('id_rekap_kube');
+            $table->unsignedBigInteger('id_kecamatan');
+            $table->year('tahun');
+            $table->string('periode_bulan', 20);
+            $table->integer('jumlah_kube');
+            $table->integer('kube_aktif');
+            $table->integer('kube_tidak_aktif');
+            $table->timestamps();
+
+            $table->foreign('id_kecamatan')
+                  ->references('id_kecamatan')
+                  ->on('kecamatan')
+                  ->onDelete('cascade')
+                  ->onUpdate('cascade');
+
+            $table->unique(['id_kecamatan', 'tahun', 'periode_bulan'], 'rekap_kube_unique');
         });
     }
 

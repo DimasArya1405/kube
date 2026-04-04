@@ -21,9 +21,9 @@
             <a href="{{ url('/kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data KUBE</a>
             <a href="{{ url('/anggota_kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data Anggota</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Data Pendamping (Tiara)</a>
-            <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Data Koordinator (Katrina)</a>
+            <a href="{{ route('koordinator.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data Koordinator (Katrina)</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Kategori KUBE (Tika)</a>
-            <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Cluster (Ana)</a>
+            <a href="{{ route('cluster_usaha.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Cluster (Ana)</a>
         </div>
     </div>
 
