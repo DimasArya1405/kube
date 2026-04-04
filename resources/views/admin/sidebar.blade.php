@@ -18,7 +18,8 @@
         </button>
         <div id="masterMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Data User (Zahran)</a>
-            <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">KUBE & Anggota (Yana)</a>
+            <a href="{{ url('/kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data KUBE</a>
+            <a href="{{ url('/anggota_kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data Anggota</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Data Pendamping (Tiara)</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Data Koordinator (Katrina)</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Kategori KUBE (Tika)</a>
