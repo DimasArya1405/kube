@@ -7,8 +7,11 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KubeController;
 use App\Http\Controllers\AnggotaKubeController;
 
+use App\Http\Controllers\PembagianPendampingController;
+
 use App\Http\Controllers\ClusterUsahaController;
 use App\Http\Controllers\KoordinatorController;
+
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -33,6 +36,9 @@ Route::middleware('auth')->group(function () {
     //KELOLA DATA KUBE & ANGGOTA
     Route::resource('kube', KubeController::class);
     Route::resource('anggota_kube', AnggotaKubeController::class);
+
+    //PEMBAGIAN PENDAMPING
+    Route::resource('pembagian_pendamping', PembagianPendampingController::class);
 
     // Cluster usaha
     Route::resource('cluster_usaha', ClusterUsahaController::class);
