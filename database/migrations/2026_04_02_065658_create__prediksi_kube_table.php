@@ -11,11 +11,11 @@ return new class extends Migration
         Schema::create('prediksi_kube', function (Blueprint $table) {
 
             // PRIMARY KEY INT(9)
-            $table->integer('id_prediksi')->length(9)->autoIncrement()->primary();
+            $table->id('id_prediksi');
 
-            // INT(9)
-            $table->integer('id_kube')->length(9);
-            $table->integer('id_pendamping')->length(9);
+            // INT(9) sementara dibuat biasa dulu
+            $table->integer('id_kube');
+            $table->integer('id_pendamping');
 
             // DECIMAL(12,2)
             $table->decimal('omset_sesudah', 12, 2)->nullable();
