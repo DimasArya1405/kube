@@ -17,7 +17,7 @@
             <i data-lucide="chevron-down" id="masterIcon" class="w-4 h-4 transition-transform duration-300"></i>
         </button>
         <div id="masterMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
-            <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Data User (Zahran)</a>
+            <a href="{{ route('admin.users') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data User (Zahran)</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">KUBE & Anggota (Yana)</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Data Pendamping (Tiara)</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Data Koordinator (Katrina)</a>
