@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('rekap_kube', function (Blueprint $table) {
             $table->increments('id_rekap_kube');
-            $table->unsignedInteger('id_kecamatan');
+            $table->unsignedBigInteger('id_kecamatan');
             $table->year('tahun');
             $table->string('periode_bulan', 20);
             $table->integer('jumlah_kube');
