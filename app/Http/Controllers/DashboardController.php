@@ -7,9 +7,34 @@ use App\Models\User;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function admin()
     {
         $users = User::all();
-        return view('dashboard', compact('users'));
+        return view('dashboard.admin', compact('users'));
+    }
+
+    public function ketua()
+    {
+        return view('dashboard.ketua');
+    }
+
+    public function pendamping()
+    {
+        return view('dashboard.pendamping');
+    }
+
+    public function koordinator()
+    {
+        return view('dashboard.koordinator');
+    }
+
+    public function tim()
+    {
+        return view('dashboard.tim');
+    }
+
+    public function dinas()
+    {
+        return view('dashboard.dinas');
     }
 }

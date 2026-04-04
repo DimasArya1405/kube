@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Kecamatan;
-use App\Models\DesaKelurahan;
 
 class AuthController extends Controller
 {
@@ -17,7 +15,7 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
- public function login(Request $request)
+public function login(Request $request)
 {
     $credentials = $request->validate([
         'email' => 'required|email',
@@ -27,15 +25,22 @@ class AuthController extends Controller
     if (Auth::attempt($credentials)) {
         $request->session()->regenerate();
 
-        $user = Auth::user();
+        $role = Auth::user()->role;
 
-        // Format role jadi lebih readable
-        $role = str_replace('_', ' ', $user->role);
-        $role = ucwords($role);
-
-        return redirect('/dashboard')->with('success', 'Selamat datang ' . $role);
+        if ($role == 'admin') {
+            return redirect('/dashboard/admin')->with('success', 'Selamat datang Admin');
+        } elseif ($role == 'ketua_kube') {
+            return redirect('/dashboard/ketua')->with('success', 'Selamat datang Ketua KUBE');
+        } elseif ($role == 'pendamping') {
+            return redirect('/dashboard/pendamping')->with('success', 'Selamat datang Pendamping');
+        } elseif ($role == 'koordinator') {
+            return redirect('/dashboard/koordinator')->with('success', 'Selamat datang Koordinator');
+        } elseif ($role == 'ketua_tim_kube') {
+            return redirect('/dashboard/tim')->with('success', 'Selamat datang Ketua Tim');
+        } elseif ($role == 'kepala_dinas') {
+            return redirect('/dashboard/dinas')->with('success', 'Selamat datang Kepala Dinas');
+        }
     }
-
     return back()->with('error', 'Email atau password salah');
 }
 
