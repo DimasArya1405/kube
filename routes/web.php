@@ -5,6 +5,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ClusterUsahaController;
 use App\Http\Controllers\KoordinatorController;
+use App\Http\Controllers\KategoriKubeController;
+
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -28,6 +30,9 @@ Route::middleware('auth')->group(function () {
 
     // Cluster usaha
     Route::resource('cluster_usaha', ClusterUsahaController::class);
+
+    // Kategori Kube
+    Route::resource('/admin/kategorikube', KategoriKubeController::class);
 
     // KELOLA DATA KOORDINATOR
     Route::get('/admin/koordinator', [KoordinatorController::class,'index'])->name('koordinator.index');

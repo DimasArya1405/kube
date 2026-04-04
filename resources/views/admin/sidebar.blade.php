@@ -21,7 +21,7 @@
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">KUBE & Anggota (Yana)</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Data Pendamping (Tiara)</a>
             <a href="{{ route('koordinator.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data Koordinator (Katrina)</a>
-            <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Kategori KUBE (Tika)</a>
+            <a href="{{ route('kategorikube.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Kategori KUBE (Tika)</a>
             <a href="{{ route('cluster_usaha.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Cluster (Ana)</a>
         </div>
     </div>
