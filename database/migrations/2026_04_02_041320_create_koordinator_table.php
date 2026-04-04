@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('koordinator', function (Blueprint $table) {
-            $table->increments('id_koor');
-            $table->integer('id_kecamatan');
+            $table->id('id_koor');
+            $table->unsignedBigInteger('id_kecamatan');
+
             $table->string('nama_koor', 100);
             $table->string('nik', 30);
             $table->enum('jenis_kelamin', ['L', 'P']);
@@ -22,8 +23,15 @@ return new class extends Migration
             $table->date('tgl_mulai');
             $table->enum('status', ['aktif', 'non-aktif']);
             $table->string('foto', 255)->nullable();
-            $table->dateTime('created_at')->nullable();
-            $table->dateTime('updated_at')->nullable();
+
+            $table->timestamps();
+
+            // FOREIGN KEY
+            $table->foreign('id_kecamatan')
+                  ->references('id_kecamatan')
+                  ->on('kecamatan')
+                  ->onDelete('cascade')
+                  ->onUpdate('cascade');
         });
     }
 

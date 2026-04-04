@@ -21,7 +21,6 @@ return new class extends Migration
                 'ketua_kube',
                 'pendamping',
                 'koordinator',
-                'ketua_tim_kube',
                 'kepala_dinas'
             ]);
 
