@@ -28,7 +28,7 @@ public function login(Request $request)
         $role = Auth::user()->role;
 
         if ($role == 'admin') {
-            return redirect('/dashboard/admin')->with('success', 'Selamat datang Admin');
+            return redirect('/admin/dashboard')->with('success', 'Selamat datang Admin');
         } elseif ($role == 'ketua_kube') {
             return redirect('/dashboard/ketua')->with('success', 'Selamat datang Ketua KUBE');
         } elseif ($role == 'pendamping') {

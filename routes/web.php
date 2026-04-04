@@ -17,7 +17,7 @@ Route::post('/logout', [AuthController::class, 'logout']);
 // DASHBOARD
 Route::middleware('auth')->group(function () {
 
-    Route::get('/dashboard/admin', [DashboardController::class, 'admin']);
+    Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
     Route::get('/dashboard/ketua', [DashboardController::class, 'ketua']);
     Route::get('/dashboard/pendamping', [DashboardController::class, 'pendamping']);
     Route::get('/dashboard/koordinator', [DashboardController::class, 'koordinator']);
