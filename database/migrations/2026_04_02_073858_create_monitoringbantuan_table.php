@@ -11,17 +11,9 @@ return new class extends Migration
         Schema::create('monitoringbantuan', function (Blueprint $table) {
             $table->id('id_monitoring');
 
-            $table->foreignId('id_jenis_bantuan')
-                  ->constrained('jenis_bantuan')
-                  ->cascadeOnDelete();
-
-            $table->foreignId('id_kube')
-                  ->constrained('kube')
-                  ->cascadeOnDelete();
-
-            $table->foreignId('id_pendamping')
-                  ->constrained('pendamping')
-                  ->cascadeOnDelete();
+            $table->unsignedBigInteger('id_jenis_bantuan');
+            $table->unsignedBigInteger('id_kube');
+            $table->unsignedBigInteger('id_pendamping');
 
             $table->date('tanggal_monitoring');
 
