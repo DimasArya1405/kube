@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ClusterUsahaController;
 use App\Http\Controllers\KoordinatorController;
+use App\Http\Controllers\PendampingController;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -33,4 +34,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/koordinator', [KoordinatorController::class,'index'])->name('koordinator.index');
     Route::post('/admin/koordinator/store', [KoordinatorController::class,'store'])->name('koordinator.store');
     Route::delete('/admin/koordinator/{id}', [KoordinatorController::class,'destroy'])->name('koordinator.delete');
+
+    // PENDAMPING
+    Route::get('/admin/pendamping', [PendampingController::class,'index'])->name('pendamping.index');
+    Route::post('/admin/pendamping/store', [PendampingController::class,'store'])->name('pendamping.store');
+    Route::delete('/admin/pendamping/{id}', [PendampingController::class,'destroy'])->name('pendamping.delete');
+    Route::get('/admin/pendamping/export/pdf', [PendampingController::class,'exportPdf'])->name('pendamping.export.pdf');
+    Route::get('/admin/pendamping/export/excel', [PendampingController::class,'exportExcel'])->name('pendamping.export.excel');
 });
