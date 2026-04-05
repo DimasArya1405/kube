@@ -18,8 +18,8 @@
         </button>
         <div id="masterMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
             <a href="{{ route('admin.users') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data User (Zahran)</a>
-            <a href="{{ url('/kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data KUBE</a>
-            <a href="{{ url('/anggota_kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data Anggota</a>
+            <a href="{{ url('/kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data KUBE (Yana)</a>
+            <a href="{{ url('/anggota_kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data Anggota (Yana)</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Data Pendamping (Tiara)</a>
             <a href="{{ route('koordinator.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data Koordinator (Katrina)</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Kategori KUBE (Tika)</a>
@@ -36,7 +36,7 @@
             <i data-lucide="chevron-down" id="taskIcon" class="w-4 h-4 transition-transform duration-300"></i>
         </button>
         <div id="taskMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
-            <a href="{{ url('/pembagian_pendamping') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Pembagian Pendamping</a>
+            <a href="{{ url('/pembagian_pendamping') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Pembagian Pendamping (Yana)</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Pembagian Koordinator</a>
         </div>
     </div>
