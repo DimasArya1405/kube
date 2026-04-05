@@ -15,11 +15,11 @@
 <div class="flex gap-4 mb-6">
     <div class="bg-orange-400 text-white rounded-lg px-6 py-4 text-center min-w-[150px]">
         <p class="text-sm font-medium">Pendamping Aktif</p>
-        <p class="text-4xl font-bold mt-1">{{ $pendamping->where('status','aktif')->count() }}</p>
+        <p class="text-4xl font-bold mt-1">{{ $pendamping->where('status','Aktif')->count() }}</p>
     </div>
     <div class="bg-green-300 text-white rounded-lg px-6 py-4 text-center min-w-[150px]">
         <p class="text-sm font-medium">Pendamping Non-Aktif</p>
-        <p class="text-4xl font-bold mt-1">{{ $pendamping->where('status','non-aktif')->count() }}</p>
+        <p class="text-4xl font-bold mt-1">{{ $pendamping->where('status','Tidak Aktif')->count() }}</p>
     </div>
 </div>
 
@@ -87,15 +87,30 @@
             </td>
             <td>{{ $item->nama_pendamping }}</td>
             <td>{{ $item->nik }}</td>
+            <td>{{ $item->kecamatan->nama_kecamatan ?? '-' }}</td>
             <td>{{ $item->no_hp }}</td>
             <td>{{ $item->status }}</td>
-            <td>
-                <form action="{{ route('pendamping.delete',$item->id_pendamping) }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button>Hapus</button>
-                </form>
-            </td>
+            <td class="px-4 py-2">
+    <div class="flex items-center gap-2">
+        {{-- Tombol Edit (Orange) --}}
+        <button type="button" 
+            onclick="openEditModal({{ $item }})"
+            class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded text-xs font-medium transition">
+            Edit
+        </button>
+        
+        {{-- Form & Tombol Hapus (Hijau) --}}
+        <form action="{{ route('pendamping.delete', $item->id_pendamping) }}" method="POST" class="inline">
+            @csrf
+            @method('DELETE')
+            <button type="submit" 
+                onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')"
+                class="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded text-xs font-medium transition">
+                Hapus
+            </button>
+        </form>
+    </div>
+</td>
         </tr>
         @endforeach
     </tbody>
@@ -207,7 +222,17 @@
 
                 <div>
                     <label class="text-sm font-semibold">Tahun Mulai</label>
-                    <input type="number" name="tahun_mulai" class="w-full border rounded-lg px-3 py-2">
+                    <select name="tahun_mulai" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none bg-white">
+                    <option value="" disabled selected>-- Pilih Tahun --</option>
+                        @php
+                            $tahunSekarang = date('Y'); // Mengambil tahun otomatis (2026)
+                            $tahunAwal = 1970;        // Batas bawah sesuai keinginan Anda
+                        @endphp
+        
+                         @for ($i = $tahunSekarang; $i >= $tahunAwal; $i--)
+                            <option value="{{ $i }}">{{ $i }}</option>
+                        @endfor
+                    </select>
                 </div>
 
                 <div>
