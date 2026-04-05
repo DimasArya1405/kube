@@ -4,18 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Mitra extends Model
 {
     use HasFactory;
 
-    // Nama tabel di database
     protected $table = 'mitra';
 
-    // Mendefinisikan primary key kustom
     protected $primaryKey = 'id_mitra';
 
-    // Kolom yang boleh diisi secara massal
     protected $fillable = [
         'nama_mitra',
         'jenis_mitra',
@@ -29,6 +27,15 @@ class Mitra extends Model
         'masa_berlaku',
         'status',
     ];
+
+    protected $casts = [
+        'tgl_mou' => 'date',
+    ];
+
+    public function bantuanKolaborasi(): HasMany
+    {
+        return $this->hasMany(KolaborasiBantuan::class, 'id_mitra');
+    }
 
     /**
      * Relasi ke Pelatihan

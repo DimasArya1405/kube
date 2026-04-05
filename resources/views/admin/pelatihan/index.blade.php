@@ -5,16 +5,35 @@
 
 <style>
     /* Styling agar input date dan select tidak punya panah bawaan browser */
-    select { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
-    
+    select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+    }
+
     input[type="date"]::-webkit-calendar-picker-indicator {
-        position: absolute; right: 0; top: 0; width: 100%; height: 100%;
-        margin: 0; padding: 0; opacity: 0; cursor: pointer;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        opacity: 0;
+        cursor: pointer;
     }
 
     /* Ukuran standar ikon di tombol dan tabel */
-    .lucide { width: 18px; height: 18px; stroke-width: 2; }
-    .icon-large { width: 32px; height: 32px; }
+    .lucide {
+        width: 18px;
+        height: 18px;
+        stroke-width: 2;
+    }
+
+    .icon-large {
+        width: 32px;
+        height: 32px;
+    }
 </style>
 
 <div class="flex min-h-screen bg-gray-100">
@@ -73,11 +92,11 @@
                         <td class="px-6 py-4">{{ $p->lokasi }}</td>
                         <td class="px-6 py-4 text-center">
                             @php
-                                $statusClasses = [
-                                    'Terjadwal' => 'bg-green-100 text-green-600',
-                                    'Selesai' => 'bg-blue-100 text-blue-600',
-                                    'Dibatalkan' => 'bg-red-100 text-red-600'
-                                ][$p->status] ?? 'bg-gray-100 text-gray-600';
+                            $statusClasses = [
+                            'Terjadwal' => 'bg-green-100 text-green-600',
+                            'Selesai' => 'bg-blue-100 text-blue-600',
+                            'Dibatalkan' => 'bg-red-100 text-red-600'
+                            ][$p->status] ?? 'bg-gray-100 text-gray-600';
                             @endphp
                             <span class="{{ $statusClasses }} px-4 py-1.5 rounded-full text-[10px] font-bold uppercase">
                                 {{ $p->status }}
@@ -110,15 +129,15 @@
         </button>
 
         <h3 class="text-4xl font-bold text-gray-800 mb-10">Tambah Data Pelatihan</h3>
-        
+
         <form action="{{ route('pelatihan.store') }}" method="POST" class="space-y-6">
             @csrf
-            
+
             <div class="w-full">
                 <label class="block text-base font-bold text-gray-800 mb-2">Nama Pelatihan</label>
                 <input type="text" name="nama_pelatihan" class="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-[#2C7A94] outline-none" required>
             </div>
-            
+
             <div class="grid grid-cols-2 gap-8">
                 <div>
                     <label class="block text-base font-bold text-gray-800 mb-2">Jenis Pelatihan</label>

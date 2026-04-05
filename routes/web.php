@@ -13,13 +13,16 @@ use App\Http\Controllers\ClusterUsahaController;
 use App\Http\Controllers\JenisBantuanController;
 use App\Http\Controllers\KoordinatorController;
 use App\Http\Controllers\PencairanBantuanController;
-
 use App\Http\Controllers\PelatihanController;
+use App\Http\Controllers\MitraController;
+use App\Models\Mitra;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/', function () {return redirect('/login');});
+Route::get('/', function () {
+    return redirect('/login');
+});
 // DATA USER
 Route::get('/admin/users', [DashboardController::class, 'users'])->name('admin.users');
 Route::post('/admin/users/store', [DashboardController::class, 'store'])->name('admin.users.store');
@@ -38,14 +41,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/tim', [DashboardController::class, 'tim']);
     Route::get('/dashboard/dinas', [DashboardController::class, 'dinas']);
 
-    //KELOLA DATA KUBE & ANGGOTA
+    // KELOLA DATA KUBE & ANGGOTA
     Route::resource('kube', KubeController::class);
     Route::resource('anggota_kube', AnggotaKubeController::class);
 
-    //PEMBAGIAN PENDAMPING
+    // PEMBAGIAN PENDAMPING
     Route::resource('pembagian_pendamping', PembagianPendampingController::class);
 
-    // Cluster usaha
+    // CLUSTER USAHA
     Route::resource('cluster_usaha', ClusterUsahaController::class);
 
     // PENCAIRAN BANTUAN
@@ -58,6 +61,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/koordinator/store', [KoordinatorController::class, 'store'])->name('koordinator.store');
     Route::delete('/admin/koordinator/{id}', [KoordinatorController::class, 'destroy'])->name('koordinator.delete');
 
+    //PELATIHAN
     Route::get('/pelatihan', [PelatihanController::class, 'index'])->name('pelatihan.index');
     Route::post('/pelatihan', [PelatihanController::class, 'store'])->name('pelatihan.store');
+
+    //KELOLA MITRA & KOLABORASI
+    Route::get('/admin/mitra', [MitraController::class, 'index'])->name('mitra.index');
+    Route::get('/admin/mitra/create', [MitraController::class, 'create'])->name('mitra.create');
+    Route::post('/admin/mitra/store', [MitraController::class, 'store'])->name('mitra.store');
+    Route::get('/admin/mitra/{id}/edit', [MitraController::class, 'edit'])->name('mitra.edit');
+    Route::put('/admin/mitra/{id}', [MitraController::class, 'update'])->name('mitra.update');
+    Route::delete('/admin/mitra/{id}', [MitraController::class, 'destroy'])->name('mitra.delete');
 });
