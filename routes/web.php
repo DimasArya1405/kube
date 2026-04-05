@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ClusterUsahaController;
 use App\Http\Controllers\KoordinatorController;
+    use App\Http\Controllers\PelatihanController;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -33,4 +34,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/koordinator', [KoordinatorController::class,'index'])->name('koordinator.index');
     Route::post('/admin/koordinator/store', [KoordinatorController::class,'store'])->name('koordinator.store');
     Route::delete('/admin/koordinator/{id}', [KoordinatorController::class,'destroy'])->name('koordinator.delete');
+
+
+
+Route::get('/pelatihan', [PelatihanController::class, 'index'])->name('pelatihan.index');
+Route::post('/pelatihan', [PelatihanController::class, 'store'])->name('pelatihan.store');
 });
