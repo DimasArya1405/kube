@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ClusterUsahaController;
 use App\Http\Controllers\KoordinatorController;
+use App\Http\Controllers\RekapKubeController;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -33,4 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/koordinator', [KoordinatorController::class,'index'])->name('koordinator.index');
     Route::post('/admin/koordinator/store', [KoordinatorController::class,'store'])->name('koordinator.store');
     Route::delete('/admin/koordinator/{id}', [KoordinatorController::class,'destroy'])->name('koordinator.delete');
+
+    // REKAP KUBE
+    Route::get('/rekap_kube', [RekapKubeController::class, 'index'])->name('rekap_kube.index');
 });
