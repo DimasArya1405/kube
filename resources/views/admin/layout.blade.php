@@ -10,6 +10,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -22,16 +23,20 @@
         .custom-scrollbar::-webkit-scrollbar {
             width: 5px;
         }
+
         .custom-scrollbar::-webkit-scrollbar-track {
             background: rgba(0, 0, 0, 0.05);
         }
+
         .custom-scrollbar::-webkit-scrollbar-thumb {
             background: rgba(0, 0, 0, 0.1);
             border-radius: 10px;
         }
+
         .bg-indigo-700 .custom-scrollbar::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.05);
         }
+
         .bg-indigo-700 .custom-scrollbar::-webkit-scrollbar-thumb {
             background: rgba(255, 255, 255, 0.2);
         }
@@ -75,7 +80,7 @@
     </aside>
 
     <main class="flex-1 flex flex-col min-w-0 h-full">
-        
+
         <header class="h-16 flex-shrink-0 bg-white border-b border-gray-200 flex items-center justify-between px-8 shadow-sm z-10">
             <div class="text-gray-500 font-medium truncate">
                 @yield('breadcrumb', 'Dashboard')
@@ -108,12 +113,12 @@
             // Akordion: Tutup semua menu lain kecuali yang diklik
             const allMenus = document.querySelectorAll('[id$="Menu"]');
             const allIcons = document.querySelectorAll('[id$="Icon"]');
-            
-            allMenus.forEach(m => { 
-                if(m.id !== menuId) m.classList.add('hidden'); 
+
+            allMenus.forEach(m => {
+                if (m.id !== menuId) m.classList.add('hidden');
             });
-            allIcons.forEach(i => { 
-                if(i.id !== iconId) i.style.transform = 'rotate(0deg)'; 
+            allIcons.forEach(i => {
+                if (i.id !== iconId) i.style.transform = 'rotate(0deg)';
             });
 
             // Toggle menu target
@@ -123,16 +128,17 @@
     </script>
 
     @if (session('success'))
-        <script>
-            Swal.fire({
-                title: 'Berhasil!',
-                text: "{{ session('success') }}",
-                icon: 'success',
-                confirmButtonColor: '#4f46e5',
-            });
-        </script>
+    <script>
+        Swal.fire({
+            title: 'Berhasil!',
+            text: "{{ session('success') }}",
+            icon: 'success',
+            confirmButtonColor: '#4f46e5',
+        });
+    </script>
     @endif
 
 
 </body>
+
 </html>

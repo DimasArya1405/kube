@@ -1,5 +1,9 @@
 @extends('admin.layout')
 
+@section('breadcrumb')
+    Data Master / <span class="text-gray-800">Data Anggota KUBE</span>
+@stop
+
 @section('content')
 <div class="p-6">
     <div class="mb-6">
