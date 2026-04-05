@@ -15,7 +15,7 @@ use App\Http\Controllers\KoordinatorController;
 use App\Http\Controllers\PencairanBantuanController;
 use App\Http\Controllers\PelatihanController;
 use App\Http\Controllers\MitraController;
-use App\Models\Mitra;
+use App\Http\Controllers\KategoriKubeController;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -55,6 +55,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/pencairan_bantuan', [PencairanBantuanController::class, 'index'])->name('admin.pencairan_bantuan.index');
     Route::get('/admin/jenis_bantuan', [JenisBantuanController::class, 'index'])->name('admin.alur_bantuan.jenis_bantuan.index');
     Route::post('/admin/jenis_bantuan/tambah', [JenisBantuanController::class, 'tambah'])->name('admin.alur_bantuan.jenis_bantuan.tambah');
+    
+    // KATEGORI KUBE
+    Route::resource('/admin/kategorikube', KategoriKubeController::class);
 
     // KELOLA DATA KOORDINATOR
     Route::get('/admin/koordinator', [KoordinatorController::class, 'index'])->name('koordinator.index');
