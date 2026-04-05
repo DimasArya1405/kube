@@ -17,6 +17,7 @@ use App\Http\Controllers\PelatihanController;
 use App\Http\Controllers\MitraController;
 use App\Http\Controllers\KategoriKubeController;
 use App\Http\Controllers\PendampingController;
+use App\Http\Controllers\RekapKubeController;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -83,4 +84,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/admin/pendamping/{id}', [PendampingController::class,'destroy'])->name('pendamping.delete');
     Route::get('/admin/pendamping/export/pdf', [PendampingController::class,'exportPdf'])->name('pendamping.export.pdf');
     Route::get('/admin/pendamping/export/excel', [PendampingController::class,'exportExcel'])->name('pendamping.export.excel');
+
+    // REKAP KUBE
+    Route::get('/rekap_kube', [RekapKubeController::class, 'index'])->name('rekap_kube.index');
 });
