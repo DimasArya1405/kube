@@ -16,6 +16,7 @@ use App\Http\Controllers\PencairanBantuanController;
 use App\Http\Controllers\PelatihanController;
 use App\Http\Controllers\MitraController;
 use App\Http\Controllers\KategoriKubeController;
+use App\Http\Controllers\PendampingController;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -64,15 +65,22 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/koordinator/store', [KoordinatorController::class, 'store'])->name('koordinator.store');
     Route::delete('/admin/koordinator/{id}', [KoordinatorController::class, 'destroy'])->name('koordinator.delete');
 
-    //PELATIHAN
+    // PELATIHAN
     Route::get('/pelatihan', [PelatihanController::class, 'index'])->name('pelatihan.index');
     Route::post('/pelatihan', [PelatihanController::class, 'store'])->name('pelatihan.store');
 
-    //KELOLA MITRA & KOLABORASI
+    // KELOLA MITRA & KOLABORASI
     Route::get('/admin/mitra', [MitraController::class, 'index'])->name('mitra.index');
     Route::get('/admin/mitra/create', [MitraController::class, 'create'])->name('mitra.create');
     Route::post('/admin/mitra/store', [MitraController::class, 'store'])->name('mitra.store');
     Route::get('/admin/mitra/{id}/edit', [MitraController::class, 'edit'])->name('mitra.edit');
     Route::put('/admin/mitra/{id}', [MitraController::class, 'update'])->name('mitra.update');
     Route::delete('/admin/mitra/{id}', [MitraController::class, 'destroy'])->name('mitra.delete');
+
+    // PENDAMPING
+    Route::get('/admin/pendamping', [PendampingController::class,'index'])->name('pendamping.index');
+    Route::post('/admin/pendamping/store', [PendampingController::class,'store'])->name('pendamping.store');
+    Route::delete('/admin/pendamping/{id}', [PendampingController::class,'destroy'])->name('pendamping.delete');
+    Route::get('/admin/pendamping/export/pdf', [PendampingController::class,'exportPdf'])->name('pendamping.export.pdf');
+    Route::get('/admin/pendamping/export/excel', [PendampingController::class,'exportExcel'])->name('pendamping.export.excel');
 });
