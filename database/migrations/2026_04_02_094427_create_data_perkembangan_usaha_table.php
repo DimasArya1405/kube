@@ -31,10 +31,10 @@ return new class extends Migration
             $table->timestamps();
 
             // Foreign Key
-            $table->foreign('id_laporan')
-                  ->references('id')
-                  ->on('laporan_keuangan') // sesuaikan dengan nama tabel kamu
-                  ->onDelete('cascade');
+           // $table->foreign('id_laporan')
+                  //->references('id')
+                  //->on('laporan_keuangan') // sesuaikan dengan nama tabel kamu
+                  //->onDelete('cascade');
         });
     }
 
