@@ -3,7 +3,7 @@
 @section('title', 'Data Cluster Usaha - KUBE')
 
 @section('breadcrumb')
-    Dashboard / <span class="text-gray-800">Cluster Usaha</span>
+Dashboard / <span class="text-gray-800">Cluster Usaha</span>
 @stop
 
 @section('content')
@@ -12,7 +12,7 @@
         <h2 class="text-3xl font-bold text-gray-800">Cluster Usaha</h2>
         <p class="text-gray-500 mt-1">Kelola data cluster usaha KUBE.</p>
     </div>
-    
+
     <button data-modal-target="modal-tambah" data-modal-toggle="modal-tambah"
         class="text-white bg-blue-600 hover:bg-blue-700 px-5 py-2.5 rounded-lg">
         Tambah Cluster
@@ -67,7 +67,7 @@
             <select name="id_kategori" class="w-full mb-2 border p-2 rounded" required>
                 <option value="">Pilih Kategori</option>
                 @foreach($kategori as $k)
-                    <option value="{{ $k->id_kategori }}">{{ $k->nama_kategori }}</option>
+                <option value="{{ $k->id_kategori }}">{{ $k->nama_kategori }}</option>
                 @endforeach
             </select>
 

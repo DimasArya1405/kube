@@ -1,6 +1,6 @@
 <nav class="flex-1 px-4 mt-4 space-y-2 overflow-y-auto custom-scrollbar">
-    <a href="{{ route('admin.dashboard') }}" 
-       class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group
+    <a href="{{ route('admin.dashboard') }}"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group
        {{ request()->routeIs('admin.dashboard') 
           ? 'bg-indigo-800 text-white border-l-4 border-white shadow-inner' 
           : 'text-indigo-100 hover:bg-indigo-600 hover:text-white' }}">

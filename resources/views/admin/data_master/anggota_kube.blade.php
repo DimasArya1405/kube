@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @section('breadcrumb')
-    Data Master / <span class="text-gray-800">Data Anggota KUBE</span>
+Data Master / <span class="text-gray-800">Data Anggota KUBE</span>
 @stop
 
 @section('content')
@@ -18,7 +18,7 @@
             </span>
             <input type="text" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-gray-50 text-sm" placeholder="Cari nama Anggota...">
         </div>
-        
+
         <div class="flex gap-2 w-full md:w-auto">
             <button class="flex items-center px-4 py-2 bg-orange-500 text-white text-sm font-medium rounded-lg hover:bg-orange-600 transition shadow-sm">
                 <i class="fas fa-file-pdf mr-2"></i> Export PDF
@@ -52,12 +52,12 @@
                     <td class="py-3 px-5 text-gray-800">{{ $anggota->nama_anggota }}</td>
                     <td class="py-3 px-5 text-gray-600">{{ $anggota->kube->nama_kube ?? '-' }}</td>
                     <td class="py-3 px-5 text-gray-600 text-center">{{ $anggota->no_hp }}</td>
-                    
+
                     <td class="py-3 px-5 text-center">
                         <div class="flex justify-center space-x-3">
                             <a href="#" class="text-gray-400 hover:text-purple-600 transition text-lg"><i class="far fa-eye"></i></a>
                             <a href="#" class="text-gray-400 hover:text-yellow-500 transition text-lg"><i class="far fa-edit"></i></a>
-                            
+
                             <form action="{{ route('anggota_kube.destroy', $anggota->id_anggota) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
@@ -82,7 +82,7 @@
                 <i class="fas fa-times text-lg"></i>
             </button>
         </div>
-        
+
         <form action="{{ route('anggota_kube.store') }}" method="POST">
             @csrf
             <div class="px-6 py-4 space-y-4">
@@ -91,7 +91,7 @@
                     <select name="id_kube" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-sm transition" required>
                         <option value="">-- Pilih KUBE --</option>
                         @foreach($kubes as $kube)
-                            <option value="{{ $kube->id_kube }}">{{ $kube->nama_kube }}</option>
+                        <option value="{{ $kube->id_kube }}">{{ $kube->nama_kube }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -122,7 +122,7 @@
                     <textarea name="alamat" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-sm transition" required></textarea>
                 </div>
             </div>
-            
+
             <div class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3 bg-gray-50">
                 <button type="button" onclick="toggleModal('tambahAnggotaModal')" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition">Batal</button>
                 <button type="submit" class="px-4 py-2 bg-purple-700 text-white text-sm font-medium rounded-lg hover:bg-purple-800 transition shadow-sm">Simpan Data</button>

@@ -46,7 +46,7 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
     <a href="#"
         class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
         </svg>
         Ekspor PDF
     </a>
@@ -55,7 +55,7 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
     <a href="#"
         class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6M3 17V7a2 2 0 012-2h14a2 2 0 012 2v10"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6M3 17V7a2 2 0 012-2h14a2 2 0 012 2v10" />
         </svg>
         Ekspor Excel
     </a>
@@ -91,10 +91,10 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
                         <div class="text-gray-800 font-bold">{{ $item->nama_mitra }}</div>
                         <div class="text-[10px] text-gray-400">Tgl: {{ \Carbon\Carbon::parse($item->tgl_mou)->format('d/m/Y') }}</div>
                         <div class="text-[10px] text-orange-500 font-bold">Masa: {{ $item->masa_berlaku }} Tahun</div>
-                    </td>  
+                    </td>
                     <td class="px-4 py-3">
                         <div class="text-gray-800 font-bold">{{ $item->jenis_mitra }}</div>
-                    </td>  
+                    </td>
                     <td class="px-4 py-3">
                         <div class="flex items-center gap-1"><i data-lucide="mail" class="w-3 h-3"></i> {{ $item->email }}</div>
                         <div class="text-xs text-gray-400 italic font-medium">{{ $item->no_telp }}</div>
@@ -113,9 +113,9 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
                     </td>
                     <td class="px-4 py-3">
                         @if($item->status == 'Aktif')
-                            <span class="bg-green-100 text-green-700 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Aktif</span>
+                        <span class="bg-green-100 text-green-700 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Aktif</span>
                         @else
-                            <span class="bg-gray-100 text-gray-600 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Non-Aktif</span>
+                        <span class="bg-gray-100 text-gray-600 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Non-Aktif</span>
                         @endif
                     </td>
                     <td class="px-4 py-3 text-center">
@@ -156,7 +156,7 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
             @csrf
             <div class="p-6 overflow-y-auto max-h-[75vh]">
                 <div class="grid grid-cols-2 gap-4">
-                    
+
                     {{-- Baris 1: Nama Mitra (Full Width) --}}
                     <div class="col-span-2">
                         <label class="block text-sm font-bold text-gray-700 mb-1">Nama Mitra</label>
@@ -226,7 +226,7 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
                         <div class="flex items-center border-2 border-dashed border-gray-300 rounded-lg p-4 justify-center flex-col hover:bg-gray-50 transition-colors cursor-pointer" onclick="document.getElementById('mouInput').click()">
                             <i data-lucide="upload-cloud" class="w-8 h-8 text-gray-400 mb-2"></i>
                             <input type="file" name="mou" id="mouInput" class="hidden" accept=".pdf,.jpg,.jpeg,.png" required>
-                            <input type="text" id="mouLabel" readonly placeholder="Silahkan Upload MOU" 
+                            <input type="text" id="mouLabel" readonly placeholder="Silahkan Upload MOU"
                                 class="text-center text-sm text-gray-500 bg-transparent outline-none cursor-pointer w-full">
                         </div>
                     </div>
@@ -259,7 +259,7 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
             }
         });
     }
-    document.getElementById('searchInput').addEventListener('keyup', function () {
+    document.getElementById('searchInput').addEventListener('keyup', function() {
         const keyword = this.value.toLowerCase();
         const rows = document.querySelectorAll('.searchable-row');
         rows.forEach(row => {

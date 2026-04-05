@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @section('breadcrumb')
-    Data Master / <span class="text-gray-800">Data KUBE</span>
+Data Master / <span class="text-gray-800">Data KUBE</span>
 @stop
 
 @section('content')

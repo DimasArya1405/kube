@@ -94,7 +94,7 @@
     <div class="flex items-center gap-2">
         {{-- Tombol Edit (Orange) --}}
         <button type="button" 
-            onclick="openEditModal({{ $item }})"
+            onclick="openEditModal({ $item })"
             class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded text-xs font-medium transition">
             Edit
         </button>

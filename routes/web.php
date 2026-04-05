@@ -3,12 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
-
 use App\Http\Controllers\KubeController;
 use App\Http\Controllers\AnggotaKubeController;
-
 use App\Http\Controllers\PembagianPendampingController;
-
 use App\Http\Controllers\ClusterUsahaController;
 use App\Http\Controllers\JenisBantuanController;
 use App\Http\Controllers\KoordinatorController;
@@ -25,12 +22,14 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/', function () {
     return redirect('/login');
 });
+
 // DATA USER
 Route::get('/admin/users', [DashboardController::class, 'users'])->name('admin.users');
 Route::post('/admin/users/store', [DashboardController::class, 'store'])->name('admin.users.store');
 Route::get('/admin/users/edit/{id}', [DashboardController::class, 'edit'])->name('admin.users.edit');
 Route::put('/admin/users/update/{id}', [DashboardController::class, 'update'])->name('admin.users.update');
 Route::delete('/admin/users/delete/{id}', [DashboardController::class, 'destroy'])->name('admin.users.delete');
+
 // LOGOUT
 Route::post('/logout', [AuthController::class, 'logout']);
 
@@ -57,7 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/pencairan_bantuan', [PencairanBantuanController::class, 'index'])->name('admin.pencairan_bantuan.index');
     Route::get('/admin/jenis_bantuan', [JenisBantuanController::class, 'index'])->name('admin.alur_bantuan.jenis_bantuan.index');
     Route::post('/admin/jenis_bantuan/tambah', [JenisBantuanController::class, 'tambah'])->name('admin.alur_bantuan.jenis_bantuan.tambah');
-    
+
     // KATEGORI KUBE
     Route::resource('/admin/kategorikube', KategoriKubeController::class);
 
@@ -79,11 +78,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/admin/mitra/{id}', [MitraController::class, 'destroy'])->name('mitra.delete');
 
     // PENDAMPING
-    Route::get('/admin/pendamping', [PendampingController::class,'index'])->name('pendamping.index');
-    Route::post('/admin/pendamping/store', [PendampingController::class,'store'])->name('pendamping.store');
-    Route::delete('/admin/pendamping/{id}', [PendampingController::class,'destroy'])->name('pendamping.delete');
-    Route::get('/admin/pendamping/export/pdf', [PendampingController::class,'exportPdf'])->name('pendamping.export.pdf');
-    Route::get('/admin/pendamping/export/excel', [PendampingController::class,'exportExcel'])->name('pendamping.export.excel');
+    Route::get('/admin/pendamping', [PendampingController::class, 'index'])->name('pendamping.index');
+    Route::post('/admin/pendamping/store', [PendampingController::class, 'store'])->name('pendamping.store');
+    Route::delete('/admin/pendamping/{id}', [PendampingController::class, 'destroy'])->name('pendamping.delete');
+    Route::get('/admin/pendamping/export/pdf', [PendampingController::class, 'exportPdf'])->name('pendamping.export.pdf');
+    Route::get('/admin/pendamping/export/excel', [PendampingController::class, 'exportExcel'])->name('pendamping.export.excel');
 
     // REKAP KUBE
     Route::get('/rekap_kube', [RekapKubeController::class, 'index'])->name('rekap_kube.index');
