@@ -13,6 +13,9 @@ Route::get('/', function () {return redirect('/login');});
 // DATA USER
 Route::get('/admin/users', [DashboardController::class, 'users'])->name('admin.users');
 Route::post('/admin/users/store', [DashboardController::class, 'store'])->name('admin.users.store');
+Route::get('/admin/users/edit/{id}', [DashboardController::class, 'edit'])->name('admin.users.edit');
+Route::put('/admin/users/update/{id}', [DashboardController::class, 'update'])->name('admin.users.update');
+Route::delete('/admin/users/delete/{id}', [DashboardController::class, 'destroy'])->name('admin.users.delete');
 // LOGOUT
 Route::post('/logout', [AuthController::class, 'logout']);
 
