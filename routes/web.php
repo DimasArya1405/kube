@@ -19,16 +19,18 @@ use App\Http\Controllers\PelatihanController;
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/', function () {
-    return redirect('/login');
-});
-
+Route::get('/', function () {return redirect('/login');});
+// DATA USER
+Route::get('/admin/users', [DashboardController::class, 'users'])->name('admin.users');
+Route::post('/admin/users/store', [DashboardController::class, 'store'])->name('admin.users.store');
+Route::get('/admin/users/edit/{id}', [DashboardController::class, 'edit'])->name('admin.users.edit');
+Route::put('/admin/users/update/{id}', [DashboardController::class, 'update'])->name('admin.users.update');
+Route::delete('/admin/users/delete/{id}', [DashboardController::class, 'destroy'])->name('admin.users.delete');
 // LOGOUT
 Route::post('/logout', [AuthController::class, 'logout']);
 
 // DASHBOARD
 Route::middleware('auth')->group(function () {
-
     Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
     Route::get('/dashboard/ketua', [DashboardController::class, 'ketua']);
     Route::get('/dashboard/pendamping', [DashboardController::class, 'pendamping']);
