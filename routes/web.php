@@ -15,6 +15,7 @@ use App\Http\Controllers\MitraController;
 use App\Http\Controllers\KategoriKubeController;
 use App\Http\Controllers\PendampingController;
 use App\Http\Controllers\RekapKubeController;
+use App\Http\Controllers\UsersController;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -22,13 +23,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/', function () {
     return redirect('/login');
 });
-
-// DATA USER
-Route::get('/admin/users', [DashboardController::class, 'users'])->name('admin.users');
-Route::post('/admin/users/store', [DashboardController::class, 'store'])->name('admin.users.store');
-Route::get('/admin/users/edit/{id}', [DashboardController::class, 'edit'])->name('admin.users.edit');
-Route::put('/admin/users/update/{id}', [DashboardController::class, 'update'])->name('admin.users.update');
-Route::delete('/admin/users/delete/{id}', [DashboardController::class, 'destroy'])->name('admin.users.delete');
 
 // LOGOUT
 Route::post('/logout', [AuthController::class, 'logout']);
@@ -41,6 +35,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/koordinator', [DashboardController::class, 'koordinator']);
     Route::get('/dashboard/tim', [DashboardController::class, 'tim']);
     Route::get('/dashboard/dinas', [DashboardController::class, 'dinas']);
+
+    // DATA USER
+    Route::get('/admin/users', [UsersController::class, 'index'])->name('admin.users');
+    Route::post('/admin/users/store', [UsersController::class, 'store'])->name('admin.users.store');
+    Route::get('/admin/users/edit/{id}', [UsersController::class, 'edit'])->name('admin.users.edit');
+    Route::put('/admin/users/update/{id}', [UsersController::class, 'update'])->name('admin.users.update');
+    Route::delete('/admin/users/delete/{id}', [UsersController::class, 'destroy'])->name('admin.users.delete');
 
     // KELOLA DATA KUBE & ANGGOTA
     Route::resource('kube', KubeController::class);
