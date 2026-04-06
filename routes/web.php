@@ -5,7 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ClusterUsahaController;
 use App\Http\Controllers\KoordinatorController;
-
+use App\Http\Controllers\LaporanKecamatanController;
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -33,4 +33,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/koordinator', [KoordinatorController::class,'index'])->name('koordinator.index');
     Route::post('/admin/koordinator/store', [KoordinatorController::class,'store'])->name('koordinator.store');
     Route::delete('/admin/koordinator/{id}', [KoordinatorController::class,'destroy'])->name('koordinator.delete');
+    Route::get('/admin/laporan-kecamatan', [LaporanKecamatanController::class,'index'])
+    ->name('laporan.kecamatan');
+    Route::get('/admin/laporan-kecamatan/{id}', 
+    [LaporanKecamatanController::class, 'detail']
+)->name('laporan.kecamatan.detail');
 });
