@@ -15,6 +15,7 @@ use App\Http\Controllers\MitraController;
 use App\Http\Controllers\KategoriKubeController;
 use App\Http\Controllers\PendampingController;
 use App\Http\Controllers\RekapKubeController;
+use App\Http\Controllers\KeuanganController;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -87,3 +88,16 @@ Route::middleware('auth')->group(function () {
     // REKAP KUBE
     Route::get('/rekap_kube', [RekapKubeController::class, 'index'])->name('rekap_kube.index');
 });
+
+// Rute untuk menampilkan halaman (Index)
+Route::get('/laporan-keuangan', [KeuanganController::class, 'index'])->name('laporan.index');
+
+// Rute untuk simpan data baru (Store)
+Route::post('/laporan-keuangan/store', [KeuanganController::class, 'store'])->name('laporan.store');
+
+// Rute untuk simpan perubahan (Update) - INI YANG BARU
+Route::put('/laporan-keuangan/{id}', [KeuanganController::class, 'update'])->name('laporan.update');
+
+// Rute untuk hapus data (Destroy) - Jaga-jaga kalau mau pakai
+Route::delete('/laporan-keuangan/{id}', [KeuanganController::class, 'destroy'])->name('laporan.destroy');
+
