@@ -77,6 +77,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/mitra/{id}/edit', [MitraController::class, 'edit'])->name('mitra.edit');
     Route::put('/admin/mitra/{id}', [MitraController::class, 'update'])->name('mitra.update');
     Route::delete('/admin/mitra/{id}', [MitraController::class, 'destroy'])->name('mitra.delete');
+    Route::get('/admin/mitra/view-pdf/{id}', [MitraController::class, 'viewPdf'])->name('mitra.viewPdf');
 
     // PENDAMPING
     Route::get('/admin/pendamping', [PendampingController::class, 'index'])->name('pendamping.index');
