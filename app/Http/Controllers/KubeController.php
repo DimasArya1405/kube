@@ -33,7 +33,7 @@ class KubeController extends Controller
             'id_desa_kelurahan' => $request->id_desa_kelurahan,
             'id_cluster' => $request->id_cluster,
             'tanggal_terbentuk' => $request->tanggal_terbentuk, 
-            'status' => $request->status ?? 'Aktif',
+            'status' => $request->status ?? 'Tidak Aktif',
             'keterangan' => $request->keterangan,
         ]);
 
