@@ -4,7 +4,6 @@
 <script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
-    /* Styling agar input date dan select tidak punya panah bawaan browser */
     select {
         -webkit-appearance: none;
         -moz-appearance: none;
@@ -23,7 +22,6 @@
         cursor: pointer;
     }
 
-    /* Ukuran standar ikon di tombol dan tabel */
     .lucide {
         width: 18px;
         height: 18px;
@@ -52,7 +50,7 @@
                 </div>
             </div>
 
-            {{-- TOMBOL EKSPOR & TAMBAH --}}
+            {{--TOMBOL EKSPOR & TAMBAH --}}
             <div class="flex gap-3 shrink-0">
                 <button class="bg-[#F07124] hover:bg-orange-600 text-white px-5 py-2.5 rounded-lg flex items-center text-sm font-bold transition shadow-md">
                     <i data-lucide="file-text" class="mr-2"></i> Ekspor PDF
@@ -121,7 +119,7 @@
     </main>
 </div>
 
-{{-- MODAL TAMBAH (DENGAN DETAIL IKON PERSIS GAMBAR) --}}
+{{-- MODAL TAMBAH--}}
 <div id="modalTambah" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-[9999]">
     <div class="bg-white rounded-[40px] w-[800px] max-h-[95vh] overflow-y-auto p-12 shadow-2xl relative">
         <button onclick="toggleModal(false)" class="absolute top-10 right-10 text-gray-400 hover:text-gray-600">
@@ -175,7 +173,7 @@
                     <input type="text" name="lokasi" class="w-full border border-gray-300 rounded-xl p-3 outline-none">
                 </div>
 
-                {{-- TANGGAL MULAI DENGAN IKON KALENDER --}}
+                {{-- TANGGAL MULAI--}}
                 <div>
                     <label class="block text-base font-bold text-gray-800 mb-2">Tanggal Mulai</label>
                     <div class="relative">
@@ -237,7 +235,6 @@
 </div>
 
 <script>
-    // Jalankan Lucide Icons
     lucide.createIcons();
 
     function toggleModal(show) {

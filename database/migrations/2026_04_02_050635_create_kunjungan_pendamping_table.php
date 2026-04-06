@@ -9,36 +9,30 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('kunjungan_pendamping', function (Blueprint $table) {
-            $table->id('id_kunjungan');
+        $table->id('id_kunjungan');
 
-            $table->unsignedBigInteger('id_pendamping');
-            $table->unsignedBigInteger('id_kube');
+        $table->unsignedBigInteger('id_pembagian');
 
-            $table->date('tanggal_kunjungan');
-            $table->time('waktu_kunjungan');
+        $table->date('tanggal_kunjungan');
+        $table->time('waktu_kunjungan');
 
-            $table->enum('tujuan_kunjungan', [
-                'Monitoring',
-                'Evaluasi',
-                'Koordinasi',
-                'Kunjungan Rutin'
-            ]);
+        $table->enum('tujuan_kunjungan', [
+            'Monitoring',
+            'Evaluasi',
+            'Koordinasi',
+            'Kunjungan Rutin'
+        ]);
 
-            $table->integer('kunjungan_ke');
+        $table->integer('kunjungan_ke');
 
-            $table->timestamps();
+        $table->timestamps();
 
-            // // Foreign Key
-            // $table->foreign('id_pendamping')
-            //     ->references('id')
-            //     ->on('pendamping')
-            //     ->onDelete('cascade');
-
-            // $table->foreign('id_kube')
-            //     ->references('id')
-            //     ->on('kube')
-            //     ->onDelete('cascade');
-        });
+        // FK
+        $table->foreign('id_pembagian')
+            ->references('id_pembagian')
+            ->on('pembagian_pendamping')
+            ->onDelete('cascade');
+    });
     }
 
     public function down(): void
