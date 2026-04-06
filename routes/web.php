@@ -14,6 +14,7 @@ use App\Http\Controllers\PelatihanController;
 use App\Http\Controllers\MitraController;
 use App\Http\Controllers\KategoriKubeController;
 use App\Http\Controllers\PendampingController;
+use App\Http\Controllers\PersetujuanPengajuanKubeController;
 use App\Http\Controllers\RekapKubeController;
 
 // LOGIN
@@ -86,4 +87,9 @@ Route::middleware('auth')->group(function () {
 
     // REKAP KUBE
     Route::get('/rekap_kube', [RekapKubeController::class, 'index'])->name('rekap_kube.index');
+
+    // KELOLA DATA PERSETUJUAN KUBE
+    Route::get('/admin/persetujuan-bantuan-kube', [PersetujuanPengajuanKubeController::class, 'index'])->name('admin.persetujuan_bantuan_kube.index');
+    Route::put('/admin/persetujuan-bantuan-kube/setujui/{id}', [PersetujuanPengajuanKubeController::class, 'setujui'])->name('admin.persetujuan_bantuan_kube.setujui');
+    Route::put('/admin/persetujuan-bantuan-kube/tolak/{id}', [PersetujuanPengajuanKubeController::class, 'tolak'])->name('admin.persetujuan_bantuan_kube.tolak');
 });
