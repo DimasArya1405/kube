@@ -84,7 +84,7 @@
         </button>
         <div id="analisisMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Prediksi KUBE (Aulia)</a>
-            <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Ranking KUBE (Shela)</a>
+            <a href="{{ route('ranking.kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Ranking KUBE (Shela)</a>
         </div>
     </div>
 

@@ -15,6 +15,7 @@ use App\Http\Controllers\MitraController;
 use App\Http\Controllers\KategoriKubeController;
 use App\Http\Controllers\PendampingController;
 use App\Http\Controllers\RekapKubeController;
+use App\Http\Controllers\RankingKubeController;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -86,4 +87,11 @@ Route::middleware('auth')->group(function () {
 
     // REKAP KUBE
     Route::get('/rekap_kube', [RekapKubeController::class, 'index'])->name('rekap_kube.index');
+
+
+       // RANKING KUBE
+       Route::get('/ranking-kube', [RankingKubeController::class, 'index'])->name('ranking.kube');
+       Route::get('/ranking-kube/export/pdf',   [RankingKubeController::class, 'exportPdf'])->name('ranking.kube.export.pdf');
+       Route::get('/ranking-kube/export/excel', [RankingKubeController::class, 'exportExcel'])->name('ranking.kube.export.excel');
+   
 });
