@@ -7,7 +7,6 @@ use App\Http\Controllers\ClusterUsahaController;
 use App\Http\Controllers\JenisBantuanController;
 use App\Http\Controllers\KoordinatorController;
 use App\Http\Controllers\PencairanBantuanController;
-use App\Http\Controllers\PerkembanganUsahaController;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -45,8 +44,5 @@ Route::middleware('auth')->group(function () {
     //PERKEMBANGAN USAHA
   
 
-Route::get('/admin/perkembangan-usaha', [PerkembanganUsahaController::class, 'index'])->name('perkembangan.index');
-Route::post('/admin/perkembangan-usaha', [PerkembanganUsahaController::class, 'store'])->name('perkembangan.store');
-Route::delete('/admin/perkembangan-usaha/{id}', [PerkembanganUsahaController::class, 'destroy'])->name('perkembangan.delete');
 
 });
