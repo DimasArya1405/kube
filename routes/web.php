@@ -18,6 +18,7 @@ use App\Http\Controllers\PersetujuanPengajuanKubeController;
 use App\Http\Controllers\RekapKubeController;
 use App\Http\Controllers\KeuanganController;
 use App\Http\Controllers\MonitoringController;
+use App\Http\Controllers\RankingKubeController;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -107,9 +108,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
     Route::post('/monitoringbantuan/store', [MonitoringController::class, 'store'])->name('monitoring.store');
     Route::delete('/monitoringbantuan/delete/{id}', [MonitoringController::class, 'delete'])->name('monitoring.delete');
-   
+
     // KELOLA DATA PERSETUJUAN KUBE
     Route::get('/admin/persetujuan-bantuan-kube', [PersetujuanPengajuanKubeController::class, 'index'])->name('admin.persetujuan_bantuan_kube.index');
     Route::put('/admin/persetujuan-bantuan-kube/setujui/{id}', [PersetujuanPengajuanKubeController::class, 'setujui'])->name('admin.persetujuan_bantuan_kube.setujui');
     Route::put('/admin/persetujuan-bantuan-kube/tolak/{id}', [PersetujuanPengajuanKubeController::class, 'tolak'])->name('admin.persetujuan_bantuan_kube.tolak');
+
+    // RANKING KUBE
+    Route::get('/ranking-kube', [RankingKubeController::class, 'index'])->name('ranking.kube');
+    Route::get('/ranking-kube/export/pdf',   [RankingKubeController::class, 'exportPdf'])->name('ranking.kube.export.pdf');
+    Route::get('/ranking-kube/export/excel', [RankingKubeController::class, 'exportExcel'])->name('ranking.kube.export.excel');
 });
