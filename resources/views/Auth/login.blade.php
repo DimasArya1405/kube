@@ -21,7 +21,6 @@
             display: flex;
             width: 900px;
             height: 500px;
-            /* biar fix simetris */
             background: #fff;
             border-radius: 12px;
             overflow: hidden;
