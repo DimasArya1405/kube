@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ClusterUsahaController;
 use App\Http\Controllers\KoordinatorController;
+use App\Http\Controllers\MonitoringController;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -33,4 +34,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/koordinator', [KoordinatorController::class,'index'])->name('koordinator.index');
     Route::post('/admin/koordinator/store', [KoordinatorController::class,'store'])->name('koordinator.store');
     Route::delete('/admin/koordinator/{id}', [KoordinatorController::class,'destroy'])->name('koordinator.delete');
+
+
+    // Route::get('/monitoringbantuan', [MonitoringController::class, 'index'])->name('monitoring.index');
+    Route::get('/monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
+    Route::post('/monitoringbantuan/store', [MonitoringController::class, 'store'])->name('monitoring.store');
+    Route::delete('/monitoringbantuan/delete/{id}', [MonitoringController::class, 'delete'])->name('monitoring.delete');
 });
