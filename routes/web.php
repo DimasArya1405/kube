@@ -48,5 +48,5 @@ Route::middleware('auth')->group(function () {
 Route::get('/admin/perkembangan-usaha', [PerkembanganUsahaController::class, 'index'])->name('perkembangan.index');
 Route::post('/admin/perkembangan-usaha', [PerkembanganUsahaController::class, 'store'])->name('perkembangan.store');
 Route::delete('/admin/perkembangan-usaha/{id}', [PerkembanganUsahaController::class, 'destroy'])->name('perkembangan.delete');
+
 });
-;

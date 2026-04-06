@@ -13,4 +13,9 @@ class DesaKelurahan extends Model
     public $timestamps = true;
 
     protected $guarded = [];
+
+    public function kecamatan()
+    {
+    return $this->belongsTo(Kecamatan::class, 'id_kecamatan', 'id_kecamatan');
+    }
 }
