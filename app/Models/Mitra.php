@@ -26,7 +26,7 @@ class Mitra extends Model
     ];
     //merubah tipe data
     protected $casts = [
-        'tgl_mou' => 'date',
+        'tgl_mou' => 'date:Y-m-d',
     ];
     public function bantuanKolaborasi(): HasMany
     {
