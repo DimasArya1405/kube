@@ -16,7 +16,7 @@ class PelatihanController extends Controller
         $kubes = Kube::all(); 
         $pendampings = Pendamping::all(); 
         $mitras = Mitra::all(); 
-        return view('admin.pelatihan.index', compact('pelatihans', 'kubes', 'pendampings', 'mitras'));
+        return view('admin.monevbimbingan.pelatihan', compact('pelatihans', 'kubes', 'pendampings', 'mitras'));
     }
 
     public function store(Request $request)
