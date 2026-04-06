@@ -21,6 +21,7 @@ use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\RankingKubeController;
 use App\Http\Controllers\KunjunganPendampingController;
 use App\Http\Controllers\LaporanKecamatanController;
+use App\Http\Controllers\PembagianKoordinatorController;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -57,6 +58,8 @@ Route::middleware('auth')->group(function () {
 
     // CLUSTER USAHA
     Route::resource('cluster_usaha', ClusterUsahaController::class);
+    // Pembagian Koordinator
+    Route::resource('pembagian_koordinator', PembagianKoordinatorController::class);
 
     // PENCAIRAN BANTUAN
     Route::get('/admin/pencairan_bantuan', [PencairanBantuanController::class, 'index'])->name('admin.pencairan_bantuan.index');

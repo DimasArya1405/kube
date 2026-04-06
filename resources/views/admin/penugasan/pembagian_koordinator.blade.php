@@ -1,9 +1,9 @@
 @extends('admin.layout')
 
-@section('title', 'Data Cluster Usaha - KUBE')
+@section('title', 'Pembagian Koordinator')
 
 @section('breadcrumb')
-Dashboard / <span class="text-gray-800">Cluster Usaha</span>
+Dashboard / <span class="text-gray-800">Pembagian Koordinator</span>
 @stop
 
 @section('content')
@@ -11,8 +11,8 @@ Dashboard / <span class="text-gray-800">Cluster Usaha</span>
 {{-- HEADER --}}
 <div class="mb-6 flex justify-between items-end">
     <div>
-        <h2 class="text-3xl font-bold text-gray-800">Cluster Usaha</h2>
-        <p class="text-gray-500 mt-1">Kelola data cluster usaha KUBE.</p>
+        <h2 class="text-3xl font-bold text-gray-800">Pembagian Koordinator</h2>
+        <p class="text-gray-500 mt-1">Kelola penugasan koordinator.</p>
     </div>
 </div>
 
@@ -25,9 +25,10 @@ Dashboard / <span class="text-gray-800">Cluster Usaha</span>
         placeholder="Cari...">
 
     {{-- TAMBAH --}}
-    <button data-modal-target="modal-tambah" data-modal-toggle="modal-tambah"
+    <button data-modal-target="modal-tambah"
+        data-modal-toggle="modal-tambah"
         class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
-        + Tambah Cluster
+        + Tambah Data
     </button>
 
 </div>
@@ -35,13 +36,13 @@ Dashboard / <span class="text-gray-800">Cluster Usaha</span>
 {{-- TABLE --}}
 <div class="bg-white rounded-lg shadow border overflow-hidden">
     <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left text-gray-500">
+        <table class="w-full text-sm text-left">
             <thead class="bg-gray-200 text-gray-700">
                 <tr>
                     <th class="px-4 py-3">No</th>
-                    <th class="px-4 py-3">Nama Cluster</th>
-                    <th class="px-4 py-3">Deskripsi</th>
-                    <th class="px-4 py-3">Kategori</th>
+                    <th class="px-4 py-3">Koordinator</th>
+                    <th class="px-4 py-3">Pendamping</th>
+                    <th class="px-4 py-3">KUBE</th>
                     <th class="px-4 py-3">Status</th>
                     <th class="px-4 py-3">Aksi</th>
                 </tr>
@@ -53,21 +54,23 @@ Dashboard / <span class="text-gray-800">Cluster Usaha</span>
 
                     <td class="px-4 py-3">{{ $i+1 }}</td>
 
-                    <td class="px-4 py-3 font-medium text-gray-900">
-                        {{ $row->nama_cluster }}
+                    <td class="px-4 py-3 font-medium">
+                        {{ $row->koordinator->nama_koor ?? '-' }}
                     </td>
 
-                    <td class="px-4 py-3">{{ $row->deskripsi }}</td>
+                    <td class="px-4 py-3">
+                        {{ $row->pembagianPendamping->pendamping->nama_pendamping ?? '-' }}
+                    </td>
 
                     <td class="px-4 py-3">
-                        {{ $row->nama_kategori ?? '-' }}
+                        {{ $row->pembagianPendamping->kube->nama_kube ?? '-' }}
                     </td>
 
                     <td class="px-4 py-3">
                         @if($row->status == 'Aktif')
                             <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">Aktif</span>
                         @else
-                            <span class="bg-red-100 text-red-700 text-xs px-2 py-1 rounded-full">Tidak Aktif</span>
+                            <span class="bg-yellow-100 text-yellow-700 text-xs px-2 py-1 rounded-full">Selesai</span>
                         @endif
                     </td>
 
@@ -78,10 +81,9 @@ Dashboard / <span class="text-gray-800">Cluster Usaha</span>
                             {{-- EDIT --}}
                             <button 
                                 class="text-yellow-500 btn-edit"
-                                data-id="{{ $row->id_cluster }}"
-                                data-nama="{{ $row->nama_cluster }}"
-                                data-deskripsi="{{ $row->deskripsi }}"
-                                data-kategori="{{ $row->id_kategori }}"
+                                data-id="{{ $row->id_pembagian_koor }}"
+                                data-koor="{{ $row->id_koor }}"
+                                data-pembagian="{{ $row->id_pembagian }}"
                                 data-status="{{ $row->status }}"
                                 data-modal-target="modal-edit"
                                 data-modal-toggle="modal-edit">
@@ -89,8 +91,9 @@ Dashboard / <span class="text-gray-800">Cluster Usaha</span>
                             </button>
 
                             {{-- DELETE --}}
-                            <form action="/cluster_usaha/{{ $row->id_cluster }}" method="POST"
-                                onsubmit="return confirm('Yakin hapus data ini?')">
+                            <form action="{{ route('pembagian_koordinator.destroy', $row->id_pembagian_koor) }}" 
+                                  method="POST"
+                                  onsubmit="return confirm('Yakin hapus data ini?')">
                                 @csrf
                                 @method('DELETE')
 
@@ -116,29 +119,35 @@ Dashboard / <span class="text-gray-800">Cluster Usaha</span>
 
 {{-- ================= MODAL TAMBAH ================= --}}
 <div id="modal-tambah" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div class="bg-white rounded-lg p-6 w-96">
+    <div class="bg-white p-6 rounded-lg w-96">
 
-        <h3 class="text-lg font-semibold mb-4">Tambah Cluster</h3>
+        <h3 class="text-lg font-semibold mb-4">Tambah Data</h3>
 
-        <form action="/cluster_usaha" method="POST">
+        <form action="{{ route('pembagian_koordinator.store') }}" method="POST">
             @csrf
 
-            <input type="text" name="nama_cluster" placeholder="Nama Cluster"
-                class="w-full mb-2 border p-2 rounded" required>
-
-            <textarea name="deskripsi" placeholder="Deskripsi"
-                class="w-full mb-2 border p-2 rounded"></textarea>
-
-            <select name="id_kategori" class="w-full mb-2 border p-2 rounded" required>
-                <option value="">Pilih Kategori</option>
-                @foreach($kategori as $k)
-                    <option value="{{ $k->id_kategori }}">{{ $k->nama_kategori }}</option>
+            {{-- KOORDINATOR --}}
+            <select name="id_koor" class="w-full mb-2 border p-2 rounded" required>
+                <option value="">Pilih Koordinator</option>
+                @foreach($koor as $k)
+                    <option value="{{ $k->id_koor }}">{{ $k->nama_koor }}</option>
                 @endforeach
             </select>
 
+            {{-- PENDAMPING --}}
+            <select name="id_pembagian" class="w-full mb-2 border p-2 rounded" required>
+                <option value="">Pilih Pendamping</option>
+                @foreach($pendamping as $p)
+                    <option value="{{ $p->id_pembagian }}">
+                        {{ $p->nama_pendamping }} - {{ $p->nama_kube }}
+                    </option>
+                @endforeach
+            </select>
+
+            {{-- STATUS --}}
             <select name="status" class="w-full mb-3 border p-2 rounded">
                 <option value="Aktif">Aktif</option>
-                <option value="Tidak Aktif">Tidak Aktif</option>
+                <option value="Selesai">Selesai</option>
             </select>
 
             <button class="bg-blue-600 text-white w-full py-2 rounded">
@@ -151,37 +160,36 @@ Dashboard / <span class="text-gray-800">Cluster Usaha</span>
 
 {{-- ================= MODAL EDIT ================= --}}
 <div id="modal-edit" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div class="bg-white rounded-lg p-6 w-96">
+    <div class="bg-white p-6 rounded-lg w-96">
 
-        <h3 class="text-lg font-semibold mb-4">Edit Cluster</h3>
+        <h3 class="text-lg font-semibold mb-4">Edit Data</h3>
 
         <form method="POST" id="formEdit">
             @csrf
             @method('PUT')
 
-            <input type="text" name="nama_cluster" id="edit_nama"
-                class="w-full mb-2 border p-2 rounded">
-
-            <textarea name="deskripsi" id="edit_deskripsi"
-                class="w-full mb-2 border p-2 rounded"></textarea>
-
-            <select name="id_kategori" id="edit_kategori"
-                class="w-full mb-2 border p-2 rounded">
-                @foreach($kategori as $k)
-                    <option value="{{ $k->id_kategori }}">{{ $k->nama_kategori }}</option>
+            <select name="id_koor" id="edit_koor" class="w-full mb-2 border p-2 rounded">
+                @foreach($koor as $k)
+                    <option value="{{ $k->id_koor }}">{{ $k->nama_koor }}</option>
                 @endforeach
             </select>
 
-            <select name="status" id="edit_status"
-                class="w-full mb-3 border p-2 rounded">
+            <select name="id_pembagian" id="edit_pembagian" class="w-full mb-2 border p-2 rounded">
+                @foreach($pendamping as $p)
+                    <option value="{{ $p->id_pembagian }}">
+                        {{ $p->nama_pendamping }} - {{ $p->nama_kube }}
+                    </option>
+                @endforeach
+            </select>
+
+            <select name="status" id="edit_status" class="w-full mb-3 border p-2 rounded">
                 <option value="Aktif">Aktif</option>
-                <option value="Tidak Aktif">Tidak Aktif</option>
+                <option value="Selesai">Selesai</option>
             </select>
 
             <button class="bg-yellow-500 text-white w-full py-2 rounded">
                 Update
             </button>
-
         </form>
     </div>
 </div>
@@ -201,13 +209,12 @@ document.getElementById('searchInput').addEventListener('keyup', function() {
 document.querySelectorAll('.btn-edit').forEach(btn => {
     btn.addEventListener('click', function () {
 
-        document.getElementById('edit_nama').value = this.dataset.nama;
-        document.getElementById('edit_deskripsi').value = this.dataset.deskripsi;
-        document.getElementById('edit_kategori').value = this.dataset.kategori;
+        document.getElementById('edit_koor').value = this.dataset.koor;
+        document.getElementById('edit_pembagian').value = this.dataset.pembagian;
         document.getElementById('edit_status').value = this.dataset.status;
 
         document.getElementById('formEdit').action =
-            "/cluster_usaha/" + this.dataset.id;
+            "/pembagian_koordinator/" + this.dataset.id;
     });
 });
 
