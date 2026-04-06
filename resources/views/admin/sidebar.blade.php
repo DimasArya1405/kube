@@ -37,7 +37,7 @@
         </button>
         <div id="taskMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
             <a href="{{ url('/pembagian_pendamping') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Pembagian Pendamping (Yana)</a>
-            <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Pembagian Koordinator</a>
+            <a href="{{ route('pembagian_koordinator.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Pembagian Koordinator</a>
         </div>
     </div>
 
