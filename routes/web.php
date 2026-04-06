@@ -15,6 +15,7 @@ use App\Http\Controllers\MitraController;
 use App\Http\Controllers\KategoriKubeController;
 use App\Http\Controllers\PendampingController;
 use App\Http\Controllers\RekapKubeController;
+use App\Http\Controllers\KunjunganPendampingController;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -86,4 +87,10 @@ Route::middleware('auth')->group(function () {
 
     // REKAP KUBE
     Route::get('/rekap_kube', [RekapKubeController::class, 'index'])->name('rekap_kube.index');
+
+    //Kelola Data Kunjungan PPendamping
+    Route::get('/pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'index'])->name('kunjungan.index');
+    Route::post('pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'store'])->name('kunjungan.store');
+    Route::delete('pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'destroy'])->name('kunjungan.delete');
+
 });
