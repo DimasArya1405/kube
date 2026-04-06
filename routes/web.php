@@ -20,6 +20,7 @@ use App\Http\Controllers\KeuanganController;
 use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\RankingKubeController;
 use App\Http\Controllers\KunjunganPendampingController;
+use App\Http\Controllers\LaporanKecamatanController;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -125,4 +126,10 @@ Route::middleware('auth')->group(function () {
     Route::post('pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'store'])->name('kunjungan.store');
     Route::delete('pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'destroy'])->name('kunjungan.delete');
 
+    Route::get('/admin/laporan-kecamatan', [LaporanKecamatanController::class, 'index'])
+        ->name('laporan.kecamatan');
+    Route::get(
+        '/admin/laporan-kecamatan/{id}',
+        [LaporanKecamatanController::class, 'detail']
+    )->name('laporan.kecamatan.detail');
 });
