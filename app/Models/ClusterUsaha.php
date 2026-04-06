@@ -17,4 +17,9 @@ class ClusterUsaha extends Model
         'id_kategori',
         'status'
     ];
+
+    public function kube()
+    {
+        return $this->hasMany(Kube::class, 'id_cluster', 'id_cluster');
+    }
 }

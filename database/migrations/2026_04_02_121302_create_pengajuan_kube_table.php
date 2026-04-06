@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('id_pengajuan_kube');
             $table->integer('id_kube');
             $table->integer('id_user');
+            $table->integer('disetujui_oleh');
             $table->integer('id_jenis_bantuan');
             $table->integer('jumlah_bantuan');
             $table->string('tujuan_pengajuan', 100);
@@ -22,6 +23,7 @@ return new class extends Migration
             $table->date('tanggal_disetujui');
             $table->string('keterangan', 255);
             $table->enum('status_pengajuan', ['diajukan', 'menunggu', 'disetujui', 'ditolak', 'cair'])->default('diajukan');
+            $table->enum('status_penerima', ['menunggu', 'diterima', 'ditolak'])->default('menunggu');
             $table->timestamps();
         });
     }

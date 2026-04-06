@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Dashboard</title>
 
@@ -40,7 +41,7 @@
         }
 
         .menu a:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .content {
@@ -66,7 +67,8 @@
             font-weight: bold;
         }
 
-        table th, table td {
+        table th,
+        table td {
             padding: 12px;
             border-bottom: 1px solid #ddd;
             text-align: center;
@@ -97,7 +99,7 @@
         .profile {
             display: flex;
             align-items: center;
-            background: rgba(255,255,255,0.15);
+            background: rgba(255, 255, 255, 0.15);
             padding: 10px;
             border-radius: 8px;
             margin-bottom: 10px;
@@ -144,65 +146,66 @@
 
 <body>
 
-<!-- SIDEBAR -->
-<div class="sidebar">
-    <h2>KUBE</h2>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h2>KUBE</h2>
 
-    <!-- BOTTOM -->
-    <div class="bottom-area">
+        <!-- BOTTOM -->
+        <div class="bottom-area">
 
-        <!-- PROFILE -->
-        <div class="profile">
-            <div class="avatar">
-                {{ strtoupper(substr(auth()->user()->nama, 0, 1)) }}
-            </div>
-            <div class="info">
-                <div class="name">{{ auth()->user()->nama }}</div>
-                <div class="role">
-                    {{ ucfirst(str_replace('_', ' ', auth()->user()->role)) }}
+            <!-- PROFILE -->
+            <div class="profile">
+                <div class="avatar">
+                    {{ strtoupper(substr(auth()->user()->nama, 0, 1)) }}
+                </div>
+                <div class="info">
+                    <div class="name">{{ auth()->user()->nama }}</div>
+                    <div class="role">
+                        {{ ucfirst(str_replace('_', ' ', auth()->user()->role)) }}
+                    </div>
                 </div>
             </div>
+
+            <!-- LOGOUT -->
+            <form method="POST" action="/logout">
+                @csrf
+                <button class="logout-btn">Logout</button>
+            </form>
+
         </div>
-
-        <!-- LOGOUT -->
-        <form method="POST" action="/logout">
-            @csrf
-            <button class="logout-btn">Logout</button>
-        </form>
-
     </div>
-</div>
 
-<!-- SWEET ALERT SUCCESS -->
-@if(session('success'))
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    Swal.fire({
-        title: 'Login Berhasil 👋',
-        text: "{{ session('success') }}",
-        icon: 'success',
-        confirmButtonColor: '#2f6fed',
-        timer: 3000,
-        timerProgressBar: true,
-        showConfirmButton: false
-    });
-});
-</script>
-@endif
+    <!-- SWEET ALERT SUCCESS -->
+    @if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Login Berhasil 👋',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonColor: '#2f6fed',
+                timer: 3000,
+                timerProgressBar: true,
+                showConfirmButton: false
+            });
+        });
+    </script>
+    @endif
 
-<!-- SWEET ALERT ERROR -->
-@if(session('error'))
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    Swal.fire({
-        title: 'Gagal!',
-        text: "{{ session('error') }}",
-        icon: 'error',
-        confirmButtonColor: '#d33'
-    });
-});
-</script>
-@endif
+    <!-- SWEET ALERT ERROR -->
+    @if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Gagal!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonColor: '#d33'
+            });
+        });
+    </script>
+    @endif
 
 </body>
+
 </html>

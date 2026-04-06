@@ -3,7 +3,7 @@
 @section('title', 'Data Cluster Usaha - KUBE')
 
 @section('breadcrumb')
-Dashboard / <span class="text-gray-800">Cluster Usaha</span>
+Dashboard / <span class="text-gray-800">Pencairan Bantuan</span>
 @stop
 
 @section('content')
@@ -12,11 +12,18 @@ Dashboard / <span class="text-gray-800">Cluster Usaha</span>
         <h2 class="text-3xl font-bold text-gray-800">Cluster Usaha</h2>
         <p class="text-gray-500 mt-1">Kelola data cluster usaha KUBE.</p>
     </div>
+    <div class="flex justify-end gap-2">
 
-    <button data-modal-target="modal-tambah" data-modal-toggle="modal-tambah"
-        class="text-white bg-blue-600 hover:bg-blue-700 px-5 py-2.5 rounded-lg">
-        Tambah Cluster
-    </button>
+        <a href="{{ route('admin.alur_bantuan.jenis_bantuan.index') }}"
+            class="text-white bg-green-600 hover:bg-green-700 px-5 py-2.5 rounded-lg">
+            Olah Data Jenis Bantuan
+        </a>
+
+        <button data-modal-target="modal-tambah" data-modal-toggle="modal-tambah"
+            class="text-white bg-blue-600 hover:bg-blue-700 px-5 py-2.5 rounded-lg">
+            Tambah Cluster
+        </button>
+    </div>
 </div>
 
 <div class="bg-white mb-6 rounded-lg shadow-sm border overflow-hidden">
@@ -32,26 +39,26 @@ Dashboard / <span class="text-gray-800">Cluster Usaha</span>
                 </tr>
             </thead>
             <tbody>
-                @foreach($data as $i => $row)
+                {{-- @foreach ($pencairan_bantuan as $i => $row)
                 <tr class="border-b">
                     <td class="px-6 py-4">{{ $i+1 }}</td>
-                    <td class="px-6 py-4 font-medium text-gray-900">{{ $row->nama_cluster }}</td>
-                    <td class="px-6 py-4">{{ $row->deskripsi }}</td>
-                    <td class="px-6 py-4">{{ $row->nama_kategori ?? '-' }}</td>
-                    <td class="px-6 py-4">
-                        <span class="px-2 py-1 rounded text-white {{ $row->status == 'Aktif' ? 'bg-green-500' : 'bg-red-500' }}">
-                            {{ $row->status }}
-                        </span>
-                    </td>
+                <td class="px-6 py-4 font-medium text-gray-900">{{ $row->nama_cluster }}</td>
+                <td class="px-6 py-4">{{ $row->deskripsi }}</td>
+                <td class="px-6 py-4">{{ $row->nama_kategori ?? '-' }}</td>
+                <td class="px-6 py-4">
+                    <span class="px-2 py-1 rounded text-white {{ $row->status == 'Aktif' ? 'bg-green-500' : 'bg-red-500' }}">
+                        {{ $row->status }}
+                    </span>
+                </td>
                 </tr>
                 @endforeach
-            </tbody>
+            </tbody> --}}
         </table>
     </div>
 </div>
 
 {{-- ================= MODAL TAMBAH ================= --}}
-<div id="modal-tambah" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+{{-- <div id="modal-tambah" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">
     <div class="bg-white rounded-lg p-6 w-96">
         <h3 class="text-lg font-semibold mb-4">Tambah Cluster</h3>
 
@@ -66,21 +73,21 @@ Dashboard / <span class="text-gray-800">Cluster Usaha</span>
 
             <select name="id_kategori" class="w-full mb-2 border p-2 rounded" required>
                 <option value="">Pilih Kategori</option>
-                @foreach($kategori as $k)
-                <option value="{{ $k->id_kategori }}">{{ $k->nama_kategori }}</option>
-                @endforeach
-            </select>
+                @foreach ($kategori as $k)
+                    <option value="{{ $k->id_kategori }}">{{ $k->nama_kategori }}</option>
+@endforeach
+</select>
 
-            <select name="status" class="w-full mb-3 border p-2 rounded">
-                <option value="Aktif">Aktif</option>
-                <option value="Tidak Aktif">Tidak Aktif</option>
-            </select>
+<select name="status" class="w-full mb-3 border p-2 rounded">
+    <option value="Aktif">Aktif</option>
+    <option value="Tidak Aktif">Tidak Aktif</option>
+</select>
 
-            <button class="bg-blue-600 text-white px-4 py-2 rounded w-full">
-                Simpan
-            </button>
-        </form>
-    </div>
+<button class="bg-blue-600 text-white px-4 py-2 rounded w-full">
+    Simpan
+</button>
+</form>
 </div>
+</div> --}}
 
 @stop
