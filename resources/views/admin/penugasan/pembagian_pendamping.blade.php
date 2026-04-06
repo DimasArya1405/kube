@@ -47,7 +47,7 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
                     <td class="py-3 px-5 text-gray-800 font-medium">{{ $index + 1 }}.</td>
                     <td class="py-3 px-5 text-gray-800">{{ $p->kube->nama_kube ?? 'KUBE Dihapus' }}</td>
 
-                    <td class="py-3 px-5 text-gray-800">{{ $p->pendamping->nama ?? 'Pendamping Dihapus' }}</td>
+                    <td class="py-3 px-5 text-gray-800">{{ $p->pendamping->nama_pendamping ?? 'Pendamping Dihapus' }}</td>
 
                     <td class="py-3 px-5 text-gray-600 text-center">{{ \Carbon\Carbon::parse($p->tgl_pembagian)->format('d M Y') }}</td>
 
