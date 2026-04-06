@@ -15,11 +15,52 @@ Dashboard / <span class="text-gray-800">Kategori KUBE</span>
         <p class="text-gray-500 mt-1">Kelola data kategori KUBE.</p>
     </div>
 
-    <button data-modal-target="modal-tambah" data-modal-toggle="modal-tambah" class="block text-white bg-blue-600 hover:bg-blue-700 rounded-lg text-sm px-5 py-2.5">
-        Tambah Kategori
-    </button>
+</div>
+<div class="flex gap-4 mb-6">
+
+    <!-- AKTIF -->
+    <div class="bg-orange-400 text-white px-6 py-4 rounded-xl w-60">
+        <p class="text-sm">Kategori Aktif</p>
+        <h1 class="text-3xl font-bold">
+            {{ $data->where('status','Aktif')->count() }}
+        </h1>
+    </div>
+
+    <!-- NON AKTIF -->
+    <div class="bg-green-400 text-white px-6 py-4 rounded-xl w-60">
+        <p class="text-sm">Kategori Non-Aktif</p>
+        <h1 class="text-3xl font-bold">
+            {{ $data->where('status','Nonaktif')->count() }}
+        </h1>
+    </div>
+
 </div>
 
+<div class="flex justify-between items-center mb-6">
+
+    <!-- SEARCH -->
+    <input type="text" placeholder="Cari..."
+        class="w-1/2 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+    <!-- BUTTON -->
+    <div class="flex gap-2">
+
+        <button class="bg-red-500 text-white px-4 py-2 rounded-lg">
+            Ekspor PDF
+        </button>
+
+        <button class="bg-green-500 text-white px-4 py-2 rounded-lg">
+            Ekspor Excel
+        </button>
+
+        <button data-modal-target="modal-tambah" data-modal-toggle="modal-tambah"
+            class="bg-blue-600 text-white px-4 py-2 rounded-lg">
+            + Tambah Kategori
+        </button>
+
+    </div>
+
+</div>
 <div class="bg-white mb-6 rounded-lg shadow-sm border border-gray-100 overflow-hidden">
     <div class="relative overflow-x-auto">
         <table class="w-full text-sm text-left text-body">
@@ -53,21 +94,22 @@ Dashboard / <span class="text-gray-800">Kategori KUBE</span>
                     <td class="px-6 py-4 flex gap-2">
 
                         <!-- EDIT -->
-                        <a href="{{ route('kategorikube.edit', $item->id_kategori) }}"
-                            class="px-3 py-1 bg-blue-500 text-white rounded-lg text-xs">
-                            Edit
-                        </a>
+                        <button data-modal-target="modal-edit-{{ $item->id_kategori }}"
+                        data-modal-toggle="modal-edit-{{ $item->id_kategori }}"
+                        class="bg-blue-500 text-white px-3 py-1 rounded">
+                        Edit
+                        </button>
 
                         <!-- HAPUS -->
-                        <form action="{{ route('kategorikube.destroy', $item->id_kategori) }}" method="POST">
+                        <form action="{{ route('kategorikube.destroy', $item->id_kategori) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-
-                            <button onclick="return confirm('Yakin hapus data?')"
-                                class="px-3 py-1 bg-red-500 text-white rounded-lg text-xs">
-                                Hapus
-                            </button>
-                        </form>
+                            
+                            <button onclick="return confirm('Yakin mau hapus?')"
+                            class="bg-red-500 text-white px-3 py-1 rounded">
+                            Hapus
+                        </button>
+                    </form>
 
                     </td>
                 </tr>
@@ -122,8 +164,56 @@ Dashboard / <span class="text-gray-800">Kategori KUBE</span>
                     Simpan Data
                 </button>
             </form>
+    </div>
+    </div>
+</div>
+@stop
+<!-- MODAL EDIT -->
+@foreach($data as $item)
+<div id="modal-edit-{{ $item->id_kategori }}"
+    class="hidden fixed top-0 left-0 right-0 z-50 justify-center items-center w-full h-full bg-black/50">
+
+    <div class="relative p-4 w-full max-w-md">
+        <div class="bg-white rounded-lg shadow">
+
+            <div class="flex justify-between p-4 border-b">
+                <h3 class="text-lg font-semibold">Edit Kategori</h3>
+                <button data-modal-toggle="modal-edit-{{ $item->id_kategori }}">✖</button>
+            </div>
+
+            <form method="POST" action="{{ route('kategorikube.update', $item->id_kategori) }}" class="p-4">
+                @csrf
+                @method('PUT')
+
+                <div class="mb-3">
+                    <label class="text-sm">Nama Kategori</label>
+                    <input type="text" name="nama_kategori"
+                        value="{{ $item->nama_kategori }}"
+                        class="w-full border rounded-lg px-4 py-2">
+                </div>
+
+                <div class="mb-3">
+                    <label class="text-sm">Deskripsi</label>
+                    <textarea name="deskripsi"
+                        class="w-full border rounded-lg px-4 py-2">{{ $item->deskripsi }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="text-sm">Status</label>
+                    <select name="status" class="w-full border rounded p-2">
+                        <option value="Aktif" {{ $item->status == 'Aktif' ? 'selected' : '' }}>Aktif</option>
+                        <option value="Nonaktif" {{ $item->status == 'Nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                    </select>
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-blue-600 text-white py-2 rounded">
+                    Update Data
+                </button>
+            </form>
 
         </div>
     </div>
 </div>
-@stop
+@endforeach
+        
