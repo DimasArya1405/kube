@@ -19,6 +19,7 @@ use App\Http\Controllers\RekapKubeController;
 use App\Http\Controllers\KeuanganController;
 use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\RankingKubeController;
+use App\Http\Controllers\KunjunganPendampingController;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -118,4 +119,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/ranking-kube', [RankingKubeController::class, 'index'])->name('ranking.kube');
     Route::get('/ranking-kube/export/pdf',   [RankingKubeController::class, 'exportPdf'])->name('ranking.kube.export.pdf');
     Route::get('/ranking-kube/export/excel', [RankingKubeController::class, 'exportExcel'])->name('ranking.kube.export.excel');
+
+    //Kelola Data Kunjungan PPendamping
+    Route::get('/pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'index'])->name('kunjungan.index');
+    Route::post('pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'store'])->name('kunjungan.store');
+    Route::delete('pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'destroy'])->name('kunjungan.delete');
+
 });

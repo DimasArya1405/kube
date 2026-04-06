@@ -17,11 +17,16 @@ class PembagianPendamping extends Model
     // Relasi ke tabel KUBE
     public function kube()
     {
-        return $this->belongsTo(Kube::class, 'id_kube', 'id_kube');
+        return $this->belongsTo(Kube::class, 'id_kube');
     }
 
     public function pendamping()
     {
-        return $this->belongsTo(Pendamping::class, 'id_pendamping', 'id_pendamping');
+        return $this->belongsTo(Pendamping::class, 'id_pendamping');
     }
+
+    public function kunjungan()
+{
+    return $this->hasMany(KunjunganPendamping::class, 'id_pembagian');
+}
 }
