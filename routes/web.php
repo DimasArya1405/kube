@@ -9,6 +9,8 @@ use App\Http\Controllers\PembagianPendampingController;
 use App\Http\Controllers\ClusterUsahaController;
 use App\Http\Controllers\JenisBantuanController;
 use App\Http\Controllers\KoordinatorController;
+use App\Http\Controllers\PrediksiController;
+
 use App\Http\Controllers\PencairanBantuanController;
 use App\Http\Controllers\PelatihanController;
 use App\Http\Controllers\MitraController;
@@ -72,6 +74,23 @@ Route::middleware('auth')->group(function () {
     Route::resource('/admin/kategorikube', KategoriKubeController::class);
 
     // KELOLA DATA KOORDINATOR
+    Route::get('/admin/koordinator', [KoordinatorController::class,'index'])->name('koordinator.index');
+    Route::post('/admin/koordinator/store', [KoordinatorController::class,'store'])->name('koordinator.store');
+    Route::delete('/admin/koordinator/{id}', [KoordinatorController::class,'destroy'])->name('koordinator.delete');
+
+
+// HALAMAN
+Route::get('/pendamping/prediksi', [PrediksiController::class, 'index'])
+    ->name('prediksi.index');
+
+// SIMPAN
+Route::post('/pendamping/prediksi', [PrediksiController::class, 'store'])
+    ->name('prediksi.store');
+    
+    // AJAX SUDAH DIPINDAH KE SINI
+    Route::get('/get-kube/{id}', [PrediksiController::class, 'getKube']);
+    Route::get('/get-kube-detail/{id}', [PrediksiController::class, 'getDetail']);
+
     Route::get('/admin/koordinator', [KoordinatorController::class, 'index'])->name('koordinator.index');
     Route::post('/admin/koordinator/store', [KoordinatorController::class, 'store'])->name('koordinator.store');
     Route::delete('/admin/koordinator/{id}', [KoordinatorController::class, 'destroy'])->name('koordinator.delete');
