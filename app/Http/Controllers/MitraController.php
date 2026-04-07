@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Mitra;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 
 class MitraController extends Controller
 {
@@ -65,15 +67,42 @@ class MitraController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $mitra = Mitra::findOrFail($id);
+        return response()->json($mitra);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $mitra = Mitra::findOrFail($id);
+        $request->validate([
+            'nama_mitra'   => 'required',
+            'jenis_mitra'  => 'required',
+            'no_telp'      => 'required',
+            'email'        => 'required|email',
+            'nama_pic'     => 'required',
+            'telp_pic'     => 'required',
+            'mou'          => 'nullable|file|mimes:pdf,jpg,png,jpeg|max:2048',
+            'tgl_mou'      => 'required|date',
+            'masa_berlaku' => 'required|numeric',
+            'alamat'       => 'required',
+        ]);
+        $data = $request->all();
+        if($request->hasFile('mou')){
+            if($mitra->mou){
+                Storage::delete('public/mou/' . $mitra->mou);
+            }
+            $file = $request->file('mou');
+            $nama_file = time()."_".str_replace(' ', '_', $file->getClientOriginalName());
+            $file->storeAs('public/mou', $nama_file);
+            $data['mou'] = $nama_file;
+        }else{
+            $data['mou'] = $mitra->mou;
+        }
+        $mitra->update($data);
+        return redirect()->back()->with('success', 'Data Mitra Berhasil Diperbarui');
     }
 
     /**
@@ -85,5 +114,21 @@ class MitraController extends Controller
         $mitra->delete();
         return redirect()->back()->with('success', 'Data berhasil dihapus');
 
+    }
+
+    public function viewPdf($id)
+    {
+        $mitra = Mitra::findOrFail($id);
+        
+        $pathFull = storage_path('app/private/public/mou/' . $mitra->mou);
+
+        if (!file_exists($pathFull)) {
+            return "File asli tidak ditemukan di: " . $pathFull;
+        }
+
+        return response()->file($pathFull, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline'
+        ]);
     }
 }
