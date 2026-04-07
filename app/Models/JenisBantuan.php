@@ -21,4 +21,8 @@ class JenisBantuan extends Model
     {
         return $this->hasMany(Monitoring::class, 'id_jenis_bantuan');
     }
+    public function pencairan_bantuan()
+    {
+        return $this->hasMany(PencairanBantuan::class, 'id_jenis_bantuan', 'id_jenis_bantuan');
+    }
 }
