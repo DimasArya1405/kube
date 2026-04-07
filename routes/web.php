@@ -15,6 +15,7 @@ use App\Http\Controllers\MitraController;
 use App\Http\Controllers\KategoriKubeController;
 use App\Http\Controllers\PendampingController;
 use App\Http\Controllers\RekapKubeController;
+use App\Http\Controllers\BimbinganKubeController;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -33,7 +34,7 @@ Route::delete('/admin/users/delete/{id}', [DashboardController::class, 'destroy'
 // LOGOUT
 Route::post('/logout', [AuthController::class, 'logout']);
 
-// DASHBOARD
+// DASHBOARD & MASTER DATA (Wajib Login)
 Route::middleware('auth')->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
     Route::get('/dashboard/ketua', [DashboardController::class, 'ketua']);
@@ -41,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/koordinator', [DashboardController::class, 'koordinator']);
     Route::get('/dashboard/tim', [DashboardController::class, 'tim']);
     Route::get('/dashboard/dinas', [DashboardController::class, 'dinas']);
+    
 
     // KELOLA DATA KUBE & ANGGOTA
     Route::resource('kube', KubeController::class);
@@ -48,6 +50,10 @@ Route::middleware('auth')->group(function () {
 
     // PEMBAGIAN PENDAMPING
     Route::resource('pembagian_pendamping', PembagianPendampingController::class);
+
+    // BIMBINGAN KUBE OLEH PENDAMPING (Tambahan Baru)
+    // Ini akan otomatis menghandle route bimbingan.index, bimbingan.create, bimbingan.store, dll.
+    Route::resource('bimbingan', BimbinganKubeController::class);
 
     // CLUSTER USAHA
     Route::resource('cluster_usaha', ClusterUsahaController::class);
