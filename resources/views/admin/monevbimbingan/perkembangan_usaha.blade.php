@@ -102,7 +102,7 @@
                     <td class="px-6 py-4">{{ $loop->iteration }}</td>
 
                     <td class="px-6 py-4 font-semibold text-gray-800">
-                        {{ $item->laporan->cluster->nama_kube ?? '-' }}
+                        {{ $item->laporan->cluster->kube->first()->nama_kube ?? '-' }}
                     </td>
 
                     <td class="px-6 py-4">
@@ -179,26 +179,34 @@
         <form method="POST" action="{{ route('perkembangan.store') }}">
             @csrf
 
+            <!-- PILIH KUBE -->
             <div class="mb-3">
-                <label class="text-sm">Pilih KUBE & Periode</label>
-                <select name="id_laporan" class="w-full border rounded p-2" required>
-                    <option value="">-- Pilih --</option>
-                    @foreach ($laporan as $lap)
-                        <option value="{{ $lap->id_laporan }}">
-                            {{ $lap->cluster->nama_kube }} - 
-                            {{ $lap->periode_bulan }}/{{ $lap->periode_tahun }}
+                <label class="text-sm font-medium">Pilih KUBE</label>
+                <select id="select-kube" class="w-full border rounded p-2" required>
+                    <option value="">-- Pilih KUBE --</option>
+                    @foreach ($kubeList as $kube)
+                        <option value="{{ $kube['id_cluster'] }}">
+                            {{ $kube['nama_kube'] }}
                         </option>
                     @endforeach
                 </select>
             </div>
 
+            <!-- PILIH PERIODE (dinamis) -->
             <div class="mb-3">
-                <label class="text-sm">Jumlah Tenaga Kerja</label>
-                <input type="number" name="jumlah_tenaga_kerja" class="w-full border rounded p-2">
+                <label class="text-sm font-medium">Pilih Periode</label>
+                <select name="id_laporan" id="select-periode" class="w-full border rounded p-2" required>
+                    <option value="">-- Pilih KUBE dulu --</option>
+                </select>
             </div>
 
             <div class="mb-3">
-                <label class="text-sm">Perkembangan</label>
+                <label class="text-sm font-medium">Jumlah Tenaga Kerja</label>
+                <input type="number" name="jumlah_tenaga_kerja" class="w-full border rounded p-2" min="0">
+            </div>
+
+            <div class="mb-3">
+                <label class="text-sm font-medium">Perkembangan</label>
                 <select name="perkembangan_usaha" class="w-full border rounded p-2">
                     <option value="Meningkat">Meningkat</option>
                     <option value="Tetap">Tetap</option>
@@ -207,7 +215,7 @@
             </div>
 
             <div class="mb-3">
-                <label class="text-sm">Status</label>
+                <label class="text-sm font-medium">Status</label>
                 <select name="status_hasil" class="w-full border rounded p-2">
                     <option value="Tercapai">Tercapai</option>
                     <option value="Belum Tercapai">Belum Tercapai</option>
@@ -215,13 +223,13 @@
             </div>
 
             <div class="mb-3">
-                <label class="text-sm">Evaluasi</label>
-                <textarea name="hasil_evaluasi" class="w-full border rounded p-2"></textarea>
+                <label class="text-sm font-medium">Evaluasi</label>
+                <textarea name="hasil_evaluasi" class="w-full border rounded p-2" rows="2"></textarea>
             </div>
 
             <div class="mb-3">
-                <label class="text-sm">Rekomendasi</label>
-                <textarea name="rekomendasi" class="w-full border rounded p-2"></textarea>
+                <label class="text-sm font-medium">Rekomendasi</label>
+                <textarea name="rekomendasi" class="w-full border rounded p-2" rows="2"></textarea>
             </div>
 
             <div class="flex justify-end gap-2 mt-4">
@@ -229,15 +237,48 @@
                     class="px-4 py-2 border rounded">
                     Batal
                 </button>
-
                 <button type="submit"
                     class="px-4 py-2 bg-blue-600 text-white rounded">
                     Simpan
                 </button>
             </div>
-        </form>
 
+        </form>
     </div>
 </div>
+
+<!-- SCRIPT AJAX -->
+<script>
+document.getElementById('select-kube').addEventListener('change', function () {
+    const idCluster = this.value;
+    const selectPeriode = document.getElementById('select-periode');
+
+    selectPeriode.innerHTML = '<option value="">-- Memuat... --</option>';
+
+    if (!idCluster) {
+        selectPeriode.innerHTML = '<option value="">-- Pilih KUBE dulu --</option>';
+        return;
+    }
+
+    fetch(`/admin/perkembangan-usaha/periode/${idCluster}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.length === 0) {
+                selectPeriode.innerHTML = '<option value="">-- Tidak ada periode --</option>';
+                return;
+            }
+            selectPeriode.innerHTML = '<option value="">-- Pilih Periode --</option>';
+            data.forEach(item => {
+                selectPeriode.innerHTML += `
+                    <option value="${item.id_laporan}">
+                        ${item.periode_bulan}/${item.periode_tahun}
+                    </option>`;
+            });
+        })
+        .catch(() => {
+            selectPeriode.innerHTML = '<option value="">-- Gagal memuat --</option>';
+        });
+});
+</script>
 
 @endsection

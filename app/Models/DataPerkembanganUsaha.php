@@ -13,6 +13,8 @@ class DataPerkembanganUsaha extends Model
 
     protected $fillable = [
         'id_laporan',
+        'periode_bulan',
+        'periode_tahun',
         'jumlah_tenaga_kerja',
         'perkembangan_usaha',
         'hasil_evaluasi',
