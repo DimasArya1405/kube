@@ -20,9 +20,9 @@ class LaporanKecamatanController extends Controller
             ->join('kecamatan','desa_kelurahan.id_kecamatan','=','kecamatan.id_kecamatan')
             ->join('cluster_usaha','kube.id_cluster','=','cluster_usaha.id_cluster')
 
-            // 🔥 RELASI FIX
+            // RELASI FIX
             ->leftJoin('pengajuan_kube','kube.id_kube','=','pengajuan_kube.id_kube')
-            ->leftJoin('laporan_keuangan','pengajuan_kube.id_pengajuan','=','laporan_keuangan.id_pengajuan')
+            ->leftJoin('laporan_keuangan','pengajuan_kube.id_pengajuan_kube','=','laporan_keuangan.id_persetujuan')
 
             ->where('kube.id_kube', $id)
 
@@ -53,8 +53,9 @@ class LaporanKecamatanController extends Controller
     // =======================
     public function index(Request $request)
     {
-        // dropdown tahun
-        $tahun = Kube::selectRaw('YEAR(tanggal_terbentuk) as tahun')
+        // 🔥 DROPDOWN TAHUN (FIX: fallback ke created_at)
+        $tahun = Kube::selectRaw('YEAR(COALESCE(tanggal_terbentuk, created_at)) as tahun')
+            ->whereNotNull(DB::raw('COALESCE(tanggal_terbentuk, created_at)'))
             ->distinct()
             ->orderBy('tahun','desc')
             ->get();
@@ -62,13 +63,15 @@ class LaporanKecamatanController extends Controller
         $kecamatan = Kecamatan::all();
         $cluster = ClusterUsaha::all();
 
-        // query utama
+        // =======================
+        // QUERY UTAMA
+        // =======================
         $query = DB::table('kube')
             ->join('desa_kelurahan','kube.id_desa_kelurahan','=','desa_kelurahan.id_desa_kelurahan')
             ->join('kecamatan','desa_kelurahan.id_kecamatan','=','kecamatan.id_kecamatan')
             ->join('cluster_usaha','kube.id_cluster','=','cluster_usaha.id_cluster')
 
-            // 🔥 RELASI FIX
+            // RELASI FIX
             ->leftJoin('pengajuan_kube','kube.id_kube','=','pengajuan_kube.id_kube')
             ->leftJoin('laporan_keuangan','pengajuan_kube.id_pengajuan_kube','=','laporan_keuangan.id_persetujuan');
 
@@ -76,7 +79,10 @@ class LaporanKecamatanController extends Controller
         // FILTER
         // =======================
         if($request->tahun && $request->tahun != 'all'){
-            $query->whereYear('kube.tanggal_terbentuk', $request->tahun);
+            $query->whereYear(
+                DB::raw('COALESCE(kube.tanggal_terbentuk, kube.created_at)'),
+                $request->tahun
+            );
         }
 
         if($request->kecamatan && $request->kecamatan != 'all'){
@@ -87,7 +93,7 @@ class LaporanKecamatanController extends Controller
             $query->where('cluster_usaha.id_cluster', $request->cluster);
         }
 
-        // 🔥 hanya yang disetujui (opsional tapi direkomendasikan)
+        // hanya yang disetujui
         $query->where('pengajuan_kube.status_pengajuan', 'disetujui');
 
         // =======================

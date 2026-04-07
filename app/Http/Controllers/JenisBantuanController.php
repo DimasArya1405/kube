@@ -19,4 +19,9 @@ class JenisBantuanController extends Controller
         $jenis_bantuan->save();
         return redirect()->route('admin.alur_bantuan.jenis_bantuan.index')->with('success', 'Data berhasil ditambahkan');
     }
+    public function hapus($id, Request $request)
+    {
+        JenisBantuan::where('id_jenis_bantuan', $id)->delete();
+        return redirect()->route('admin.alur_bantuan.jenis_bantuan.index')->with('success', 'Data berhasil dihapus');
+    }
 }
