@@ -1,17 +1,18 @@
 <?php
 
+use App\Http\Controllers\AnggotaKubeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\KubeController;
-use App\Http\Controllers\AnggotaKubeController;
-use App\Http\Controllers\PembagianPendampingController;
 use App\Http\Controllers\ClusterUsahaController;
 use App\Http\Controllers\JenisBantuanController;
 use App\Http\Controllers\KoordinatorController;
 use App\Http\Controllers\PrediksiController;
 
 use App\Http\Controllers\PencairanBantuanController;
+
+
+
 use App\Http\Controllers\PelatihanController;
 use App\Http\Controllers\MitraController;
 use App\Http\Controllers\KategoriKubeController;
@@ -24,13 +25,22 @@ use App\Http\Controllers\KeuanganController;
 use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\RankingKubeController;
 use App\Http\Controllers\KunjunganPendampingController;
+use App\Http\Controllers\DataPerkembanganUsahaController;
+use App\Http\Controllers\KubeController;
 use App\Http\Controllers\LaporanKecamatanController;
 use App\Http\Controllers\PembagianKoordinatorController;
+use App\Http\Controllers\PembagianPendampingController;
+use Dflydev\DotAccessData\Data;
+
 use App\Http\Controllers\PengajuanKubeController; // ✅ PUNYAMU
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/', function () {
+    return redirect('/login');
+});
+
 Route::get('/', function () {return redirect('/login');});
 
 // LOGOUT
@@ -46,6 +56,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/tim', [DashboardController::class, 'tim']);
     Route::get('/dashboard/dinas', [DashboardController::class, 'dinas']);
     
+
+    // Cluster usaha
 
     // DATA USER
     Route::get('/admin/users', [UsersController::class, 'index'])->name('admin.users');
@@ -85,6 +97,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/koordinator/store', [KoordinatorController::class,'store'])->name('koordinator.store');
     Route::delete('/admin/koordinator/{id}', [KoordinatorController::class,'destroy'])->name('koordinator.delete');
 
+    //PERKEMBANGAN USAHA
+
+Route::get('/admin/perkembangan-usaha', [DataPerkembanganUsahaController::class, 'index'])->name('perkembangan.index');
+Route::post('/admin/perkembangan-usaha/store', [DataPerkembanganUsahaController::class, 'store'])->name('perkembangan.store');
+Route::delete('/admin/perkembangan-usaha/{id}', [DataPerkembanganUsahaController::class, 'destroy'])->name('perkembangan.delete');
 
 // HALAMAN
 Route::get('/pendamping/prediksi', [PrediksiController::class, 'index'])
@@ -102,9 +119,6 @@ Route::post('/pendamping/prediksi', [PrediksiController::class, 'store'])
     Route::post('/admin/koordinator/store', [KoordinatorController::class, 'store'])->name('koordinator.store');
     Route::delete('/admin/koordinator/{id}', [KoordinatorController::class, 'destroy'])->name('koordinator.delete');
 
-    // PELATIHAN
-    Route::get('/pelatihan', [PelatihanController::class, 'index'])->name('pelatihan.index');
-    Route::post('/pelatihan', [PelatihanController::class, 'store'])->name('pelatihan.store');
 
     // KELOLA MITRA & KOLABORASI
     Route::get('/admin/mitra', [MitraController::class, 'index'])->name('mitra.index');
@@ -136,9 +150,7 @@ Route::post('/pendamping/prediksi', [PrediksiController::class, 'store'])
     Route::post('/monitoringbantuan/store', [MonitoringController::class, 'store'])->name('monitoring.store');
     Route::delete('/monitoringbantuan/delete/{id}', [MonitoringController::class, 'delete'])->name('monitoring.delete');
 
-    // ============================
-    // 🔥 PUNYAMU (PENGAJUAN KUBE)
-    // ============================
+   
     Route::get('/pengajuan-kube/create', [PengajuanKubeController::class, 'create'])->name('pengajuan.create');
     Route::post('/pengajuan-kube/store', [PengajuanKubeController::class, 'store'])->name('pengajuan.store');
 
@@ -151,6 +163,9 @@ Route::post('/pendamping/prediksi', [PrediksiController::class, 'store'])
     Route::get('/ranking-kube', [RankingKubeController::class, 'index'])->name('ranking.kube');
     Route::get('/ranking-kube/export/pdf', [RankingKubeController::class, 'exportPdf'])->name('ranking.kube.export.pdf');
     Route::get('/ranking-kube/export/excel', [RankingKubeController::class, 'exportExcel'])->name('ranking.kube.export.excel');
+
+    Route::get('/kategori-kube', function () {return view('coming-soon');})->name('kategorikube.index');
+    //Kelola Data Kunjungan PPendamping
 
     // KUNJUNGAN PENDAMPING
     Route::get('/pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'index'])->name('kunjungan.index');
