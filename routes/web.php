@@ -118,6 +118,10 @@ Route::post('/pendamping/prediksi', [PrediksiController::class, 'store'])
     Route::get('/admin/koordinator', [KoordinatorController::class, 'index'])->name('koordinator.index');
     Route::post('/admin/koordinator/store', [KoordinatorController::class, 'store'])->name('koordinator.store');
     Route::delete('/admin/koordinator/{id}', [KoordinatorController::class, 'destroy'])->name('koordinator.delete');
+    
+    // PELATIHAN
+    Route::get('/pelatihan', [PelatihanController::class, 'index'])->name('pelatihan.index');
+    Route::post('/pelatihan', [PelatihanController::class, 'store'])->name('pelatihan.store');
 
 
     // KELOLA MITRA & KOLABORASI
