@@ -109,6 +109,7 @@ Dashboard / <span class="text-gray-800">Kategori KUBE</span>
                             class="bg-red-500 text-white px-3 py-1 rounded">
                             Hapus
                         </button>
+                    
                     </form>
 
                     </td>
