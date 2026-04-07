@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnggotaKubeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
@@ -24,8 +25,10 @@ use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\RankingKubeController;
 use App\Http\Controllers\KunjunganPendampingController;
 use App\Http\Controllers\DataPerkembanganUsahaController;
+use App\Http\Controllers\KubeController;
 use App\Http\Controllers\LaporanKecamatanController;
 use App\Http\Controllers\PembagianKoordinatorController;
+use App\Http\Controllers\PembagianPendampingController;
 use Dflydev\DotAccessData\Data;
 
 use App\Http\Controllers\PengajuanKubeController; // ✅ PUNYAMU
@@ -89,7 +92,6 @@ Route::middleware('auth')->group(function () {
 Route::get('/admin/perkembangan-usaha', [DataPerkembanganUsahaController::class, 'index'])->name('perkembangan.index');
 Route::post('/admin/perkembangan-usaha/store', [DataPerkembanganUsahaController::class, 'store'])->name('perkembangan.store');
 Route::delete('/admin/perkembangan-usaha/{id}', [DataPerkembanganUsahaController::class, 'destroy'])->name('perkembangan.delete');
-=======
 
 // HALAMAN
 Route::get('/pendamping/prediksi', [PrediksiController::class, 'index'])
