@@ -83,7 +83,7 @@
             <i data-lucide="chevron-down" id="analisisIcon" class="w-4 h-4 transition-transform duration-300"></i>
         </button>
         <div id="analisisMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
-            <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Prediksi KUBE (Aulia)</a>
+            <a href="{{ route('prediksi.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Prediksi KUBE (Aulia)</a>
             <a href="{{ route('ranking.kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Ranking KUBE (Shela)</a>
         </div>
     </div>
