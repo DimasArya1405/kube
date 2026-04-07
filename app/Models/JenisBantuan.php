@@ -15,4 +15,14 @@ class JenisBantuan extends Model
         'created_at',
         'updated_at'
     ];
+
+    // 🔥 RELASI (opsional tapi bagus)
+    public function monitoring()
+    {
+        return $this->hasMany(Monitoring::class, 'id_jenis_bantuan');
+    }
+    public function pencairan_bantuan()
+    {
+        return $this->hasMany(PencairanBantuan::class, 'id_jenis_bantuan', 'id_jenis_bantuan');
+    }
 }

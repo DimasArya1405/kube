@@ -37,7 +37,7 @@
         </button>
         <div id="taskMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
             <a href="{{ url('/pembagian_pendamping') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Pembagian Pendamping (Yana)</a>
-            <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Pembagian Koordinator</a>
+            <a href="{{ route('pembagian_koordinator.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Pembagian Koordinator (Ana)</a>
         </div>
     </div>
 
@@ -50,8 +50,8 @@
             <i data-lucide="chevron-down" id="bantuanIcon" class="w-4 h-4 transition-transform duration-300"></i>
         </button>
         <div id="bantuanMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
-            <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Pengajuan KUBE (Putri)</a>
-            <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Persetujuan (Probo)</a>
+            <a href="{{ route('pengajuan.create') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Pengajuan KUBE (Putri)</a>
+            <a href="{{route('admin.persetujuan_bantuan_kube.index')}}" class="py-2 px-3 text-indigo-200 hover:text-white">Persetujuan (Probo)</a>
             <a href="{{route('admin.pencairan_bantuan.index')}}" class="py-2 px-3 text-indigo-200 hover:text-white">Tahap Pencairan (Dimas)</a>
             <a href="/admin/mitra" class="py-2 px-3 text-indigo-200 hover:text-white">Mitra & Kolaborasi (Amel)</a>
         </div>
@@ -66,9 +66,9 @@
             <i data-lucide="chevron-down" id="monevIcon" class="w-4 h-4 transition-transform duration-300"></i>
         </button>
         <div id="monevMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[12px] text-[11px] uppercase tracking-widest font-bold">
-            <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Monitoring Bantuan (Noni)</a>
-            <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Laporan Keuangan (Fassha)</a>
-            <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Kunjungan (Meilita/Ferina)</a>
+            <a href="{{ route('monitoring.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Monitoring Bantuan (Noni)</a>
+            <a href="{{ route('laporan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Laporan Keuangan (Fassha)</a>
+            <a href="{{ route('kunjungan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Kunjungan (Meilita)</a>
             <a href="{{ route('bimbingan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Bimbingan (Shalshabilla)</a>
             <a href="{{ route('pelatihan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Pelatihan KUBE (Devia)</a>
         </div>
@@ -84,7 +84,7 @@
         </button>
         <div id="analisisMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Prediksi KUBE (Aulia)</a>
-            <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Ranking KUBE (Shela)</a>
+            <a href="{{ route('ranking.kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Ranking KUBE (Shela)</a>
         </div>
     </div>
 
@@ -97,7 +97,10 @@
             <i data-lucide="chevron-down" id="reportIcon" class="w-4 h-4 transition-transform duration-300"></i>
         </button>
         <div id="reportMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
-            <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Laporan Kecamatan (Alva)</a>
+            <a href="{{ route('laporan.kecamatan') }}" 
+   class="py-2 px-3 text-indigo-200 hover:text-white">
+    Laporan Kecamatan (Alva)
+</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Galeri Kegiatan (Tika)</a>
             <a href="{{ route('rekap_kube.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Rekap KUBE (Fia)</a>
         </div>

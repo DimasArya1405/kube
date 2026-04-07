@@ -102,6 +102,7 @@
     </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
     @stack('scripts')
+    
     <script>
         // Inisialisasi Ikon Lucide
         lucide.createIcons();
