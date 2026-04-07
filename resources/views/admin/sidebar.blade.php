@@ -17,12 +17,12 @@
             <i data-lucide="chevron-down" id="masterIcon" class="w-4 h-4 transition-transform duration-300"></i>
         </button>
         <div id="masterMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
-            <a href="{{ route('admin.users') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data User (Zahran)</a>
+            <a href="{{ url('/admin/users') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data User (Zahran)</a>
             <a href="{{ url('/kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data KUBE (Yana)</a>
             <a href="{{ url('/anggota_kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data Anggota (Yana)</a>
             <a href="{{ route('pendamping.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data Pendamping (Tiara)</a>
             <a href="{{ route('koordinator.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data Koordinator (Katrina)</a>
-            <a href="{{ route('kategorikube.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Kategori KUBE (Tika)</a>
+            <a href="{{ url('/kategorikube.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Kategori KUBE (Tika)</a>
             <a href="{{ route('cluster_usaha.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Cluster (Ana)</a>
         </div>
     </div>
@@ -69,8 +69,9 @@
             <a href="{{ route('monitoring.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Monitoring Bantuan (Noni)</a>
             <a href="{{ route('laporan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Laporan Keuangan (Fassha)</a>
             <a href="{{ route('kunjungan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Kunjungan (Meilita)</a>
+            <a href="{{ route('perkembangan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Perkembangan Usaha (Ferina)</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Bimbingan (Shalshabilla)</a>
-            <a href="{{ route('pelatihan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Pelatihan KUBE (Devia)</a>
+            <a href="{{ url('/pelatihan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Pelatihan KUBE (Devia)</a>
         </div>
     </div>
 

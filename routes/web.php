@@ -9,6 +9,7 @@ use App\Http\Controllers\KoordinatorController;
 use App\Http\Controllers\PencairanBantuanController;
 
 
+
 use App\Http\Controllers\PelatihanController;
 use App\Http\Controllers\MitraController;
 use App\Http\Controllers\KategoriKubeController;
@@ -19,8 +20,10 @@ use App\Http\Controllers\KeuanganController;
 use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\RankingKubeController;
 use App\Http\Controllers\KunjunganPendampingController;
+use App\Http\Controllers\DataPerkembanganUsahaController;
 use App\Http\Controllers\LaporanKecamatanController;
 use App\Http\Controllers\PembagianKoordinatorController;
+use Dflydev\DotAccessData\Data;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -58,7 +61,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/admin/koordinator/{id}', [KoordinatorController::class,'destroy'])->name('koordinator.delete');
 
     //PERKEMBANGAN USAHA
-  
+
+Route::get('/admin/perkembangan-usaha', [DataPerkembanganUsahaController::class, 'index'])->name('perkembangan.index');
+Route::post('/admin/perkembangan-usaha/store', [DataPerkembanganUsahaController::class, 'store'])->name('perkembangan.store');
+Route::delete('/admin/perkembangan-usaha/{id}', [DataPerkembanganUsahaController::class, 'destroy'])->name('perkembangan.delete');
 
 
     // KELOLA MITRA & KOLABORASI
@@ -107,6 +113,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/ranking-kube/export/pdf',   [RankingKubeController::class, 'exportPdf'])->name('ranking.kube.export.pdf');
     Route::get('/ranking-kube/export/excel', [RankingKubeController::class, 'exportExcel'])->name('ranking.kube.export.excel');
 
+    Route::get('/kategori-kube', function () {return view('coming-soon');})->name('kategorikube.index');
     //Kelola Data Kunjungan PPendamping
     Route::get('/pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'index'])->name('kunjungan.index');
     Route::post('pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'store'])->name('kunjungan.store');
