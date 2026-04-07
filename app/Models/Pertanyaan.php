@@ -11,7 +11,7 @@ class Pertanyaan extends Model
 
     protected $table = 'pertanyaan';
 
-    protected $primaryKey = 'id_pertanyaan';
+    protected $primaryKey = 'id';
 
     public $timestamps = false;
 
@@ -22,6 +22,6 @@ class Pertanyaan extends Model
     // Relasi ke hasil prediksi
     public function hasilPrediksi()
     {
-        return $this->hasMany(HasilPrediksi::class, 'id_pertanyaan', 'id_pertanyaan');
+        return $this->hasMany(HasilPrediksi::class, 'id', 'id_pertanyaan');
     }
 }

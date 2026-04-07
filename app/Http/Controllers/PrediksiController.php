@@ -61,21 +61,21 @@ public function store(Request $request)
         'bulan' => 'required|integer|min:1|max:12',
         'tahun' => 'required|integer|min:2000|max:' . date('Y'),
         'jawaban' => 'required|array', // Pastikan input jawaban ada
-        'catatan' => 'required|array', // Pastikan input catatan ada
+        'catatan' => 'nullable|array', // Pastikan input catatan ada
     ]);
 
     // 2. AMBIL DATA DARI REQUEST (Penting: Tanpa ini, validasi di bawah pasti gagal)
-    $jawabanArr = $request->input('jawaban', []);
-    $catatanArr = $request->input('catatan', []);
+    $jawabanArr = $request->input('jawaban');
+    $catatanArr = $request->input('catatan');
 
     $pertanyaan = Pertanyaan::all();
 
     // 3. VALIDASI APAKAH SEMUA PERTANYAAN DI DATABASE SUDAH DIJAWAB DI FORM
     foreach ($pertanyaan as $p) {
-        $pid = $p->id_pertanyaan;
+        $pid = $p->id;
 
         // Cek apakah ID pertanyaan ini ada di array jawaban dan catatan
-        if (!isset($jawabanArr[$pid]) || !isset($catatanArr[$pid]) || trim($catatanArr[$pid]) === '') {
+        if (!isset($jawabanArr[$pid])) {
             return back()->withInput()->with('error', 'Semua pertanyaan harus diisi!');
         }
     }
@@ -86,17 +86,17 @@ public function store(Request $request)
         $idPrediksi = time(); // Unique ID untuk grup prediksi ini
 
         foreach ($pertanyaan as $p) {
-            $pid = $p->id_pertanyaan;
+            $pid = $p->id;
 
             HasilPrediksi::create([
                 'id_prediksi'   => $idPrediksi,
-                'id_kube'       => $request->input('id_kube'),
-                'id_pendamping' => $request->input('id_pendamping'),
+                'id_kube'       => $request->id_kube,
+                'id_pendamping' => $request->id_pendamping,
                 'id_pertanyaan' => $pid,
                 'jawaban'       => $jawabanArr[$pid] === 'ya' ? 1 : 0,
                 'catatan'       => $catatanArr[$pid],
-                'bulan'         => $request->input('bulan'),
-                'tahun'         => $request->input('tahun'),
+                'bulan'         => $request->bulan,
+                'tahun'         => $request->tahun,
             ]);
         }
 
