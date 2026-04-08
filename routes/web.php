@@ -123,10 +123,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/ranking-kube/export/pdf',   [RankingKubeController::class, 'exportPdf'])->name('ranking.kube.export.pdf');
     Route::get('/ranking-kube/export/excel', [RankingKubeController::class, 'exportExcel'])->name('ranking.kube.export.excel');
 
-    //Kelola Data Kunjungan PPendamping
+    //Kelola Data Kunjungan Pendamping
     Route::get('/pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'index'])->name('kunjungan.index');
     Route::post('pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'store'])->name('kunjungan.store');
+    Route::get('/pendamping/kunjungan_pendamping/{id}/edit', [KunjunganPendampingController::class, 'edit'])->name('kunjungan.edit');
+    Route::put('/pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'update'])->name('kunjungan.update');
+    Route::get('/pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'show'])->name('kunjungan.show');
     Route::delete('pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'destroy'])->name('kunjungan.delete');
+
 
     Route::get('/admin/laporan-kecamatan', [LaporanKecamatanController::class, 'index'])
         ->name('laporan.kecamatan');

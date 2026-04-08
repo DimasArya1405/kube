@@ -32,6 +32,7 @@ class KunjunganPendampingController extends Controller
             'waktu_kunjungan' => 'required',
             'tujuan_kunjungan' => 'required',
             'kunjungan_ke' => 'required|integer',
+            'catatan'
         ]);
 
         KunjunganPendamping::create([
@@ -40,9 +41,60 @@ class KunjunganPendampingController extends Controller
             'waktu_kunjungan' => $request->waktu_kunjungan,
             'tujuan_kunjungan' => $request->tujuan_kunjungan,
             'kunjungan_ke' => $request->kunjungan_ke,
+            'catatan' => $request->catatan
         ]);
 
         return redirect()->back()->with('success', 'Data berhasil disimpan');
+    }
+
+    public function edit($id)
+    {
+        $kunjunganPendamping = KunjunganPendamping::with(['pembagian.pendamping','pembagian.kube'])->get();
+
+        $kunjungan = KunjunganPendamping::with('pembagian.kube')->findOrFail($id);
+
+        $pembagianPendamping = PembagianPendamping::with(['pendamping','kube'])->get();
+
+        return view('pendamping.dashboard.kunjungan_pendamping', compact(
+            'kunjunganPendamping',
+            'kunjungan',
+            'pembagianPendamping'
+        ));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'id_pembagian' => 'required|exists:pembagian_pendamping,id_pembagian',
+            'tanggal_kunjungan' => 'required|date',
+            'waktu_kunjungan' => 'required',
+            'tujuan_kunjungan' => 'required|in:Monitoring,Evaluasi,Koordinasi,Kunjungan Rutin',
+            'kunjungan_ke' => 'required|integer',
+            'catatan' 
+        ]);
+
+        $kunjungan = KunjunganPendamping::findOrFail($id);
+
+        $kunjungan->update([
+            'id_pembagian' => $request->id_pembagian,
+            'tanggal_kunjungan' => $request->tanggal_kunjungan,
+            'waktu_kunjungan' => $request->waktu_kunjungan,
+            'tujuan_kunjungan' => $request->tujuan_kunjungan,
+            'kunjungan_ke' => $request->kunjungan_ke,
+            'catatan' => $request->catatan
+        ]);
+
+        return redirect()->back()->with('success','Data berhasil diupdate');
+    }
+
+    public function show($id)
+    {
+        $kunjungan = KunjunganPendamping::with([
+            'pembagian.pendamping',
+            'pembagian.kube'
+        ])->findOrFail($id);
+
+        return view('pendamping.kunjungan.detail', compact('kunjungan'));
     }
 
     public function destroy($id)
