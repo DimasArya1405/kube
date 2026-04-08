@@ -80,6 +80,15 @@ Route::middleware('auth')->group(function () {
     // CLUSTER USAHA
     Route::resource('cluster_usaha', ClusterUsahaController::class);
 
+    // KATEGORI KUBE
+    Route::get('/admin/kategorikube', [KategoriKubeController::class, 'index'])->name('kategorikube.index');
+    Route::get('/admin/kategorikube/create', [KategoriKubeController::class, 'create'])->name('kategorikube.create');
+    Route::post('/admin/kategorikube', [KategoriKubeController::class, 'store'])->name('kategorikube.store');
+    Route::get('/admin/kategorikube/{id}', [KategoriKubeController::class, 'show'])->name('kategorikube.show');
+    Route::put('/admin/kategorikube/{id}/edit', [KategoriKubeController::class, 'edit'])->name('kategorikube.edit');
+    Route::post('/admin/kategorikube/{id}', [KategoriKubeController::class, 'update'])->name('kategorikube.update');
+    Route::get('/admin/kategorikube/delete/{id}', [KategoriKubeController::class, 'destroy'])->name('kategorikube.destroy');
+    
     // Pembagian Koordinator
     Route::resource('pembagian_koordinator', PembagianKoordinatorController::class);
 
@@ -89,8 +98,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/jenis_bantuan/tambah', [JenisBantuanController::class, 'tambah'])->name('admin.alur_bantuan.jenis_bantuan.tambah');
     Route::get('/admin/jenis_bantuan/hapus/{id}', [JenisBantuanController::class, 'hapus'])->name('admin.alur_bantuan.jenis_bantuan.hapus');
 
-    // KATEGORI KUBE
-    Route::resource('/admin/kategorikube', KategoriKubeController::class);
+    
 
     // KELOLA DATA KOORDINATOR
     Route::get('/admin/koordinator', [KoordinatorController::class,'index'])->name('koordinator.index');
