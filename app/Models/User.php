@@ -39,14 +39,4 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
-    public function kecamatan()
-{
-    return $this->belongsTo(Kecamatan::class, 'id_kecamatan');
-}
-
-public function desa()
-{
-    return $this->belongsTo(DesaKelurahan::class, 'id_desa_kelurahan');
-}
 }

@@ -23,19 +23,22 @@ use App\Http\Controllers\RankingKubeController;
 use App\Http\Controllers\KunjunganPendampingController;
 use App\Http\Controllers\LaporanKecamatanController;
 use App\Http\Controllers\PembagianKoordinatorController;
-use App\Http\Controllers\PengajuanKubeController; // ✅ PUNYAMU
+use App\Http\Controllers\PengajuanKubeController;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/', function () {return redirect('/login');});
 
+// REGISTER
+Route::get('/register', [AuthController::class, 'showRegister']);
+Route::post('/register', [AuthController::class, 'register']);
+ 
 // LOGOUT
 Route::post('/logout', [AuthController::class, 'logout']);
 
 // DASHBOARD
 Route::middleware('auth')->group(function () {
-
     Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
     Route::get('/dashboard/ketua', [DashboardController::class, 'ketua']);
     Route::get('/dashboard/pendamping', [DashboardController::class, 'pendamping']);
