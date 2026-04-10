@@ -101,10 +101,16 @@
                 <tr class="border-b hover:bg-gray-50">
                     <td class="px-6 py-4">{{ $loop->iteration }}</td>
 
-                    <td class="px-6 py-4 font-semibold text-gray-800">
-                        {{ $item->laporan->cluster->kube->first()->nama_kube ?? '-' }}
-                    </td>
-
+      <td class="px-6 py-4 font-semibold text-gray-800">
+    @php
+        $namaKube = '-';
+        if ($item->laporan && $item->laporan->cluster) {
+            $firstKube = $item->laporan->cluster->kube->first();
+            if ($firstKube) $namaKube = $firstKube->nama_kube;
+        }
+    @endphp
+    {{ $namaKube }}
+</td>
                     <td class="px-6 py-4">
                         {{ $item->laporan->periode_bulan ?? '-' }}/{{ $item->laporan->periode_tahun ?? '-' }}
                     </td>
