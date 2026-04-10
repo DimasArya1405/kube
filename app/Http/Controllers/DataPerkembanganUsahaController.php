@@ -13,16 +13,19 @@ class DataPerkembanganUsahaController extends Controller
         $data = DataPerkembanganUsaha::with('laporan.cluster.kube')->get();
         $laporan = Keuangan::with('cluster.kube')->get();
         
-        // Ambil list KUBE unik dari laporan
         $kubeList = $laporan->map(function($lap) {
+            if (!$lap->cluster) return null;
             $kube = $lap->cluster->kube->first();
-            return $kube ? ['id_cluster' => $lap->id_cluster, 'nama_kube' => $kube->nama_kube] : null;
+            if (!$kube) return null;
+            return [
+                'id_cluster' => $lap->id_cluster,
+                'nama_kube'  => $kube->nama_kube
+            ];
         })->filter()->unique('id_cluster')->values();
 
         return view('admin.monevbimbingan.perkembangan_usaha', compact('data', 'laporan', 'kubeList'));
     }
 
-    // Tambah method baru untuk AJAX
     public function getPeriodeByKube($id_cluster)
     {
         $periodes = Keuangan::where('id_cluster', $id_cluster)
@@ -40,8 +43,7 @@ class DataPerkembanganUsahaController extends Controller
             'id_laporan' => 'required',
         ]);
 
-        // Ambil periode_bulan dari laporan yang dipilih
-        $laporan = \App\Models\Keuangan::findOrFail($request->id_laporan);
+        $laporan = Keuangan::findOrFail($request->id_laporan);
 
         DataPerkembanganUsaha::create([
             'id_laporan'          => $request->id_laporan,
