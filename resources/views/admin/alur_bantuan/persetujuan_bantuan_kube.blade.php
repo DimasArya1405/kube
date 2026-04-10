@@ -73,7 +73,7 @@ Dashboard / <span class="text-gray-800">Pengajuan Bantuan KUBE</span>
                     </td>
 
                     <td class="px-6 py-4">
-                        {{ $row->jenisBantuan->jenis_bantuan ?? '-' }}
+                        {{ $row->jenisBantuan->jenisBantuan->jenis_bantuan ?? '-' }}
                     </td>
 
                     <td class="px-6 py-4">
