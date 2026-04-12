@@ -50,43 +50,44 @@
                         <div class="relative">
                             <i data-lucide="user" class="absolute left-3 top-3 w-4 h-4 text-gray-400"></i>
                             <input type="text" name="nama" id="inputNama" placeholder="Nama Lengkap" required
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm transition-all">
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm">
                         </div>
                         
                         <div class="relative">
                             <i data-lucide="credit-card" class="absolute left-3 top-3 w-4 h-4 text-gray-400"></i>
                             <input type="text" name="nik" placeholder="NIK" required
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm transition-all">
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm">
                         </div>
                         
                         <div class="relative">
                             <i data-lucide="mail" class="absolute left-3 top-3 w-4 h-4 text-gray-400"></i>
                             <input type="email" name="email" placeholder="Email" required
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm transition-all">
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm">
                         </div>
                         
                         <div class="relative">
                             <i data-lucide="lock" class="absolute left-3 top-3 w-4 h-4 text-gray-400"></i>
                             <input type="password" name="password" id="inputPassword" placeholder="Password" required
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm transition-all">
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm">
                         </div>
                         
                         <div class="relative md:col-span-2">
                             <i data-lucide="phone" class="absolute left-3 top-3 w-4 h-4 text-gray-400"></i>
                             <input type="text" name="no_hp" placeholder="Nomor WhatsApp" required
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm transition-all">
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm">
                         </div>
 
                         <div class="relative md:col-span-2">
                             <i data-lucide="map-pin" class="absolute left-3 top-3 w-4 h-4 text-gray-400"></i>
                             <textarea name="alamat" placeholder="Alamat Domisili" required
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm resize-none h-20 transition-all"></textarea>
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm h-20 resize-none"></textarea>
                         </div>
 
                         <div class="relative">
                             <i data-lucide="map" class="absolute left-3 top-3 w-4 h-4 text-gray-400 z-10"></i>
-                            <select name="id_kecamatan" required class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white text-sm text-gray-600 appearance-none relative z-0">
-                                <option value="">Kecamatan</option>
+                            <select name="id_kecamatan" id="selectKecamatan" required 
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white text-sm text-gray-600 appearance-none">
+                                <option value="">Pilih Kecamatan</option>
                                 @foreach($kecamatan as $kec)
                                     <option value="{{ $kec->id_kecamatan }}">{{ $kec->nama_kecamatan }}</option>
                                 @endforeach
@@ -95,11 +96,9 @@
 
                         <div class="relative">
                             <i data-lucide="home" class="absolute left-3 top-3 w-4 h-4 text-gray-400 z-10"></i>
-                            <select name="id_desa_kelurahan" required class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white text-sm text-gray-600 appearance-none">
-                                <option value="">Desa/Kelurahan</option>
-                                @foreach($desa as $d)
-                                    <option value="{{ $d->id_desa_kelurahan }}">{{ $d->nama_desa_kelurahan }}</option>
-                                @endforeach
+                            <select name="id_desa_kelurahan" id="selectDesa" required disabled
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 text-sm text-gray-600 appearance-none disabled:bg-gray-100 disabled:cursor-not-allowed">
+                                <option value="">Pilih Desa/Kelurahan</option>
                             </select>
                         </div>
 
@@ -128,18 +127,57 @@
                     <a href="/login" class="text-blue-600 hover:underline font-medium">Masuk</a>
                 </div>
             </div>
-
         </div>
     </div>
 
     <script>
-        // Inisialisasi ikon Lucide
         lucide.createIcons();
 
+        // 1. Sinkronisasi Nama ke Password (sesuai request sebelumnya)
         const inputNama = document.getElementById('inputNama');
         const inputPassword = document.getElementById('inputPassword');
         inputNama.addEventListener('input', function() {
             inputPassword.value = this.value;
+        });
+
+        // 2. LOGIC DEPENDENT DROPDOWN
+        const selectKecamatan = document.getElementById('selectKecamatan');
+        const selectDesa = document.getElementById('selectDesa');
+
+        selectKecamatan.addEventListener('change', function() {
+            const idKecamatan = this.value;
+
+            // Reset dropdown desa
+            selectDesa.innerHTML = '<option value="">Pilih Desa/Kelurahan</option>';
+            
+            if (idKecamatan) {
+                // Aktifkan dropdown desa
+                selectDesa.disabled = false;
+                selectDesa.classList.remove('bg-gray-100');
+                selectDesa.classList.add('bg-white');
+                selectDesa.innerHTML = '<option value="">Memuat...</option>';
+
+                // Ambil data menggunakan AJAX/Fetch
+                fetch(`/get-desa/${idKecamatan}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        selectDesa.innerHTML = '<option value="">Pilih Desa/Kelurahan</option>';
+                        data.forEach(desa => {
+                            const option = document.createElement('option');
+                            option.value = desa.id_desa_kelurahan;
+                            option.textContent = desa.nama_desa_kelurahan;
+                            selectDesa.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Gagal mengambil data desa');
+                    });
+            } else {
+                // Jika kecamatan dikosongkan lagi
+                selectDesa.disabled = true;
+                selectDesa.classList.add('bg-gray-100');
+            }
         });
     </script>
 </body>

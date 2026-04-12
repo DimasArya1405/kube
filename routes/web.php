@@ -8,11 +8,7 @@ use App\Http\Controllers\ClusterUsahaController;
 use App\Http\Controllers\JenisBantuanController;
 use App\Http\Controllers\KoordinatorController;
 use App\Http\Controllers\PrediksiController;
-
 use App\Http\Controllers\PencairanBantuanController;
-
-
-
 use App\Http\Controllers\PelatihanController;
 use App\Http\Controllers\MitraController;
 use App\Http\Controllers\KategoriKubeController;
@@ -36,10 +32,6 @@ use Dflydev\DotAccessData\Data;
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/', function () {
-    return redirect('/login');
-});
-
 Route::get('/', function () {return redirect('/login');});
 
 // REGISTER
@@ -48,6 +40,11 @@ Route::post('/register', [AuthController::class, 'register']);
  
 // LOGOUT
 Route::post('/logout', [AuthController::class, 'logout']);
+
+Route::get('/get-desa/{id_kecamatan}', function($id_kecamatan) {
+    $desa = \App\Models\DesaKelurahan::where('id_kecamatan', $id_kecamatan)->get(['id_desa_kelurahan', 'nama_desa_kelurahan']);
+    return response()->json($desa);
+});
 
 // DASHBOARD & MASTER DATA (Wajib Login)
 Route::middleware('auth')->group(function () {
