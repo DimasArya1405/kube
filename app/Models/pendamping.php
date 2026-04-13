@@ -50,4 +50,9 @@ class Pendamping extends Model
     {
         return $this->hasMany(Pelatihan::class, 'id_pendamping', 'id_pendamping');
     }
+
+    public function pembagianKoordinator()
+    {
+        return $this->hasOne(PembagianKoordinator::class, 'id_pembagian', 'id_pembagian');
+    }
 }
