@@ -117,7 +117,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="md:col-span-2">
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nama Lengkap</label>
-                            <input type="text" name="nama" placeholder="Masukkan nama lengkap" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border" required>
+                            <input type="text" name="nama" placeholder="Masukkan nama" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border" required>
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">NIK</label>
@@ -163,7 +163,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Alamat Lengkap</label>
-                            <textarea name="alamat" rows="2" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 border resize-none"></textarea>
+                            <textarea name="alamat" placeholder="Masukkan alamat" rows="2" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 border resize-none"></textarea>
                         </div>
                     </div>
 
