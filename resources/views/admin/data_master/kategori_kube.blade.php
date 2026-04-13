@@ -16,25 +16,6 @@ Dashboard / <span class="text-gray-800">Kategori KUBE</span>
     </div>
 
 </div>
-<div class="flex gap-4 mb-6">
-
-    <!-- AKTIF -->
-    <div class="bg-orange-400 text-white px-6 py-4 rounded-xl w-60">
-        <p class="text-sm">Kategori Aktif</p>
-        <h1 class="text-3xl font-bold">
-            {{ $data->where('status','Aktif')->count() }}
-        </h1>
-    </div>
-
-    <!-- NON AKTIF -->
-    <div class="bg-green-400 text-white px-6 py-4 rounded-xl w-60">
-        <p class="text-sm">Kategori Non-Aktif</p>
-        <h1 class="text-3xl font-bold">
-            {{ $data->where('status','Nonaktif')->count() }}
-        </h1>
-    </div>
-
-</div>
 
 <div class="flex justify-between items-center mb-6">
 
@@ -66,16 +47,21 @@ Dashboard / <span class="text-gray-800">Kategori KUBE</span>
         <table class="w-full text-sm text-left text-body">
             <thead class="text-sm bg-gray-200 border-b">
                 <tr>
+                    <th class="px-2 py-2">No.</th>
                     <th class="px-6 py-3">Nama Kategori</th>
                     <th class="px-6 py-3">Deskripsi</th>
-                    <th class="px-6 py-3">Status</th>
+                    <!-- <th class="px-6 py-3">Status</th> -->
                     <th class="px-6 py-3">Aksi</th>
                 </tr>
             </thead>
 
             <tbody>
-                @forelse($data as $item)
+                @forelse($data as $index => $item)
                 <tr class="border-b">
+                    <td class="px-6 py-4">
+                        {{ $index + 1 }}
+                    </td>
+                    
                     <td class="px-6 py-4 font-medium">
                         {{ $item->nama_kategori }}
                     </td>
@@ -84,32 +70,49 @@ Dashboard / <span class="text-gray-800">Kategori KUBE</span>
                         {{ $item->deskripsi }}
                     </td>
 
-                    <td class="px-6 py-4">
+                    <!-- <td class="px-6 py-4">
                         <span class="px-3 py-1 text-xs rounded-full 
                                 {{ $item->status == 'Aktif' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
                             {{ $item->status }}
                         </span>
-                    </td>
+                    </td> -->
 
-                    <td class="px-6 py-4 flex gap-2">
+                    <td class="px-4 py-3 flex gap-2">
+                        <!-- Detail -->
+                         <button data-modal-target="modal-detail-{{ $item->id_kategori }}"
+                         data-modal-toggle="modal-detail-{{ $item->id_kategori }}"
+                            class="text-blue-500 hover:text-blue-700" title="Detail">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                        </button>
+            
 
                         <!-- EDIT -->
                         <button data-modal-target="modal-edit-{{ $item->id_kategori }}"
                         data-modal-toggle="modal-edit-{{ $item->id_kategori }}"
-                        class="bg-blue-500 text-white px-3 py-1 rounded">
-                        Edit
+                        class="text-yellow-500 hover:text-yellow-700" title="Edit">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
                         </button>
 
                         <!-- HAPUS -->
-                        <form action="{{ route('kategorikube.destroy', $item->id_kategori) }}" method="POST" style="display:inline;">
+                        <a href="{{ route('kategorikube.destroy', $item->id_kategori) }}" method="POST" style="display:inline;">
                             @csrf
-                            @method('DELETE')
                             
                             <button onclick="return confirm('Yakin mau hapus?')"
-                            class="bg-red-500 text-white px-3 py-1 rounded">
-                            Hapus
+                            class="text-red-500 hover:text-red-700" title="Hapus">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
                         </button>
+
+
+                    
                     </form>
+
 
                     </td>
                 </tr>
@@ -126,7 +129,27 @@ Dashboard / <span class="text-gray-800">Kategori KUBE</span>
         </table>
     </div>
 </div>
+<!-- MODAL DETAIL -->
+@foreach($data as $item)
+<div id="modal-detail-{{ $item->id_kategori }}" 
+class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/50">
 
+    <div class="bg-white p-6 rounded-lg w-[400px]">
+        
+        <h2 class="text-xl font-bold mb-4">Detail Kategori</h2>
+
+        <p><b>Nama:</b> {{ $item->nama_kategori }}</p>
+        <p><b>Deskripsi:</b> {{ $item->deskripsi }}</p>
+
+        <button 
+        data-modal-toggle="modal-detail-{{ $item->id_kategori }}"
+        class="bg-gray-500 text-white px-3 py-1 rounded mt-3">
+            Tutup
+        </button>
+
+    </div>
+</div>
+@endforeach
 <!-- MODAL TAMBAH -->
 <div id="modal-tambah" class="hidden fixed top-0 left-0 right-0 z-50 justify-center items-center w-full h-full bg-black/50">
     <div class="relative p-4 w-full max-w-md">
@@ -139,7 +162,7 @@ Dashboard / <span class="text-gray-800">Kategori KUBE</span>
 
             <form method="POST" action="{{ route('kategorikube.store') }}" class="p-4">
                 @csrf
-
+                
                 <div class="mb-3">
                     <label class="text-sm">Nama Kategori</label>
                     <input type="text" name="nama_kategori" placeholder="Masukkan nama kategori"
@@ -152,13 +175,13 @@ Dashboard / <span class="text-gray-800">Kategori KUBE</span>
                         class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                 </div>
 
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label class="text-sm">Status</label>
                     <select name="status" class="w-full border rounded p-2">
                         <option value="Aktif">Aktif</option>
                         <option value="Nonaktif">Nonaktif</option>
                     </select>
-                </div>
+                </div> -->
 
                 <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded">
                     Simpan Data
@@ -169,7 +192,7 @@ Dashboard / <span class="text-gray-800">Kategori KUBE</span>
 </div>
 @stop
 <!-- MODAL EDIT -->
-@foreach($data as $item)
+@foreach($data as $index => $item)
 <div id="modal-edit-{{ $item->id_kategori }}"
     class="hidden fixed top-0 left-0 right-0 z-50 justify-center items-center w-full h-full bg-black/50">
 
@@ -183,8 +206,6 @@ Dashboard / <span class="text-gray-800">Kategori KUBE</span>
 
             <form method="POST" action="{{ route('kategorikube.update', $item->id_kategori) }}" class="p-4">
                 @csrf
-                @method('PUT')
-
                 <div class="mb-3">
                     <label class="text-sm">Nama Kategori</label>
                     <input type="text" name="nama_kategori"
@@ -198,13 +219,13 @@ Dashboard / <span class="text-gray-800">Kategori KUBE</span>
                         class="w-full border rounded-lg px-4 py-2">{{ $item->deskripsi }}</textarea>
                 </div>
 
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label class="text-sm">Status</label>
                     <select name="status" class="w-full border rounded p-2">
                         <option value="Aktif" {{ $item->status == 'Aktif' ? 'selected' : '' }}>Aktif</option>
                         <option value="Nonaktif" {{ $item->status == 'Nonaktif' ? 'selected' : '' }}>Nonaktif</option>
                     </select>
-                </div>
+                </div> -->
 
                 <button type="submit"
                     class="w-full bg-blue-600 text-white py-2 rounded">

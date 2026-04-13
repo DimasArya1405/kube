@@ -16,20 +16,15 @@ return new class extends Migration
 
             // Foreign key (sementara jadi integer biasa dulu)
             $table->integer('id_pengajuan');
-            $table->integer('id_jenis_bantuan');
 
             // Enum tahap pencairan (contoh bisa disesuaikan)
             $table->enum('tahap', ['1', '2', '3']);
 
-            // Nilai bantuan
-            $table->bigInteger('nilai_bantuan');
-
             // Tanggal
-            $table->date('tanggal_pengajuan');
             $table->date('tanggal_cair')->nullable();
 
             // Status pencairan
-            $table->enum('status_pencairan', ['menunggu', 'cair', 'ditolak'])->default('menunggu');
+            $table->enum('status_pencairan', ['menunggu', 'cair', 'disetujui', 'ditolak'])->default('menunggu');
 
             $table->timestamps();
         });
