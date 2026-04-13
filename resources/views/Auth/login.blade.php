@@ -90,7 +90,6 @@
     </div>
 
     <script>
-        // Inisialisasi Lucide Icons
         lucide.createIcons();
 
         function togglePassword() {

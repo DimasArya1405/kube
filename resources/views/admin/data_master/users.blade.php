@@ -21,6 +21,42 @@
         </button>
     </div>
 
+    {{-- Stats Section --}}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {{-- Total User --}}
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-5 transition-all hover:shadow-md">
+            <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Total User</p>
+                <h4 class="text-2xl font-black text-gray-800">{{ $total_user }}</h4>
+            </div>
+        </div>
+
+        {{-- User Aktif --}}
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-5 transition-all hover:shadow-md">
+            <div class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-green-600">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">User Aktif</p>
+                <h4 class="text-2xl font-black text-gray-800">{{ $user_aktif }}</h4>
+            </div>
+        </div>
+
+        {{-- User Nonaktif --}}
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-5 transition-all hover:shadow-md">
+            <div class="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center text-red-600">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">User Nonaktif</p>
+                <h4 class="text-2xl font-black text-gray-800">{{ $user_nonaktif }}</h4>
+            </div>
+        </div>
+    </div>
+
     {{-- Table Section --}}
     <div class="bg-white mb-6 rounded-lg shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">
@@ -101,77 +137,98 @@
         {{ $users->links() }}
     </div>
 
-    {{-- Modal: Tambah User --}}
-    <div id="modal-tambah-user" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 backdrop-blur-sm p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div class="flex justify-between items-center px-6 py-4 bg-gray-50 border-b flex-shrink-0">
-                <h3 class="text-xl font-bold text-gray-800">Tambah User Baru</h3>
-                <button data-modal-toggle="modal-tambah-user" class="text-gray-400 hover:text-red-500 transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
+{{-- Modal: Tambah User (Versi Modern) --}}
+<div id="modal-tambah-user" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900/70 backdrop-blur-md p-4 transition-all duration-300">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] border border-gray-100 transform transition-transform duration-300 scale-100">
+        
+        <div class="flex justify-between items-center px-8 py-5 bg-gradient-to-r from-blue-600 to-indigo-700 flex-shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white">Tambah User Baru</h3>
+                    <p class="text-blue-100 text-xs">Lengkapi data untuk membuat akun baru</p>
+                </div>
             </div>
+            <button data-modal-toggle="modal-tambah-user" class="text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-full transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
 
-            <form method="POST" action="{{ route('admin.users.store') }}" class="flex flex-col overflow-hidden">
-                @csrf
-                <div class="p-6 overflow-y-auto space-y-5 flex-grow">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form method="POST" action="{{ route('admin.users.store') }}" class="flex flex-col overflow-hidden bg-gray-50/50">
+            @csrf
+            <div class="p-8 overflow-y-auto space-y-6 flex-grow custom-scrollbar">
+                
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-4">
+                    <div class="flex items-center gap-2 mb-2 border-b border-gray-50 pb-2">
+                        <span class="text-blue-600 font-bold text-sm tracking-widest uppercase">01. Profil Pribadi</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div class="md:col-span-2">
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nama Lengkap</label>
-                            <input type="text" name="nama" placeholder="Masukkan nama" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border" required>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Nama Lengkap</label>
+                            <input type="text" name="nama" placeholder="Contoh: Ahmad Sulaiman" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all placeholder:text-gray-400" required>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">NIK</label>
-                            <input type="text" name="nik" placeholder="Masukkan NIK" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border">
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">NIK (KTP)</label>
+                            <input type="text" name="nik" placeholder="16 digit nomor induk" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all" required>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">No. HP</label>
-                            <input type="text" name="no_hp" placeholder="Masukkan no. HP" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border">
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">No. Handphone</label>
+                            <input type="text" name="no_hp" placeholder="08xxxx" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all">
                         </div>
                     </div>
+                </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-gray-100">
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-4">
+                    <div class="flex items-center gap-2 mb-2 border-b border-gray-50 pb-2">
+                        <span class="text-blue-600 font-bold text-sm tracking-widest uppercase">02. Keamanan Akun</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Email</label>
-                            <input type="email" name="email" placeholder="Masukkan email" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border" required>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Alamat Email</label>
+                            <input type="email" name="email" placeholder="nama@email.com" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all" required>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Password</label>
-                            <input type="password" name="password" placeholder="Masukkan password" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border" required>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Kata Sandi</label>
+                            <input type="password" name="password" placeholder="••••••••" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all" required>
                         </div>
                     </div>
+                </div>
 
-                    <div class="pt-4 border-t border-gray-100 space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Kecamatan</label>
-                                <select name="id_kecamatan" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 border bg-white">
-                                    <option value="">Pilih Kecamatan</option>
-                                    @foreach ($kecamatan as $kec)
-                                        <option value="{{ $kec->id_kecamatan }}">{{ $kec->nama_kecamatan }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Desa/Kelurahan</label>
-                                <select name="id_desa_kelurahan" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 border bg-white">
-                                    <option value="">Pilih Desa</option>
-                                    @foreach ($desa as $d)
-                                        <option value="{{ $d->id_desa_kelurahan }}">{{ $d->nama_desa_kelurahan }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Alamat Lengkap</label>
-                            <textarea name="alamat" placeholder="Masukkan alamat" rows="2" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 border resize-none"></textarea>
-                        </div>
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-4">
+                    <div class="flex items-center gap-2 mb-2 border-b border-gray-50 pb-2">
+                        <span class="text-blue-600 font-bold text-sm tracking-widest uppercase">03. Lokasi & Role</span>
                     </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-gray-100">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Role Pengguna</label>
-                            <select name="role" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 border bg-white">
-                                <option value="admin">Admin</option>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Kecamatan</label>
+                            <select name="id_kecamatan" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 border bg-white outline-none appearance-none transition-all cursor-pointer">
+                                <option value="">Pilih Kecamatan</option>
+                                @foreach ($kecamatan as $kec)
+                                    <option value="{{ $kec->id_kecamatan }}">{{ $kec->nama_kecamatan }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Desa/Kelurahan</label>
+                            <select name="id_desa_kelurahan" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 border bg-white outline-none appearance-none transition-all cursor-pointer">
+                                <option value="">Pilih Desa</option>
+                                @foreach ($desa as $d)
+                                    <option value="{{ $d->id_desa_kelurahan }}">{{ $d->nama_desa_kelurahan }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Alamat Domisili</label>
+                            <textarea name="alamat" placeholder="Jalan, RT/RW, No. Rumah..." rows="2" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 border resize-none outline-none transition-all"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Hak Akses (Role)</label>
+                            <select name="role" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 border bg-white outline-none transition-all cursor-pointer">
+                                <option value="admin">Administrator</option>
                                 <option value="ketua_kube">Ketua KUBE</option>
                                 <option value="pendamping">Pendamping</option>
                                 <option value="koordinator">Koordinator</option>
@@ -180,107 +237,154 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Status Akun</label>
-                            <div class="flex items-center h-[46px] gap-2 px-3 bg-green-50 border border-green-100 rounded-lg">
-                                <span class="relative flex h-2 w-2">
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Status Aktivasi</label>
+                            <div class="flex items-center h-[50px] gap-3 px-4 bg-green-50 border border-green-200 rounded-xl">
+                                <span class="relative flex h-3 w-3">
                                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                                 </span>
-                                <span class="text-sm font-bold text-green-700 uppercase tracking-wider">Aktif</span>
+                                <span class="text-sm font-bold text-green-700 uppercase tracking-widest">Akun Aktif</span>
                             </div>
                             <input type="hidden" name="status" value="aktif">
                         </div>
                     </div>
                 </div>
-
-                <div class="p-6 bg-gray-50 border-t flex gap-3 flex-shrink-0">
-                    <button type="button" data-modal-toggle="modal-tambah-user" class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-100 font-semibold">Batal</button>
-                    <button type="submit" class="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-lg shadow-blue-200 font-semibold">Simpan User</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    {{-- Modal: Edit User --}}
-    <div id="modal-edit-user" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 backdrop-blur-sm p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
-            <div class="flex justify-between items-center px-6 py-4 bg-amber-50 border-b border-amber-100">
-                <div class="flex items-center gap-2">
-                    <div class="p-1.5 bg-amber-500 rounded-md text-white">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-amber-900">Edit Pengguna</h3>
-                </div>
-                <button onclick="closeEditModal()" class="text-amber-400 hover:text-amber-600">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
             </div>
 
-            <form id="form-edit" method="POST" class="p-6">
-                @csrf
-                @method('PUT')
-                <div class="space-y-4">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="col-span-2">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Nama Lengkap</label>
-                            <input type="text" name="nama" id="edit_nama" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-amber-500 border">
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">NIK</label>
-                            <input type="text" name="nik" id="edit_nik" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-amber-500 border">
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">No. HP</label>
-                            <input type="text" name="no_hp" id="edit_no_hp" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-amber-500 border">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Email</label>
-                        <input type="email" name="email" id="edit_email" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-amber-500 border">
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Alamat Lengkap</label>
-                        <textarea name="alamat" id="edit_alamat" rows="2" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-amber-500 border"></textarea>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <select name="id_kecamatan" id="edit_kecamatan" class="border rounded-lg p-2.5 bg-white">
-                            @foreach ($kecamatan as $kec)
-                                <option value="{{ $kec->id_kecamatan }}">{{ $kec->nama_kecamatan }}</option>
-                            @endforeach
-                        </select>
-                        <select name="id_desa_kelurahan" id="edit_desa" class="border rounded-lg p-2.5 bg-white">
-                            @foreach ($desa as $d)
-                                <option value="{{ $d->id_desa_kelurahan }}">{{ $d->nama_desa_kelurahan }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4 pt-2">
-                        <select name="role" id="edit_role" class="border rounded-lg p-2.5 bg-white">
-                            <option value="admin">Admin</option>
-                            <option value="ketua_kube">Ketua KUBE</option>
-                            <option value="pendamping">Pendamping</option>
-                            <option value="koordinator">Koordinator</option>
-                            <option value="ketua_tim_kube">Ketua Tim Kube</option>
-                            <option value="kepala_dinas">Kepala Dinas</option>
-                        </select>
-                        <select name="status" id="edit_status" class="border rounded-lg p-2.5 bg-white">
-                            <option value="aktif">Aktif</option>
-                            <option value="nonaktif">Nonaktif</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="mt-8 flex gap-3">
-                    <button type="button" onclick="closeEditModal()" class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 font-medium">Batal</button>
-                    <button type="submit" class="flex-1 px-4 py-2.5 bg-amber-500 text-white rounded-lg hover:bg-amber-600 shadow-lg shadow-amber-200 font-medium">Update Data</button>
-                </div>
-            </form>
-        </div>
+            <div class="p-6 bg-white border-t flex gap-4 flex-shrink-0 px-8">
+                <button type="button" data-modal-toggle="modal-tambah-user" class="flex-1 px-4 py-3 border border-gray-200 text-gray-600 rounded-xl hover:bg-gray-50 font-bold transition-all">
+                    Batal
+                </button>
+                <button type="submit" class="flex-[2] px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 shadow-lg shadow-blue-200 font-bold transition-all transform active:scale-[0.98]">
+                    Simpan Data User
+                </button>
+            </div>
+        </form>
     </div>
+</div>
+
+{{-- Modal: Edit User (Versi Modern & Premium) --}}
+<div id="modal-edit-user" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900/70 backdrop-blur-md p-4 transition-all duration-300">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] border border-gray-100 transform transition-transform duration-300 scale-100">
+        
+        <div class="flex justify-between items-center px-8 py-5 bg-gradient-to-r from-amber-500 to-orange-600 flex-shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 text-white.828 2.828 0 114 4L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white">Perbarui Pengguna</h3>
+                    <p class="text-amber-50 text-xs">Ubah informasi akun dan hak akses pengguna</p>
+                </div>
+            </div>
+            <button onclick="closeEditModal()" class="text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-full transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+
+        <form id="form-edit" method="POST" class="flex flex-col overflow-hidden bg-gray-50/50">
+            @csrf
+            @method('PUT')
+            
+            <div class="p-8 overflow-y-auto space-y-6 flex-grow custom-scrollbar">
+                
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-4">
+                    <div class="flex items-center gap-2 mb-2 border-b border-gray-50 pb-2">
+                        <span class="text-amber-600 font-bold text-sm tracking-widest uppercase">01. Identitas Pengguna</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Nama Lengkap</label>
+                            <input type="text" name="nama" id="edit_nama" placeholder="Nama sesuai KTP" 
+                                class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 outline-none border transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">NIK</label>
+                            <input type="text" name="nik" id="edit_nik" placeholder="16 Digit NIK" 
+                                class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 outline-none border transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">No. WhatsApp</label>
+                            <input type="text" name="no_hp" id="edit_no_hp" placeholder="08xxxx" 
+                                class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 outline-none border transition-all">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Email Aktif</label>
+                            <input type="email" name="email" id="edit_email" placeholder="nama@email.com" 
+                                class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 outline-none border transition-all">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-4">
+                    <div class="flex items-center gap-2 mb-2 border-b border-gray-50 pb-2">
+                        <span class="text-amber-600 font-bold text-sm tracking-widest uppercase">02. Domisili</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Kecamatan</label>
+                            <select name="id_kecamatan" id="edit_kecamatan" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 border bg-white outline-none transition-all cursor-pointer appearance-none">
+                                @foreach ($kecamatan as $kec)
+                                    <option value="{{ $kec->id_kecamatan }}">{{ $kec->nama_kecamatan }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Desa/Kelurahan</label>
+                            <select name="id_desa_kelurahan" id="edit_desa" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 border bg-white outline-none transition-all cursor-pointer appearance-none">
+                                @foreach ($desa as $d)
+                                    <option value="{{ $d->id_desa_kelurahan }}">{{ $d->nama_desa_kelurahan }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Alamat Lengkap</label>
+                            <textarea name="alamat" id="edit_alamat" rows="2" placeholder="Nama jalan, blok, nomor rumah..." 
+                                class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 border resize-none outline-none transition-all"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-4">
+                    <div class="flex items-center gap-2 mb-2 border-b border-gray-50 pb-2">
+                        <span class="text-amber-600 font-bold text-sm tracking-widest uppercase">03. Otoritas & Status</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Hak Akses (Role)</label>
+                            <select name="role" id="edit_role" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 border bg-white outline-none transition-all cursor-pointer">
+                                <option value="admin">Administrator</option>
+                                <option value="ketua_kube">Ketua KUBE</option>
+                                <option value="pendamping">Pendamping</option>
+                                <option value="koordinator">Koordinator</option>
+                                <option value="ketua_tim_kube">Ketua Tim Kube</option>
+                                <option value="kepala_dinas">Kepala Dinas</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Status Akun</label>
+                            <select name="status" id="edit_status" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 border bg-white outline-none transition-all cursor-pointer font-bold uppercase text-sm tracking-wide">
+                                <option value="aktif" class="text-green-600">AKTIF</option>
+                                <option value="nonaktif" class="text-red-600">NONAKTIF</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 bg-white border-t flex gap-4 flex-shrink-0 px-8">
+                <button type="button" onclick="closeEditModal()" class="flex-1 px-4 py-3 border border-gray-200 text-gray-600 rounded-xl hover:bg-gray-50 font-bold transition-all">
+                    Batal
+                </button>
+                <button type="submit" class="flex-[2] px-4 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-xl hover:from-amber-600 hover:to-amber-700 shadow-lg shadow-amber-100 font-bold transition-all transform active:scale-[0.98]">
+                    Simpan Perubahan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
     {{-- Modal: Detail User --}}
     <div id="modal-detail-user" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 backdrop-blur-sm p-4">

@@ -18,7 +18,10 @@ class UsersController extends Controller
         $users = User::paginate(10);
         $kecamatan = Kecamatan::all();
         $desa = DesaKelurahan::all();
-        return view('admin.data_master.users', compact('users', 'kecamatan', 'desa'));
+        $total_user = User::count();
+        $user_aktif = User::where('status', 'aktif')->count();
+        $user_nonaktif = User::where('status', 'nonaktif')->count();
+        return view('admin.data_master.users', compact('users', 'kecamatan', 'desa', 'total_user', 'user_aktif', 'user_nonaktif'));
     }
 
     /**
