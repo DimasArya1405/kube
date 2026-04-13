@@ -117,26 +117,26 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="md:col-span-2">
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nama Lengkap</label>
-                            <input type="text" name="nama" placeholder="Budi Santoso" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border" required>
+                            <input type="text" name="nama" placeholder="Masukkan nama lengkap" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border" required>
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">NIK</label>
-                            <input type="text" name="nik" placeholder="16 digit NIK" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border">
+                            <input type="text" name="nik" placeholder="Masukkan NIK" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">No. HP</label>
-                            <input type="text" name="no_hp" placeholder="0812..." class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border">
+                            <input type="text" name="no_hp" placeholder="Masukkan no. HP" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-gray-100">
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Email</label>
-                            <input type="email" name="email" placeholder="email@domain.com" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border" required>
+                            <input type="email" name="email" placeholder="Masukkan email" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border" required>
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Password</label>
-                            <input type="password" name="password" placeholder="••••••••" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border" required>
+                            <input type="password" name="password" placeholder="Masukkan password" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border" required>
                         </div>
                     </div>
 
