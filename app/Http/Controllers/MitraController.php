@@ -14,7 +14,7 @@ class MitraController extends Controller
      */
     public function index()
     {
-        $mitras = Mitra::all();
+        $mitras = Mitra::withCount('bantuan_kolaborasi')->get();
         return view('admin.alur_bantuan.mitra',compact('mitras'));
     }
 
@@ -38,12 +38,13 @@ class MitraController extends Controller
             'email'        => 'required|email',
             'nama_pic'     => 'required',
             'telp_pic'     => 'required',
-            'mou'          => 'required|file|mimes:pdf,jpg,png,jpeg|max:2048',
+            'mou'          => 'required|file|mimes:pdf,jpg,png,jpeg,doc,docx|max:2048',
             'tgl_mou'      => 'required|date',
             'masa_berlaku' => 'required|numeric',
             'alamat'       => 'required',
         ]);
         $data = $request->all();
+        $data['status'] = 'aktif';
         if  ($request->hasFile('mou')){
             $file = $request->file('mou');
             $nama_file = time()."_".$file->getClientOriginalName();
@@ -84,12 +85,12 @@ class MitraController extends Controller
             'email'        => 'required|email',
             'nama_pic'     => 'required',
             'telp_pic'     => 'required',
-            'mou'          => 'nullable|file|mimes:pdf,jpg,png,jpeg|max:2048',
+            'mou'          => 'nullable|file|mimes:pdf,jpg,png,jpeg,doc,docx|max:2048',
             'tgl_mou'      => 'required|date',
             'masa_berlaku' => 'required|numeric',
             'alamat'       => 'required',
         ]);
-        $data = $request->all();
+        $data = $request->except(['status']);
         if($request->hasFile('mou')){
             if($mitra->mou){
                 Storage::delete('public/mou/' . $mitra->mou);
@@ -126,9 +127,7 @@ class MitraController extends Controller
             return "File asli tidak ditemukan di: " . $pathFull;
         }
 
-        return response()->file($pathFull, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline'
-        ]);
+        return response()->file($pathFull);
     }
+    
 }

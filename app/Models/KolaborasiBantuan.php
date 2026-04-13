@@ -18,6 +18,7 @@ class KolaborasiBantuan extends Model
         'nama_bantuan',
         'tgl_pelaksanaan',
         'bantuan',
+        'deskripsi',
         'foto_bukti',
         'status',
     ];

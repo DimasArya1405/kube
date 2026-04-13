@@ -45,4 +45,19 @@ class Mitra extends Model
     {
         return $this->hasMany(Pelatihan::class, 'id_mitra', 'id_mitra');
     }
+    public function getStatusAttribute()
+    {
+        // Hitung tanggal berakhir (Tanggal MOU + Masa Berlaku Tahun)
+        $tanggalBerakhir = \Carbon\Carbon::parse($this->tgl_mou)->addYears($this->masa_berlaku);
+
+        if (\Carbon\Carbon::now()->greaterThan($tanggalBerakhir)) {
+            return 'Tidak Aktif';
+        }
+
+        return 'Aktif';
+    }
+    public function bantuan_kolaborasi()
+    {
+        return $this->hasMany(KolaborasiBantuan::class, 'id_mitra', 'id_mitra');
+    }
 }

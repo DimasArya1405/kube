@@ -26,6 +26,7 @@ use App\Http\Controllers\KunjunganPendampingController;
 use App\Http\Controllers\LaporanKecamatanController;
 use App\Http\Controllers\PembagianKoordinatorController;
 use App\Http\Controllers\PengajuanKubeController; // ✅ PUNYAMU
+use App\Http\Controllers\KolaborasiBantuanController;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -107,6 +108,12 @@ Route::post('/pendamping/prediksi', [PrediksiController::class, 'store'])
     Route::put('/admin/mitra/{id}', [MitraController::class, 'update'])->name('mitra.update');
     Route::delete('/admin/mitra/{id}', [MitraController::class, 'destroy'])->name('mitra.delete');
     Route::get('/admin/mitra/view-pdf/{id}', [MitraController::class, 'viewPdf'])->name('mitra.viewPdf');
+    Route::get('/admin/bantuan', [KolaborasiBantuanController::class, 'index'])->name('bantuan.index');
+    Route::post('/admin/bantuan/store', [KolaborasiBantuanController::class, 'store'])->name('bantuan.store');
+    Route::get('/admin/bantuan/{id}/edit', [KolaborasiBantuanController::class, 'edit'])->name('bantuan.edit');
+    Route::put('/admin/bantuan/update/{id}', [KolaborasiBantuanController::class, 'update'])->name('bantuan.update');
+    Route::delete('/admin/bantuan/delete/{id}', [KolaborasiBantuanController::class, 'destroy'])->name('bantuan.delete');
+    Route::get('/admin/bantuan/lihat-foto/{filename}', [KolaborasiBantuanController::class, 'lihatFoto'])->name('bantuan.lihat_foto');
 
     // PENDAMPING
     Route::get('/admin/pendamping', [PendampingController::class, 'index'])->name('pendamping.index');

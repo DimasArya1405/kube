@@ -38,7 +38,7 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
         <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
             <i data-lucide="search" class="h-4 w-4"></i>
         </span>
-        <input type="text" id="searchInput" placeholder="Cari nama mitra atau PIC..."
+        <input type="text" id="searchInput" placeholder="Cari nama mitra...."
             class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
     </div>
 
@@ -65,6 +65,7 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
         class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all">
         + Tambah Mitra
     </button>
+   
 </div>
 
 {{-- TABLE --}}
@@ -106,7 +107,7 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
                     <td class="px-4 py-3">
                         <div class="flex flex-col items-center">
                             <span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-md border border-indigo-100">
-                                {{ rand(1, 10) }} Kali
+                                {{ $item->bantuan_kolaborasi_count }} Kali
                             </span>
                             <p class="text-[10px] text-gray-400 mt-1 uppercase font-semibold italic">Kolaborasi</p>
                         </div>
@@ -120,18 +121,22 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
                     </td>
                     <td class="px-4 py-3 text-center">
                         <div class="flex justify-center items-center gap-2">
+                            <a href="{{ route('bantuan.index', ['id_mitra' => $item->id_mitra]) }}" 
+                            class="text-indigo-500 hover:text-indigo-700" title="Riwayat Bantuan">
+                                <i data-lucide="handshake" class="w-4 h-4"></i>
+                            </a>
                             <button type="button" onclick='openDetailModal(@json($item))' class="text-blue-500 hover:text-blue-700">
                                 <i data-lucide="eye" class="w-4 h-4"></i>
                             </button>
                             <button type="button" onclick='openEditModal(@json($item))' class="text-amber-500 hover:text-amber-700">
                                 <i data-lucide="edit-3" class="w-4 h-4"></i>
                             </button>
-                            <form action="{{ route('mitra.delete', $item->id_mitra) }}" method="POST" onsubmit="return confirm('Hapus data ini?')">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="text-red-500 hover:text-red-700">
-                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                </button>
-                            </form>
+                            <button type="button" 
+                                    class="trigger-hapus-mitra text-red-500 hover:text-red-700"
+                                    data-id="{{ $item->id_mitra }}"
+                                    data-nama="{{ $item->nama_mitra }}">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -177,11 +182,8 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Status</label>
-                        <select name="status" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none" required>
-                            <option value="Aktif">Aktif</option>
-                            <option value="Tidak Aktif">Tidak Aktif</option>
-                        </select>
+                        <label class="block text-sm font-bold text-gray-700 mb-1"></label>
+                        <input type="hidden" name="status" value="Aktif">
                     </div>
 
                     {{-- Baris 3: Telepon & Email --}}
@@ -277,12 +279,9 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
                             <option value="Pemerintah">Pemerintah</option>
                         </select>
                     </div>
-                    <div>
+                    <div class="invisible">
                         <label class="block text-sm font-bold text-gray-700 mb-1">Status</label>
-                        <select name="status" id="edit_status" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none" required>
-                            <option value="Aktif">Aktif</option>
-                            <option value="Tidak Aktif">Tidak Aktif</option>
-                        </select>
+                        <input type="hidden" name="status" id="edit_status">
                     </div>
 
                     {{-- Telepon & Email --}}
@@ -410,9 +409,31 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
     </div>
 </div>
 
+<div id="modalDeleteMitra" tabindex="-1" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-black bg-opacity-50 p-4">
+    <div class="relative w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden">
+        <div class="p-6 text-center">
+            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-4">
+                <i data-lucide="alert-triangle" class="h-10 w-10 text-red-600"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Konfirmasi Hapus</h3>
+            <p class="text-sm text-gray-500 mb-6" id="textDeleteNameMitra"></p>
+            
+            <div class="flex gap-3">
+                <button type="button" onclick="closeDeleteModalMitra()" class="flex-1 px-4 py-2 bg-gray-100 text-gray-800 font-bold rounded-lg">Batal</button>
+                <form id="formDeleteMitra" method="POST" class="flex-1">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="w-full px-4 py-2 bg-red-600 text-white font-bold rounded-lg shadow-md">Ya, Hapus</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 {{-- SCRIPT SEARCH --}}
 <script>
+
     // Penanganan Input File Label
     const mouInput = document.getElementById('mouInput');
     const mouLabel = document.getElementById('mouLabel');
@@ -423,6 +444,44 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
         });
     }
 
+    document.addEventListener('DOMContentLoaded', function() {
+    // Kita cari semua button dengan class trigger-hapus-mitra
+    const btnHapus = document.querySelectorAll('.trigger-hapus-mitra');
+    
+    btnHapus.forEach(btn => {
+        // Gunakan parameter 'true' di akhir untuk menangkap event lebih awal (Capturing)
+        btn.addEventListener('click', function(e) {
+            // Hentikan semua script lain yang mencoba membaca klik tombol ini
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+
+            const id = this.getAttribute('data-id');
+            const nama = this.getAttribute('data-nama');
+            
+            const modal = document.getElementById('modalDeleteMitra');
+            const textLabel = document.getElementById('textDeleteNameMitra');
+            const form = document.getElementById('formDeleteMitra');
+
+            // Set action form dan teks
+            const baseUrl = window.location.origin + window.location.pathname.split('/mitra')[0];
+            form.action = baseUrl + "/mitra/" + id;
+            textLabel.innerText = `Apakah Anda yakin ingin menghapus mitra "${nama}"?`;
+
+            // Tampilkan modal
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            if(window.lucide) lucide.createIcons();
+        }, true); // <--- 'true' ini adalah kunci agar script layout kalah cepat
+    });
+});
+
+    function closeDeleteModalMitra() {
+        const modal = document.getElementById('modalDeleteMitra');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
     // Fungsi Search
     document.getElementById('searchInput').addEventListener('keyup', function () {
         const keyword = this.value.toLowerCase();
@@ -510,6 +569,8 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
         modal.classList.add('hidden');
         modal.classList.remove('flex');
     }
+
+    
 </script>
 
 @stop
