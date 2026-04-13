@@ -94,6 +94,9 @@ Route::middleware('auth')->group(function () {
 
     // PENCAIRAN BANTUAN
     Route::get('/admin/pencairan_bantuan', [PencairanBantuanController::class, 'index'])->name('admin.pencairan_bantuan.index');
+    Route::post('/admin/pencairan_bantuan/tambah/{id}', [PencairanBantuanController::class, 'tambah'])->name('admin.pencairan_bantuan.tambah');
+    Route::get('/admin/pencairan_bantuan/accept/{id}', [PencairanBantuanController::class, 'accept'])->name('admin.pencairan_bantuan.accept');
+    Route::get('/admin/pencairan_bantuan/reject/{id}', [PencairanBantuanController::class, 'reject'])->name('admin.pencairan_bantuan.reject');
     Route::get('/admin/jenis_bantuan', [JenisBantuanController::class, 'index'])->name('admin.alur_bantuan.jenis_bantuan.index');
     Route::post('/admin/jenis_bantuan/tambah', [JenisBantuanController::class, 'tambah'])->name('admin.alur_bantuan.jenis_bantuan.tambah');
     Route::get('/admin/jenis_bantuan/hapus/{id}', [JenisBantuanController::class, 'hapus'])->name('admin.alur_bantuan.jenis_bantuan.hapus');
@@ -107,9 +110,10 @@ Route::middleware('auth')->group(function () {
 
     //PERKEMBANGAN USAHA
 
-Route::get('/admin/perkembangan-usaha', [DataPerkembanganUsahaController::class, 'index'])->name('perkembangan.index');
-Route::post('/admin/perkembangan-usaha/store', [DataPerkembanganUsahaController::class, 'store'])->name('perkembangan.store');
-Route::delete('/admin/perkembangan-usaha/{id}', [DataPerkembanganUsahaController::class, 'destroy'])->name('perkembangan.delete');
+    Route::get('/admin/perkembangan-usaha', [DataPerkembanganUsahaController::class, 'index'])->name('perkembangan.index');
+    Route::get('/admin/perkembangan-usaha/periode/{id_cluster}', [DataPerkembanganUsahaController::class, 'getPeriodeByKube'])->name('perkembangan.periode');
+    Route::post('/admin/perkembangan-usaha/store', [DataPerkembanganUsahaController::class, 'store'])->name('perkembangan.store');
+    Route::delete('/admin/perkembangan-usaha/{id}', [DataPerkembanganUsahaController::class, 'destroy'])->name('perkembangan.delete');
 
 // HALAMAN
 Route::get('/pendamping/prediksi', [PrediksiController::class, 'index'])
@@ -126,7 +130,7 @@ Route::post('/pendamping/prediksi', [PrediksiController::class, 'store'])
     Route::get('/admin/koordinator', [KoordinatorController::class, 'index'])->name('koordinator.index');
     Route::post('/admin/koordinator/store', [KoordinatorController::class, 'store'])->name('koordinator.store');
     Route::delete('/admin/koordinator/{id}', [KoordinatorController::class, 'destroy'])->name('koordinator.delete');
-    
+
     // PELATIHAN
     Route::get('/pelatihan', [PelatihanController::class, 'index'])->name('pelatihan.index');
     Route::post('/pelatihan', [PelatihanController::class, 'store'])->name('pelatihan.store');
@@ -178,6 +182,8 @@ Route::post('/pendamping/prediksi', [PrediksiController::class, 'store'])
 
     Route::get('/kategori-kube', function () {return view('coming-soon');})->name('kategorikube.index');
     //Kelola Data Kunjungan PPendamping
+
+
 
     // KUNJUNGAN PENDAMPING
     Route::get('/pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'index'])->name('kunjungan.index');

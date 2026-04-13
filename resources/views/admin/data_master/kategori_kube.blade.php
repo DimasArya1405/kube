@@ -109,6 +109,11 @@ Dashboard / <span class="text-gray-800">Kategori KUBE</span>
                                     </svg>
                         </button>
 
+
+                    
+                    </form>
+
+
                     </td>
                 </tr>
 

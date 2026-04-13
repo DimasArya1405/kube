@@ -110,42 +110,35 @@ Dashboard / <span class="text-gray-800">Prediksi</span>
             <input type="hidden" name="tahun" id="inputTahun">
 
             @foreach($pertanyaan as $p)
-            @php $pid = (int) $p->id_pertanyaan; @endphp
+<div class="border p-4 mb-4 rounded">
+    <p class="mb-2 font-medium">
+        {{ $loop->iteration }}. {{ $p->pertanyaan }}
+    </p>
 
-            <div class="border p-4 mb-4 rounded">
+    <div class="flex gap-6">
+        <label class="cursor-pointer">
+            <input type="radio" 
+                   name="jawaban[{{ $p->id }}]" {{-- Pastikan menggunakan kolom ID yang benar --}}
+                   value="ya" 
+                   required>
+            Ya
+        </label>
 
-                <p class="mb-2 font-medium">
-                    {{ $loop->iteration }}. {{ $p->pertanyaan }}
-                </p>
+        <label class="cursor-pointer">
+            <input type="radio" 
+                   name="jawaban[{{ $p->id }}]" 
+                   value="tidak" 
+                   required>
+            Tidak
+        </label>
+    </div>
 
-                <div class="flex gap-6">
-
-                    <label>
-                        <input type="radio"
-                               name="jawaban[[{{ $loop->iteration }}]]"
-                               value="ya"
-                               required>
-                        Ya
-                    </label>
-
-                    <label>
-                        <input type="radio"
-                               name="jawaban[[{{ $loop->iteration }}]]"
-                               value="tidak"
-                               required>
-                        Tidak
-                    </label>
-
-                </div>
-
-                <input type="text"
-                       name="catatan[[{{ $loop->iteration }}]]"
-                       class="w-full border p-2 mt-2"
-                       placeholder="Keterangan..."
-                       required>
-
-            </div>
-            @endforeach
+    <input type="text" 
+           name="catatan[{{ $p->id }}]" 
+           class="w-full border p-2 mt-2" 
+           placeholder="Keterangan untuk pertanyaan {{ $loop->iteration }}..." >
+</div>
+@endforeach
 
             <button type="submit" class="bg-green-600 text-white px-4 py-2">
                 Simpan & Hitung
