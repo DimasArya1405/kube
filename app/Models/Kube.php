@@ -39,4 +39,9 @@ class Kube extends Model
     {
         return $this->hasMany(AnggotaKube::class, 'id_kube', 'id_kube');
     }
+
+    public function pembagianPendamping()
+    {
+        return $this->belongsTo(PembagianPendamping::class, 'id_kube', 'id_kube');
+    }
 }

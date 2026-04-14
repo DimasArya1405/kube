@@ -33,9 +33,9 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
         <table class="w-full text-left border-collapse">
             <thead class="bg-gray-100 border-b border-gray-200">
                 <tr>
-                    <th class="py-3 px-5 text-gray-700 font-semibold text-sm">No.</th>
-                    <th class="py-3 px-5 text-gray-700 font-semibold text-sm">Nama KUBE</th>
-                    <th class="py-3 px-5 text-gray-700 font-semibold text-sm">Nama Pendamping</th>
+                    <th class="py-3 px-5 text-gray-700 font-semibold text-sm text-center">No.</th>
+                    <th class="py-3 px-5 text-gray-700 font-semibold text-sm text-center">Nama KUBE</th>
+                    <th class="py-3 px-5 text-gray-700 font-semibold text-sm text-center">Nama Pendamping</th>
                     <th class="py-3 px-5 text-gray-700 font-semibold text-sm text-center">Tgl Pembagian</th>
                     <th class="py-3 px-5 text-gray-700 font-semibold text-sm text-center">Status</th>
                     <th class="py-3 px-5 text-gray-700 font-semibold text-sm text-center">Aksi</th>
@@ -44,10 +44,10 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
             <tbody class="text-sm">
                 @foreach($pembagians as $index => $p)
                 <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
-                    <td class="py-3 px-5 text-gray-800 font-medium">{{ $index + 1 }}.</td>
-                    <td class="py-3 px-5 text-gray-800">{{ $p->kube->nama_kube ?? 'KUBE Dihapus' }}</td>
+                    <td class="py-3 px-5 text-gray-800 text-center font-medium">{{ $index + 1 }}.</td>
+                    <td class="py-3 px-5 text-gray-800 text-center">{{ $p->kube->nama_kube ?? 'KUBE Dihapus' }}</td>
 
-                    <td class="py-3 px-5 text-gray-800">{{ $p->pendamping->nama_pendamping ?? 'Pendamping Dihapus' }}</td>
+                    <td class="py-3 px-5 text-gray-800 text-center">{{ $p->pendamping->nama_pendamping ?? 'Pendamping Dihapus' }}</td>
 
                     <td class="py-3 px-5 text-gray-600 text-center">{{ \Carbon\Carbon::parse($p->tgl_pembagian)->format('d M Y') }}</td>
 
@@ -61,7 +61,6 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
 
                     <td class="py-3 px-5 text-center">
                         <div class="flex justify-center space-x-3">
-                            <a href="#" class="text-gray-400 hover:text-yellow-500 transition text-lg"><i class="far fa-edit"></i></a>
                             <form action="{{ route('pembagian_pendamping.destroy', $p->id_pembagian) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
