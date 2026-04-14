@@ -90,6 +90,7 @@
                             </td>
                             <td class="px-6 py-4 text-center">
                                 <div class="flex items-center justify-center gap-2">
+
                                     {{-- Detail Button --}}
                                     <button onclick="detailUser('{{ $user->id_user }}')"
                                         class="w-9 h-9 flex items-center justify-center rounded-lg text-blue-500 hover:bg-blue-50 transition-colors"
@@ -137,7 +138,7 @@
         {{ $users->links() }}
     </div>
 
-{{-- Modal: Tambah User (Versi Modern) --}}
+{{-- Modal: Tambah User --}}
 <div id="modal-tambah-user" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900/70 backdrop-blur-md p-4 transition-all duration-300">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] border border-gray-100 transform transition-transform duration-300 scale-100">
         
@@ -163,45 +164,32 @@
             <div class="p-8 overflow-y-auto space-y-6 flex-grow custom-scrollbar">
                 
                 <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-4">
-                    <div class="flex items-center gap-2 mb-2 border-b border-gray-50 pb-2">
-                        <span class="text-blue-600 font-bold text-sm tracking-widest uppercase">01. Profil Pribadi</span>
-                    </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div class="md:col-span-2">
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Nama Lengkap</label>
-                            <input type="text" name="nama" placeholder="Contoh: Ahmad Sulaiman" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all placeholder:text-gray-400" required>
+                            <input type="text" name="nama" placeholder="Masukkan Nama" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all placeholder:text-gray-400" required>
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">NIK (KTP)</label>
-                            <input type="text" name="nik" placeholder="16 digit nomor induk" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all" required>
+                            <input type="text" name="nik" placeholder="Masukkan NIK" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all" required>
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">No. Handphone</label>
-                            <input type="text" name="no_hp" placeholder="08xxxx" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all">
+                            <input type="text" name="no_hp" placeholder="Masukkan No. HP" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all">
                         </div>
                     </div>
-                </div>
 
-                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-4">
-                    <div class="flex items-center gap-2 mb-2 border-b border-gray-50 pb-2">
-                        <span class="text-blue-600 font-bold text-sm tracking-widest uppercase">02. Keamanan Akun</span>
-                    </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Alamat Email</label>
-                            <input type="email" name="email" placeholder="nama@email.com" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all" required>
+                            <input type="email" name="email" placeholder="Masukkan Email" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all" required>
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Kata Sandi</label>
-                            <input type="password" name="password" placeholder="••••••••" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all" required>
+                            <input type="password" name="password" placeholder="Masukkan Kata Sandi" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all" required>
                         </div>
                     </div>
-                </div>
 
-                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-4">
-                    <div class="flex items-center gap-2 mb-2 border-b border-gray-50 pb-2">
-                        <span class="text-blue-600 font-bold text-sm tracking-widest uppercase">03. Lokasi & Role</span>
-                    </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Kecamatan</label>
@@ -223,7 +211,7 @@
                         </div>
                         <div class="md:col-span-2">
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Alamat Domisili</label>
-                            <textarea name="alamat" placeholder="Jalan, RT/RW, No. Rumah..." rows="2" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 border resize-none outline-none transition-all"></textarea>
+                            <textarea name="alamat" placeholder="Masukkan Alamat" rows="2" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 border resize-none outline-none transition-all"></textarea>
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Hak Akses (Role)</label>
@@ -263,7 +251,7 @@
     </div>
 </div>
 
-{{-- Modal: Edit User (Versi Modern & Premium) --}}
+{{-- Modal: Edit User --}}
 <div id="modal-edit-user" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900/70 backdrop-blur-md p-4 transition-all duration-300">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] border border-gray-100 transform transition-transform duration-300 scale-100">
         
@@ -291,9 +279,6 @@
             <div class="p-8 overflow-y-auto space-y-6 flex-grow custom-scrollbar">
                 
                 <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-4">
-                    <div class="flex items-center gap-2 mb-2 border-b border-gray-50 pb-2">
-                        <span class="text-amber-600 font-bold text-sm tracking-widest uppercase">01. Identitas Pengguna</span>
-                    </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div class="md:col-span-2">
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Nama Lengkap</label>
@@ -306,7 +291,7 @@
                                 class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 outline-none border transition-all">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">No. WhatsApp</label>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">No. Handphone</label>
                             <input type="text" name="no_hp" id="edit_no_hp" placeholder="08xxxx" 
                                 class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 outline-none border transition-all">
                         </div>
@@ -316,12 +301,7 @@
                                 class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 outline-none border transition-all">
                         </div>
                     </div>
-                </div>
 
-                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-4">
-                    <div class="flex items-center gap-2 mb-2 border-b border-gray-50 pb-2">
-                        <span class="text-amber-600 font-bold text-sm tracking-widest uppercase">02. Domisili</span>
-                    </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Kecamatan</label>
@@ -345,12 +325,7 @@
                                 class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 border resize-none outline-none transition-all"></textarea>
                         </div>
                     </div>
-                </div>
 
-                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-4">
-                    <div class="flex items-center gap-2 mb-2 border-b border-gray-50 pb-2">
-                        <span class="text-amber-600 font-bold text-sm tracking-widest uppercase">03. Otoritas & Status</span>
-                    </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Hak Akses (Role)</label>

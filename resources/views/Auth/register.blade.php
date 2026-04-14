@@ -22,9 +22,6 @@
                 <h2 class="text-3xl font-bold text-green-600 leading-tight">
                     Sistem<br>Kelompok Usaha Bersama
                 </h2>
-                <div class="mt-8 hidden md:block italic text-gray-400 text-sm">
-                    Platform Kolaborasi & Digitalisasi KUBE
-                </div>
             </div>
 
             <div class="w-full md:w-7/12 p-8 md:p-12 flex flex-col justify-center">
