@@ -178,7 +178,7 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
                 </button>
             </div>
 
-            <form action="#" method="POST" enctype="multipart/form-data" class="p-5">
+            <form action="{{ route('kunjungan.store') }}" method="POST" enctype="multipart/form-data" class="p-5">
                 @csrf
 
                 <div class="mb-4">
@@ -186,30 +186,27 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
                         Nama Pendamping
                     </label>
 
-                    <select name="id_pembagian" id="pembagian"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        required>
-
+                    <select id="pendamping" name="id_pendamping" class="w-full border px-3 py-2">
                         <option value="">-- Pilih Pendamping --</option>
 
-                        @foreach($pembagianPendamping as $item)
-                            <option 
-                                value="{{ $item->id_pembagian }}"
-                                data-kube="{{ $item->kube->nama_kube }}"
-                            >
-                                {{ $item->pendamping->nama_pendamping }}
+                        @foreach($pendamping as $id => $items)
+                            <option value="{{ $id }}">
+                                {{ $items->first()->pendamping->nama_pendamping }}
                             </option>
                         @endforeach
-
                     </select>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mb-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Nama KUBE</label>
-                    <input type="text" id="nama_kube"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-gray-100"
-                        readonly>
+                    <select id="kube" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" required
+                            onchange="document.getElementById('id_kube_hidden').value = this.value">
+                        <option value="">-- Pilih KUBE --</option>
+                    </select>
+                    <!-- Hidden input sebagai pengganti name, agar tetap terkirim walau disabled -->
+                    <input type="hidden" name="id_pembagian" id="id_kube_hidden">
+
                 </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
@@ -316,21 +313,20 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
                         readonly>
                 </div>
                     <div>
-                        <input type="date" name="tanggal_kunjungan"
-                        value="{{ $item->tanggal_kunjungan }}"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
+                        <input type="date" name="tanggal_kunjungan" value="{{ $item->tanggal_kunjungan }}"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" required>
                     </div>
                     <div>
-                        <input type="time" name="waktu_kunjungan"
-                        value="{{ $item->waktu_kunjungan }}"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" required>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Waktu</label>
+                        <input type="time" name="waktu_kunjungan" value="{{ $item->waktu_kunjungan }}"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" required>
                     </div>
                     <div>
-                        <input type="number" name="kunjungan_ke"
-                        value="{{ $item->kunjungan_ke }}"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" required>
-                    </div>
-                    
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kunjungan Ke-</label>
+                        <input type="number" name="kunjungan_ke" value="{{ $item->kunjungan_ke }}"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+                    </div>                    
                 </div>
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -453,6 +449,10 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
 @endforeach
 
 
+<script>
+    const dataPembagian = JSON.parse('{!! json_encode($dataPembagian) !!}');
+</script>
+
 {{-- SCRIPT: Search --}}
 <script>
     document.getElementById('searchInput').addEventListener('keyup', function() {
@@ -464,12 +464,43 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
         });
     });
 
-    // 
-    document.getElementById('pembagian').addEventListener('change', function() {
-        let selected = this.options[this.selectedIndex];
-        let kube = selected.getAttribute('data-kube');
+    document.getElementById('pendamping').addEventListener('change', function() {
+        let idPendamping = this.value;
+        let kubeSelect   = document.getElementById('kube');
 
-        document.getElementById('nama_kube').value = kube ?? '';
+        // Reset
+        kubeSelect.innerHTML = '<option value="">-- Pilih KUBE --</option>';
+        kubeSelect.disabled  = false;
+        document.getElementById('id_kube_hidden').value = '';
+
+        if (!idPendamping) return;
+
+        let filtered = dataPembagian.filter(item => item.id_pendamping == idPendamping);
+
+        if (filtered.length === 1) {
+            let opt      = document.createElement('option');
+            opt.value    = filtered[0].id_pembagian;
+            opt.text     = filtered[0].kube.nama_kube;
+            opt.selected = true;
+            kubeSelect.appendChild(opt);
+            kubeSelect.disabled = true;
+
+            // ✅ Di dalam sini, filtered sudah terdefinisi
+            document.getElementById('id_kube_hidden').value = filtered[0].id_pembagian;
+
+        } else {
+            filtered.forEach(item => {
+                let opt   = document.createElement('option');
+                opt.value = item.id_pembagian;
+                opt.text  = item.kube.nama_kube;
+                kubeSelect.appendChild(opt);
+            });
+
+            // ✅ Di dalam sini, kubeSelect sudah terdefinisi
+            kubeSelect.addEventListener('change', function() {
+                document.getElementById('id_kube_hidden').value = this.value;
+            });
+        }
     });
 </script>
 

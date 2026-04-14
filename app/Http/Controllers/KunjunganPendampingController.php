@@ -11,12 +11,35 @@ class KunjunganPendampingController extends Controller
 {
     public function index()
     {
-        // $kunjunganPendamping = KunjunganPendamping::with(['pembagian_pendamping'])->get();
-        $kunjunganPendamping = KunjunganPendamping::with(['pembagian.pendamping','pembagian.kube'])->get();
-        $pembagianPendamping = PembagianPendamping::all();
-        
-        return view('pendamping.dashboard.kunjungan_pendamping', compact('kunjunganPendamping', 'pembagianPendamping'));
+        $kunjunganPendamping = KunjunganPendamping::with([
+            'pembagian.pendamping',
+            'pembagian.kube'
+        ])->get();
+
+        $pembagianPendamping = PembagianPendamping::with([
+            'pendamping',
+            'kube'
+        ])->get();
+
+        $pendamping = $pembagianPendamping->groupBy('id_pendamping');
+
+        // Tambahkan ini
+        $dataPembagian = $pembagianPendamping->map(function($item) {
+            return [
+                'id_pembagian'  => $item->id_pembagian,
+                'id_pendamping' => $item->id_pendamping,
+                'kube'          => ['nama_kube' => $item->kube->nama_kube ?? ''],
+            ];
+        })->values();
+
+        return view('pendamping.dashboard.kunjungan_pendamping', compact(
+            'kunjunganPendamping',
+            'pembagianPendamping',
+            'pendamping',
+            'dataPembagian' // ✅ tambahkan ini
+        ));
     }
+
     public function create()
     {
         $pembagian = PembagianPendamping::with(['pendamping', 'kube'])->get();
