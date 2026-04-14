@@ -120,10 +120,13 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
                     </td>
                     <td class="px-4 py-3 text-center">
                         <div class="flex justify-center items-center gap-2">
-                            <button type="button" onclick='openDetailModal(@json($item))' class="text-blue-500 hover:text-blue-700">
+                            <button type="button" onclick='openDetailModal( json_encode($item) )' 
+                                class="text-blue-500 hover:text-blue-700">
                                 <i data-lucide="eye" class="w-4 h-4"></i>
                             </button>
-                            <button type="button" onclick='openEditModal(@json($item))' class="text-amber-500 hover:text-amber-700">
+                            <button type="button" 
+                                onclick="openEditModal( json_encode($item) )" 
+                                class="text-amber-500 hover:text-amber-700">
                                 <i data-lucide="edit-3" class="w-4 h-4"></i>
                             </button>
                             <form action="{{ route('mitra.delete', $item->id_mitra) }}" method="POST" onsubmit="return confirm('Hapus data ini?')">
@@ -435,9 +438,8 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
     function openEditModal(mitra) {
         const modal = document.getElementById('modal-edit-mitra');
         const form = document.getElementById('editForm');
-
-        const baseUrl = window.location.origin + window.location.pathname.split('/mitra')[0];
-        form.action = baseUrl + "/mitra/" + mitra.id_mitra;
+        
+        form.action = "/admin/mitra/" + mitra.id_mitra;
         
         document.getElementById('edit_nama_mitra').value = mitra.nama_mitra || '';
         document.getElementById('edit_jenis_mitra').value = mitra.jenis_mitra || '';
@@ -454,6 +456,8 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
         document.getElementById('edit_nama_pic').value = mitra.nama_pic || '';
         document.getElementById('edit_telp_pic').value = mitra.telp_pic || '';
 
+        
+        
         modal.classList.remove('hidden');
         modal.classList.add('flex');
         if(window.lucide) lucide.createIcons();
@@ -486,9 +490,10 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
         document.getElementById('detail_nama_pic').value = mitra.nama_pic || '';
         document.getElementById('detail_telp_pic').value = mitra.telp_pic || '';
         
-        
+        // Handle Dokumen (Hanya satu deklarasi 'container')
         const container = document.getElementById('detail_mou_container');
         if(mitra.mou) {
+            
             const pdfUrl = `/admin/mitra/view-pdf/${mitra.id_mitra}`;
             
             container.innerHTML = `

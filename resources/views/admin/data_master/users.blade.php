@@ -101,78 +101,74 @@
     {{ $users->links() }}
 </div>
 
-<div id="modal-tambah-user" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 backdrop-blur-sm transition-opacity p-4">
-    <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden transform transition-all flex flex-col max-h-[90vh]">
-        
-        <div class="flex justify-between items-center px-6 py-4 bg-gray-50 border-b flex-shrink-0">
+<div id="modal-tambah-user" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 backdrop-blur-sm transition-opacity">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all">
+        <div class="flex justify-between items-center px-6 py-4 bg-gray-50 border-b">
             <h3 class="text-xl font-bold text-gray-800">Tambah User Baru</h3>
             <button data-modal-toggle="modal-tambah-user" class="text-gray-400 hover:text-red-500 transition-colors">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
 
-        <form method="POST" action="{{ route('admin.users.store') }}" class="flex flex-col overflow-hidden">
+        <form method="POST" action="{{ route('admin.users.store') }}" class="p-6">
             @csrf
-            
-            <div class="p-6 overflow-y-auto space-y-5 custom-scrollbar flex-grow">
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="md:col-span-2">
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nama Lengkap</label>
-                        <input type="text" name="nama" placeholder="Budi Santoso" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border" required>
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-2">
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Nama Lengkap</label>
+                        <input type="text" name="nama" placeholder="Contoh: Budi Santoso" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border transition-all" required>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">NIK</label>
-                        <input type="text" name="nik" placeholder="16 digit NIK" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border">
+                    <div class="col-span-2 sm:col-span-1">
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">NIK</label>
+                        <input type="text" name="nik" placeholder="16 digit NIK" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border transition-all">
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">No. HP</label>
-                        <input type="text" name="no_hp" placeholder="0812..." class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border">
+                    <div class="col-span-2 sm:col-span-1">
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">No. HP</label>
+                        <input type="text" name="no_hp" placeholder="0812..." class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border transition-all">
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-gray-100">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Email</label>
-                        <input type="email" name="email" placeholder="email@domain.com" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border" required>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-2 sm:col-span-1">
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Email</label>
+                        <input type="email" name="email" placeholder="email@domain.com" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border transition-all" required>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Password</label>
-                        <input type="password" name="password" placeholder="••••••••" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border" required>
-                    </div>
-                </div>
-
-                <div class="pt-4 border-t border-gray-100 space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Kecamatan</label>
-                            <select name="id_kecamatan" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border bg-white">
-                                <option value="">Pilih Kecamatan</option>
-                                @foreach ($kecamatan as $kec)
-                                    <option value="{{ $kec->id_kecamatan }}">{{ $kec->nama_kecamatan }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Desa/Kelurahan</label>
-                            <select name="id_desa_kelurahan" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border bg-white">
-                                <option value="">Pilih Desa</option>
-                                @foreach ($desa as $d)
-                                    <option value="{{ $d->id_desa_kelurahan }}">{{ $d->nama_desa_kelurahan }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Alamat Lengkap</label>
-                        <textarea name="alamat" rows="2" placeholder="Jl. Merdeka No. 123..." class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border resize-none"></textarea>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Password</label>
+                        <input type="password" name="password" placeholder="••••••••" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border transition-all" required>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-gray-100">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Alamat Lengkap</label>
+                    <textarea name="alamat" rows="2" placeholder="Nama jalan, nomor rumah..." class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border transition-all"></textarea>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Role Pengguna</label>
-                        <select name="role" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border bg-white">
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Kecamatan</label>
+                        <select name="id_kecamatan" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border bg-white transition-all">
+                            <option value="">Pilih...</option>
+                            @foreach ($kecamatan as $kec)
+                                <option value="{{ $kec->id_kecamatan }}">{{ $kec->nama_kecamatan }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Desa/Kelurahan</label>
+                        <select name="id_desa_kelurahan" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border bg-white transition-all">
+                            <option value="">Pilih...</option>
+                            @foreach ($desa as $d)
+                                <option value="{{ $d->id_desa_kelurahan }}">{{ $d->nama_desa_kelurahan }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 pt-2 border-t">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Role Pengguna</label>
+                        <select name="role" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border bg-white transition-all">
                             <option value="admin">Admin</option>
                             <option value="ketua_kube">Ketua KUBE</option>
                             <option value="pendamping">Pendamping</option>
@@ -182,22 +178,18 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Status Akun</label>
-                        <div class="flex items-center h-[46px] gap-2 px-3 bg-green-50 border border-green-100 rounded-lg">
-                            <span class="relative flex h-2 w-2">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                            </span>
-                            <span class="text-sm font-bold text-green-700 uppercase tracking-wider">Aktif</span>
-                        </div>
-                        <input type="hidden" name="status" value="aktif">
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Status Akun</label>
+                        <select name="status" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none border bg-white transition-all">
+                            <option value="aktif">Aktif</option>
+                            <option value="nonaktif">Nonaktif</option>
+                        </select>
                     </div>
                 </div>
             </div>
 
-            <div class="p-6 bg-gray-50 border-t flex gap-3 flex-shrink-0">
-                <button type="button" data-modal-toggle="modal-tambah-user" class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-100 transition-all font-semibold">Batal</button>
-                <button type="submit" class="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all font-semibold">Simpan User</button>
+            <div class="mt-8 flex gap-3">
+                <button type="button" data-modal-toggle="modal-tambah-user" class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-all font-medium">Batal</button>
+                <button type="submit" class="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all font-medium">Simpan User</button>
             </div>
         </form>
     </div>
