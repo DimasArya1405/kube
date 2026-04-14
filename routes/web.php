@@ -34,7 +34,7 @@ use Dflydev\DotAccessData\Data;
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/', function () {
-    return redirect('/login');
+    return view('/welcome');
 });
 
 // DATA USER
@@ -43,8 +43,6 @@ Route::post('/admin/users/store', [DashboardController::class, 'store'])->name('
 Route::get('/admin/users/edit/{id}', [DashboardController::class, 'edit'])->name('admin.users.edit');
 Route::put('/admin/users/update/{id}', [DashboardController::class, 'update'])->name('admin.users.update');
 Route::delete('/admin/users/delete/{id}', [DashboardController::class, 'destroy'])->name('admin.users.delete');
-
-Route::get('/', function () {return redirect('/login');});
 
 // LOGOUT
 Route::post('/logout', [AuthController::class, 'logout']);
