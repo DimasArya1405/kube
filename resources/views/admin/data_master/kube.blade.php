@@ -96,7 +96,6 @@ Data Master / <span class="text-gray-800">Data KUBE</span>
             <form action="{{ route('kube.update', $k->id_kube) }}" method="POST">
                 @csrf
                 @method('PUT')
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                     <div class="col-span-1 md:col-span-2">
                         <label class="block text-sm font-bold text-gray-700 mb-1">Nama KUBE</label>

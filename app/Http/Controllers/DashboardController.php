@@ -70,17 +70,17 @@ public function edit($id)
     }
     public function ketua()
     {
-        return view('dashboard.ketua');
+        return view('ketua_kube.dashboard.index');
     }
 
     public function pendamping()
     {
-        return view('dashboard.pendamping');
+        return view('pendamping.dashboard.index');
     }
 
     public function koordinator()
     {
-        return view('dashboard.koordinator');
+        return view('koordinator.dashboard.index');
     }
 
     public function tim()
@@ -90,6 +90,6 @@ public function edit($id)
 
     public function dinas()
     {
-        return view('dashboard.dinas');
+        return view('kepala_dinas.dashboard.index');
     }
 }
