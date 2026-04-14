@@ -142,6 +142,7 @@
 <div id="modal-tambah-user" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900/70 backdrop-blur-md p-4 transition-all duration-300">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] border border-gray-100 transform transition-transform duration-300 scale-100">
         
+        {{-- Header --}}
         <div class="flex justify-between items-center px-8 py-5 bg-gradient-to-r from-blue-600 to-indigo-700 flex-shrink-0">
             <div class="flex items-center gap-3">
                 <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
@@ -154,11 +155,12 @@
                     <p class="text-blue-100 text-xs">Lengkapi data untuk membuat akun baru</p>
                 </div>
             </div>
-            <button data-modal-toggle="modal-tambah-user" class="text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-full transition-all">
+            <button type="button" data-modal-toggle="modal-tambah-user" class="text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-full transition-all">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
 
+        {{-- Form --}}
         <form method="POST" action="{{ route('admin.users.store') }}" class="flex flex-col overflow-hidden bg-gray-50/50">
             @csrf
             <div class="p-8 overflow-y-auto space-y-6 flex-grow custom-scrollbar">
@@ -239,6 +241,7 @@
                 </div>
             </div>
 
+            {{-- Footer Buttons --}}
             <div class="p-6 bg-white border-t flex gap-4 flex-shrink-0 px-8">
                 <button type="button" data-modal-toggle="modal-tambah-user" class="flex-1 px-4 py-3 border border-gray-200 text-gray-600 rounded-xl hover:bg-gray-50 font-bold transition-all">
                     Batal

@@ -41,9 +41,9 @@ public function login(Request $request)
             return redirect('/ketua_tim_kube/dashboard')->with('success', 'Selamat datang Ketua Tim');
         } elseif ($role == 'kepala_dinas') {
             return redirect('/kepala_dinas/dashboard')->with('success', 'Selamat datang Kepala Dinas');
-        }
     }
     return back()->with('error', 'Email atau password salah');
+}
 }
 
     // ================= REGISTER =================
