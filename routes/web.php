@@ -181,4 +181,6 @@ Route::middleware('auth')->group(function () {
     // LAPORAN KECAMATAN
     Route::get('/admin/laporan-kecamatan', [LaporanKecamatanController::class, 'index'])->name('laporan.kecamatan');
     Route::get('/admin/laporan-kecamatan/{id}', [LaporanKecamatanController::class, 'detail'])->name('laporan.kecamatan.detail');
+    Route::get('/admin/laporan-kecamatan/pdf/{id}',[LaporanKecamatanController::class,'exportPdf'])->name('laporan.pdf');
+   
 });
