@@ -20,7 +20,7 @@ class KategoriKubeController extends Controller
         KategoriKube::create([
             'nama_kategori' => $request->nama_kategori,
             'deskripsi' => $request->deskripsi,
-            'status' => $request->status
+            // 'status' => $request->status
         ]);
 
         return redirect()->back()->with('success', 'Data berhasil ditambahkan');
@@ -41,10 +41,16 @@ class KategoriKubeController extends Controller
     $data->update([
         'nama_kategori' => $request->nama_kategori,
         'deskripsi' => $request->deskripsi,
-        'status' => $request->status
+        // 'status' => $request->status
     ]);
-
+    
     return redirect()->back()->with('success', 'Data berhasil diupdate');
+    }
+    //Detail
+            public function show($id)
+    {
+        $data = KategoriKube::findOrFail($id);
+        return view('admin.data_master.detail_kategori', compact('data'));
     }
     // HAPUS DATA
     public function destroy($id)

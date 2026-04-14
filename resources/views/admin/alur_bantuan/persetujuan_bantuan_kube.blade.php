@@ -14,15 +14,15 @@ Dashboard / <span class="text-gray-800">Pengajuan Bantuan KUBE</span>
     </div>
     <div class="flex justify-end gap-2">
 
-        <a href="{{ route('admin.alur_bantuan.jenis_bantuan.index') }}"
+        <!-- <a href="{{ route('admin.alur_bantuan.jenis_bantuan.index') }}"
             class="text-white bg-green-600 hover:bg-green-700 px-5 py-2.5 rounded-lg">
             Olah Data Jenis Bantuan
-        </a>
+        </a> -->
 
-        <button data-modal-target="modal-tambah" data-modal-toggle="modal-tambah"
+        <!-- <button data-modal-target="modal-tambah" data-modal-toggle="modal-tambah"
             class="text-white bg-blue-600 hover:bg-blue-700 px-5 py-2.5 rounded-lg">
             Tambah Cluster
-        </button>
+        </button> -->
     </div>
 </div>
 
