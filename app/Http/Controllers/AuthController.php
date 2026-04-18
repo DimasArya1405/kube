@@ -24,26 +24,24 @@ public function login(Request $request)
         'password' => 'required'
     ]);
 
-    if (Auth::attempt($credentials)) {
-        $request->session()->regenerate();
-
-        $role = Auth::user()->role;
-
-        if ($role == 'admin') {
-            return redirect('/admin/dashboard')->with('success', 'Selamat datang Admin');
-        } elseif ($role == 'ketua_kube') {
-            return redirect('/ketua_kube/dashboard')->with('success', 'Selamat datang Ketua KUBE');
-        } elseif ($role == 'pendamping') {
-            return redirect('/pendamping/dashboard')->with('success', 'Selamat datang Pendamping');
-        } elseif ($role == 'koordinator') {
-            return redirect('/koordinator/dashboard')->with('success', 'Selamat datang Koordinator');
-        } elseif ($role == 'ketua_tim_kube') {
-            return redirect('/ketua_tim_kube/dashboard')->with('success', 'Selamat datang Ketua Tim');
-        } elseif ($role == 'kepala_dinas') {
-            return redirect('/kepala_dinas/dashboard')->with('success', 'Selamat datang Kepala Dinas');
+if (Auth::attempt($credentials)) {
+    $request->session()->regenerate();
+    $role = Auth::user()->role;
+    if ($role == 'admin') {
+        return redirect('/admin/dashboard')->with('success', 'Selamat datang Admin');
+    } elseif ($role == 'ketua_kube') {
+        return redirect('/ketua_kube/dashboard')->with('success', 'Selamat datang Ketua KUBE');
+    } elseif ($role == 'pendamping') {
+        return redirect('/pendamping/dashboard')->with('success', 'Selamat datang Pendamping');
+    } elseif ($role == 'koordinator') {
+        return redirect('/koordinator/dashboard')->with('success', 'Selamat datang Koordinator');
+    } elseif ($role == 'ketua_tim_kube') {
+        return redirect('/ketua_tim_kube/dashboard')->with('success', 'Selamat datang Ketua Tim');
+    } elseif ($role == 'kepala_dinas') {
+        return redirect('/kepala_dinas/dashboard')->with('success', 'Selamat datang Kepala Dinas');
     }
-    return back()->with('error', 'Email atau password salah');
 }
+return back()->with('error', 'Email atau password salah');
 }
 
     // ================= REGISTER =================

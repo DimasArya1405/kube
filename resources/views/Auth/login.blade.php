@@ -63,10 +63,10 @@
                                 class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm" 
                                 placeholder="Masukkan password" required>
                             
-                            <button type="button" onclick="togglePassword()" class="absolute right-3 top-3 text-gray-400 hover:text-blue-600 transition-colors">
-                                <i data-lucide="eye" id="eyeIcon" class="w-5 h-5"></i>
-                                <i data-lucide="eye-off" id="eyeOffIcon" class="w-5 h-5 hidden"></i>
-                            </button>
+                        <button type="button" onclick="togglePassword()" class="absolute right-3 top-3.5 text-gray-400 hover:text-blue-600 transition-colors">
+                            <i data-lucide="eye-off" id="eyeOffIcon" class="w-5 h-5"></i>
+                            <i data-lucide="eye" id="eyeIcon" class="w-5 h-5 hidden"></i>
+                        </button>
                         </div>
                     </div>
 
@@ -89,21 +89,21 @@
     <script>
         lucide.createIcons();
 
-        function togglePassword() {
-            const passwordField = document.getElementById('passwordField');
-            const eyeIcon = document.getElementById('eyeIcon');
-            const eyeOffIcon = document.getElementById('eyeOffIcon');
+function togglePassword() {
+    const passwordField = document.getElementById('passwordField');
+    const eyeIcon = document.getElementById('eyeIcon');
+    const eyeOffIcon = document.getElementById('eyeOffIcon');
 
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                eyeIcon.classList.add('hidden');
-                eyeOffIcon.classList.remove('hidden');
-            } else {
-                passwordField.type = 'password';
-                eyeIcon.classList.remove('hidden');
-                eyeOffIcon.classList.add('hidden');
-            }
-        }
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        eyeIcon.classList.remove('hidden');
+        eyeOffIcon.classList.add('hidden');
+    } else {
+        passwordField.type = 'password';
+        eyeIcon.classList.add('hidden');
+        eyeOffIcon.classList.remove('hidden');
+    }
+}
     </script>
 </body>
 </html>

@@ -13,7 +13,7 @@ class UsersController extends Controller
     /**
      * Menampilkan daftar user dengan pagination
      */
-    public function index()
+    public function index() 
     {
         $users = User::paginate(10);
         $kecamatan = Kecamatan::all();

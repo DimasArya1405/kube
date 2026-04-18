@@ -32,16 +32,6 @@ use Dflydev\DotAccessData\Data;
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/', function () {
-    return redirect('/login');
-});
-
-// DATA USER
-Route::get('/admin/users', [DashboardController::class, 'users'])->name('admin.users');
-Route::post('/admin/users/store', [DashboardController::class, 'store'])->name('admin.users.store');
-Route::get('/admin/users/edit/{id}', [DashboardController::class, 'edit'])->name('admin.users.edit');
-Route::put('/admin/users/update/{id}', [DashboardController::class, 'update'])->name('admin.users.update');
-Route::delete('/admin/users/delete/{id}', [DashboardController::class, 'destroy'])->name('admin.users.delete');
 Route::get('/', function () {return redirect('/login');});
 
 // REGISTER
@@ -58,11 +48,18 @@ Route::get('/get-desa/{id_kecamatan}', function($id_kecamatan) {
 // DASHBOARD & MASTER DATA (Wajib Login)
 Route::middleware('auth')->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
-    Route::get('/dashboard/ketua', [DashboardController::class, 'ketua']);
-    Route::get('/dashboard/pendamping', [DashboardController::class, 'pendamping']);
-    Route::get('/dashboard/koordinator', [DashboardController::class, 'koordinator']);
-    Route::get('/dashboard/tim', [DashboardController::class, 'tim']);
-    Route::get('/dashboard/dinas', [DashboardController::class, 'dinas']);
+    Route::get('/ketua_kube/dashboard', [DashboardController::class, 'ketua'])->name('ketua_kube.dashboard');
+    Route::get('/pendamping/dashboard', [DashboardController::class, 'pendamping'])->name('pendamping.dashboard');
+    Route::get('/koordinator/dashboard', [DashboardController::class, 'koordinator'])->name('dashboard.koordinator');
+    Route::get('/dashboard/tim', [DashboardController::class, 'tim'])->name('dashboard.tim');
+    Route::get('/kepala_dinas/dashboard', [DashboardController::class, 'dinas'])->name('dashboard.dinas');
+
+    // KELOLA DATA USER
+    Route::get('/admin/users', [UsersController::class, 'index'])->name('admin.users');
+    Route::post('/admin/users/store', [UsersController::class, 'store'])->name('admin.users.store');
+    Route::get('/admin/users/edit/{id}', [UsersController::class, 'edit'])->name('admin.users.edit');
+    Route::put('/admin/users/update/{id}', [UsersController::class, 'update'])->name('admin.users.update');
+    Route::delete('/admin/users/delete/{id}', [UsersController::class, 'destroy'])->name('admin.users.delete');
 
     // KELOLA DATA KUBE & ANGGOTA
     Route::resource('kube', KubeController::class);
