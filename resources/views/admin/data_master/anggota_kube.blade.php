@@ -108,7 +108,6 @@ Data Master / <span class="text-gray-800">Data Anggota KUBE</span>
                         </div>
                     </td>
                 </tr>
-                @endforeach
             </tbody>
         </table>
     </div>
@@ -206,6 +205,8 @@ Data Master / <span class="text-gray-800">Data Anggota KUBE</span>
         </form>
     </div>
 </div>
+@endforeach
+
 
 <div id="tambahAnggotaModal" class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center transition-opacity">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden">
@@ -263,6 +264,7 @@ Data Master / <span class="text-gray-800">Data Anggota KUBE</span>
         </form>
     </div>
 </div>
+
 
 <script>
     // Memastikan function toggleModal dideklarasikan agar bisa dipanggil dari tombol

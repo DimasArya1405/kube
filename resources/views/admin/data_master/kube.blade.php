@@ -78,7 +78,6 @@ Data Master / <span class="text-gray-800">Data KUBE</span>
                         </div>
                     </td>
                 </tr>
-                @endforeach
             </tbody>
         </table>
     </div>
@@ -96,7 +95,6 @@ Data Master / <span class="text-gray-800">Data KUBE</span>
             <form action="{{ route('kube.update', $k->id_kube) }}" method="POST">
                 @csrf
                 @method('PUT')
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                     <div class="col-span-1 md:col-span-2">
                         <label class="block text-sm font-bold text-gray-700 mb-1">Nama KUBE</label>
@@ -177,6 +175,8 @@ Data Master / <span class="text-gray-800">Data KUBE</span>
         </div>
     </div>
 </div>
+@endforeach
+
 
 <div id="tambahKubeModal" class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center transition-opacity">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden">
@@ -225,6 +225,7 @@ Data Master / <span class="text-gray-800">Data KUBE</span>
         </form>
     </div>
 </div>
+
 
 <script>
     function toggleModal(modalID) {
