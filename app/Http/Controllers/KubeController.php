@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kube;
+use App\Models\AnggotaKube;
 use App\Models\DesaKelurahan;
 use App\Models\ClusterUsaha;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class KubeController extends Controller
 {
@@ -34,16 +36,26 @@ class KubeController extends Controller
             'keterangan' => 'required|string',
         ]);
 
-        Kube::create([
+        $kubeBaru = Kube::create([
             'nama_kube' => $request->nama_kube,
             'id_desa_kelurahan' => $request->id_desa_kelurahan,
             'id_cluster' => $request->id_cluster,
             'tanggal_terbentuk' => $request->tanggal_terbentuk,
-            'status' => $request->status ?? 'Tidak Aktif',
+            'status' => $request->status ?? 'Tidak Aktif', // Biasakan default pengajuan itu Menunggu
             'keterangan' => $request->keterangan,
+            'id_user' => Auth::id() 
         ]);
 
-        return redirect()->back()->with('success', 'Data KUBE berhasil ditambahkan!');
+        AnggotaKube::create([
+            'id_kube' => $kubeBaru->id_kube, 
+            'nama_anggota' => Auth::user()->nama, // Pastikan di tabel users ada kolom 'nama'
+            'nik' => Auth::user()->nik,           // Pastikan di tabel users ada kolom 'nik'
+            'no_hp' => Auth::user()->no_hp,       // Pastikan di tabel users ada kolom 'no_hp'
+            'alamat' => Auth::user()->alamat,     // Pastikan di tabel users ada kolom 'alamat'
+            'jabatan' => 'Ketua' 
+        ]);
+
+        return redirect()->back()->with('success', 'Data KUBE berhasil diajukan!');
     }
 
     public function destroy($id)
