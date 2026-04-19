@@ -25,7 +25,7 @@ class PersetujuanPengajuanKubeController extends Controller
         if ($tahun) {
             $query->whereYear('tanggal_pengajuan', $tahun);
         }
-        $pengajuan_kube = $query->orderBy('tanggal_pengajuan', 'desc')->get();
+        $pengajuan_kube = $query->orderBy('created_at', 'desc')->get();
 
         $total_pengajuan = PengajuanKube::when($tahun, function ($q) use ($tahun) {
             $q->whereYear('tanggal_pengajuan', $tahun);

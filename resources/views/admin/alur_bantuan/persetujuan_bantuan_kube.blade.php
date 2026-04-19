@@ -282,37 +282,4 @@ Dashboard / <span class="text-gray-800">Pengajuan Bantuan KUBE</span>
     </div>
 </div>
 
-{{-- ================= MODAL TAMBAH ================= --}}
-{{-- <div id="modal-tambah" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div class="bg-white rounded-lg p-6 w-96">
-        <h3 class="text-lg font-semibold mb-4">Tambah Cluster</h3>
-
-        <form action="/cluster_usaha" method="POST">
-            @csrf
-
-            <input type="text" name="nama_cluster" placeholder="Nama Cluster"
-                class="w-full mb-2 border p-2 rounded" required>
-
-            <textarea name="deskripsi" placeholder="Deskripsi"
-                class="w-full mb-2 border p-2 rounded"></textarea>
-
-            <select name="id_kategori" class="w-full mb-2 border p-2 rounded" required>
-                <option value="">Pilih Kategori</option>
-                @foreach ($kategori as $k)
-                    <option value="{{ $k->id_kategori }}">{{ $k->nama_kategori }}</option>
-@endforeach
-</select>
-
-<select name="status" class="w-full mb-3 border p-2 rounded">
-    <option value="Aktif">Aktif</option>
-    <option value="Tidak Aktif">Tidak Aktif</option>
-</select>
-
-<button class="bg-blue-600 text-white px-4 py-2 rounded w-full">
-    Simpan
-</button>
-</form>
-</div>
-</div> --}}
-
 @stop
