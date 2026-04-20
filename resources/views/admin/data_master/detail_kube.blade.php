@@ -19,18 +19,24 @@ Data Master / Data Kube / <span class="text-gray-800">Detail KUBE</span>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
         <div>
             <h3 class="text-lg font-bold text-gray-800 mb-4 uppercase tracking-wide">Informasi Dasar KUBE</h3>
-            <div class="space-y-2 text-gray-700 font-medium">
+
+            <div class="space-y-3 text-gray-700 font-medium">
                 <p>Nama KUBE : <span class="uppercase">{{ $kube->nama_kube }}</span></p>
-                <p>Kategori : <span>{{ $kube->clusterUsaha->nama_cluster ?? '-' }}</span></p> 
+                <p>Kategori : <span>{{ $kube->clusterUsaha->kategori->nama_kategori ?? '-' }}</span></p>
                 <p>Cluster : <span>{{ $kube->clusterUsaha->nama_cluster ?? '-' }}</span></p>
-                <p>Kecamatan : <span>{{ $kube->desa->nama_desa_kelurahan ?? '-' }}</span></p> 
+
+                <p>Kecamatan : <span>{{ $kube->desa->kecamatan->nama_kecamatan ?? '-' }}</span></p>
                 <p>Desa/Kelurahan : <span>{{ $kube->desa->nama_desa_kelurahan ?? '-' }}</span></p>
                 <p>Status : <span>{{ $kube->status }}</span></p>
+
+                <p>Tanggal Dibentuk : <span>{{ $kube->tanggal_terbentuk ? \Carbon\Carbon::parse($kube->tanggal_terbentuk)->format('d F Y') : '-' }}</span></p>
+
+
             </div>
         </div>
 
         <div>
-            <h3 class="text-lg font-bold text-gray-800 mb-4 uppercase tracking-wide">Pengelola KUBE</h3>
+            <h3 class="text-lg font-bold text-gray-800 mb-2 uppercase tracking-wide">Pengelola KUBE</h3>
             <div class="space-y-4">
                 <div>
                     <p class="text-gray-700 font-medium mb-1">Pendamping</p>
@@ -43,6 +49,16 @@ Data Master / Data Kube / <span class="text-gray-800">Detail KUBE</span>
                     <div class="flex justify-between items-center bg-gray-300 rounded-full px-6 py-2 shadow-inner">
                         <span class="font-bold text-gray-800 mx-auto">{{ $kube->pembagianPendamping->pembagianKoordinator->koordinator->nama_koor ?? 'Belum ada Koordinator' }}</span>
                     </div>
+                </div>
+
+            </div>
+
+            <h3 class="text-lg font-bold text-gray-800 mt-5 mb-2 uppercase tracking-wide">Keterangan KUBE</h3>
+            <div>
+                <div class="bg-gray-50 rounded-lg px-4 py-3 border border-gray-200 shadow-sm">
+                    <p class="text-gray-800 text-sm leading-relaxed">
+                        {{ $kube->keterangan ?? 'Tidak ada keterangan.' }}
+                    </p>
                 </div>
             </div>
         </div>

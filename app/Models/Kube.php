@@ -18,6 +18,7 @@ class Kube extends Model
 
     protected $fillable = [
         'nama_kube',
+        'id_user',         // <--- INI BIANG KEROKNYA
         'id_desa_kelurahan',
         'id_cluster',
         'tanggal_terbentuk',

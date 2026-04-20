@@ -73,7 +73,7 @@ return new class extends Migration
                 'nama' => 'Ran',
                 'email' => 'ran123@gmail.com',
                 'password' => Hash::make('12345678'),
-                'id_kecamatan' => 1, 'id_desa_kelurahan' => 1
+                'id_kecamatan' => 1, 'id_desa_kelurahan' => 1        
             ],
             [
                 'id_user' => 2,
