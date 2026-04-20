@@ -136,15 +136,19 @@ if ($duaDataTerakhir->count() >= 2) {
             'periode_tahun' => $request->periode_tahun,
         ];
 
-        if ($request->hasFile('lampiran_keuangan')) {
-            if ($laporan->lampiran_keuangan && File::exists(public_path('uploads/keuangan/'.$laporan->lampiran_keuangan))) {
-                File::delete(public_path('uploads/keuangan/'.$laporan->lampiran_keuangan));
-            }
-            $file = $request->file('lampiran_keuangan');
-            $namaFile = time() . "_" . str_replace(' ', '_', $file->getClientOriginalName());
-            $file->move(public_path('uploads/keuangan'), $namaFile);
-            $updateData['lampiran_keuangan'] = $namaFile;
+       if ($request->hasFile('lampiran_keuangan')) {
+        if ($laporan->lampiran_keuangan && file_exists(public_path('uploads/keuangan/'.$laporan->lampiran_keuangan))) {
+            unlink(public_path('uploads/keuangan/'.$laporan->lampiran_keuangan));
         }
+
+        $file = $request->file('lampiran_keuangan');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('uploads/keuangan'), $filename);
+
+        $laporan->lampiran_keuangan = $filename;
+        $laporan->save();
+    }
+
 
         $laporan->update($updateData);
         return redirect()->back()->with('success', 'Laporan diperbarui!');

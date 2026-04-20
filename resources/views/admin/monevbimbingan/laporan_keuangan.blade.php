@@ -5,7 +5,7 @@
     {{-- Header Section --}}
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-5 gap-3">
         <div>
-            <h1 class="text-xl font-bold text-gray-800 tracking-tight">Laporan Keuangan KUBE</h1>
+            <h1 class="text-xl font-bold text-gray-800 tracking-tight">Keuangan KUBE</h1>
             <p class="text-[11px] text-gray-500">Monitoring omset dan laba bulanan KUBE.</p>
         </div>
         <div class="flex flex-wrap items-center gap-2">
@@ -147,6 +147,7 @@
                                     data-tahun="{{ $row->periode_tahun }}"
                                     data-tgl="{{ $row->tanggal_laporan }}"
                                     data-ket="{{ $row->keterangan }}"
+                                    data-file="{{ $row->lampiran_keuangan }}"
                                     class="p-1.5 text-amber-500 hover:bg-amber-50 rounded-md transition text-xs">✏️</button>
                                 
                                 <form id="delete-form-{{ $row->id_laporan }}" action="{{ route('laporan.destroy', $row->id_laporan) }}" method="POST" class="inline">
@@ -289,6 +290,21 @@
                 <div class="col-span-2">
                     <textarea name="keterangan" id="edit-ket" rows="2" class="w-full border-gray-100 rounded-lg p-2 bg-gray-50"></textarea>
                 </div>
+               <div class="col-span-2">
+    <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Lampiran Baru</label>
+    {{-- Container Wrapper --}}
+    <div class="relative group border-2 border-dashed border-slate-100 hover:border-amber-300 rounded-xl px-4 py-2 flex items-center gap-3 transition-all mt-1">
+        <input type="file" name="lampiran_keuangan" id="edit-file-upload" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+        <div class="text-lg text-amber-500">📂</div>
+        <div class="text-left leading-tight">
+            {{-- Label ini akan berubah teksnya lewat JS saat file dipilih --}}
+            <p id="edit-file-name" class="text-[10px] font-bold text-slate-500 group-hover:text-amber-600 truncate max-w-[200px]">
+                Klik untuk ganti bukti transaksi
+            </p>
+            <p class="text-[8px] text-slate-300 uppercase font-bold tracking-tight">JPG, PNG, PDF, EXCEL (Max 5MB)</p>
+        </div>
+    </div>
+</div>
             </div>
             <button type="submit" class="mt-5 w-full py-2.5 bg-amber-500 text-white font-bold rounded-lg shadow hover:bg-amber-600 transition text-xs uppercase">Perbarui</button>
         </form>
@@ -377,6 +393,7 @@
 
     function openEditModal(btn) {
         const id = btn.getAttribute('data-id');
+        const file = btn.getAttribute('data-file');
         document.getElementById('form-edit-lk').action = `/laporan-keuangan/${id}`;
         document.getElementById('edit-kube').value = btn.getAttribute('data-kube');
         document.getElementById('edit-cluster').value = btn.getAttribute('data-cluster');
@@ -388,6 +405,9 @@
         document.getElementById('edit-ket').value = btn.getAttribute('data-ket');
         document.getElementById('modal-edit-lk').classList.remove('hidden');
         document.getElementById('modal-edit-lk').classList.add('flex');
+        // Tampilkan info file lama
+    const fileInfo = document.getElementById('edit-file-info');
+    fileInfo.innerText = file ? `File saat ini: ${file}` : "Belum ada lampiran.";
     }
 
     function closeEditModal() {
@@ -508,6 +528,12 @@ document.getElementById('file-upload').addEventListener('change', function(e) {
     const label = document.getElementById('file-name');
     label.innerText = fileName;
     label.classList.add('text-sky-600');
+
+    // Listener untuk Modal Edit
+document.getElementById('edit-file-upload').addEventListener('change', function(e) {
+    const fileName = e.target.files[0] ? e.target.files[0].name : "Klik untuk ganti bukti transaksi";
+    document.getElementById('edit-file-name').innerText = fileName;
+});
 });
 </script>
 @endsection
