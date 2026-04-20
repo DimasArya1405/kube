@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\AnggotaKube;
 use App\Models\Kube;
 use Illuminate\Http\Request;
-
+use App\Exports\AnggotaKubeExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 class AnggotaKubeController extends Controller
 {
     public function index()
@@ -103,4 +105,23 @@ class AnggotaKubeController extends Controller
         // 5. Redirect
         return redirect()->back()->with('success', 'Data Anggota berhasil diupdate!');
     }
+
+    public function exportExcel()
+    {
+        return Excel::download(new AnggotaKubeExport, 'Data_Seluruh_Anggota_KUBE.xlsx');
+    }
+
+    public function exportPdf()
+    {
+        $anggotas = AnggotaKube::with('kube')->get();
+        
+        // Sesuaikan path view-nya dengan tempat lu bikin file pdf_anggota.blade.php tadi
+        $pdf = Pdf::loadView('admin.data_master.pdf_anggota', compact('anggotas'));
+        
+        // Setting kertas Landscape biar kolomnya muat
+        $pdf->setPaper('A4', 'landscape'); 
+        
+        return $pdf->download('Laporan_Anggota_KUBE.pdf');
+    }
 }
+

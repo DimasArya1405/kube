@@ -11,6 +11,30 @@ Data Master / <span class="text-gray-800">Data KUBE</span>
         <p class="text-gray-500 text-sm mt-1">Kelola informasi Kelompok Usaha Bersama, status, dan pembagian pendamping.</p>
     </div>
 
+    @if(session('success'))
+    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <span class="block sm:inline">{{ session('success') }}</span>
+    </div>
+    @endif
+
+    @if(session('error'))
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <strong class="font-bold">Oops!</strong>
+        <span class="block sm:inline">{{ session('error') }}</span>
+    </div>
+    @endif
+
+    <!-- @if ($errors->any())
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <strong class="font-bold">Gagal Menyimpan Data!</strong>
+        <ul class="list-disc ml-5 mt-1">
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif -->
+
     <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
         <div class="relative w-full md:w-1/3">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
@@ -69,20 +93,22 @@ Data Master / <span class="text-gray-800">Data KUBE</span>
                                 <i class="far fa-edit"></i>
                             </button>
 
-                            <form action="{{ route('kube.destroy', $k->id_kube) }}" method="POST" class="inline">
+                            <form action="{{ route('kube.destroy', $k->id_kube) }}" method="POST" class="inline" id="deleteForm-{{ $k->id_kube }}">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="text-gray-400 hover:text-red-500 transition text-lg" onclick="return confirm('Yakin ingin menghapus KUBE ini?')">
+                                <button type="button" class="text-gray-400 hover:text-red-500 transition text-lg" onclick="confirmDelete(event, '{{ $k->id_kube }}')">
                                     <i class="far fa-trash-alt"></i>
                                 </button>
                             </form>
                         </div>
                     </td>
                 </tr>
+                @endforeach
+
             </tbody>
         </table>
     </div>
-</div>
+</div> @foreach($kubes as $k)
 
 <div id="editKubeModal{{ $k->id_kube }}" class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center transition-opacity">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl mx-4 overflow-hidden text-left relative">
@@ -195,6 +221,16 @@ Data Master / <span class="text-gray-800">Data KUBE</span>
             @csrf
             <div class="px-6 py-4 space-y-4">
                 <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Akun Ketua KUBE</label>
+                    <select name="id_user" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-sm transition" required>
+                        <option value="">-- Pilih Akun Pendaftar --</option>
+                        @foreach($calonKetua as $ketua)
+                        <option value="{{ $ketua->id_user }}">{{ $ketua->nama }}</option>
+                        @endforeach
+                    </select>
+                    <p class="text-xs text-gray-500 mt-1">*Pilih akun pengguna yang akan menjadi Ketua di KUBE ini.</p>
+                </div>
+                <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Nama KUBE</label>
                     <input type="text" name="nama_kube" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-sm transition" required>
                 </div>
@@ -235,6 +271,30 @@ Data Master / <span class="text-gray-800">Data KUBE</span>
     function toggleModal(modalID) {
         const modal = document.getElementById(modalID);
         modal.classList.toggle('hidden');
+    }
+
+    // 🔥 Tangkap 'event'-nya di sini
+    function confirmDelete(event, id_kube) {
+
+        // 🔥 INI REM TANGANNYA! Tahan form biar ga langsung ke-submit
+        event.preventDefault();
+
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Data KUBE ini akan dihapus secara permanen!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Hapus Data!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Kalau user udah beneran ngeklik "Ya", baru kita lepas remnya dan kirim formnya
+                document.getElementById('deleteForm-' + id_kube).submit();
+            }
+        });
     }
 </script>
 @endsection

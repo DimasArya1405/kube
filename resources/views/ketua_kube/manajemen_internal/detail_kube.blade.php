@@ -1,15 +1,12 @@
-@extends('admin.layout')
+@extends('ketua_kube.layout')
 
 @section('breadcrumb')
-Data Master / Data Kube / <span class="text-gray-800">Detail KUBE</span>
+Manajemen Internal / <span class="text-gray-800">Detail KUBE</span>
 @stop
 
 @section('content')
 <div class="p-6">
     <div class="flex items-center mb-6 border-b pb-4">
-        <a href="{{ route('kube.index') }}" class="text-gray-600 hover:text-purple-700 transition mr-4 text-2xl">
-            <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
-        </a>
         <div>
             <h2 class="text-2xl font-bold text-gray-800">Manajemen Detail KUBE {{ $kube->nama_kube }}</h2>
             <p class="text-gray-500 text-sm mt-1">Kelola informasi Kelompok Usaha Bersama, status, dan pembagian pendamping.</p>
@@ -125,7 +122,7 @@ Data Master / Data Kube / <span class="text-gray-800">Detail KUBE</span>
             <div class="px-6 py-4 space-y-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Asal KUBE</label>
-                    <input type="text" value="{{ $kube->nama_kube }}" disabled class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-sm transition" required>
+                    <input type="text" value="{{ $kube->nama_kube }}" disabled class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 font-bold cursor-not-allowed">
                     <input type="hidden" name="id_kube" value="{{ $kube->id_kube }}">
                 </div>
                 <div>
