@@ -60,6 +60,8 @@ Route::middleware('auth')->group(function () {
     // KELOLA DATA KUBE & ANGGOTA
     Route::resource('kube', KubeController::class);
     Route::resource('anggota_kube', AnggotaKubeController::class);
+    Route::get('/kube/export/excel', [App\Http\Controllers\KubeController::class, 'exportExcel'])->name('kube.export.excel');
+    Route::get('/kube/export/pdf', [App\Http\Controllers\KubeController::class, 'exportPdf'])->name('kube.export.pdf');
 
     // PEMBAGIAN PENDAMPING
     Route::resource('pembagian_pendamping', PembagianPendampingController::class);
@@ -170,7 +172,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/ranking-kube/export/excel', [RankingKubeController::class, 'exportExcel'])->name('ranking.kube.export.excel');
 
     //Kelola Data Kunjungan Pendamping
-    Route::get('/kategori-kube', function () {return view('coming-soon');})->name('kategorikube.index');
+    Route::get('/kategori-kube', function () {
+        return view('coming-soon');
+    })->name('kategorikube.index');
 
     // KUNJUNGAN PENDAMPING
     Route::get('/pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'index'])->name('kunjungan.index');
@@ -183,6 +187,5 @@ Route::middleware('auth')->group(function () {
     // LAPORAN KECAMATAN
     Route::get('/admin/laporan-kecamatan', [LaporanKecamatanController::class, 'index'])->name('laporan.kecamatan');
     Route::get('/admin/laporan-kecamatan/{id}', [LaporanKecamatanController::class, 'detail'])->name('laporan.kecamatan.detail');
-    Route::get('/admin/laporan-kecamatan/pdf/{id}',[LaporanKecamatanController::class,'exportPdf'])->name('laporan.pdf');
-   
+    Route::get('/admin/laporan-kecamatan/pdf/{id}', [LaporanKecamatanController::class, 'exportPdf'])->name('laporan.pdf');
 });

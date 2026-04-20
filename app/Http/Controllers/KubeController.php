@@ -8,6 +8,9 @@ use App\Models\DesaKelurahan;
 use App\Models\ClusterUsaha;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Exports\KubeExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class KubeController extends Controller
 {
@@ -20,7 +23,7 @@ class KubeController extends Controller
             'pembagianPendamping.pendamping.pembagianKoordinator.koordinator',
             'pembagianPendamping.pembagianKoordinator.koordinator'
         ])->get();
-        
+
         $desas = DesaKelurahan::orderBy('nama_desa_kelurahan', 'asc')->get();
         $clusters = ClusterUsaha::all();
 
@@ -43,16 +46,16 @@ class KubeController extends Controller
             'tanggal_terbentuk' => $request->tanggal_terbentuk,
             'status' => $request->status ?? 'Tidak Aktif', // Biasakan default pengajuan itu Menunggu
             'keterangan' => $request->keterangan,
-            'id_user' => Auth::id() 
+            'id_user' => Auth::id()
         ]);
 
         AnggotaKube::create([
-            'id_kube' => $kubeBaru->id_kube, 
+            'id_kube' => $kubeBaru->id_kube,
             'nama_anggota' => Auth::user()->nama, // Pastikan di tabel users ada kolom 'nama'
             'nik' => Auth::user()->nik,           // Pastikan di tabel users ada kolom 'nik'
             'no_hp' => Auth::user()->no_hp,       // Pastikan di tabel users ada kolom 'no_hp'
             'alamat' => Auth::user()->alamat,     // Pastikan di tabel users ada kolom 'alamat'
-            'jabatan' => 'Ketua' 
+            'jabatan' => 'Ketua'
         ]);
 
         return redirect()->back()->with('success', 'Data KUBE berhasil diajukan!');
@@ -95,10 +98,35 @@ class KubeController extends Controller
             'id_desa_kelurahan' => $request->id_desa_kelurahan,
             'id_cluster' => $request->id_cluster,
             'status' => $request->status,
+            'tanggal_terbentuk' => $request->tanggal_terbentuk,
             'keterangan' => $request->keterangan,
         ]);
 
         // 4. Balik ke halaman semula
         return redirect()->back()->with('success', 'Data KUBE berhasil diupdate!');
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(new KubeExport, 'Data_KUBE.xlsx');
+    }
+
+    public function exportPdf()
+    {
+        // Tarik SEMUA relasi sampai ke akar-akarnya, termasuk anggota!
+        $kubes = Kube::with([
+            'desa.kecamatan',
+            'clusterUsaha.kategori',
+            'pembagianPendamping.pendamping.pembagianKoordinator.koordinator',
+            'pembagianPendamping.pembagianKoordinator.koordinator',
+            'anggota' // 🔥 Jangan lupa tarik data anggotanya
+        ])->get();
+
+        $pdf = Pdf::loadView('admin.data_master.pdf_kube', compact('kubes'));
+
+        // Opsional: Bikin kertasnya jadi Landscape kalau tabelnya lebar
+        $pdf->setPaper('A4', 'landscape');
+
+        return $pdf->download('Laporan_Lengkap_KUBE.pdf');
     }
 }
