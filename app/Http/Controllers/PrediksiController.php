@@ -18,7 +18,6 @@ class PrediksiController extends Controller
      */
     private function getPendampingLogin()
     {
-        
         $user = auth()->user();
 
         if (!$user) {
