@@ -22,4 +22,9 @@ class ClusterUsaha extends Model
     {
         return $this->hasMany(Kube::class, 'id_cluster', 'id_cluster');
     }
+
+        public function kategori()
+    {
+    return $this->belongsTo(KategoriKube::class, 'id_kategori', 'id_kategori');
+    }
 }

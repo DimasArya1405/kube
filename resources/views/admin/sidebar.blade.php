@@ -98,10 +98,10 @@
             <i data-lucide="chevron-down" id="reportIcon" class="w-4 h-4 transition-transform duration-300"></i>
         </button>
         <div id="reportMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
-            <a href="{{ route('laporan.kecamatan') }}" 
-   class="py-2 px-3 text-indigo-200 hover:text-white">
-    Laporan Kecamatan (Alva)
-</a>
+            <a href="{{ route('laporan.kecamatan') }}"
+                class="py-2 px-3 text-indigo-200 hover:text-white">
+                Laporan Kecamatan (Alva)
+            </a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Galeri Kegiatan (Tika)</a>
             <a href="{{ route('rekap_kube.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Rekap KUBE (Fia)</a>
         </div>
