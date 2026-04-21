@@ -30,14 +30,14 @@ class Pelatihan extends Model
     ];
 
     public function kube()
-{
-    return $this->belongsTo(Kube::class, 'id_kube', 'id_kube');
-}
+    {
+        return $this->belongsTo(Kube::class, 'id_kube', 'id_kube');
+    }
 
-public function pendamping()
-{
-    return $this->belongsTo(Pendamping::class, 'id_pendamping', 'id_pendamping');
-}
-    // Relasi 
-    public function mitra() { return $this->belongsTo(Mitra::class, 'id_mitra'); }
+    public function pendamping()
+    {
+        return $this->belongsTo(Pendamping::class, 'id_pendamping', 'id_pendamping');
+    }
+        // Relasi 
+        public function mitra() { return $this->belongsTo(Mitra::class, 'id_mitra'); }
 }
