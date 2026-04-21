@@ -55,8 +55,4 @@ class Pendamping extends Model
     {
         return $this->hasOne(PembagianKoordinator::class, 'id_pembagian', 'id_pembagian');
     }
-        public function user()
-    {
-        return $this->belongsTo(User::class, 'id_user', 'id_user');
-    }
 }
