@@ -146,6 +146,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/admin/pendamping/{id}', [PendampingController::class, 'destroy'])->name('pendamping.delete');
     Route::get('/admin/pendamping/export/pdf', [PendampingController::class, 'exportPdf'])->name('pendamping.export.pdf');
     Route::get('/admin/pendamping/export/excel', [PendampingController::class, 'exportExcel'])->name('pendamping.export.excel');
+    Route::put('/admin/pendamping/{id}', [PendampingController::class, 'update'])->name('pendamping.update');
+    Route::get('/admin/pendamping/{id}', [PendampingController::class,'show'])->name('pendamping.show');
 
     // REKAP KUBE
     Route::get('/rekap_kube', [RekapKubeController::class, 'index'])->name('rekap_kube.index');
