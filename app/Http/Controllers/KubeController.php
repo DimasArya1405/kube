@@ -15,24 +15,70 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class KubeController extends Controller
 {
+    // public function index()
+    // {
+    //     $kubes = Kube::with([
+    //         'desa.kecamatan',
+    //         'clusterUsaha.kategori',
+    //         // Rute baru: Penugasan -> Tabel Pendamping -> Penugasan Koor -> Tabel Koordinator
+    //         'pembagianPendamping.pendamping.pembagianKoordinator.koordinator',
+    //         'pembagianPendamping.pembagianKoordinator.koordinator'
+    //     ])->get();
+
+    //     $desas = DesaKelurahan::orderBy('nama_desa_kelurahan', 'asc')->get();
+    //     $clusters = ClusterUsaha::all();
+
+    //     // 🔥 TAMBAHAN BARU: Cari user yang role-nya ketua_kube
+    //     // Pastikan kolom primary key di tabel user lu bener ya (gw asumsikan namanya 'id_user' atau 'id')
+    //     $calonKetua = User::where('role', 'ketua_kube')->get();
+
+    //     return view('admin.data_master.kube', compact('kubes', 'desas', 'clusters', 'calonKetua'));
+    // }
+
     public function index()
     {
-        $kubes = Kube::with([
-            'desa.kecamatan',
-            'clusterUsaha.kategori',
-            // Rute baru: Penugasan -> Tabel Pendamping -> Penugasan Koor -> Tabel Koordinator
-            'pembagianPendamping.pendamping.pembagianKoordinator.koordinator',
-            'pembagianPendamping.pembagianKoordinator.koordinator'
-        ])->get();
-
+        // Siapkan data pendukung yang dipakai bareng-bareng
         $desas = DesaKelurahan::orderBy('nama_desa_kelurahan', 'asc')->get();
         $clusters = ClusterUsaha::all();
+        $role = Auth::user()->role; // Cek siapa yang lagi login
 
-        // 🔥 TAMBAHAN BARU: Cari user yang role-nya ketua_kube
-        // Pastikan kolom primary key di tabel user lu bener ya (gw asumsikan namanya 'id_user' atau 'id')
-        $calonKetua = User::where('role', 'ketua_kube')->get();
+        // ================= LOGIKA UNTUK ADMIN =================
+        if ($role == 'admin') {
+            $kubes = Kube::with([
+                'desa.kecamatan',
+                'clusterUsaha.kategori',
+                'pembagianPendamping.pendamping.pembagianKoordinator.koordinator',
+                'pembagianPendamping.pembagianKoordinator.koordinator'
+            ])->get();
 
-        return view('admin.data_master.kube', compact('kubes', 'desas', 'clusters', 'calonKetua'));
+            $calonKetua = User::where('role', 'ketua_kube')->get();
+
+            // Arahkan ke file Blade punya Admin
+            return view('admin.data_master.kube', compact('kubes', 'desas', 'clusters', 'calonKetua'));
+        }
+
+        // ================= LOGIKA UNTUK PENDAMPING =================
+        elseif ($role == 'pendamping') {
+            $nikLogin = Auth::user()->nik;
+
+            // Tarik KUBE yang relasi NIK pendampingnya cocok dengan yang lagi login
+            $kubes = Kube::whereHas('pembagianPendamping.pendamping', function ($q) use ($nikLogin) {
+                $q->where('nik', $nikLogin);
+            })->with([
+                'desa.kecamatan',
+                'clusterUsaha.kategori',
+                'pembagianPendamping.pendamping.pembagianKoordinator.koordinator',
+                'pembagianPendamping.pembagianKoordinator.koordinator'
+            ])->get();
+
+            $calonKetua = User::where('role', 'ketua_kube')->get();
+
+            // Arahkan ke file Blade khusus Pendamping (biar tombol hapus/edit admin gak muncul)
+            return view('pendamping.kube_binaan.kube', compact('kubes', 'desas', 'clusters', 'calonKetua'));
+        }
+
+        // Kalau ada role lain yang nyasar ke rute ini
+        return abort(403, 'Anda tidak memiliki akses ke halaman ini.');
     }
 
     //fungsi simpan lewat role ketua 
@@ -110,12 +156,12 @@ class KubeController extends Controller
 
         // 4. Otomatis Daftarkan Sebagai Anggota (Jabatan: Ketua)
         AnggotaKube::create([
-            'id_kube' => $kubeBaru->id_kube, 
-            'nama_anggota' => $ketuaTerpilih->nama, 
-            'nik' => $ketuaTerpilih->nik,           
-            'no_hp' => $ketuaTerpilih->no_hp,       
-            'alamat' => $ketuaTerpilih->alamat,     
-            'jabatan' => 'Ketua' 
+            'id_kube' => $kubeBaru->id_kube,
+            'nama_anggota' => $ketuaTerpilih->nama,
+            'nik' => $ketuaTerpilih->nik,
+            'no_hp' => $ketuaTerpilih->no_hp,
+            'alamat' => $ketuaTerpilih->alamat,
+            'jabatan' => 'Ketua'
         ]);
 
         // Arahkan kembali dengan pesan sukses

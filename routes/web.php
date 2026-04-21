@@ -68,7 +68,7 @@ Route::middleware('auth')->group(function () {
 
     // PEMBAGIAN PENDAMPING
     Route::resource('pembagian_pendamping', PembagianPendampingController::class);
-Route::get('/pembagian_pendamping/export/excel', [App\Http\Controllers\PembagianPendampingController::class, 'exportExcel'])->name('pembagian_pendamping.export.excel');
+    Route::get('/pembagian_pendamping/export/excel', [App\Http\Controllers\PembagianPendampingController::class, 'exportExcel'])->name('pembagian_pendamping.export.excel');
 
     // BIMBINGAN KUBE OLEH PENDAMPING (Tambahan Baru)
     // Ini akan otomatis menghandle route bimbingan.index, bimbingan.create, bimbingan.store, dll.
@@ -193,3 +193,4 @@ Route::get('/pembagian_pendamping/export/excel', [App\Http\Controllers\Pembagian
     Route::get('/admin/laporan-kecamatan/{id}', [LaporanKecamatanController::class, 'detail'])->name('laporan.kecamatan.detail');
     Route::get('/admin/laporan-kecamatan/pdf/{id}', [LaporanKecamatanController::class, 'exportPdf'])->name('laporan.pdf');
 });
+

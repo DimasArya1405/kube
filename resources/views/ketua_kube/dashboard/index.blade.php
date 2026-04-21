@@ -1,4 +1,4 @@
-@extends('admin.layout')
+@extends('ketua_kube.layout')
 
 @section('content')
 <div class="p-6">
@@ -21,12 +21,12 @@
         <form action="{{ route('anggota_kube.store') }}" method="POST">
             @csrf
             
-            <input type="hidden" name="id_kube" value="{{ $myKube->id_kube }}">
+            <input type="hidden" name="id_kube" value="{{ $kube->id_kube }}">
 
             <div class="px-6 py-4 space-y-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Asal KUBE</label>
-                    <input type="text" value="{{ $myKube->nama_kube }}" disabled class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 font-bold cursor-not-allowed">
+                    <input type="text" value="{{ $kube->nama_kube }}" disabled class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 font-bold cursor-not-allowed">
                 </div>
 
                 <div>

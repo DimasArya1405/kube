@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Pendamping;
 use App\Models\Kecamatan;
-use PDF;
+use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\PendampingExport;
 
