@@ -37,4 +37,7 @@ Route::middleware('auth')->group(function () {
 
     // REKAP KUBE
     Route::get('/rekap_kube', [RekapKubeController::class, 'index'])->name('rekap_kube.index');
+    Route::get('/rekap_kube/detail/{id_kecamatan}', [RekapKubeController::class, 'detail'])
+    ->name('rekap_kube.detail');
+    
 });
