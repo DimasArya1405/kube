@@ -4,6 +4,16 @@
         <i data-lucide="pie-chart" class="w-5 h-5"></i>
         <span class="font-medium">Dashboard Statistik</span>
     </a>
+    <a href="#"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group bg-indigo-800 text-white border-l-4 border-white shadow-inner">
+        <i class="w-5 h-5 " data-lucide="dollar-sign"></i>
+        <span class="font-medium">Persetujuan Kube</span>
+    </a>
+    <a href="{{route('kadis.pencairan_bantuan.index')}}"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group bg-indigo-800 text-white border-l-4 border-white shadow-inner">
+        <i class="w-5 h-5 " data-lucide="dollar-sign"></i>
+        <span class="font-medium">Pencairan Bantuan</span>
+    </a>
 
     <div class="relative">
         <button onclick="toggleDropdown('monitorDinas', 'monitorIcon')" class="w-full flex items-center justify-between px-4 py-3 hover:bg-indigo-600 rounded-xl transition-all text-indigo-100 hover:text-white group">
