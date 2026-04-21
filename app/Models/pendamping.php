@@ -19,4 +19,9 @@ class Pendamping extends Model
     {
         return $this->belongsTo(Kecamatan::class, 'id_kecamatan', 'id_kecamatan');
     }
+
+        public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
 }

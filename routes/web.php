@@ -39,6 +39,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/pendamping', [PendampingController::class,'index'])->name('pendamping.index');
     Route::post('/admin/pendamping/store', [PendampingController::class,'store'])->name('pendamping.store');
     Route::delete('/admin/pendamping/{id}', [PendampingController::class,'destroy'])->name('pendamping.delete');
-    Route::get('/admin/pendamping/export/pdf', [PendampingController::class,'exportPdf'])->name('pendamping.export.pdf');
-    Route::get('/admin/pendamping/export/excel', [PendampingController::class,'exportExcel'])->name('pendamping.export.excel');
+    Route::get('/admin/pendamping/export/pdf',   [PendampingController::class,'exportPdf'])->name('pendamping.export.pdf');
+    Route::get('/admin/pendamping/export/excel', [PendampingController::class, 'exportExcel'])->name('pendamping.export.excel');
+    Route::put('/admin/pendamping/{id}', [PendampingController::class, 'update'])->name('pendamping.update');
+    Route::get('/admin/pendamping/{id}', [PendampingController::class,'show'])->name('pendamping.show');
 });
