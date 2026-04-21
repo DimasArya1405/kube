@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash; 
 
 return new class extends Migration
 {
@@ -60,6 +62,52 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
         });
+
+        // ==========================================
+        // Semua password diset: 12345678
+        // ==========================================
+        DB::table('users')->insert([
+            [
+                'id_user' => 1,
+                'role' => 'ketua_kube',
+                'nama' => 'Ran',
+                'email' => 'ran123@gmail.com',
+                'password' => Hash::make('12345678'),
+                'id_kecamatan' => 1, 'id_desa_kelurahan' => 1        
+            ],
+            [
+                'id_user' => 2,
+                'role' => 'pendamping',
+                'nama' => 'Rana',
+                'email' => 'rana123@gmail.com',
+                'password' => Hash::make('12345678'),
+                'id_kecamatan' => 1, 'id_desa_kelurahan' => 1
+            ],
+            [
+                'id_user' => 3,
+                'role' => 'koordinator',
+                'nama' => 'Rani',
+                'email' => 'rani123@gmail.com',
+                'password' => Hash::make('12345678'),
+                'id_kecamatan' => 1, 'id_desa_kelurahan' => 1
+            ],
+            [
+                'id_user' => 4,
+                'role' => 'kepala_dinas',
+                'nama' => 'Rane',
+                'email' => 'rane123@gmail.com',
+                'password' => Hash::make('12345678'),
+                'id_kecamatan' => 1, 'id_desa_kelurahan' => 1
+            ],
+            [
+                'id_user' => 5,
+                'role' => 'admin',
+                'nama' => 'Ranu',
+                'email' => 'ranu123@gmail.com',
+                'password' => Hash::make('12345678'),
+                'id_kecamatan' => 1, 'id_desa_kelurahan' => 1
+            ],
+        ]);
     }
 
     /**

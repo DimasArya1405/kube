@@ -16,8 +16,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            // Seeder lain (kecamatan/desa) harus dipanggil lebih dulu
             UserSeeder::class,
+            KategoriSeeder::class,
+            ClusterUsahaSeeder::class,
+            KubeSeeder::class
         ]);
     }
 }

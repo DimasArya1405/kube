@@ -14,14 +14,16 @@ return new class extends Migration
         Schema::create('pengajuan_kube', function (Blueprint $table) {
             $table->id('id_pengajuan_kube');
             $table->integer('id_kube');
-            $table->integer('id_user');
+            $table->integer('id_user')->nullable();
+            $table->integer('disetujui_oleh')->nullable();
             $table->integer('id_jenis_bantuan');
             $table->integer('jumlah_bantuan');
-            $table->string('tujuan_pengajuan', 100);
+            $table->string('tujuan_pengajuan', 100)->nullable();
             $table->date('tanggal_pengajuan');
-            $table->date('tanggal_disetujui');
-            $table->string('keterangan', 255);
+            $table->date('tanggal_disetujui')->nullable();
+            $table->string('keterangan', 255)->nullable();
             $table->enum('status_pengajuan', ['diajukan', 'menunggu', 'disetujui', 'ditolak', 'cair'])->default('diajukan');
+            $table->enum('status_penerima', ['menunggu', 'diterima', 'ditolak'])->default('menunggu');
             $table->timestamps();
         });
     }
