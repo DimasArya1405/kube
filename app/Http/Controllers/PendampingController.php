@@ -13,12 +13,15 @@ use App\Exports\PendampingExport;
 
 class PendampingController extends Controller
 {
-    public function index()
+public function index()
     {
         $pendamping = Pendamping::with('kecamatan')->get();
         $kecamatan  = Kecamatan::all();
+        
+        // Ambil user dengan role pendamping
+        $users = User::where('role', 'pendamping')->where('status', 'aktif')->get();
 
-        return view('admin.data_master.pendamping', compact('pendamping', 'kecamatan'));
+        return view('admin.data_master.pendamping', compact('pendamping', 'kecamatan', 'users'));
     }
 
     // Mengembalikan data JSON untuk modal detail

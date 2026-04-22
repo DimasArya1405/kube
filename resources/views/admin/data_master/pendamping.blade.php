@@ -29,7 +29,7 @@
     <div class="relative flex-1 min-w-[200px]">
         <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
             </svg>
         </span>
         <input type="text" id="searchInput" placeholder="Cari..."
@@ -39,7 +39,7 @@
     <a href="{{ route('pendamping.export.pdf') }}"
         class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
         </svg>
         Ekspor PDF
     </a>
@@ -47,7 +47,7 @@
     <a href="{{ route('pendamping.export.excel') }}"
         class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6M3 17V7a2 2 0 012-2h14a2 2 0 012 2v10"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6M3 17V7a2 2 0 012-2h14a2 2 0 012 2v10" />
         </svg>
         Ekspor Excel
     </a>
@@ -58,58 +58,6 @@
     </button>
 
 </div>
-
-{{-- TABLE --}}
-<table class="w-full border">
-    <thead class="bg-gray-200">
-        <tr>
-            <th>Foto</th>
-            <th>Nama</th>
-            <th>NIK</th>
-            <th>Kecamatan</th>
-            <th>No HP</th>
-            <th>Status</th>
-            <th>Aksi</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach($pendamping as $item)
-        <tr class="searchable-row border-t">
-            <td>
-                @if($item->foto)
-                <img src="{{ asset('storage/foto_pendamping/'.$item->foto) }}" width="40">
-                @endif
-            </td>
-            <td>{{ $item->nama_pendamping }}</td>
-            <td>{{ $item->nik }}</td>
-            <td>{{ $item->kecamatan->nama_kecamatan ?? '-' }}</td>
-            <td>{{ $item->no_hp }}</td>
-            <td>{{ $item->status }}</td>
-            <td class="px-4 py-2">
-    <div class="flex items-center gap-2">
-        {{-- Tombol Edit (Orange) --}}
-        <button type="button" 
-            onclick="openEditModal({ $item })"
-            class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded text-xs font-medium transition">
-            Edit
-        </button>
-        
-        {{-- Form & Tombol Hapus (Hijau) --}}
-        <form action="{{ route('pendamping.delete', $item->id_pendamping) }}" method="POST" class="inline">
-            @csrf
-            @method('DELETE')
-            <button type="submit" 
-                onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')"
-                class="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded text-xs font-medium transition">
-                Hapus
-            </button>
-        </form>
-    </div>
-</td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
 
 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
     <table class="w-full text-left border-collapse">
@@ -129,14 +77,14 @@
             <tr class="searchable-row hover:bg-gray-50 transition-colors">
                 <td class="px-6 py-4">
                     @if($item->foto)
-                        <img src="{{ asset('storage/foto_pendamping/'.$item->foto) }}"
-                             class="w-10 h-10 rounded-full object-cover border border-gray-100 shadow-sm">
+                    <img src="{{ asset('storage/foto_pendamping/'.$item->foto) }}"
+                        class="w-10 h-10 rounded-full object-cover border border-gray-100 shadow-sm">
                     @else
-                        <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                        </div>
+                    <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                    </div>
                     @endif
                 </td>
                 <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $item->nama_pendamping }}</td>
@@ -165,19 +113,22 @@
                         {{-- Tombol Edit (Orange) --}}
                         <button type="button"
                             onclick="openEditModal(
-                                '{{ $item->id_pendamping }}',
-                                '{{ $item->nik }}',
-                                '{{ $item->nama_pendamping }}',
-                                '{{ $item->jenis_kelamin }}',
-                                '{{ $item->no_hp }}',
-                                '{{ $item->id_kecamatan }}',
-                                '{{ $item->status }}'
-                            )"
+                            '{{ $item->id_pendamping }}',
+                            '{{ $item->id_user }}',   
+                            '{{ $item->nik }}',
+                            '{{ $item->nama_pendamping }}',
+                            '{{ $item->jenis_kelamin }}',
+                            '{{ $item->no_hp }}',
+                            '{{ $item->id_kecamatan }}',
+                            '{{ $item->status }}',
+                            '{{ $item->tanggal_mulai }}',
+                            '{{ $item->tanggal_selesai }}'
+                        )"
                             class="p-2 bg-orange-50 text-orange-600 hover:bg-orange-600 hover:text-white rounded-lg transition-all shadow-sm border border-orange-100"
                             title="Edit">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                         </button>
 
@@ -216,7 +167,7 @@
             <h2 class="text-lg font-semibold">Detail Pendamping</h2>
             <button onclick="closeDetailModal()" class="text-gray-400 hover:text-gray-600">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
         </div>
@@ -291,8 +242,13 @@
                     </div>
 
                     <div>
-                        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide">Tahun Mulai</p>
-                        <p id="detail-tahun-mulai" class="text-sm text-gray-700 font-medium mt-0.5"></p>
+                        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide">Tanggal Mulai</p>
+                        <p id="detail-tanggal-mulai" class="text-sm text-gray-700 font-medium mt-0.5"></p>
+                    </div>
+
+                    <div>
+                        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide">Tanggal Selesai</p>
+                        <p id="detail-tanggal-selesai" class="text-sm text-gray-700 font-medium mt-0.5"></p>
                     </div>
 
                 </div>
@@ -329,13 +285,23 @@
                 <div class="grid grid-cols-2 gap-4">
 
                     <div class="col-span-2">
-                        <label class="block text-sm font-semibold mb-1">NIK</label>
-                        <input name="nik" class="w-full border rounded-lg px-3 py-2">
+                        <label class="block text-sm font-semibold mb-1">Pilih User Pendamping</label>
+                        <select name="nama_pendamping" id="select_nama" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none bg-white"
+                            onchange="document.getElementById('input_nik').value = this.options[this.selectedIndex].getAttribute('data-nik') || ''; document.getElementById('input_id_user').value = this.options[this.selectedIndex].getAttribute('data-id') || '';">
+                            <option value="" disabled selected>-- Pilih Pendamping dari Akun User --</option>
+                            @foreach($users as $user)
+                            <option value="{{ $user->nama }}" data-nik="{{ $user->nik }}" data-id="{{ $user->id_user }}">{{ $user->nama }}</option>
+                            @endforeach {{-- <--- ENDFOREACH HARUSNYA DI SINI --}}
+                        </select>
+
+                        {{-- HIDDEN INPUT: Ini yang akan mengirim id_user ke controller --}}
+                        <input type="hidden" name="id_user" id="input_id_user">
                     </div>
 
                     <div class="col-span-2">
-                        <label class="block text-sm font-semibold mb-1">Nama Pendamping</label>
-                        <input name="nama_pendamping" class="w-full border rounded-lg px-3 py-2">
+                        <label class="block text-sm font-semibold mb-1">NIK</label>
+                        {{-- Hapus atribut value="{{ $user->nik }}" yang tadi nyangkut --}}
+                        <input type="text" id="input_nik" name="nik" class="w-full border rounded-lg px-3 py-2 bg-gray-100 text-gray-600 outline-none cursor-not-allowed" readonly placeholder="Otomatis terisi...">
                     </div>
 
                     <div class="col-span-2">
@@ -389,20 +355,19 @@
                         <label class="text-sm font-semibold">Kecamatan</label>
                         <select name="id_kecamatan" class="w-full border rounded-lg px-3 py-2">
                             @foreach($kecamatan as $kec)
-                                <option value="{{ $kec->id_kecamatan }}">{{ $kec->nama_kecamatan }}</option>
+                            <option value="{{ $kec->id_kecamatan }}">{{ $kec->nama_kecamatan }}</option>
                             @endforeach
                         </select>
                     </div>
 
                     <div>
-                        <label class="text-sm font-semibold">Tahun Mulai</label>
-                        <select name="tahun_mulai" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none bg-white">
-                            <option value="" disabled selected>-- Pilih Tahun --</option>
-                            @php $tahunSekarang = date('Y'); $tahunAwal = 1970; @endphp
-                            @for ($i = $tahunSekarang; $i >= $tahunAwal; $i--)
-                                <option value="{{ $i }}">{{ $i }}</option>
-                            @endfor
-                        </select>
+                        <label class="text-sm font-semibold">Tanggal Mulai</label>
+                        <input type="date" name="tanggal_mulai" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none">
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-semibold">Tanggal Selesai</label>
+                        <input type="date" name="tanggal_selesai" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none">
                     </div>
 
                     <div class="col-span-2">
@@ -441,13 +406,22 @@
                 <div class="grid grid-cols-2 gap-4">
 
                     <div class="col-span-2">
-                        <label class="text-sm font-semibold">NIK</label>
-                        <input id="edit_nik" name="nik" class="w-full border px-3 py-2 rounded">
+                        <label class="text-sm font-semibold">Nama Pendamping</label>
+                        <select id="edit_nama" name="nama_pendamping" class="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-blue-400 outline-none"
+                            onchange="document.getElementById('edit_nik').value = this.options[this.selectedIndex].getAttribute('data-nik') || ''; document.getElementById('edit_id_user').value = this.options[this.selectedIndex].getAttribute('data-id') || '';">
+                            <option value="" disabled>-- Pilih Pendamping --</option>
+                            @foreach($users as $user)
+                            <option value="{{ $user->nama }}" data-nik="{{ $user->nik }}" data-id="{{ $user->id_user }}">{{ $user->nama }}</option>
+                            @endforeach
+                        </select>
+
+                        {{-- HIDDEN INPUT: Ini yang akan mengirim id_user ke controller --}}
+                        <input type="hidden" name="id_user" id="edit_id_user">
                     </div>
 
                     <div class="col-span-2">
-                        <label class="text-sm font-semibold">Nama</label>
-                        <input id="edit_nama" name="nama_pendamping" class="w-full border px-3 py-2 rounded">
+                        <label class="text-sm font-semibold">NIK</label>
+                        <input id="edit_nik" name="nik" type="text" class="w-full border px-3 py-2 rounded bg-gray-100 text-gray-600 outline-none cursor-not-allowed" readonly>
                     </div>
 
                     <div>
@@ -467,7 +441,7 @@
                         <label class="text-sm font-semibold">Kecamatan</label>
                         <select id="edit_kecamatan" name="id_kecamatan" class="w-full border px-3 py-2 rounded">
                             @foreach($kecamatan as $kec)
-                                <option value="{{ $kec->id_kecamatan }}">{{ $kec->nama_kecamatan }}</option>
+                            <option value="{{ $kec->id_kecamatan }}">{{ $kec->nama_kecamatan }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -478,6 +452,16 @@
                             <option value="Aktif">Aktif</option>
                             <option value="Tidak Aktif">Tidak Aktif</option>
                         </select>
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-semibold">Tanggal Mulai</label>
+                        <input type="date" id="edit_tanggal_mulai" name="tanggal_mulai" class="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-blue-400 outline-none">
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-semibold">Tanggal Selesai</label>
+                        <input type="date" id="edit_tanggal_selesai" name="tanggal_selesai" class="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-blue-400 outline-none">
                     </div>
 
                     <div class="col-span-2">
@@ -498,97 +482,108 @@
 
 {{-- SCRIPT --}}
 <script>
-// ================= MODAL TAMBAH =================
-function openModal() {
-    document.getElementById('modal').classList.remove('hidden');
-}
-function closeModal() {
-    document.getElementById('modal').classList.add('hidden');
-}
+    // ================= MODAL TAMBAH =================
+    function openModal() {
+        document.getElementById('modal').classList.remove('hidden');
+    }
 
-// ================= MODAL DETAIL =================
-function openDetailModal(id) {
-    document.getElementById('DetailModal').classList.remove('hidden');
-    document.getElementById('detail-loading').classList.remove('hidden');
-    document.getElementById('detail-content').classList.add('hidden');
+    function closeModal() {
+        document.getElementById('modal').classList.add('hidden');
+    }
 
-    fetch('/admin/pendamping/' + id)
-        .then(response => response.json())
-        .then(data => {
-            // Foto
-            const fotoWrapper = document.getElementById('detail-foto-wrapper');
-            if (data.foto) {
-                fotoWrapper.innerHTML = `<img src="/storage/foto_pendamping/${data.foto}"
+    // ================= MODAL DETAIL =================
+    function openDetailModal(id) {
+        document.getElementById('DetailModal').classList.remove('hidden');
+        document.getElementById('detail-loading').classList.remove('hidden');
+        document.getElementById('detail-content').classList.add('hidden');
+
+        fetch('/admin/pendamping/' + id)
+            .then(response => response.json())
+            .then(data => {
+                // Foto
+                const fotoWrapper = document.getElementById('detail-foto-wrapper');
+                if (data.foto) {
+                    fotoWrapper.innerHTML = `<img src="/storage/foto_pendamping/${data.foto}"
                     class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg">`;
-            } else {
-                fotoWrapper.innerHTML = `
+                } else {
+                    fotoWrapper.innerHTML = `
                     <div class="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center border-4 border-white shadow-lg">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                         </svg>
                     </div>`;
-            }
+                }
 
-            // Nama & status
-            document.getElementById('detail-nama').textContent = data.nama_pendamping ?? '-';
-            const badge = document.getElementById('detail-status-badge');
-            if (data.status === 'Aktif') {
-                badge.textContent = 'Aktif';
-                badge.className = 'mt-1 inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800';
-            } else {
-                badge.textContent = data.status ?? '-';
-                badge.className = 'mt-1 inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800';
-            }
+                // Nama & status
+                document.getElementById('detail-nama').textContent = data.nama_pendamping ?? '-';
+                const badge = document.getElementById('detail-status-badge');
+                if (data.status === 'Aktif') {
+                    badge.textContent = 'Aktif';
+                    badge.className = 'mt-1 inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800';
+                } else {
+                    badge.textContent = data.status ?? '-';
+                    badge.className = 'mt-1 inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800';
+                }
 
-            // Field lain
-            document.getElementById('detail-nik').textContent           = data.nik ?? '-';
-            document.getElementById('detail-jk').textContent            = data.jenis_kelamin === 'L' ? 'Laki-laki' : (data.jenis_kelamin === 'P' ? 'Perempuan' : '-');
-            document.getElementById('detail-tempat-lahir').textContent  = data.tempat_lahir ?? '-';
-            document.getElementById('detail-tanggal-lahir').textContent = data.tanggal_lahir
-                ? new Date(data.tanggal_lahir).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })
-                : '-';
-            document.getElementById('detail-alamat').textContent        = data.alamat ?? '-';
-            document.getElementById('detail-no-hp').textContent         = data.no_hp ?? '-';
-            document.getElementById('detail-email').textContent         = data.email ?? '-';
-            document.getElementById('detail-pendidikan').textContent    = data.pendidikan_terakhir ?? '-';
-            document.getElementById('detail-kecamatan').textContent     = data.kecamatan ? data.kecamatan.nama_kecamatan : '-';
-            document.getElementById('detail-tahun-mulai').textContent   = data.tahun_mulai ?? '-';
+                // Field lain
+                document.getElementById('detail-nik').textContent = data.nik ?? '-';
+                document.getElementById('detail-jk').textContent = data.jenis_kelamin === 'L' ? 'Laki-laki' : (data.jenis_kelamin === 'P' ? 'Perempuan' : '-');
+                document.getElementById('detail-tempat-lahir').textContent = data.tempat_lahir ?? '-';
+                document.getElementById('detail-tanggal-lahir').textContent = data.tanggal_lahir ?
+                    new Date(data.tanggal_lahir).toLocaleDateString('id-ID', {
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric'
+                    }) :
+                    '-';
+                document.getElementById('detail-alamat').textContent = data.alamat ?? '-';
+                document.getElementById('detail-no-hp').textContent = data.no_hp ?? '-';
+                document.getElementById('detail-email').textContent = data.email ?? '-';
+                document.getElementById('detail-pendidikan').textContent = data.pendidikan_terakhir ?? '-';
+                document.getElementById('detail-kecamatan').textContent = data.kecamatan ? data.kecamatan.nama_kecamatan : '-';
+                document.getElementById('detail-tanggal-mulai').textContent = data.tanggal_mulai ? new Date(data.tanggal_mulai).toLocaleDateString('id-ID') : '-';
+                document.getElementById('detail-tanggal-selesai').textContent = data.tanggal_selesai ? new Date(data.tanggal_selesai).toLocaleDateString('id-ID') : 'Masih Menjabat';
+                document.getElementById('detail-loading').classList.add('hidden');
+                document.getElementById('detail-content').classList.remove('hidden');
+            })
+            .catch(() => {
+                document.getElementById('detail-loading').innerHTML =
+                    '<p class="text-red-500 text-sm text-center">Gagal memuat data. Silakan coba lagi.</p>';
+            });
+    }
 
-            document.getElementById('detail-loading').classList.add('hidden');
-            document.getElementById('detail-content').classList.remove('hidden');
-        })
-        .catch(() => {
-            document.getElementById('detail-loading').innerHTML =
-                '<p class="text-red-500 text-sm text-center">Gagal memuat data. Silakan coba lagi.</p>';
+    function closeDetailModal() {
+        document.getElementById('DetailModal').classList.add('hidden');
+    }
+
+    // ================= MODAL EDIT =================
+    // Tambahkan parameter id_user
+    function openEditModal(id, id_user, nik, nama, jk, nohp, kecamatan, status, tanggal_mulai, tanggal_selesai) {
+        document.getElementById('edit_id_user').value = id_user; // Isi hidden input
+        document.getElementById('edit_nik').value = nik;
+        document.getElementById('edit_nama').value = nama;
+        document.getElementById('edit_jk').value = jk;
+        document.getElementById('edit_no_hp').value = nohp;
+        document.getElementById('edit_kecamatan').value = kecamatan;
+        document.getElementById('edit_status').value = status;
+        document.getElementById('edit_tanggal_mulai').value = tanggal_mulai;
+        document.getElementById('edit_tanggal_selesai').value = tanggal_selesai;
+
+        document.getElementById('formPendamping').action = "/admin/pendamping/" + id;
+        document.getElementById('EditModal').classList.remove('hidden');
+    }
+
+    function closeEditModal() {
+        document.getElementById('EditModal').classList.add('hidden');
+    }
+
+    // ================= SEARCH =================
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let keyword = this.value.toLowerCase();
+        document.querySelectorAll('.searchable-row').forEach(row => {
+            row.style.display = row.textContent.toLowerCase().includes(keyword) ? '' : 'none';
         });
-}
-function closeDetailModal() {
-    document.getElementById('DetailModal').classList.add('hidden');
-}
-
-// ================= MODAL EDIT =================
-function openEditModal(id, nik, nama, jk, nohp, kecamatan, status) {
-    document.getElementById('edit_nik').value        = nik;
-    document.getElementById('edit_nama').value       = nama;
-    document.getElementById('edit_jk').value         = jk;
-    document.getElementById('edit_no_hp').value      = nohp;
-    document.getElementById('edit_kecamatan').value  = kecamatan;
-    document.getElementById('edit_status').value     = status;
-
-    document.getElementById('formPendamping').action = "/admin/pendamping/" + id;
-    document.getElementById('EditModal').classList.remove('hidden');
-}
-function closeEditModal() {
-    document.getElementById('EditModal').classList.add('hidden');
-}
-
-// ================= SEARCH =================
-document.getElementById('searchInput').addEventListener('keyup', function () {
-    let keyword = this.value.toLowerCase();
-    document.querySelectorAll('.searchable-row').forEach(row => {
-        row.style.display = row.textContent.toLowerCase().includes(keyword) ? '' : 'none';
     });
-});
 </script>
 
 @endsection
