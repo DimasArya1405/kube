@@ -512,7 +512,6 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
     function openEditModal(mitra) {
         const modal = document.getElementById('modal-edit-mitra');
         const form = document.getElementById('editForm');
-
         form.action = "/admin/mitra/" + mitra.id_mitra;
         
         document.getElementById('edit_nama_mitra').value = mitra.nama_mitra || '';
@@ -530,15 +529,15 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
         document.getElementById('edit_nama_pic').value = mitra.nama_pic || '';
         document.getElementById('edit_telp_pic').value = mitra.telp_pic || '';
 
-
         const labelFile = document.getElementById('mouEditLabel');
         if (mitra.mou) {
             labelFile.value = "File Aktif: " + mitra.mou;
             labelFile.classList.add('text-indigo-600', 'font-bold');
         } else {
             labelFile.value = "Belum ada dokumen diunggah";
-         labelFile.classList.remove('text-indigo-600');
+            labelFile.classList.remove('text-indigo-600');
         }
+        
         modal.classList.remove('hidden');
         modal.classList.add('flex');
         if(window.lucide) lucide.createIcons();
@@ -584,7 +583,6 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
         
         const container = document.getElementById('detail_mou_container');
         if(mitra.mou) {
-            
             const pdfUrl = `/admin/mitra/view-pdf/${mitra.id_mitra}`;
             container.innerHTML = `
                 <a href="${pdfUrl}" target="_blank" 

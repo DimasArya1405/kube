@@ -5,7 +5,6 @@
         "This file is @generated automatically"
     ],
     "content-hash": "26be62f041f7efb91fb64502023330a4",
-
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",

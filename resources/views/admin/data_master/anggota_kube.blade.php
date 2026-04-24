@@ -110,7 +110,6 @@ Data Master / <span class="text-gray-800">Data Anggota KUBE</span>
                         </div>
                     </td>
                 </tr>
-                @endforeach
             </tbody>
         </table>
     </div>

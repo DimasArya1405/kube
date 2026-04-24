@@ -7,27 +7,21 @@ Dashboard / <span class="text-gray-800">Pencairan Bantuan</span>
 @stop
 
 @section('content')
-<div class="mb-8 flex justify-between items-end">
-    <div>
-        <h2 class="text-3xl font-bold text-gray-800">Pencairan Bantuan</h2>
-        <p class="text-gray-500 mt-1">Kelola data pencairan bantuan KUBE.</p>
-    </div>
-    <div>
-        <button type="button" onclick="toggleModal('modal-tambah')"
-            class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md transition shadow-sm font-medium">
-            Tambah Pencairan
-        </button>
-    </div>
-</div>
-
-{{-- 🔥 SUMMARY BOX (Disamakan persis dengan kode pertama) --}}
-<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-    {{-- Total Pencairan --}}
-    <div class="bg-white p-4 rounded-lg shadow border">
-        <p class="text-sm text-gray-500">Sudah cair</p>
-        <h3 class="text-2xl font-bold text-gray-800">
-            {{ $total_cair ?? $pencairan_bantuan->count() }}
-        </h3>
+    <div class="mb-8 flex justify-between items-end">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-800">Pencairan Bantuan</h2>
+            <p class="text-gray-500 mt-1">Kelola data pencairan bantuan KUBE.</p>
+        </div>
+        <div class="flex justify-end gap-2">
+            <a href="{{ route('admin.alur_bantuan.jenis_bantuan.index') }}"
+                class="text-white bg-green-600 hover:bg-green-700 px-4 py-2 rounded-md">
+                Olah Data Jenis Bantuan
+            </a>
+            <button data-modal-target="modal-tambah" data-modal-toggle="modal-tambah"
+                class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md">
+                Tambah Pencairan
+            </button>
+        </div>
     </div>
 
     {{-- Menunggu --}}

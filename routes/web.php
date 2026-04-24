@@ -106,6 +106,10 @@ Route::middleware('auth')->group(function () {
     // Ini akan otomatis menghandle route bimbingan.index, bimbingan.create, bimbingan.store, dll.
     Route::resource('bimbingan', BimbinganKubeController::class);
 
+    // BIMBINGAN KUBE OLEH PENDAMPING (Tambahan Baru)
+    // Ini akan otomatis menghandle route bimbingan.index, bimbingan.create, bimbingan.store, dll.
+    Route::resource('bimbingan', BimbinganKubeController::class);
+
     // CLUSTER USAHA
     Route::resource('cluster_usaha', ClusterUsahaController::class);
 
@@ -198,6 +202,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/pelatihan/{id}', [PelatihanController::class, 'update'])->name('mitra.update');
     Route::get('/pelatihan/export-excel', [PelatihanController::class, 'exportExcel'])->name('pelatihan.excel');
     Route::get('/pelatihan/export-pdf', [PelatihanController::class, 'exportPdf'])->name('pelatihan.pdf');
+
 
 
 
