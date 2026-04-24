@@ -21,17 +21,21 @@ Dashboard / <span class="text-gray-800">Ranking KUBE</span>
         <h2 class="text-3xl font-bold text-gray-800">Ranking KUBE</h2>
         <p class="text-gray-500 mt-1">Ranking KUBE terbaik berdasarkan laba bersih.</p>
     </div>
+   
     <div class="flex gap-2">
-        <a href="{{ route('ranking.kube.export.pdf', request()->query()) }}"
-           class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+        {{-- Tombol PDF --}}
+        <button onclick="previewPDF('{{ route('ranking.kube.export.pdf', request()->query()) }}')"
+            class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
             </svg>
             Ekspor PDF
-        </a>
+        </button>
+
+        {{-- Tombol Excel --}}
         <a href="{{ route('ranking.kube.export.excel', request()->query()) }}"
-           class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+        class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6M3 17V7a2 2 0 012-2h14a2 2 0 012 2v10"/>
@@ -192,6 +196,22 @@ Dashboard / <span class="text-gray-800">Ranking KUBE</span>
     </div>
 </div>
 
+{{-- MODAL PREVIEW PDF --}}
+<div id="modalPDF"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white rounded-xl shadow-xl w-[90vw] h-[90vh] flex flex-col">
+        <div class="flex items-center justify-between px-4 py-3 border-b">
+            <h3 class="font-semibold text-gray-800">Preview PDF — Ranking KUBE</h3>
+            <div class="flex gap-2">
+                <button onclick="closePDF()"
+                    class="text-gray-400 hover:bg-gray-200 rounded-lg w-8 h-8 flex items-center justify-center">✕</button>
+            </div>
+        </div>
+        <iframe id="iframePDF" src="" class="flex-1 rounded-b-xl"></iframe>
+    </div>
+</div>
+
+
 {{-- MODAL DETAIL --}}
 <div id="modalDetail"
     class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full bg-black bg-opacity-40">
@@ -290,6 +310,7 @@ document.getElementById('modalContent').innerHTML =
     field('Desa/Kelurahan',    data.nama_desa_kelurahan) +
     field('Kategori',          data.nama_kategori) +
     field('Cluster',           data.nama_cluster) +
+    field('Periode',           data.periode) +          // ← tambah ini
     field('Total Omset',       fmt(data.total_omset)) +
     field('Total Pengeluaran', fmt(data.total_pengeluaran)) +
     field('Total Laba Bersih', fmt(data.total_laba_bersih)) +
@@ -304,6 +325,16 @@ function closeModal() {
 document.getElementById('modalDetail').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
 });
+
+
+function previewPDF(url) {
+    document.getElementById('iframePDF').src = url;
+     document.getElementById('modalPDF').classList.remove('hidden');
+}
+function closePDF() {
+    document.getElementById('iframePDF').src = '';
+    document.getElementById('modalPDF').classList.add('hidden');
+}
 </script>
 
 @stop

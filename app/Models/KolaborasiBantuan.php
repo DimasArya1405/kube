@@ -30,4 +30,9 @@ class KolaborasiBantuan extends Model
     {
         return $this->belongsTo(Kube::class, 'id_kube', 'id_kube');
     }
+    public function buktiPenyaluran()
+    {
+        // hasOne karena satu kolaborasi biasanya punya satu laporan penyaluran akhir
+        return $this->hasOne(BuktiPenyaluran::class, 'id_kolaborasi', 'id_kolaborasi');
+    }
 }

@@ -25,4 +25,8 @@ class JenisBantuan extends Model
     {
         return $this->hasMany(PencairanBantuan::class, 'id_jenis_bantuan', 'id_jenis_bantuan');
     }
+    public function pengajuan_kube()
+    {
+        return $this->hasMany(PengajuanKube::class, 'id_jenis_bantuan', 'id_jenis_bantuan');
+    }
 }

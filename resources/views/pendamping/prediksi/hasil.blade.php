@@ -46,7 +46,7 @@ Dashboard / <span class="text-gray-800">Hasil Prediksi</span>
         <tbody>
             @forelse($pertanyaan as $index => $p)
                 @php
-                    $hasil = $hasilPrediksi->firstWhere('id_pertanyaan', $p->id_pertanyaan);
+                    $hasil = $hasilPrediksi->firstWhere('id_pertanyaan', $p->id);
                 @endphp
                 <tr class="border-b">
                     <td class="px-4 py-2 border">{{ $index + 1 }}</td>

@@ -11,7 +11,7 @@ class HasilPrediksi extends Model
 
     protected $table = 'hasil_prediksi';
 
-    protected $primaryKey = 'id_hasil';
+    protected $primaryKey = 'id';
 
     protected $fillable = [
     'id_prediksi',
@@ -26,14 +26,14 @@ class HasilPrediksi extends Model
 
     public function pertanyaan()
 {
-    return $this->belongsTo(Pertanyaan::class, 'id_pertanyaan', 'id_pertanyaan');
+    return $this->belongsTo(Pertanyaan::class, 'id_pertanyaan', 'id');
 }
 
 // Relasi ke KUBE
 public function kube()
 {
     return $this->belongsTo(\App\Models\Kube::class, 'id_kube', 'id_kube');
-}
+} 
 
 public $timestamps = true;
 }
