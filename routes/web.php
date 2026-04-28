@@ -129,6 +129,11 @@ Route::middleware('auth')->group(function () {
     // PELATIHAN
     Route::get('/pelatihan', [PelatihanController::class, 'index'])->name('pelatihan.index');
     Route::post('/pelatihan', [PelatihanController::class, 'store'])->name('pelatihan.store');
+    Route::delete('/pelatihan/{id}', [PelatihanController::class, 'destroy'])->name('pelatihan.destroy');
+    Route::put('/pelatihan/{id}', [PelatihanController::class, 'update'])->name('mitra.update');
+    Route::get('/pelatihan/export-excel', [PelatihanController::class, 'exportExcel'])->name('pelatihan.excel');
+    Route::get('/pelatihan/export-pdf', [PelatihanController::class, 'exportPdf'])->name('pelatihan.pdf');
+
 
 
     // KELOLA MITRA & KOLABORASI
