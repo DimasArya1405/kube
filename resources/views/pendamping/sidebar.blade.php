@@ -19,7 +19,8 @@
                 </span>
             </div>
 
-            <i data-lucide="chevron-down" id="kubeBinaanIcon"
+            <i data-lucide="chevron-down"
+                id="kubeBinaanIcon"
                 class="w-4 h-4 transition-transform duration-300"></i>
         </button>
 
@@ -50,7 +51,8 @@
                 </span>
             </div>
 
-            <i data-lucide="chevron-down" id="monevIcon"
+            <i data-lucide="chevron-down"
+                id="monevIcon"
                 class="w-4 h-4 transition-transform duration-300"></i>
         </button>
 
@@ -138,7 +140,8 @@
                 </span>
             </div>
 
-            <i data-lucide="chevron-down" id="analisisPendampingIcon"
+            <i data-lucide="chevron-down"
+                id="analisisPendampingIcon"
                 class="w-4 h-4 transition-transform duration-300"></i>
         </button>
 
@@ -149,7 +152,7 @@
                 class="py-2 px-3 text-indigo-200 hover:text-white">
                 Prediksi KUBE
             </a>
+
         </div>
     </div>
-
 </nav>
