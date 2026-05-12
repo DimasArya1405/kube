@@ -110,11 +110,11 @@
                         <td class="px-6 py-4 text-center">
                             <div class="flex justify-center gap-3">
                                 {{-- Tombol Detail --}}
-                                <button onclick='openDetailModal(@json($p))' class="text-blue-600 hover:text-blue-800 transition">
+                                <button data-item="{{ json_encode($p) }}" onclick="openDetailModal(JSON.parse(this.getAttribute('data-item')))" class="text-blue-600 hover:text-blue-800 transition">
                                     <i data-lucide="eye"></i>
                                 </button>
                                 {{-- Tombol Edit --}}
-                                <button onclick='openEditModal(@json($p))' class="text-orange-600 hover:text-orange-800 transition">
+                                <button data-item="{{ json_encode($p) }}" onclick="openEditModal(JSON.parse(this.getAttribute('data-item')))" class="text-orange-600 hover:text-orange-800 transition">
                                     <i data-lucide="edit-3"></i>
                                 </button>
                                 {{-- Tombol Hapus --}}

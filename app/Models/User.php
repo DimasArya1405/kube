@@ -41,12 +41,12 @@ class User extends Authenticatable
     }
 
     public function kecamatan()
-{
-    return $this->belongsTo(Kecamatan::class, 'id_kecamatan');
-}
+    {
+        return $this->belongsTo(Kecamatan::class, 'id_kecamatan', 'id_kecamatan');
+    }
 
-public function desa()
-{
-    return $this->belongsTo(DesaKelurahan::class, 'id_desa_kelurahan');
-}
+    public function desa()
+    {
+        return $this->belongsTo(DesaKelurahan::class, 'id_desa_kelurahan', 'id_desa_kelurahan');
+    }
 }

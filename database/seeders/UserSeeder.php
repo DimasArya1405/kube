@@ -56,7 +56,6 @@ class UserSeeder extends Seeder
                 'no_hp' => '08123456789',
                 'alamat' => 'Alamat Default Seeder',
                 'nik' => '1234567890123456',
-                // Pastikan ID ini ada di tabel kecamatan & desa_kelurahan Anda
                 'id_kecamatan' => 1, 
                 'id_desa_kelurahan' => 1,
                 'created_at' => now(),
