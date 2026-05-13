@@ -18,7 +18,7 @@ class PencairanBantuanController extends Controller
             'pengajuan_kube.kube',
             'pengajuan_kube.jenisBantuan'
         ])->get();
-        return view('admin.alur_bantuan.pencairan_bantuan', compact('pencairan_bantuan', 'pengajuan_bantuan'));
+        return view('kepala_dinas.pencairan_bantuan', compact('pencairan_bantuan', 'pengajuan_bantuan'));
     }
 
     public function tambah($id)

@@ -1,4 +1,4 @@
-@extends('admin.layout')
+@extends('kepala_dinas.layout')
 
 @section('title', 'Data Pengajuan Bantuan - KUBE')
 
@@ -74,7 +74,7 @@ Dashboard / <span class="text-gray-800">Pengajuan Bantuan KUBE</span>
 
 {{-- FILTER TAHUN --}}
 <div class="bg-white mb-4 rounded-lg shadow-sm border p-4">
-    <form action="{{ route('admin.persetujuan_bantuan_kube.index') }}" method="GET">
+    <form action="{{ route('kadis.persetujuan_bantuan_kube.index') }}" method="GET">
         <div class="flex flex-col md:flex-row gap-3 md:items-center">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Filter Tahun</label>
@@ -95,7 +95,7 @@ Dashboard / <span class="text-gray-800">Pengajuan Bantuan KUBE</span>
                     Filter
                 </button>
 
-                <a href="{{ route('admin.persetujuan_bantuan_kube.index') }}"
+                <a href="{{ route('kadis.persetujuan_bantuan_kube.index') }}"
                     class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
                     Reset
                 </a>
@@ -167,15 +167,26 @@ Dashboard / <span class="text-gray-800">Pengajuan Bantuan KUBE</span>
 
                     <td class="px-6 py-4">
                         <div class="flex gap-2 items-center flex-wrap">
-                            <a href="{{ route('admin.persetujuan_bantuan_kube.detail', $row->id_pengajuan_kube) }}"
+                            <a href="{{ route('kadis.persetujuan_bantuan_kube.detail', $row->id_pengajuan_kube) }}"
                                 class="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600">
                                 Detail
                             </a>
 
                             @if (in_array($row->status_pengajuan, ['diajukan', 'menunggu']))
+                            <button type="button"
+                                onclick="document.getElementById('modal-setujui-{{ $row->id_pengajuan_kube }}').classList.remove('hidden')"
+                                class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
+                                Setujui
+                            </button>
+
+                            <button type="button"
+                                onclick="document.getElementById('modal-tolak-{{ $row->id_pengajuan_kube }}').classList.remove('hidden')"
+                                class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
+                                Tolak
+                            </button>
                             @else
                             @if(in_array($row->status_pengajuan, ['disetujui','cair']))
-                            <a href="{{ route('admin.persetujuan_bantuan_kube.unduh_berita_acara', $row->id_pengajuan_kube) }}"
+                            <a href="{{ route('kadis.persetujuan_bantuan_kube.unduh_berita_acara', $row->id_pengajuan_kube) }}"
                                 class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-1">
                                 <i class="bi bi-download"></i>
                                 Unduh Berita Acara
@@ -198,7 +209,7 @@ Dashboard / <span class="text-gray-800">Pengajuan Bantuan KUBE</span>
                             <span class="font-semibold">{{ $row->kube->nama_kube ?? '-' }}</span>?
                         </p>
 
-                        <form action="{{ route('admin.persetujuan_bantuan_kube.setujui', $row->id_pengajuan_kube) }}" method="POST">
+                        <form action="{{ route('kadis.persetujuan_bantuan_kube.setujui', $row->id_pengajuan_kube) }}" method="POST">
                             @csrf
                             @method('PUT')
 
@@ -228,7 +239,7 @@ Dashboard / <span class="text-gray-800">Pengajuan Bantuan KUBE</span>
                             <span class="font-semibold">{{ $row->kube->nama_kube ?? '-' }}</span>?
                         </p>
 
-                        <form action="{{ route('admin.persetujuan_bantuan_kube.tolak', $row->id_pengajuan_kube) }}" method="POST">
+                        <form action="{{ route('kadis.persetujuan_bantuan_kube.tolak', $row->id_pengajuan_kube) }}" method="POST">
                             @csrf
                             @method('PUT')
 
