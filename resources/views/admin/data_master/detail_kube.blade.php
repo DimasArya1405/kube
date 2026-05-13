@@ -41,13 +41,13 @@ Dashboard / Data Master / <span class="text-gray-800">Detail KUBE</span>
                 <div>
                     <p class="text-gray-700 font-medium mb-1">Pendamping</p>
                     <div class="flex justify-between items-center bg-gray-300 rounded-full px-6 py-2 shadow-inner">
-                        <span class="font-bold text-gray-800 mx-auto">{{ $kube->pembagianPendamping->pendamping->nama_pendamping ?? 'Belum ada Pendamping' }}</span>
+                        <span class="font-bold text-gray-800 mx-auto">{{ $kube->pembagianPendampingAktif->pendamping->nama_pendamping ?? 'Belum ada Pendamping' }}</span>
                     </div>
                 </div>
                 <div>
                     <p class="text-gray-700 font-medium mb-1">Koordinator</p>
                     <div class="flex justify-between items-center bg-gray-300 rounded-full px-6 py-2 shadow-inner">
-                        <span class="font-bold text-gray-800 mx-auto">{{ $kube->pembagianPendamping->pembagianKoordinator->koordinator->nama_koor ?? 'Belum ada Koordinator' }}</span>
+                        <span class="font-bold text-gray-800 mx-auto">{{ $kube->pembagianPendampingAktif->pembagianKoordinator->koordinator->nama_koor ?? 'Belum ada Koordinator' }}</span>
                     </div>
                 </div>
 

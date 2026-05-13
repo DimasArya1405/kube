@@ -47,7 +47,7 @@ class KubeController extends Controller
             $kubes = Kube::with([
                 'desa.kecamatan',
                 'clusterUsaha.kategori',
-                'pembagianPendamping.pendamping.pembagianKoordinator.koordinator',
+                'pembagianPendamping.pendamping',
                 'pembagianPendamping.pembagianKoordinator.koordinator'
             ])->get();
 

@@ -11,6 +11,17 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
         <p class="text-gray-500 text-sm mt-1">Kelola data pembagian pendamping untuk setiap Kelompok Usaha Bersama.</p>
     </div>
 
+    @if($errors->any())
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <strong class="font-bold">Oops! Ada kesalahan input:</strong>
+        <ul class="list-disc pl-5 mt-1 text-sm">
+            @foreach($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
     @if(session('success'))
     <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
         <span class="block sm:inline">{{ session('success') }}</span>
@@ -49,7 +60,8 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
                     <th class="py-3 px-5 text-gray-700 font-semibold text-sm text-center">No.</th>
                     <th class="py-3 px-5 text-gray-700 font-semibold text-sm text-center">Nama KUBE</th>
                     <th class="py-3 px-5 text-gray-700 font-semibold text-sm text-center">Nama Pendamping</th>
-                    <th class="py-3 px-5 text-gray-700 font-semibold text-sm text-center">Tgl Pembagian</th>
+                    <th class="py-3 px-5 text-gray-700 font-semibold text-sm text-center">Tgl Mulai</th>
+                    <th class="py-3 px-5 text-gray-700 font-semibold text-sm text-center">Tgl Selesai</th>
                     <th class="py-3 px-5 text-gray-700 font-semibold text-sm text-center">Status</th>
                     <th class="py-3 px-5 text-gray-700 font-semibold text-sm text-center">Aksi</th>
                 </tr>
@@ -62,7 +74,12 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
 
                     <td class="py-3 px-5 text-gray-800 text-center">{{ $p->pendamping->nama_pendamping ?? 'Pendamping Dihapus' }}</td>
 
-                    <td class="py-3 px-5 text-gray-600 text-center">{{ \Carbon\Carbon::parse($p->tgl_pembagian)->format('d M Y') }}</td>
+                    <td class="py-3 px-5 text-gray-600 text-center">{{ $p->tgl_pembagian ? \Carbon\Carbon::parse($p->tgl_pembagian)->format('d M Y') : '-' }}</td>
+
+                    {{-- Tambahan Tgl Selesai --}}
+                    <td class="py-3 px-5 text-gray-600 text-center">
+                        {{ $p->tgl_selesai ? \Carbon\Carbon::parse($p->tgl_selesai)->format('d M Y') : '-' }}
+                    </td>
 
                     <td class="py-3 px-5 text-center">
                         @if(strtolower($p->status) == 'aktif')
@@ -74,6 +91,17 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
 
                     <td class="py-3 px-5 text-center">
                         <div class="flex justify-center space-x-3">
+                            {{-- Tombol Tandai Selesai (Hanya muncul kalau status masih Aktif) --}}
+                            @if(strtolower($p->status) == 'aktif')
+                            <form action="{{ route('pembagian_pendamping.selesai', $p->id_pembagian) }}" method="POST" class="inline" id="selesaiForm-{{ $p->id_pembagian }}">
+                                @csrf
+                                @method('PATCH')
+                                <button type="button" class="text-gray-400 hover:text-green-500 transition text-lg" onclick="confirmSelesai(event, '{{ $p->id_pembagian }}')" title="Tandai Selesai">
+                                    <i class="fas fa-check-circle"></i>
+                                </button>
+                            </form>
+                            @endif
+
                             <form action="{{ route('pembagian_pendamping.destroy', $p->id_pembagian) }}" method="POST" class="inline" id="deleteForm-{{ $p->id_pembagian }}">
                                 @csrf
                                 @method('DELETE')
@@ -120,10 +148,21 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
                         @endforeach
                     </select>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Pembagian</label>
-                    <input type="date" name="tgl_pembagian" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-sm transition" required>
+
+                {{-- Modifikasi Tanggal Pembagian jadi Tanggal Mulai (untuk kejelasan) --}}
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tgl Mulai</label>
+                        <input type="date" name="tgl_pembagian" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-sm transition" required>
+                    </div>
+
+                    {{-- Tambahan Input Tgl Selesai --}}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tgl Selesai (Opsional)</label>
+                        <input type="date" name="tgl_selesai" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-sm transition text-gray-500">
+                    </div>
                 </div>
+
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Status Pembagian</label>
                     <select name="status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-sm transition" required>
@@ -146,8 +185,35 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
         document.getElementById(modalID).classList.toggle('hidden');
     }
 
+    // 🔥 Buka modal otomatis kalau ada error validasi (Versi aman dari linter VS Code)
+    let adaError = "{{ $errors->any() ? 'true' : 'false' }}";
+
+    if (adaError === "true") {
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleModal('tambahPembagianModal');
+        });
+    }
+
+    function confirmSelesai(event, id_pembagian) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Tandai Selesai?',
+            text: "Status penugasan ini akan diubah menjadi Selesai per hari ini!",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#10b981', // Warna hijau emerald
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Selesaikan!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('selesaiForm-' + id_pembagian).submit();
+            }
+        });
+    }
     // 🔥 Tangkap 'event'-nya di sini
-    function confirmDelete(event, id_kube) {
+    function confirmDelete(event, id_pembagian) {
 
         // 🔥 INI REM TANGANNYA! Tahan form biar ga langsung ke-submit
         event.preventDefault();
@@ -165,7 +231,7 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
         }).then((result) => {
             if (result.isConfirmed) {
                 // Kalau user udah beneran ngeklik "Ya", baru kita lepas remnya dan kirim formnya
-                document.getElementById('deleteForm-' + id_kube).submit();
+                document.getElementById('deleteForm-' + id_pembagian).submit();
             }
         });
     }

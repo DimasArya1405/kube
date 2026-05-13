@@ -78,6 +78,7 @@ Route::middleware('auth')->group(function () {
 
     // PEMBAGIAN PENDAMPING
     Route::resource('pembagian_pendamping', PembagianPendampingController::class);
+    Route::patch('/pembagian_pendamping/{id}/selesai', [App\Http\Controllers\PembagianPendampingController::class, 'tandaiSelesai'])->name('pembagian_pendamping.selesai');
     Route::get('/pembagian_pendamping/export/excel', [App\Http\Controllers\PembagianPendampingController::class, 'exportExcel'])->name('pembagian_pendamping.export.excel');
 
     // BIMBINGAN KUBE OLEH PENDAMPING (Tambahan Baru)
