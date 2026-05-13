@@ -31,7 +31,7 @@ use App\Http\Controllers\PembagianPendampingController;
 use App\Http\Controllers\KolaborasiBantuanController;
 use App\Http\Controllers\PenyaluranKolaborasiController;
 use App\Http\Controllers\KepalaDinasController;
-
+use App\Http\Controllers\PersetujuanBantuanKubeKadisController;
 use Dflydev\DotAccessData\Data;
 
 // LOGIN
@@ -308,10 +308,17 @@ Route::get('/rekap_kube/export/excel', [RekapKubeController::class, 'exportExcel
     Route::get('/pengajuan-kube/create', [PengajuanKubeController::class, 'create'])->name('pengajuan.create');
     Route::post('/pengajuan-kube/store', [PengajuanKubeController::class, 'store'])->name('pengajuan.store');
 
-    // KELOLA DATA PERSETUJUAN KUBE (PROBO)
+    // KELOLA DATA PERSETUJUAN KUBE (ADMIN)
     Route::get('/admin/persetujuan-bantuan-kube', [PersetujuanPengajuanKubeController::class, 'index'])->name('admin.persetujuan_bantuan_kube.index');
     Route::put('/admin/persetujuan-bantuan-kube/setujui/{id}', [PersetujuanPengajuanKubeController::class, 'setujui'])->name('admin.persetujuan_bantuan_kube.setujui');
     Route::put('/admin/persetujuan-bantuan-kube/tolak/{id}', [PersetujuanPengajuanKubeController::class, 'tolak'])->name('admin.persetujuan_bantuan_kube.tolak');
+
+    // KELOLA DATA PERSETUJUAN KUBE (KADIS)
+    Route::get('/kepala-dinas/persetujuan-bantuan-kube', [PersetujuanBantuanKubeKadisController::class, 'index'])->name('kadis.persetujuan_bantuan_kube.index');
+    Route::put('/kepala-dinas/persetujuan-bantuan-kube/setujui/{id}', [PersetujuanBantuanKubeKadisController::class, 'setujui'])->name('kadis.persetujuan_bantuan_kube.setujui');
+    Route::put('/kepala-dinas/persetujuan-bantuan-kube/tolak/{id}', [PersetujuanBantuanKubeKadisController::class, 'tolak'])->name('kadis.persetujuan_bantuan_kube.tolak');
+    Route::get('/kepala-dinas/persetujuan-bantuan-kube/{id}/detail', [PersetujuanBantuanKubeKadisController::class, 'detail'])->name('kadis.persetujuan_bantuan_kube.detail');
+    Route::get('/kepala-dinas/persetujuan-bantuan-kube/{id}/unduh-berita-acara', [PersetujuanBantuanKubeKadisController::class, 'unduhBeritaAcara'])->name('kadis.persetujuan_bantuan_kube.unduh_berita_acara');
 
     // RANKING KUBE
     Route::get('/ranking-kube', [RankingKubeController::class, 'index'])->name('ranking.kube');
