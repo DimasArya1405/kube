@@ -4,9 +4,9 @@
         <i data-lucide="pie-chart" class="w-5 h-5"></i>
         <span class="font-medium">Dashboard Statistik</span>
     </a>
-    <a href="#"
+    <a href="{{route('kadis.persetujuan_bantuan_kube.index')}}"
         class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group bg-indigo-800 text-white border-l-4 border-white shadow-inner">
-        <i class="w-5 h-5 " data-lucide="dollar-sign"></i>
+        <i class="w-5 h-5 " data-lucide="check"></i>
         <span class="font-medium">Persetujuan Kube</span>
     </a>
     <a href="{{route('kadis.pencairan_bantuan.index')}}"
