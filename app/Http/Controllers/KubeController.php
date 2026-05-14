@@ -61,19 +61,24 @@ class KubeController extends Controller
         elseif ($role == 'pendamping') {
             $nikLogin = Auth::user()->nik;
 
-            // Tarik KUBE yang relasi NIK pendampingnya cocok dengan yang lagi login
-            $kubes = Kube::whereHas('pembagianPendamping.pendamping', function ($q) use ($nikLogin) {
-                $q->where('nik', $nikLogin);
+            // Tarik KUBE yang punya relasi pembagian AKTIF dengan pendamping yang lagi login
+            $kubes = Kube::whereHas('pembagianPendampingAktif', function ($q) use ($nikLogin) {
+                // Karena 'pembagianPendampingAktif' sudah memfilter status 'Aktif' di Model,
+                // kita tinggal cek apakah NIK pendampingnya cocok dengan yang login
+                $q->whereHas('pendamping', function ($queryPendamping) use ($nikLogin) {
+                    $queryPendamping->where('nik', $nikLogin);
+                });
             })->with([
                 'desa.kecamatan',
                 'clusterUsaha.kategori',
-                'pembagianPendamping.pendamping.pembagianKoordinator.koordinator',
-                'pembagianPendamping.pembagianKoordinator.koordinator'
+                // PENTING: Eager load yang dipanggil juga harus yang 'Aktif'
+                'pembagianPendampingAktif.pendamping',
+                'pembagianPendampingAktif.pembagianKoordinator.koordinator'
             ])->get();
 
             $calonKetua = User::where('role', 'ketua_kube')->get();
 
-            // Arahkan ke file Blade khusus Pendamping (biar tombol hapus/edit admin gak muncul)
+            // Arahkan ke file Blade khusus Pendamping
             return view('pendamping.kube_binaan.kube', compact('kubes', 'desas', 'clusters', 'calonKetua'));
         }
 
@@ -246,9 +251,9 @@ class KubeController extends Controller
         $kubes = Kube::with([
             'desa.kecamatan',
             'clusterUsaha.kategori',
-            'pembagianPendamping.pendamping.pembagianKoordinator.koordinator',
+            'pembagianPendamping.pendamping',
             'pembagianPendamping.pembagianKoordinator.koordinator',
-            'anggota' // 🔥 Jangan lupa tarik data anggotanya
+            'anggota'
         ])->get();
 
         $pdf = Pdf::loadView('admin.data_master.pdf_kube', compact('kubes'));

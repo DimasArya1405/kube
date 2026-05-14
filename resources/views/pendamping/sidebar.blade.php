@@ -17,7 +17,7 @@
         </button>
         <div id="kubeBinaanMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
             <a href="{{ url('/kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Daftar KUBE Binaan</a>
-            <a href="{{ url('/anggota') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Detail Anggota Kelompok</a>
+            <a href="{{ url('/anggota_kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Detail Anggota Kelompok</a>
         </div>
     </div>
 
