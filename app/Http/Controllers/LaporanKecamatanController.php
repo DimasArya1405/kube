@@ -7,26 +7,51 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Kube;
 use App\Models\Kecamatan;
 use App\Models\ClusterUsaha;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class LaporanKecamatanController extends Controller
 {
+    
     // =======================
-    // DETAIL DATA KUBE
+    // DETAIL DATA KUBE (OPTIONAL)
     // =======================
     public function detail($id)
     {
-        $data = DB::table('kube')
+        $data = $this->getDetailData($id);
+
+        return view('admin.laporan.detail_kecamatan', compact('data'));
+    }
+
+    // =======================
+    // EXPORT PDF 🔥
+    // =======================
+    public function exportPdf($id)
+    {
+        $data = $this->getDetailData($id);
+
+        $pdf = Pdf::loadView('admin.laporan.pdf', compact('data'));
+
+        return $pdf->download('laporan_kube_'.$id.'.pdf');
+    }
+
+    // =======================
+    // FUNCTION AMBIL DATA DETAIL (BIAR GA NGULANG)
+    // =======================
+    private function getDetailData($id)
+    {
+        return DB::table('kube')
             ->join('desa_kelurahan','kube.id_desa_kelurahan','=','desa_kelurahan.id_desa_kelurahan')
             ->join('kecamatan','desa_kelurahan.id_kecamatan','=','kecamatan.id_kecamatan')
             ->join('cluster_usaha','kube.id_cluster','=','cluster_usaha.id_cluster')
 
-            // RELASI FIX
+            // RELASI FIX (INI YANG PENTING)
             ->leftJoin('pengajuan_kube','kube.id_kube','=','pengajuan_kube.id_kube')
             ->leftJoin('laporan_keuangan','pengajuan_kube.id_pengajuan_kube','=','laporan_keuangan.id_persetujuan')
 
             ->where('kube.id_kube', $id)
 
             ->select(
+                'kube.id_kube',
                 'kube.nama_kube',
                 'kecamatan.nama_kecamatan',
                 'cluster_usaha.nama_cluster',
@@ -36,6 +61,7 @@ class LaporanKecamatanController extends Controller
             )
 
             ->groupBy(
+                'kube.id_kube',
                 'kube.nama_kube',
                 'kecamatan.nama_kecamatan',
                 'cluster_usaha.nama_cluster',
@@ -43,8 +69,6 @@ class LaporanKecamatanController extends Controller
             )
 
             ->first();
-
-        return view('admin.laporan.detail_kecamatan', compact('data'));
     }
 
 
@@ -53,9 +77,7 @@ class LaporanKecamatanController extends Controller
     // =======================
     public function index(Request $request)
     {
-        // 🔥 DROPDOWN TAHUN (FIX: fallback ke created_at)
         $tahun = Kube::selectRaw('YEAR(COALESCE(tanggal_terbentuk, created_at)) as tahun')
-            ->whereNotNull(DB::raw('COALESCE(tanggal_terbentuk, created_at)'))
             ->distinct()
             ->orderBy('tahun','desc')
             ->get();
@@ -63,9 +85,6 @@ class LaporanKecamatanController extends Controller
         $kecamatan = Kecamatan::all();
         $cluster = ClusterUsaha::all();
 
-        // =======================
-        // QUERY UTAMA
-        // =======================
         $query = DB::table('kube')
             ->join('desa_kelurahan','kube.id_desa_kelurahan','=','desa_kelurahan.id_desa_kelurahan')
             ->join('kecamatan','desa_kelurahan.id_kecamatan','=','kecamatan.id_kecamatan')
@@ -93,7 +112,7 @@ class LaporanKecamatanController extends Controller
             $query->where('cluster_usaha.id_cluster', $request->cluster);
         }
 
-        // hanya yang disetujui
+        // 🔥 WAJIB: hanya yang disetujui
         $query->where('pengajuan_kube.status_pengajuan', 'disetujui');
 
         // =======================

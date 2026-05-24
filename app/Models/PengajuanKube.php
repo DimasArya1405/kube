@@ -43,4 +43,8 @@ class PengajuanKube extends Model
     {
         return $this->belongsTo(JenisBantuan::class, 'id_jenis_bantuan', 'id_jenis_bantuan');
     }
+    public function pencairanBantuan()
+    {
+        return $this->hasMany(PencairanBantuan::class, 'id_pengajuan', 'id_pengajuan_kube');
+    }
 }

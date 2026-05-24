@@ -30,15 +30,15 @@ public function login(Request $request)
         if ($role == 'admin') {
             return redirect('/admin/dashboard')->with('success', 'Selamat datang Admin');
         } elseif ($role == 'ketua_kube') {
-            return redirect('/ketua_kube')->with('success', 'Selamat datang Ketua KUBE');
+            return redirect('/dashboard/ketua')->with('success', 'Selamat datang Ketua KUBE');
         } elseif ($role == 'pendamping') {
-            return redirect('/pendamping')->with('success', 'Selamat datang Pendamping');
+            return redirect('/dashboard/pendamping')->with('success', 'Selamat datang Pendamping');
         } elseif ($role == 'koordinator') {
-            return redirect('/koordinator')->with('success', 'Selamat datang Koordinator');
+            return redirect('/dashboard/koordinator')->with('success', 'Selamat datang Koordinator');
         } elseif ($role == 'ketua_tim_kube') {
-            return redirect('')->with('success', 'Selamat datang Ketua Tim');
+            return redirect('/dashboard/tim')->with('success', 'Selamat datang Ketua Tim');
         } elseif ($role == 'kepala_dinas') {
-            return redirect('/kepala_dinas')->with('success', 'Selamat datang Kepala Dinas');
+            return redirect('/dashboard/dinas')->with('success', 'Selamat datang Kepala Dinas');
         }
     }
     return back()->with('error', 'Email atau password salah');
