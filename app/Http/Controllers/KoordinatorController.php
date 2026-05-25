@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Koordinator;
-use App\Models\Kecamatan;
 use App\Models\User;
 use App\Exports\KoordinatorExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -14,37 +13,45 @@ class KoordinatorController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Koordinator::with(['user', 'kecamatan']);
+        $query = Koordinator::with(['user']);
 
-        // Filter status
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
         $koordinator = $query->get();
 
-        // Hanya tampilkan user role koordinator yang BELUM ada di tabel koordinator
         $sudahAdaKoor = Koordinator::pluck('id_user')->toArray();
         $users = User::where('role', 'koordinator')
-                     ->whereNotIn('id_user', $sudahAdaKoor)
-                     ->get();
+                    ->whereNotIn('id_user', $sudahAdaKoor)
+                    ->get();
 
-        $kecamatan = Kecamatan::all();
-
-        return view('admin.data_master.koordinator', compact('koordinator', 'users', 'kecamatan'));
+        return view('admin.data_master.koordinator', compact('koordinator', 'users'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'id_user'      => 'required|exists:users,id_user',
-            'id_kecamatan' => 'required|exists:kecamatan,id_kecamatan',
+            'id_user'       => 'required|exists:users,id_user',
+            'jenis_kelamin' => 'nullable|in:L,P',
+            'tanggal_lahir' => 'nullable|date',
+            'foto'          => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
+        $fotoPath = null;
+        if ($request->hasFile('foto')) {
+            $file     = $request->file('foto');
+            $namaFile = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/foto_koordinator'), $namaFile);
+            $fotoPath = 'foto_koordinator/' . $namaFile;
+        }
+
         Koordinator::create([
-            'id_user'      => $request->id_user,
-            'id_kecamatan' => $request->id_kecamatan,
-            'status'       => 'non-aktif', // otomatis non-aktif, aktif ketika diberi tugas di fitur pembagian
+            'id_user'       => $request->id_user,
+            'foto'          => $fotoPath,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'status'        => 'non-aktif',
         ]);
 
         return redirect()->back()->with('success', 'Data koordinator berhasil ditambahkan');
@@ -53,13 +60,32 @@ class KoordinatorController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'id_kecamatan' => 'required|exists:kecamatan,id_kecamatan',
-            'status'       => 'required|in:aktif,non-aktif',
+            'status'        => 'required|in:aktif,non-aktif',
+            'jenis_kelamin' => 'nullable|in:L,P',
+            'tanggal_lahir' => 'nullable|date',
+            'foto'          => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        Koordinator::findOrFail($id)->update([
-            'id_kecamatan' => $request->id_kecamatan,
-            'status'       => $request->status,
+        $koor = Koordinator::findOrFail($id);
+
+        $fotoPath = $koor->foto; // default tetap foto lama
+        if ($request->hasFile('foto')) {
+            // Hapus foto lama jika ada
+            if ($koor->foto) {
+                $filePath = public_path('storage/' . $koor->foto);
+                if (file_exists($filePath)) unlink($filePath);
+            }
+            $file     = $request->file('foto');
+            $namaFile = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/foto_koordinator'), $namaFile);
+            $fotoPath = 'foto_koordinator/' . $namaFile;
+        }
+
+        $koor->update([
+            'status'        => $request->status,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'foto'          => $fotoPath,
         ]);
 
         return redirect()->back()->with('success', 'Data koordinator berhasil diupdate');
@@ -67,17 +93,25 @@ class KoordinatorController extends Controller
 
     public function destroy($id)
     {
-        Koordinator::findOrFail($id)->delete();
+        $koor = Koordinator::findOrFail($id);
+
+        if ($koor->foto) {
+            $filePath = public_path('storage/' . $koor->foto);
+            if (file_exists($filePath)) unlink($filePath);
+        }
+
+        $koor->delete();
+
         return redirect()->back()->with('success', 'Data koordinator berhasil dihapus');
     }
 
     public function exportPdf(Request $request)
     {
-        $query = Koordinator::with(['user', 'kecamatan']);
+        $query = Koordinator::with(['user']);
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-        $koordinator = $query->get();
+        $koordinator  = $query->get();
         $filterStatus = $request->status;
 
         $pdf = Pdf::loadView('admin.data_master.koordinator_pdf', compact('koordinator', 'filterStatus'))

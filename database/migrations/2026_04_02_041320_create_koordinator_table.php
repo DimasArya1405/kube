@@ -18,13 +18,9 @@ return new class extends Migration
                   ->onDelete('cascade')
                   ->onUpdate('cascade');
 
-            $table->unsignedBigInteger('id_kecamatan');
-            $table->foreign('id_kecamatan')
-                  ->references('id_kecamatan')
-                  ->on('kecamatan')
-                  ->onDelete('cascade')
-                  ->onUpdate('cascade');
-
+            $table->string('foto', 255)->nullable();
+            $table->enum('jenis_kelamin', ['L', 'P'])->nullable();
+            $table->date('tanggal_lahir')->nullable();
             $table->enum('status', ['aktif', 'non-aktif'])->default('non-aktif');
 
             $table->timestamps();

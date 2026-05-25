@@ -15,9 +15,4 @@ class Koordinator extends Model
     {
         return $this->belongsTo(User::class, 'id_user', 'id_user');
     }
-
-    public function kecamatan()
-    {
-        return $this->belongsTo(Kecamatan::class, 'id_kecamatan', 'id_kecamatan');
-    }
 }

@@ -35,7 +35,8 @@
                 <th>NIK</th>
                 <th>No HP</th>
                 <th>Alamat</th>
-                <th>Kesediaan Wilayah</th>
+                <th>Jenis Kelamin</th>
+                <th>Tanggal Lahir</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -47,14 +48,22 @@
                 <td>{{ $item->user->nik ?? '-' }}</td>
                 <td>{{ $item->user->no_hp ?? '-' }}</td>
                 <td>{{ $item->user->alamat ?? '-' }}</td>
-                <td>{{ $item->kecamatan->nama_kecamatan ?? '-' }}</td>
+                <td class="center">
+                    @if($item->jenis_kelamin === 'L') Laki-laki
+                    @elseif($item->jenis_kelamin === 'P') Perempuan
+                    @else -
+                    @endif
+                </td>
+                <td class="center">
+                    {{ $item->tanggal_lahir ? \Carbon\Carbon::parse($item->tanggal_lahir)->format('d-m-Y') : '-' }}
+                </td>
                 <td class="center {{ $item->status === 'aktif' ? 'aktif' : 'nonaktif' }}">
                     {{ ucfirst($item->status) }}
                 </td>
             </tr>
             @empty
             <tr>
-                <td colspan="7" style="text-align:center;padding:16px;color:#999">Belum ada data koordinator.</td>
+                <td colspan="8" style="text-align:center;padding:16px;color:#999">Belum ada data koordinator.</td>
             </tr>
             @endforelse
         </tbody>

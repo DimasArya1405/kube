@@ -28,7 +28,7 @@ class KoordinatorExport implements
     {
         $this->filterStatus = $filterStatus;
 
-        $query = Koordinator::with(['user', 'kecamatan']);
+        $query = Koordinator::with(['user']); // hapus 'kecamatan'
         if ($filterStatus) {
             $query->where('status', $filterStatus);
         }
@@ -39,14 +39,13 @@ class KoordinatorExport implements
     {
         return $this->data->map(function ($item) {
             return [
-                'Nama'              => $item->user->nama ?? '-',
-                'NIK'               => "\t" . ($item->user->nik ?? '-'),
-                'No HP'             => "\t" . ($item->user->no_hp ?? '-'),
-                'Alamat'            => $item->user->alamat ?? '-',
-                'Kesediaan Wilayah' => $item->kecamatan->nama_kecamatan ?? '-',
-                'Tanggal Mulai'     => $item->tgl_mulai ? date('d-m-Y', strtotime($item->tgl_mulai)) : '-',
-                'Tanggal Selesai'   => $item->tgl_selesai ? date('d-m-Y', strtotime($item->tgl_selesai)) : '-',
-                'Status'            => ucfirst($item->status),
+                'Nama'          => $item->user->nama ?? '-',
+                'NIK'           => "\t" . ($item->user->nik ?? '-'),
+                'No HP'         => "\t" . ($item->user->no_hp ?? '-'),
+                'Alamat'        => $item->user->alamat ?? '-',
+                'Jenis Kelamin' => $item->jenis_kelamin === 'L' ? 'Laki-laki' : ($item->jenis_kelamin === 'P' ? 'Perempuan' : '-'),
+                'Tanggal Lahir' => $item->tanggal_lahir ? date('d-m-Y', strtotime($item->tanggal_lahir)) : '-',
+                'Status'        => ucfirst($item->status),
             ];
         });
     }
@@ -55,15 +54,15 @@ class KoordinatorExport implements
 
     public function headings(): array
     {
-        return ['Nama', 'NIK', 'No HP', 'Alamat', 'Kesediaan Wilayah', 'Tanggal Mulai', 'Tanggal Selesai', 'Status'];
+        return ['Nama', 'NIK', 'No HP', 'Alamat', 'Jenis Kelamin', 'Tanggal Lahir', 'Status'];
     }
 
     public function styles(Worksheet $sheet)
     {
         return [
             3 => [
-                'font' => ['bold' => true, 'color' => ['argb' => 'FFFFFFFF']],
-                'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF2563EB']],
+                'font'      => ['bold' => true, 'color' => ['argb' => 'FFFFFFFF']],
+                'fill'      => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF2563EB']],
                 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
             ],
         ];
@@ -74,7 +73,7 @@ class KoordinatorExport implements
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 $sheet        = $event->sheet->getDelegate();
-                $lastCol      = 'H';
+                $lastCol      = 'G'; // 7 kolom: A-G
                 $headingRow   = 3;
                 $firstDataRow = 4;
                 $totalRows    = $this->data->count() + $headingRow;
@@ -103,7 +102,7 @@ class KoordinatorExport implements
                 }
 
                 // ── Alignment status ─────────────────────────────────────────
-                $sheet->getStyle("H{$firstDataRow}:H{$totalRows}")
+                $sheet->getStyle("G{$firstDataRow}:G{$totalRows}")
                     ->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
                 // ── Zebra striping ───────────────────────────────────────────
@@ -123,9 +122,9 @@ class KoordinatorExport implements
 
                 // ── Warna status ─────────────────────────────────────────────
                 for ($row = $firstDataRow; $row <= $totalRows; $row++) {
-                    $status = $sheet->getCell("H{$row}")->getValue();
+                    $status = $sheet->getCell("G{$row}")->getValue();
                     $color  = strtolower($status) === 'aktif' ? 'FF15803D' : 'FFDC2626';
-                    $sheet->getStyle("H{$row}")->applyFromArray([
+                    $sheet->getStyle("G{$row}")->applyFromArray([
                         'font' => ['bold' => true, 'color' => ['argb' => $color]],
                     ]);
                 }
