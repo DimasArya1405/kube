@@ -29,12 +29,16 @@ class PembagianKoordinatorController extends Controller
         // GROUP
         $data = $data->groupBy('id_koor');
 
-        $koor = Koordinator::all();
+        // Hapus atau komen kode lama: $koor = Koordinator::all();
+        $koor = Koordinator::with('user')->get();
         $kecamatan = Kecamatan::all();
         $pendamping = [];
 
         return view('admin.penugasan.pembagian_koordinator', compact(
-            'data','koor','pendamping','kecamatan'
+            'data',
+            'koor',
+            'pendamping',
+            'kecamatan'
         ));
     }
 
@@ -49,7 +53,7 @@ class PembagianKoordinatorController extends Controller
 
         PembagianKoordinator::create($request->all());
 
-        return back()->with('success','Data berhasil ditambahkan');
+        return back()->with('success', 'Data berhasil ditambahkan');
     }
 
     public function update(Request $request, $id)
@@ -64,86 +68,86 @@ class PembagianKoordinatorController extends Controller
         $data = PembagianKoordinator::findOrFail($id);
         $data->update($request->all());
 
-        return back()->with('success','Data berhasil diupdate');
+        return back()->with('success', 'Data berhasil diupdate');
     }
 
     public function destroy($id)
     {
         PembagianKoordinator::findOrFail($id)->delete();
-        return back()->with('success','Data dihapus');
+        return back()->with('success', 'Data dihapus');
     }
 
     public function getPendamping($id_kecamatan, $selected = null)
 {
     $sudahDipakai = PembagianKoordinator::pluck('id_pembagian')->toArray();
 
-    // hapus id yang sedang diedit
+    // Hapus id yang sedang diedit dari daftar 'sudah dipakai'
     if($selected){
         $sudahDipakai = array_diff($sudahDipakai, [$selected]);
-        }
-
-        $data = PembagianPendamping::join(
-                'pendamping',
-                'pembagian_pendamping.id_pendamping',
-                '=',
-                'pendamping.id_pendamping'
-            )
-            ->join(
-                'kube',
-                'pembagian_pendamping.id_kube',
-                '=',
-                'kube.id_kube'
-            )
-            ->where('pendamping.id_kecamatan', $id_kecamatan)
-            ->whereNotIn('pembagian_pendamping.id_pembagian', $sudahDipakai)
-            ->select(
-                'pembagian_pendamping.id_pembagian',
-                'pendamping.nama_pendamping',
-                'kube.nama_kube'
-            )
-            ->get();
-
-        return response()->json($data);
     }
+
+    $data = PembagianPendamping::join('pendamping', 'pembagian_pendamping.id_pendamping', '=', 'pendamping.id_pendamping')
+        
+        // 1. Join ke users untuk ambil nama Pendamping
+        ->join('users as user_pendamping', 'pendamping.id_user', '=', 'user_pendamping.id_user')
+        
+        // 2. Join ke tabel kube untuk ambil data KUBE yang didampingi
+        ->join('kube', 'pembagian_pendamping.id_kube', '=', 'kube.id_kube')
+        
+        // 3. Join ke tabel desa_kelurahan untuk melacak kecamatannya si KUBE
+        ->join('desa_kelurahan', 'kube.id_desa_kelurahan', '=', 'desa_kelurahan.id_desa_kelurahan')
+        
+        // Filter berdasarkan kecamatan KUBE
+        ->where('desa_kelurahan.id_kecamatan', $id_kecamatan) 
+        ->whereNotIn('pembagian_pendamping.id_pembagian', $sudahDipakai)
+        ->select(
+            'pembagian_pendamping.id_pembagian',
+            'user_pendamping.nama as nama_pendamping', // Alias yang dibaca oleh JavaScript
+            'kube.nama_kube'
+        )
+        ->get();
+
+    return response()->json($data);
+}
 
     // PDF
     public function exportPDF()
-{
-    $data = PembagianKoordinator::with([
-        'koordinator',
-        'pembagianPendamping.pendamping',
-        'pembagianPendamping.kube'
-    ])->get();
+    {
+        $data = PembagianKoordinator::with([
+            'koordinator',
+            'pembagianPendamping.pendamping',
+            'pembagianPendamping.kube'
+        ])->get();
 
-    // ✅ TAMBAHAN (biar status muncul)
-    foreach ($data as $d) {
-        $d->status = ($d->tgl_selesai && Carbon::parse($d->tgl_selesai)->isPast())
-            ? 'Selesai' : 'Aktif';
+        // ✅ TAMBAHAN (biar status muncul)
+        foreach ($data as $d) {
+            $d->status = ($d->tgl_selesai && Carbon::parse($d->tgl_selesai)->isPast())
+                ? 'Selesai' : 'Aktif';
+        }
+
+        $data = $data->groupBy('id_koor');
+
+        return Pdf::loadView('admin.penugasan.pembagian_koordinator_pdf', [
+            'data' => $data,
+            'isPdf' => true
+        ])->download('laporan.pdf');
     }
 
-    $data = $data->groupBy('id_koor');
+    public function exportExcel()
+    {
+        $data = PembagianKoordinator::with([
+            'koordinator',
+            'pembagianPendamping.pendamping',
+            'pembagianPendamping.kube'
+        ])->get();
 
-    return Pdf::loadView('admin.penugasan.pembagian_koordinator_pdf', [
-        'data' => $data,
-        'isPdf' => true
-    ])->download('laporan.pdf');
-}
+        $filename = "laporan_pembagian_koordinator.xls";
 
-public function exportExcel()
-{
-    $data = PembagianKoordinator::with([
-        'koordinator',
-        'pembagianPendamping.pendamping',
-        'pembagianPendamping.kube'
-    ])->get();
+        header("Content-Type: application/vnd.ms-excel");
+        header("Content-Disposition: attachment; filename=\"$filename\"");
 
-    $filename = "laporan_pembagian_koordinator.xls";
-
-    header("Content-Type: application/vnd.ms-excel");
-    header("Content-Disposition: attachment; filename=\"$filename\"");
-
-    echo "<table border='1'>";
-    echo "<tr>
+        echo "<table border='1'>";
+        echo "<tr>
             <th>No</th>
             <th>Koordinator</th>
             <th>Pendamping</th>
@@ -153,29 +157,29 @@ public function exportExcel()
             <th>Status</th>
           </tr>";
 
-    $no = 1;
+        $no = 1;
 
-    foreach ($data as $row) {
+        foreach ($data as $row) {
 
-        $pp = $row->pembagianPendamping;
+            $pp = $row->pembagianPendamping;
 
-        $status = ($row->tgl_selesai && \Carbon\Carbon::parse($row->tgl_selesai)->isPast())
-            ? 'Selesai' : 'Aktif';
+            $status = ($row->tgl_selesai && \Carbon\Carbon::parse($row->tgl_selesai)->isPast())
+                ? 'Selesai' : 'Aktif';
 
-        echo "<tr>
+            echo "<tr>
                 <td>{$no}</td>
-                <td>".($row->koordinator->nama_koor ?? '-')."</td>
-                <td>".($pp->pendamping->nama_pendamping ?? '-')."</td>
-                <td>".($pp->kube->nama_kube ?? '-')."</td>
-                <td>".($row->tgl_mulai ?? '-')."</td>
-                <td>".($row->tgl_selesai ?? '-')."</td>
+                <td>" . ($row->koordinator->user->nama ?? '-') . "</td>
+                <td>" . ($pp->pendamping->nama_pendamping ?? '-') . "</td>
+                <td>" . ($pp->kube->nama_kube ?? '-') . "</td>
+                <td>" . ($row->tgl_mulai ?? '-') . "</td>
+                <td>" . ($row->tgl_selesai ?? '-') . "</td>
                 <td>{$status}</td>
               </tr>";
 
-        $no++;
-    }
+            $no++;
+        }
 
-    echo "</table>";
-    exit;
-}
+        echo "</table>";
+        exit;
+    }
 }

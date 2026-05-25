@@ -9,10 +9,7 @@ class KepalaDinasController extends Controller
 {
     public function dashboard()
     {
-        $totalKube      = Kube::count();
-        $kubeAktif      = Kube::where('status', 'Aktif')->count();
-        $kubeTidakAktif = Kube::where('status', 'Tidak Aktif')->count();
-
+        // 1. Ambil data rekapitulasi KUBE
         $rekapKecamatan = DB::table('kube')
             ->join('desa_kelurahan', 'kube.id_desa_kelurahan', '=', 'desa_kelurahan.id_desa_kelurahan')
             ->join('kecamatan', 'desa_kelurahan.id_kecamatan', '=', 'kecamatan.id_kecamatan')
@@ -26,23 +23,23 @@ class KepalaDinasController extends Controller
             ->orderByDesc('total')
             ->get();
 
-        $top5Kecamatan   = $rekapKecamatan->take(5);
-        $maxTotal        = $rekapKecamatan->max('total') ?: 1;
-        $chartLabels     = $rekapKecamatan->pluck('nama_kecamatan');
-        $chartTotal      = $rekapKecamatan->pluck('total');
-        $chartAktif      = $rekapKecamatan->pluck('aktif');
-        $chartTidakAktif = $rekapKecamatan->pluck('tidak_aktif');
+        // 2. Bungkus semua variabel ke dalam satu OBJEK (Gaya KUBE)
+        $data = (object) [
+            'totalKube'       => Kube::count(),
+            'kubeAktif'       => Kube::where('status', 'Aktif')->count(),
+            'kubeTidakAktif'  => Kube::where('status', 'Tidak Aktif')->count(),
+            
+            'top5Kecamatan'   => $rekapKecamatan->take(5),
+            'maxTotal'        => $rekapKecamatan->max('total') ?: 1,
+            
+            // Untuk Chart JS
+            'chartLabels'     => $rekapKecamatan->pluck('nama_kecamatan'),
+            'chartTotal'      => $rekapKecamatan->pluck('total'),
+            'chartAktif'      => $rekapKecamatan->pluck('aktif'),
+            'chartTidakAktif' => $rekapKecamatan->pluck('tidak_aktif')
+        ];
 
-        return view('kepala_dinas.dashboard.index', compact(
-            'totalKube',
-            'kubeAktif',
-            'kubeTidakAktif',
-            'top5Kecamatan',
-            'maxTotal',
-            'chartLabels',
-            'chartTotal',
-            'chartAktif',
-            'chartTidakAktif'
-        ));
+        // 3. Kirim SATU variabel objek saja ke View
+        return view('kepala_dinas.dashboard.index', compact('data'));
     }
 }

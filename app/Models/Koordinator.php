@@ -13,6 +13,7 @@ class Koordinator extends Model
 
     public function user()
     {
+        // Sesuaikan foreign key dan owner key-nya
         return $this->belongsTo(User::class, 'id_user', 'id_user');
     }
 }

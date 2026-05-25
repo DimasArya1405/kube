@@ -110,11 +110,12 @@ Data Master / <span class="text-gray-800">Data Anggota KUBE</span>
                         </div>
                     </td>
                 </tr>
-            </tbody>
+                @endforeach </tbody>
         </table>
     </div>
-</div> @foreach($anggotas as $index => $anggota)
+</div> 
 
+@foreach($anggotas as $index => $anggota)
 <div id="detailAnggotaModal{{ $anggota->id_anggota }}" class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center transition-opacity">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden text-left relative">
         <div class="flex justify-between items-center px-6 py-4 border-b border-gray-200 bg-gray-50">

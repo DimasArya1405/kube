@@ -29,7 +29,7 @@
 
     <div class="bg-blue-500 text-white rounded-xl p-5 flex items-center justify-between shadow">
         <div>
-            <p class="text-4xl font-extrabold">{{ $totalKube }}</p>
+            <p class="text-4xl font-extrabold">{{ $data->totalKube }}</p>
             <p class="text-sm font-semibold mt-1">Total KUBE</p>
         </div>
         <div class="bg-white/20 p-3 rounded-lg">
@@ -39,7 +39,7 @@
 
     <div class="bg-green-500 text-white rounded-xl p-5 flex items-center justify-between shadow">
         <div>
-            <p class="text-4xl font-extrabold">{{ $kubeAktif }}</p>
+            <p class="text-4xl font-extrabold">{{ $data->kubeAktif }}</p>
             <p class="text-sm font-semibold mt-1">KUBE Aktif</p>
         </div>
         <div class="bg-white/20 p-3 rounded-lg">
@@ -49,7 +49,7 @@
 
     <div class="bg-red-500 text-white rounded-xl p-5 flex items-center justify-between shadow">
         <div>
-            <p class="text-4xl font-extrabold">{{ $kubeTidakAktif }}</p>
+            <p class="text-4xl font-extrabold">{{ $data->kubeTidakAktif }}</p>
             <p class="text-sm font-semibold mt-1">KUBE Tidak Aktif</p>
         </div>
         <div class="bg-white/20 p-3 rounded-lg">
@@ -74,11 +74,13 @@
         <canvas id="chartDonut" height="200"></canvas>
         <div class="flex justify-center gap-6 mt-4">
             <div class="text-center">
-                <p class="text-2xl font-extrabold text-green-600">{{ $kubeAktif }}</p>
+                {{-- PERBAIKAN: Hapus tanda dollar pada properti objek --}}
+                <p class="text-2xl font-extrabold text-green-600">{{ $data->kubeAktif }}</p>
                 <p class="text-xs text-gray-500">Aktif</p>
             </div>
             <div class="text-center">
-                <p class="text-2xl font-extrabold text-red-500">{{ $kubeTidakAktif }}</p>
+                {{-- PERBAIKAN: Hapus tanda dollar pada properti objek --}}
+                <p class="text-2xl font-extrabold text-red-500">{{ $data->kubeTidakAktif }}</p>
                 <p class="text-xs text-gray-500">Tidak Aktif</p>
             </div>
         </div>
@@ -90,7 +92,8 @@
 <div class="bg-white rounded-xl shadow border border-gray-200 p-5">
     <h3 class="text-base font-bold text-gray-800 mb-4">Top 5 Kecamatan dengan KUBE Terbanyak</h3>
 
-    @forelse ($top5Kecamatan as $index => $item)
+    {{-- PERBAIKAN: Tambahkan $data-> sebelum top5Kecamatan --}}
+    @forelse ($data->top5Kecamatan as $index => $item)
         <div class="flex items-center gap-3 mb-3">
             <div class="w-7 h-7 rounded-full bg-indigo-600 text-white text-xs flex items-center justify-center font-bold flex-shrink-0">
                 {{ $index + 1 }}
@@ -101,8 +104,9 @@
                     <span class="text-xs font-bold text-indigo-600">{{ $item->total }} KUBE</span>
                 </div>
                 <div class="w-full bg-gray-100 rounded-full h-2">
+                    {{-- PERBAIKAN: Tambahkan $data-> sebelum maxTotal --}}
                     <div class="bg-indigo-500 h-2 rounded-full"
-                        style="width: {{ $maxTotal > 0 ? ($item->total / $maxTotal) * 100 : 0 }}%">
+                        style="width: {{ $data->maxTotal > 0 ? ($item->total / $data->maxTotal) * 100 : 0 }}%">
                     </div>
                 </div>
                 <div class="flex gap-4 mt-1">
@@ -121,28 +125,29 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // CHART BAR PER KECAMATAN
     const ctxBar = document.getElementById('chartKecamatan').getContext('2d');
     new Chart(ctxBar, {
         type: 'bar',
         data: {
-            labels: @json($chartLabels),
+            labels: @json($data->chartLabels),
             datasets: [
                 {
                     label: 'Total KUBE',
-                    data: @json($chartTotal),
+                    data: @json($data->chartTotal),
                     backgroundColor: 'rgba(99, 102, 241, 0.7)',
                     borderRadius: 4,
                 },
                 {
                     label: 'Aktif',
-                    data: @json($chartAktif),
+                    // PERBAIKAN: Tambahkan $data-> sebelum chartAktif
+                    data: @json($data->chartAktif),
                     backgroundColor: 'rgba(34, 197, 94, 0.7)',
                     borderRadius: 4,
                 },
                 {
                     label: 'Tidak Aktif',
-                    data: @json($chartTidakAktif),
+                    // PERBAIKAN: Tambahkan $data-> sebelum chartTidakAktif
+                    data: @json($data->chartTidakAktif),
                     backgroundColor: 'rgba(239, 68, 68, 0.7)',
                     borderRadius: 4,
                 },
@@ -166,7 +171,8 @@
         data: {
             labels: ['Aktif', 'Tidak Aktif'],
             datasets: [{
-                data: [{{ $kubeAktif }}, {{ $kubeTidakAktif }}],
+                // PERBAIKAN: Hapus tanda dollar tambahan pada properti objek
+                data: [{{ $data->kubeAktif }}, {{ $data->kubeTidakAktif }}],
                 backgroundColor: [
                     'rgba(34, 197, 94, 0.8)',
                     'rgba(239, 68, 68, 0.8)',

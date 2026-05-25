@@ -56,7 +56,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
 // AJAX: Dapatkan Desa/Kelurahan berdasarkan Kecamatan
-Route::get('/get-desa/{id_kecamatan}', function($id_kecamatan) {
+Route::get('/get-desa/{id_kecamatan}', function ($id_kecamatan) {
     $desa = \App\Models\DesaKelurahan::where('id_kecamatan', $id_kecamatan)->get(['id_desa_kelurahan', 'nama_desa_kelurahan']);
     return response()->json($desa);
 });
@@ -79,42 +79,43 @@ Route::middleware('auth')->group(function () {
     Route::get('/koordinator/dashboard', [DashboardController::class, 'koordinator'])->name('dashboard.koordinator');
     Route::get('/dashboard/tim', [DashboardController::class, 'tim'])->name('dashboard.tim');
     Route::get('/kepala_dinas/dashboard', [DashboardController::class, 'dinas'])->name('dashboard.dinas');
-    
+
     // --- DASHBOARD ADMIN ---
-    Route::prefix('admin')->group(function() {
+    Route::prefix('admin')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'admin'])
             ->middleware('checkrole:admin') // Kita akan buat middleware ini
             ->name('admin.dashboard');
     });
 
     // --- DASHBOARD KOORDINATOR ---
-    Route::prefix('koordinator')->group(function() {
+    Route::prefix('koordinator')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'koordinator'])
             ->middleware('checkrole:koordinator')
             ->name('koordinator.dashboard');
     });
 
     // --- DASHBOARD KEPALA DINAS ---
-    Route::prefix('kepala_dinas')->group(function() {
+    Route::prefix('kepala_dinas')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'kepala_dinas'])
             ->middleware('checkrole:kepala_dinas')
             ->name('kepala_dinas.dashboard');
     });
 
     // --- DASHBOARD PENDAMPING ---
-    Route::prefix('pendamping')->group(function() {
+    Route::prefix('pendamping')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'pendamping'])
             ->middleware('checkrole:pendamping')
             ->name('pendamping.dashboard');
     });
 
     // --- DASHBOARD KETUA KUBE ---
-    Route::prefix('ketua_kube')->group(function() {
+    Route::prefix('ketua_kube')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'ketua'])
             ->middleware('checkrole:ketua_kube')
             ->name('ketua_kube.dashboard');
     });
 
+Route::get('/kepala_dinas/dashboard', [KepalaDinasController::class, 'dashboard'])->name('kadis.dashboard');
     // KELOLA DATA USER
     Route::get('/admin/users', [UsersController::class, 'index'])->name('admin.users');
     Route::post('/admin/users/store', [UsersController::class, 'store'])->name('admin.users.store');
@@ -163,15 +164,15 @@ Route::middleware('auth')->group(function () {
     Route::put('/admin/kategorikube/{id}/edit', [KategoriKubeController::class, 'edit'])->name('kategorikube.edit');
     Route::post('/admin/kategorikube/{id}', [KategoriKubeController::class, 'update'])->name('kategorikube.update');
     Route::get('/admin/kategorikube/delete/{id}', [KategoriKubeController::class, 'destroy'])->name('kategorikube.destroy');
-    
+
     // Export PDF & Excel Cluster
     Route::get('/cluster-usaha/pdf', [ClusterUsahaController::class, 'exportPDF'])->name('cluster_usaha.exportPDF');
     Route::get('/cluster-usaha/excel', [ClusterUsahaController::class, 'exportExcel'])->name('cluster_usaha.exportExcel');
-    
+
     // Pembagian Koordinator
     Route::resource('pembagian_koordinator', PembagianKoordinatorController::class);
     Route::get('/get-pendamping/{id_kecamatan}/{selected?}', [PembagianKoordinatorController::class, 'getPendamping']);
-    
+
     // Ekspor
     Route::get('/pembagian-koordinator/pdf', [PembagianKoordinatorController::class, 'exportPDF'])->name('pembagian_koordinator.exportPDF');
     Route::get('/pembagian-koordinator/excel', [PembagianKoordinatorController::class, 'exportExcel'])->name('pembagian_koordinator.exportExcel');
@@ -316,9 +317,9 @@ Route::middleware('auth')->group(function () {
 
     // REKAP KUBE
     Route::get('/rekap_kube', [RekapKubeController::class, 'index'])->name('rekap_kube.index');
-Route::get('/rekap_kube/detail/{id_kecamatan}', [RekapKubeController::class, 'detail'])->name('rekap_kube.detail');
-Route::get('/rekap_kube/export/pdf', [RekapKubeController::class, 'exportPdf'])->name('rekap_kube.export.pdf');
-Route::get('/rekap_kube/export/excel', [RekapKubeController::class, 'exportExcel'])->name('rekap_kube.export.excel');
+    Route::get('/rekap_kube/detail/{id_kecamatan}', [RekapKubeController::class, 'detail'])->name('rekap_kube.detail');
+    Route::get('/rekap_kube/export/pdf', [RekapKubeController::class, 'exportPdf'])->name('rekap_kube.export.pdf');
+    Route::get('/rekap_kube/export/excel', [RekapKubeController::class, 'exportExcel'])->name('rekap_kube.export.excel');
 
     // LAPORAN KEUANGAN
     Route::get('/laporan-keuangan', [KeuanganController::class, 'index'])->name('laporan.index');
@@ -333,7 +334,7 @@ Route::get('/rekap_kube/export/excel', [RekapKubeController::class, 'exportExcel
     Route::get('/laporan-keuangan/export/excel-single/{id_kube}', [KeuanganController::class, 'exportExcelSingle'])->name('laporan.export.excel.single');
     Route::get('/laporan-keuangan/export/pdf-single/{id_kube}', [KeuanganController::class, 'exportPdfSingle'])->name('laporan.export.pdf.single');
     Route::get('/laporan-keuangan/export/pdf-detail/{id}', [KeuanganController::class, 'exportPdfDetail'])->name('laporan.export.pdf.detail');
-    
+
     // MONITORING
     Route::get('/monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
     Route::post('/monitoringbantuan/store', [MonitoringController::class, 'store'])->name('monitoring.store');
@@ -397,17 +398,17 @@ Route::get('/rekap_kube/export/excel', [RekapKubeController::class, 'exportExcel
     // KUNJUNGAN PENDAMPING
 
     Route::prefix('pendamping')
-    ->middleware(['role:pendamping'])
-    ->group(function () {
+        ->middleware(['role:pendamping'])
+        ->group(function () {
 
-        Route::get('/kunjungan_pendamping', [KunjunganPendampingController::class, 'index'])->name('kunjungan.index');
-        Route::post('/kunjungan_pendamping', [KunjunganPendampingController::class, 'store'])->name('kunjungan.store');
-        Route::get('/kunjungan_pendamping/{id}/edit', [KunjunganPendampingController::class, 'edit'])->name('kunjungan.edit');
-        Route::put('/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'update'])->name('kunjungan.update');
-        Route::get('/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'show'])->name('kunjungan.show');
-        Route::delete('/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'destroy'])->name('kunjungan.delete');
-        Route::patch('/pendamping/kunjungan_pendamping/{id}/selesai', [KunjunganPendampingController::class, 'selesai'])->name('kunjungan.selesai');
-    });
+            Route::get('/kunjungan_pendamping', [KunjunganPendampingController::class, 'index'])->name('kunjungan.index');
+            Route::post('/kunjungan_pendamping', [KunjunganPendampingController::class, 'store'])->name('kunjungan.store');
+            Route::get('/kunjungan_pendamping/{id}/edit', [KunjunganPendampingController::class, 'edit'])->name('kunjungan.edit');
+            Route::put('/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'update'])->name('kunjungan.update');
+            Route::get('/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'show'])->name('kunjungan.show');
+            Route::delete('/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'destroy'])->name('kunjungan.delete');
+            Route::patch('/pendamping/kunjungan_pendamping/{id}/selesai', [KunjunganPendampingController::class, 'selesai'])->name('kunjungan.selesai');
+        });
 
     // Route::get('/pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'index'])->name('kunjungan.index');
     // Route::post('pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'store'])->name('kunjungan.store');
