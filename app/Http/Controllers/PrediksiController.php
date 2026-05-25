@@ -7,6 +7,7 @@ use App\Models\Kecamatan;
 use App\Models\Kube;
 use App\Models\Pertanyaan;
 use App\Models\HasilPrediksi;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class PrediksiController extends Controller
@@ -17,6 +18,7 @@ class PrediksiController extends Controller
      */
     private function getPendampingLogin()
     {
+        
         $user = auth()->user();
 
         if (!$user) {
