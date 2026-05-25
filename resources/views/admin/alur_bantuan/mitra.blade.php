@@ -583,6 +583,7 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
         
         const container = document.getElementById('detail_mou_container');
         if(mitra.mou) {
+            
             const pdfUrl = `/admin/mitra/view-pdf/${mitra.id_mitra}`;
             container.innerHTML = `
                 <a href="${pdfUrl}" target="_blank" 

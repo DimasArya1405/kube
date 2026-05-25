@@ -2,66 +2,194 @@
 
 @section('content')
 <div class="p-4 bg-gray-50 min-h-screen font-sans">
-    {{-- Header Section --}}
-    <div class="flex flex-col md:flex-row md:items-center justify-between mb-5 gap-3">
+
+{{-- Header Section --}}
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-5 gap-3">
+    <div class="flex items-center gap-3">
+        @if(request('id_kube'))
+            <a href="{{ route('laporan.index') }}" 
+               class="group p-2 bg-white hover:bg-sky-50 border border-gray-200 hover:border-sky-300 rounded-xl transition-all duration-300 shadow-sm flex items-center justify-center" 
+               title="Kembali ke Daftar KUBE">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 group-hover:text-sky-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+            </a>
+        @endif
+
         <div>
-            <h1 class="text-xl font-bold text-gray-800 tracking-tight">Laporan Keuangan KUBE</h1>
+            <h1 class="text-xl font-bold text-gray-800 tracking-tight">Keuangan KUBE</h1>
             <p class="text-[11px] text-gray-500">Monitoring omset dan laba bulanan KUBE.</p>
         </div>
-        <div class="flex flex-wrap items-center gap-2">
-          <a href="#"
-        class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-        </svg>
-        Ekspor PDF
-    </a>
-
-    {{-- Ekspor Excel --}}
-    <a href="#"
-        class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6M3 17V7a2 2 0 012-2h14a2 2 0 012 2v10"/>
-        </svg>
-        Ekspor Excel
-    </a>
-      <button data-modal-target="modal-tambah-lk" data-modal-toggle="modal-tambah-lk"
-        class="flex items-center gap-2 bg-sky-700 hover:bg-sky-900 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all">
-        + Tambah Laporan
-    </button>
-
-        </div>
     </div>
 
-{{-- Stats Cards --}}
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-    {{-- Card 1: Omset --}}
-    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-lg shadow-gray-200/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 ease-in-out flex items-center gap-4 group cursor-default">
-        <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform duration-300">💰</div>
-        <div class="min-w-0">
-            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Total Omset</p>
-            <h3 class="text-xl font-black text-gray-800 tracking-tight">Rp {{ number_format($totalOmset, 0, ',', '.') }}</h3>
-        </div>
-    </div>
+    <div class="flex items-center gap-2">
+        @if(!request('id_kube'))
+            <a href="{{ route('laporan.export.pdf.all') }}" class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all shadow-sm">
+                    <span>📄</span> Ekspor PDF
+                </a>
+                <a href="{{ route('laporan.export.excel.all') }}" class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all shadow-sm">
+                    <span>📊</span> Ekspor Excel
+                </a>
+        @endif
 
-    {{-- Card 2: Laba --}}
-    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-lg shadow-gray-200/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 ease-in-out flex items-center gap-4 group cursor-default">
-        <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform duration-300">📈</div>
-        <div class="min-w-0">
-            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Laba Bersih</p>
-            <h3 class="text-xl font-black text-emerald-600 tracking-tight">Rp {{ number_format($totalLaba, 0, ',', '.') }}</h3>
-        </div>
-    </div>
-
-    {{-- Card 3: Perkembangan --}}
-    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-lg shadow-gray-200/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 ease-in-out flex items-center gap-4 group cursor-default">
-        <div class="w-12 h-12 bg-sky-50 rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform duration-300">📊</div>
-        <div class="min-w-0">
-            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Perkembangan</p>
-            <h3 class="text-xl font-black text-sky-600 tracking-tight">{{ $perkembangan }}</h3>
-        </div>
+        @if(auth()->user()->role == 'ketua_kube')
+            <button data-modal-target="modal-tambah-lk" data-modal-toggle="modal-tambah-lk"
+                class="flex items-center gap-2 bg-sky-700 hover:bg-sky-900 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all">
+                + Tambah Laporan
+            </button>
+        @endif
     </div>
 </div>
+
+{{-- Search Section --}}
+@if(auth()->user()->role === 'admin')
+<div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm mb-6">
+    <form action="{{ request()->url() }}" method="GET" class="flex flex-wrap items-end gap-3">
+        
+        <div class="flex flex-col gap-1 flex-1 min-w-[240px]">
+            <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Cari Kelompok KUBE</label>
+            <div class="relative">
+                <input type="text" name="search" value="{{ request('search') }}" 
+                       placeholder="Ketik nama KUBE... (Contoh: Jaya)" 
+                       class="w-full bg-gray-50 border border-gray-200 text-gray-700 text-xs rounded-xl pl-3 pr-10 py-2.5 focus:ring-sky-500 focus:border-sky-500 transition-all">
+                
+                @if(request('search'))
+                    <a href="{{ route('laporan.index') }}" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-xs font-bold">
+                        ✕
+                    </a>
+                @endif
+            </div>
+        </div>
+
+        <div>
+            <button type="submit" class="px-5 py-2.5 bg-gray-200 hover:bg-gray-400 text-gray-600 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1">
+                🔍 
+            </button>
+        </div>
+    </form>
+
+    @if(isset($searchResult))
+        <div class="mt-4 pt-3 border-t border-gray-50">
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Hasil Pencarian Kelompok:</p>
+            <div class="flex flex-wrap gap-2">
+                @forelse($searchResult as $kube)
+                    <a href="{{ route('laporan.index', ['id_kube' => $kube->id_kube]) }}" 
+                       class="inline-flex items-center gap-2 bg-sky-50 hover:bg-sky-100 border border-sky-100 text-sky-700 text-xs font-bold px-4 py-2 rounded-xl transition-all shadow-sm">
+                        🏢 KUBE "{{ $kube->nama_kube }}" <span class="text-sky-400">→</span>
+                    </a>
+                @empty
+                    <p class="text-xs text-gray-400 italic py-1">Kelompok KUBE dengan nama tersebut tidak ditemukan.</p>
+                @endforelse
+            </div>
+        </div>
+    @endif
+</div>
+@endif
+
+
+@if(request('id_kube'))
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        
+        {{-- Card 1: Total Omset --}}
+        <div class="group bg-white border border-gray-100/50 rounded-[2rem] p-6 shadow-sm hover:shadow-xl hover:shadow-sky-500/10 hover:-translate-y-2 transition-all duration-300">
+            <div class="flex items-center justify-between mb-4">
+            </div>
+            <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] mb-1">Total Omset</p>
+            <div class="flex items-baseline gap-1">
+                <span class="text-xs font-bold text-gray-300">Rp</span>
+                <h3 class="text-2xl font-black text-slate-800 tracking-tight">
+                    {{ number_format($totalOmset, 0, ',', '.') }}
+                </h3>
+            </div>
+        </div>
+
+        {{-- Card 2: Laba Bersih --}}
+        <div class="group bg-white border border-gray-100/50 rounded-[2rem] p-6 shadow-sm hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-2 transition-all duration-300">
+            <div class="flex items-center justify-between mb-4">
+            </div>
+            <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] mb-1">Laba Bersih</p>
+            <div class="flex items-baseline gap-1">
+                <span class="text-xs font-bold text-gray-300">Rp</span>
+                <h3 class="text-2xl font-black text-emerald-600 tracking-tight">
+                    {{ number_format($totalLaba, 0, ',', '.') }}
+                </h3>
+            </div>
+        </div>
+
+        {{-- Card 3: Perkembangan --}}
+        <div class="group bg-white border border-gray-100/50 rounded-[2rem] p-6 shadow-sm hover:shadow-xl hover:shadow-sky-500/10 hover:-translate-y-2 transition-all duration-300">
+            <div class="flex items-center justify-between mb-4">
+            </div>
+            <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] mb-1">Perkembangan</p>
+            <div class="flex items-center gap-2">
+                <div class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+                </div>
+                <h3 class="text-sm font-black text-sky-700 uppercase tracking-tight">
+                    {{ $perkembangan }}
+                </h3>
+            </div>
+        </div>
+
+    </div>
+@else
+
+    <div class="mb-8">
+        <div class="flex items-center gap-3 mb-5 px-2">
+            <div class="w-1 h-6 bg-sky-600 rounded-full"></div>
+            <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest">Pilih Kelompok KUBE</h3>
+        </div>
+
+        <div class="grid grid-cols-1 gap-3">
+            @foreach($daftarKube as $k)
+            <a href="{{ route('laporan.index', ['id_kube' => $k->id_kube]) }}" 
+               class="group flex items-center justify-between p-4 bg-white border border-gray-100 rounded-2xl hover:border-sky-500 hover:shadow-md hover:shadow-sky-500/5 transition-all duration-300">
+                
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 bg-slate-50 text-slate-400 group-hover:bg-sky-100 group-hover:text-sky-600 rounded-xl flex items-center justify-center font-black text-sm transition-colors">
+                        {{ substr($k->nama_kube, 0, 1) }}
+                    </div>
+                    
+                    <div>
+                        <span class="block text-xs font-black text-slate-700 group-hover:text-sky-600 transition-colors uppercase tracking-tight">
+                            {{ $k->nama_kube }}
+                        </span>
+                        <span class="block text-[9px] text-gray-400 font-medium uppercase mt-0.5">
+                            Klik untuk memantau laporan
+                        </span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <span class="text-[10px] font-bold text-gray-300 group-hover:text-sky-500 transition-colors uppercase">Buka Laporan</span>
+                    <div class="w-8 h-8 rounded-lg bg-gray-50 group-hover:bg-sky-600 flex items-center justify-center transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                </div>
+            </a>
+            @endforeach
+        </div>
+    </div>
+@endif
+@if(request('id_kube'))
+    <div class="flex gap-2 mb-4 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm items-center justify-between">
+        <div>
+            
+           
+        </div>
+        <div class="flex gap-2">
+             <a href="{{ route('laporan.export.pdf.single', request('id_kube')) }}" class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all shadow-sm">
+                    <span>📄</span> Ekspor PDF 
+                </a>
+                <a href="{{ route('laporan.export.excel.single', request('id_kube')) }}"  class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all shadow-sm">
+                    <span>📊</span> Ekspor Excel 
+                </a>
+        </div>
+    </div>
+@endif
 
     {{-- Table Section --}}
     <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
@@ -115,18 +243,25 @@
                                 <span class="text-sky-400 font-black">●</span>
                             @endif
                         </td>
-                        <td class="px-4 py-2.5 text-center">
-                            @if($row->lampiran_keuangan)
-                                <a href="{{ asset('uploads/keuangan/'.$row->lampiran_keuangan) }}" target="_blank" class="text-sky-400 hover:text-sky-600 text-xs">📂</a>
-                            @else
-                                <span class="text-gray-300 text-[10px]">-</span>
-                            @endif
-                        </td>
+                        <td class="px-6 py-4 text-center">
+                    @if($row->lampiran_keuangan)
+                        <a href="{{ asset('uploads/keuangan/' . $row->lampiran_keuangan) }}" target="_blank" 
+                           class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-sky-50 hover:bg-sky-100 text-sky-600 rounded-lg text-[9px] font-black uppercase tracking-wider transition-all">
+                            <span>📄</span> Berkas
+                        </a>
+                    @else
+                        <span class="inline-flex items-center px-2 py-1 bg-slate-100 text-slate-400 rounded-lg text-[9px] font-bold">
+                            Kosong
+                        </span>
+                    @endif
+                </td>
                         <td class="px-4 py-2.5 text-center">
                             <div class="flex justify-center gap-1.5">
-                                {{-- BUTTON DETAIL --}}
+                                
                                 <button type="button" 
                                     onclick="showDetail(this)"
+                                     data-id="{{ $row->id_laporan }}"
+                                           data-id="{{ $row->id_laporan ?? $row->id_laporan ?? $row->id }}"
                                     data-kube="{{ $dataKube->nama_kube ?? 'N/A' }}"
                                     data-cluster="{{ $row->cluster->nama_cluster ?? '-' }}"
                                     data-periode="{{ date('F Y', mktime(0, 0, 0, $row->periode_bulan, 10)) }}"
@@ -137,6 +272,7 @@
                                     data-ket="{{ $row->keterangan ?? '-' }}"
                                     class="p-1.5 text-sky-400 hover:bg-sky-50 rounded-md transition text-xs z-10">👁️</button>
                                 
+                                    @if(auth()->user()->role == 'ketua_kube')
                                 <button onclick="openEditModal(this)"
                                     data-id="{{ $row->id_laporan }}"
                                     data-kube="{{ $row->id_persetujuan }}"
@@ -147,20 +283,35 @@
                                     data-tahun="{{ $row->periode_tahun }}"
                                     data-tgl="{{ $row->tanggal_laporan }}"
                                     data-ket="{{ $row->keterangan }}"
+                                    data-file="{{ $row->lampiran_keuangan }}"
                                     class="p-1.5 text-amber-500 hover:bg-amber-50 rounded-md transition text-xs">✏️</button>
-                                
+                                @endif
+
+                                @if(auth()->user()->role == 'ketua_kube')
                                 <form id="delete-form-{{ $row->id_laporan }}" action="{{ route('laporan.destroy', $row->id_laporan) }}" method="POST" class="inline">
                                     @csrf @method('DELETE')
                                     <button type="button" onclick="confirmDelete('{{ $row->id_laporan }}')" class="p-1.5 text-red-400 hover:bg-red-50 rounded-md transition text-xs">
                                         🗑️
                                     </button>
-                                </form>
+                                </form> @endif
                             </div>
                         </td>
                     </tr>
-                    @empty
-                    <tr><td colspan="8" class="p-12 text-center text-gray-400 text-xs italic">Data belum tersedia.</td></tr>
-                    @endforelse
+                   @empty
+<tr>
+    <td colspan="8" class="p-16 text-center">
+        <div class="flex flex-col items-center justify-center space-y-3">
+            <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center text-2xl">📊</div>
+            @if(auth()->user()->role == 'admin' && !request('id_kube'))
+                <p class="text-xs font-bold text-gray-500 uppercase tracking-widest">Silahkan pilih salah satu KUBE di atas</p>
+                <p class="text-[10px] text-gray-400 italic">Data laporan akan muncul setelah kelompok dipilih.</p>
+            @else
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest italic">Belum ada data laporan untuk kelompok ini.</p>
+            @endif
+        </div>
+    </td>
+</tr>
+@endforelse
                 </tbody>
             </table>
         </div>
@@ -168,39 +319,39 @@
 </div>
 
 {{-- MODAL TAMBAH --}}
+
 <div id="modal-tambah-lk" tabindex="-1" class="hidden fixed inset-0 z-[100] flex justify-center items-center w-full h-full bg-slate-900/40 backdrop-blur-sm p-4">
-    <div class="relative w-full max-w-[420px] bg-white rounded-[2rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-        
-        {{-- Header --}}
+    <div class="relative w-full max-w-[420px] bg-white rounded-[2rem] shadow-2xl overflow-hidden">
         <div class="px-6 py-3 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
-            <h3 class="text-sm font-black text-slate-800 uppercase tracking-tight">Tambah Laporan Keuangan </h3>
-            <button data-modal-toggle="modal-tambah-lk" class="w-7 h-7 flex items-center justify-center rounded-full bg-white shadow-sm border border-slate-100 text-slate-400 hover:text-red-500 transition-all text-xs">✕</button>
+            <h3 class="text-sm font-black text-slate-800 uppercase tracking-tight">Tambah Laporan Keuangan</h3>
+            <button onclick="document.getElementById('modal-tambah-lk').classList.add('hidden')" class="w-7 h-7 flex items-center justify-center rounded-full bg-white shadow-sm border border-slate-100 text-slate-400 hover:text-red-500 transition-all text-xs">✕</button>
         </div>
 
         <form action="{{ route('laporan.store') }}" method="POST" enctype="multipart/form-data" class="p-5 space-y-3">
             @csrf
-        
-            <div class="grid grid-cols-2 gap-3">
-                <div class="space-y-1">
-                    <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Kelompok KUBE</label>
-                    <select name="id_persetujuan" class="w-full bg-slate-50 border-none rounded-xl px-3 py-2 text-[10px] font-bold text-slate-700 focus:ring-2 focus:ring-sky-500/20" required>
-                        <option value="">-- Pilih --</option>
-                        @foreach($kubeDisetujui as $k) <option value="{{ $k->id_pengajuan_kube }}">{{ $k->nama_tampilan }}</option> @endforeach
-                    </select>
-                </div>
-                <div class="space-y-1">
-                    <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Cluster</label>
-                    <select name="id_cluster" class="w-full bg-slate-50 border-none rounded-xl px-3 py-2 text-[10px] font-bold text-slate-700 focus:ring-2 focus:ring-sky-500/20" required>
-                        <option value="">-- Pilih --</option>
-                        @foreach($clusters as $c) <option value="{{ $c->id_cluster }}">{{ $c->nama_cluster }}</option> @endforeach
-                    </select>
-                </div>
+            <div class="space-y-1">
+                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Kelompok KUBE</label>
+                <select name="id_persetujuan" class="w-full bg-slate-50 border-none rounded-xl px-3 py-2 text-[10px] font-bold text-slate-700 focus:ring-2 focus:ring-sky-500/20" required>
+                    <option value="">-- Pilih Kelompok KUBE --</option>
+                    @foreach($kubeDisetujui as $item)
+                        <option value="{{ $item->id_pengajuan_kube }}">{{ $item->nama_tampilan }}</option>
+                    @endforeach
+                </select>
             </div>
 
+            <div class="space-y-1">
+                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Cluster</label>
+                <select name="id_cluster" class="w-full bg-slate-50 border-none rounded-xl px-3 py-2 text-[10px] font-bold text-slate-700 focus:ring-2 focus:ring-sky-500/20" required>
+                    <option value="">-- Pilih Cluster --</option>
+                    @foreach($clusters as $c) 
+                        <option value="{{ $c->id_cluster }}">{{ $c->nama_cluster }}</option> 
+                    @endforeach
+                </select>
+            </div>
 
             <div class="grid grid-cols-2 gap-3">
                 <div class="p-2.5 bg-emerald-50/40 rounded-2xl border border-emerald-100/50">
-                    <label class="text-[8px] font-black text-emerald-600 uppercase block mb-1 text-center">Omset Pendapatan (Rp)</label>
+                    <label class="text-[8px] font-black text-emerald-600 uppercase block mb-1 text-center">Omset (Rp)</label>
                     <input type="number" name="omset_pendapatan" placeholder="0" class="w-full bg-transparent border-none text-xs font-black text-emerald-700 text-center focus:ring-0 p-0" required>
                 </div>
                 <div class="p-2.5 bg-rose-50/40 rounded-2xl border border-rose-100/50">
@@ -209,7 +360,6 @@
                 </div>
             </div>
 
-      
             <div class="bg-slate-50/50 p-2.5 rounded-2xl flex items-center gap-3 border border-slate-100">
                 <div class="flex-1 flex items-center gap-1.5 text-slate-500">
                     <span class="text-xs">📅</span>
@@ -227,17 +377,16 @@
                 </div>
             </div>
 
-       
             <div class="space-y-1">
                 <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Keterangan</label>
                 <textarea name="keterangan" rows="2" placeholder="Catatan singkat..." class="w-full bg-slate-50 border-none rounded-xl text-[10px] font-medium text-slate-600 placeholder:text-slate-300 focus:ring-2 focus:ring-sky-500/20 resize-none p-2.5"></textarea>
             </div>
 
             <div class="relative group border-2 border-dashed border-slate-100 hover:border-sky-300 rounded-xl px-4 py-2 flex items-center gap-3 transition-all">
-                <input type="file" name="lampiran_keuangan" id="file-upload" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                <input type="file" name="lampiran_keuangan" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
                 <div class="text-lg text-sky-500">📂</div>
                 <div class="text-left leading-tight">
-                    <p id="file-name" class="text-[10px] font-bold text-slate-500 group-hover:text-sky-600 truncate max-w-[250px]">Klik untuk unggah Bukti Transaksi</p>
+                    <p class="text-[10px] font-bold text-slate-500 group-hover:text-sky-600 truncate max-w-[250px]">Klik untuk unggah Bukti Transaksi</p>
                     <p class="text-[8px] text-slate-300 uppercase font-bold tracking-tight">JPG, PNG, PDF, Excel (Max 5MB)</p>
                 </div>
             </div>
@@ -289,6 +438,20 @@
                 <div class="col-span-2">
                     <textarea name="keterangan" id="edit-ket" rows="2" class="w-full border-gray-100 rounded-lg p-2 bg-gray-50"></textarea>
                 </div>
+               <div class="col-span-2">
+    <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Lampiran Baru</label>
+
+    <div class="relative group border-2 border-dashed border-slate-100 hover:border-amber-300 rounded-xl px-4 py-2 flex items-center gap-3 transition-all mt-1">
+        <input type="file" name="lampiran_keuangan" id="edit-file-upload" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+        <div class="text-lg text-amber-500">📂</div>
+        <div class="text-left leading-tight">
+            <p id="edit-file-name" class="text-[10px] font-bold text-slate-500 group-hover:text-amber-600 truncate max-w-[200px]">
+                Klik untuk ganti bukti transaksi
+            </p>
+            <p class="text-[8px] text-slate-300 uppercase font-bold tracking-tight">JPG, PNG, PDF, EXCEL (Max 5MB)</p>
+        </div>
+    </div>
+</div>
             </div>
             <button type="submit" class="mt-5 w-full py-2.5 bg-amber-500 text-white font-bold rounded-lg shadow hover:bg-amber-600 transition text-xs uppercase">Perbarui</button>
         </form>
@@ -296,54 +459,38 @@
 </div>
 
 {{-- MODAL DETAIL --}}
-<div id="modal-detail-lk" class="hidden fixed inset-0 z-[150] flex justify-center items-center w-full h-full bg-black/50 backdrop-blur-[2px] p-4">
-    <div class="relative w-full max-w-sm bg-white rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-        <div class="p-6">
-            <div class="flex justify-between items-start mb-4">
-                <div>
-                    <p id="det-cluster" class="text-[9px] font-bold text-sky-500 uppercase tracking-widest mb-0.5"></p>
-                    <h4 id="det-kube" class="text-base font-black text-gray-900 tracking-tight leading-tight"></h4>
-                    <p id="det-periode" class="text-[10px] text-gray-400 font-bold uppercase"></p>
-                    <p id="det-tgl" class="hidden"></p>
-                </div>
-                <button type="button" onclick="closeDetail()" class="text-gray-300 hover:text-gray-600 transition text-xl p-1">✕</button>
+<div id="modal-detail-lk" class="hidden fixed inset-0 z-[150] flex justify-center items-center w-full h-full bg-black/50 backdrop-blur-sm p-4">
+    <div class="relative w-full max-w-sm bg-white rounded-[2rem] shadow-2xl p-6">
+        <div class="flex justify-between items-start mb-4">
+            <div>
+                <p id="det-cluster" class="text-[9px] font-bold text-sky-500 uppercase tracking-widest"></p>
+                <h4 id="det-kube" class="text-base font-black text-gray-900 tracking-tight"></h4>
+                <p id="det-periode" class="text-[10px] text-gray-400 font-bold uppercase"></p>
+                <p id="det-tgl" class="hidden"></p>
             </div>
-            
-            <div class="space-y-3 py-4 border-y border-gray-50 mb-4">
-                <div class="flex justify-between items-center">
-                    <span class="text-[10px] font-bold text-gray-400 uppercase">Total Omset</span>
-                    <span id="det-omset" class="text-xs font-bold text-gray-700"></span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-[10px] font-bold text-gray-400 uppercase">Pengeluaran</span>
-                    <span id="det-pengeluaran" class="text-xs font-bold text-red-500"></span>
-                </div>
-                <div class="flex justify-between items-center pt-2 border-t border-gray-50">
-                    <span class="text-[10px] font-black text-gray-900 uppercase">Laba Bersih</span>
-                    <span id="det-laba" class="text-sm font-black text-emerald-500"></span>
-                </div>
-            </div>
-
-            <div class="mb-6 bg-gray-50 p-3 rounded-xl border border-gray-100">
-                <p class="text-[9px] font-bold text-gray-400 uppercase mb-1 text-center tracking-tighter">Catatan Tambahan</p>
-                <p id="det-ket" class="text-[11px] text-gray-500 leading-relaxed text-center italic"></p>
-            </div>
-
-            <div class="flex flex-col gap-2">
-                <button type="button" onclick="printFormalReport()" class="w-full py-2.5 bg-sky-700 text-white font-bold rounded-xl text-[10px] tracking-widest hover:bg-sky-900 transition-all flex items-center justify-center gap-2 shadow-lg">
+            <button onclick="closeDetail()" class="text-gray-300 hover:text-gray-600 transition text-xl">✕</button>
+        </div>
+        <div class="space-y-3 py-4 border-y border-gray-50 mb-4">
+            <div class="flex justify-between"><span class="text-[10px] font-bold text-gray-400">Total Omset</span><span id="det-omset" class="text-xs font-bold text-gray-700"></span></div>
+            <div class="flex justify-between"><span class="text-[10px] font-bold text-gray-400">Pengeluaran</span><span id="det-pengeluaran" class="text-xs font-bold text-red-500"></span></div>
+            <div class="flex justify-between pt-2 border-t"><span class="text-[10px] font-black text-gray-900">Laba Bersih</span><span id="det-laba" class="text-sm font-black text-emerald-500"></span></div>
+        </div>
+        <div class="mb-6 bg-gray-50 p-3 rounded-xl border border-gray-100">
+            <p id="det-ket" class="text-[11px] text-gray-500 italic text-center leading-relaxed"></p>
+        </div>
+          <button id="btn-cetak-modal" type="button" onclick="printFormalReport()" class="w-full py-2.5 bg-sky-700 text-white font-bold rounded-xl text-[10px] tracking-widest hover:bg-sky-900 transition-all flex items-center justify-center gap-2 shadow-lg">
                     🖨️ CETAK PDF
                 </button>
                 <button type="button" onclick="closeDetail()" class="w-full py-2 bg-transparent text-gray-400 font-bold rounded-lg text-[10px] hover:text-gray-600 transition">
                     KEMBALI
                 </button>
-            </div>
-        </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function showDetail(btn) {
+         const idLaporan = btn.getAttribute('data-id');
         const kube = btn.getAttribute('data-kube');
         const cluster = btn.getAttribute('data-cluster');
         const periode = btn.getAttribute('data-periode');
@@ -363,7 +510,11 @@
         document.getElementById('det-ket').innerText = ket;
         document.getElementById('det-tgl').innerText = tgl;
 
-  
+   const btnCetak = document.getElementById('btn-cetak-modal');
+    if (btnCetak) {
+        const urlCetak = `/laporan-keuangan/export/pdf-detail/${idLaporan}`;
+        btnCetak.setAttribute('onclick', `printLaporan('${urlCetak}')`);
+    }
         const modal = document.getElementById('modal-detail-lk');
         modal.classList.remove('hidden');
         modal.classList.add('flex'); 
@@ -377,6 +528,7 @@
 
     function openEditModal(btn) {
         const id = btn.getAttribute('data-id');
+        const file = btn.getAttribute('data-file');
         document.getElementById('form-edit-lk').action = `/laporan-keuangan/${id}`;
         document.getElementById('edit-kube').value = btn.getAttribute('data-kube');
         document.getElementById('edit-cluster').value = btn.getAttribute('data-cluster');
@@ -388,6 +540,8 @@
         document.getElementById('edit-ket').value = btn.getAttribute('data-ket');
         document.getElementById('modal-edit-lk').classList.remove('hidden');
         document.getElementById('modal-edit-lk').classList.add('flex');
+    const fileInfo = document.getElementById('edit-file-info');
+    fileInfo.innerText = file ? `File saat ini: ${file}` : "Belum ada lampiran.";
     }
 
     function closeEditModal() {
@@ -412,6 +566,22 @@
             }
         })
     }
+    function printLaporan(url) {
+    const iframe = document.getElementById('print-frame');
+    if (iframe) {
+        iframe.src = url;
+        iframe.onload = function() {
+            try {
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
+            } catch (e) {
+                window.open(url, '_blank');
+            }
+        };
+    } else {
+        console.error("Elemen iframe dengan id 'print-frame' tidak ditemukan!");
+    }
+}
 
     function printFormalReport() {
         const kube = document.getElementById('det-kube').innerText;
@@ -508,6 +678,12 @@ document.getElementById('file-upload').addEventListener('change', function(e) {
     const label = document.getElementById('file-name');
     label.innerText = fileName;
     label.classList.add('text-sky-600');
+
+document.getElementById('edit-file-upload').addEventListener('change', function(e) {
+    const fileName = e.target.files[0] ? e.target.files[0].name : "Klik untuk ganti bukti transaksi";
+    document.getElementById('edit-file-name').innerText = fileName;
+});
 });
 </script>
+  <iframe id="print-frame" class="hidden" style="display:none;"></iframe>
 @endsection

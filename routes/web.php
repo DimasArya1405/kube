@@ -110,6 +110,10 @@ Route::middleware('auth')->group(function () {
     // Ini akan otomatis menghandle route bimbingan.index, bimbingan.create, bimbingan.store, dll.
     Route::resource('bimbingan', BimbinganKubeController::class);
 
+    // BIMBINGAN KUBE OLEH PENDAMPING (Tambahan Baru)
+    // Ini akan otomatis menghandle route bimbingan.index, bimbingan.create, bimbingan.store, dll.
+    Route::resource('bimbingan', BimbinganKubeController::class);
+
     // CLUSTER USAHA
     Route::resource('cluster_usaha', ClusterUsahaController::class);
 
@@ -151,7 +155,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/admin/koordinator/{id}', [KoordinatorController::class, 'destroy'])->name('koordinator.delete');
 
     //PERKEMBANGAN USAHA
-
     Route::get('/admin/perkembangan-usaha', [DataPerkembanganUsahaController::class, 'index'])->name('perkembangan.index');
     Route::get('/admin/perkembangan-usaha/periode/{id_cluster}', [DataPerkembanganUsahaController::class, 'getPeriodeByKube'])->name('perkembangan.periode');
     Route::post('/admin/perkembangan-usaha/store', [DataPerkembanganUsahaController::class, 'store'])->name('perkembangan.store');
@@ -230,6 +233,7 @@ Route::prefix('admin/prediksi-kube')->name('admin.prediksi-kube.')->group(functi
 
 
 
+
     // KELOLA MITRA & KOLABORASI
     Route::get('/admin/mitra', [MitraController::class, 'index'])->name('mitra.index');
     Route::get('/admin/mitra/create', [MitraController::class, 'create'])->name('mitra.create');
@@ -269,7 +273,15 @@ Route::prefix('admin/prediksi-kube')->name('admin.prediksi-kube.')->group(functi
     Route::post('/laporan-keuangan/store', [KeuanganController::class, 'store'])->name('laporan.store');
     Route::put('/laporan-keuangan/{id}', [KeuanganController::class, 'update'])->name('laporan.update');
     Route::delete('/laporan-keuangan/{id}', [KeuanganController::class, 'destroy'])->name('laporan.destroy');
+// Rute untuk Ekspor SEMUA data (Admin)
+Route::get('/laporan-keuangan/export/excel-all', [KeuanganController::class, 'exportExcelAll'])->name('laporan.export.excel.all');
+Route::get('/laporan-keuangan/export/pdf-all', [KeuanganController::class, 'exportPdfAll'])->name('laporan.export.pdf.all');
 
+// Rute untuk Ekspor PER KUBE (Bisa dipakai Admin & Ketua)
+Route::get('/laporan-keuangan/export/excel-single/{id_kube}', [KeuanganController::class, 'exportExcelSingle'])->name('laporan.export.excel.single');
+Route::get('/laporan-keuangan/export/pdf-single/{id_kube}', [KeuanganController::class, 'exportPdfSingle'])->name('laporan.export.pdf.single');
+// Pastikan strukturnya sama persis dengan yang dipanggil JavaScript di fungsi showDetail
+Route::get('/laporan-keuangan/export/pdf-detail/{id}', [KeuanganController::class, 'exportPdfDetail'])->name('laporan.export.pdf.detail');
     // MONITORING
     Route::get('/monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
     Route::post('/monitoringbantuan/store', [MonitoringController::class, 'store'])->name('monitoring.store');
