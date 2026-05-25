@@ -2,7 +2,8 @@
 
 @section('content')
 <script src="https://unpkg.com/lucide@latest"></script>
-
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 <style>
     select {
         -webkit-appearance: none;
@@ -177,24 +178,17 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-8">
+            {{-- KUBE (MULTIPLE SELECT SEARCHABLE) --}}
+            <div class="col-span-2">
+                <label class="block text-base font-bold text-gray-800 mb-2">Pilih KUBE Pelatihan <span class="text-sm text-gray-500 font-normal">(Bisa ketik untuk mencari & pilih banyak)</span></label>
+                <select id="select_kube_tambah" name="id_kube[]" multiple placeholder="Ketik nama KUBE..." autocomplete="off" class="w-full rounded-xl" required>
+                    @foreach($kubes as $k)
+                        <option value="{{ $k->id_kube }}">{{ $k->nama_kube }}</option>
+                    @endforeach
+                </select>
+            </div>
 
-
-                {{-- KUBE (MULTIPLE CHECKBOX) --}}
-                <div class="col-span-2">
-                    <label class="block text-base font-bold text-gray-800 mb-2">Pilih KUBE Pelatihan <span class="text-sm text-gray-500 font-normal">(Bisa pilih lebih dari satu)</span></label>
-                    <div class="w-full border border-gray-300 rounded-xl p-4 bg-white max-h-48 overflow-y-auto">
-                        <div class="grid grid-cols-2 gap-3">
-                            @foreach($kubes as $k)
-                            <label class="flex items-center space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition">
-                                <input type="checkbox" name="id_kube[]" value="{{ $k->id_kube }}" class="w-5 h-5 text-[#2C7A94] border-gray-300 rounded focus:ring-[#2C7A94]">
-                                <span class="text-gray-700 font-medium">{{ $k->nama_kube }}</span>
-                            </label>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-
+             <div class="grid grid-cols-2 gap-8">
                 <div>
                     <label class="block text-base font-bold text-gray-800 mb-2">Pendamping</label>
                     <div class="relative">
@@ -295,16 +289,15 @@
                 <input type="text" id="detail_jenis" class="w-full border border-gray-300 rounded-xl p-3 bg-gray-50 outline-none" readonly>
             </div>
 
-            <div>
-                <label class="block text-base font-bold text-gray-800 mb-2">KUBE Peserta</label>
-                {{-- Wadah untuk list KUBE berupa badge --}}
-                <div id="detail_kube_list" class="w-full border border-gray-300 rounded-xl p-4 bg-gray-50 min-h-[60px] max-h-[120px] overflow-y-auto flex flex-wrap gap-2 content-start">
-                </div>
+        <div>
+            <label class="block text-base font-bold text-gray-800 mb-2">
+                KUBE Peserta <span id="detail_kube_count" class="text-sm bg-[#2C7A94] text-white px-2 py-0.5 rounded-full ml-1 font-semibold">0</span>
+            </label>
+            <div id="detail_kube_list" class="w-full border border-gray-300 rounded-xl p-4 bg-gray-50 max-h-32 overflow-y-auto flex flex-wrap gap-2 content-start">
             </div>
+        </div>
 
             <div class="grid grid-cols-2 gap-8">
-
-
                 <div>
                     <label class="block text-base font-bold text-gray-800 mb-2">Pendamping</label>
                     <input type="text" id="detail_pendamping" class="w-full border border-gray-300 rounded-xl p-3 bg-gray-50 outline-none" readonly>
@@ -330,19 +323,12 @@
                     <input type="date" id="detail_mulai" class="w-full border border-gray-300 rounded-xl p-3 bg-gray-50 outline-none" readonly>
                 </div>
 
-
-
                 <div>
                     <label class="block text-base font-bold text-gray-800 mb-2">Tanggal Selesai</label>
                     <input type="date" id="detail_selesai" class="w-full border border-gray-300 rounded-xl p-3 bg-gray-50 outline-none" readonly>
                 </div>
-
-
-
-
             </div>
 
-            <div class="row-span-2">
                 <label class="block text-base font-bold text-gray-800 mb-2">Deskripsi</label>
                 <textarea id="detail_deskripsi" class="w-full border border-gray-300 rounded-xl p-3 h-[145px] bg-gray-50 outline-none resize-none" readonly></textarea>
             </div>
@@ -393,22 +379,15 @@
             </div>
             <div class="grid grid-cols-2 gap-8">
 
-
-                {{-- KUBE EDIT (MULTIPLE CHECKBOX) --}}
-                <div class="col-span-2">
-                    <label class="block text-base font-bold text-gray-800 mb-2">Pilih KUBE Pelatihan</label>
-                    <div class="w-full border border-gray-300 rounded-xl p-4 bg-white max-h-48 overflow-y-auto" id="edit_kube_wrapper">
-                        <div class="grid grid-cols-2 gap-3">
-                            @foreach($kubes as $k)
-                            <label class="flex items-center space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition">
-                                {{-- Kita tambahkan class khusus "edit-kube-checkbox" untuk mempermudah JS --}}
-                                <input type="checkbox" name="id_kube[]" value="{{ $k->id_kube }}" class="edit-kube-checkbox w-5 h-5 text-[#2C7A94] border-gray-300 rounded focus:ring-[#2C7A94]">
-                                <span class="text-gray-700 font-medium">{{ $k->nama_kube }}</span>
-                            </label>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
+                {{-- KUBE EDIT (MULTIPLE SELECT SEARCHABLE) --}}
+            <div class="col-span-2">
+                <label class="block text-base font-bold text-gray-800 mb-2">Pilih KUBE Pelatihan</label>
+                <select id="select_kube_edit" name="id_kube[]" multiple placeholder="Ketik nama KUBE..." autocomplete="off" class="w-full rounded-xl" required>
+                    @foreach($kubes as $k)
+                        <option value="{{ $k->id_kube }}">{{ $k->nama_kube }}</option>
+                    @endforeach
+                </select>
+            </div>
 
                 <div>
                     <label class="block text-base font-bold text-gray-800 mb-2">Pendamping</label>
@@ -497,6 +476,17 @@
 
 <script>
     lucide.createIcons();
+
+    const tsTambah = new TomSelect('#select_kube_tambah', {
+        plugins: ['remove_button'],
+        maxOptions: 200 // Membatasi opsi agar tidak lag
+    });
+
+    const tsEdit = new TomSelect('#select_kube_edit', {
+        plugins: ['remove_button'],
+        maxOptions: 200
+    });
+
     // Fungsi memunculkan modal
     function openModal(modalId) {
         const modal = document.getElementById(modalId);
@@ -517,8 +507,6 @@
         else closeModal('modalTambah');
     }
 
-    // Pop-up Detail
-    // Pop-up Detail
 // Pop-up Detail
     function openDetailModal(data) {
         let namaPendamping = data.pendamping ? data.pendamping.nama_pendamping : '-';
@@ -527,20 +515,23 @@
         document.getElementById('detail_nama').value = data.nama_pelatihan || '-';
         document.getElementById('detail_jenis').value = data.jenis_pelatihan || '-';
         
-        // --- LOGIKA BARU UNTUK LIST KUBE ---
+        // --- LOGIKA LIST KUBE DENGAN PROTEKSI DATA MASIF ---
         let kubeContainer = document.getElementById('detail_kube_list');
-        kubeContainer.innerHTML = ''; // Kosongkan wadah setiap kali modal dibuka
+        let kubeCountBadge = document.getElementById('detail_kube_count');
+        kubeContainer.innerHTML = '';
 
         if (data.kubes && data.kubes.length > 0) {
-            // Looping dan buat elemen badge untuk tiap KUBE
+            kubeCountBadge.innerText = data.kubes.length;
+            kubeCountBadge.classList.remove('hidden');
+
             data.kubes.forEach(k => {
-                let badge = `<span class="bg-[#e6f4f1] text-[#2C7A94] px-3 py-1.5 rounded-lg text-sm font-semibold border border-[#bce0d9] shadow-sm">
+                let badge = `<span class="bg-[#e6f4f1] text-[#2C7A94] px-3 py-1 rounded-lg text-xs font-semibold border border-[#bce0d9] shadow-sm">
                                 ${k.nama_kube}
                              </span>`;
                 kubeContainer.insertAdjacentHTML('beforeend', badge);
             });
         } else {
-            // Kalau nggak ada KUBE yang dipilih
+            kubeCountBadge.innerText = '0';
             kubeContainer.innerHTML = '<span class="text-gray-400 italic text-sm py-1">- Tidak ada KUBE peserta -</span>';
         }
         // -----------------------------------
@@ -557,38 +548,32 @@
     }
 
     // Pop-up Edit
-    function openEditModal(data) {
-        const form = document.getElementById('formEdit');
-        form.action = `/pelatihan/${data.id_pelatihan}`;
+// Pop-up Edit
+function openEditModal(data) {
+    const form = document.getElementById('formEdit');
+    form.action = `/pelatihan/${data.id_pelatihan}`;
 
-        document.getElementById('edit_nama_pelatihan').value = data.nama_pelatihan || '';
-        document.getElementById('edit_jenis_pelatihan').value = data.jenis_pelatihan || '';
-        document.getElementById('edit_id_pendamping').value = data.id_pendamping || '';
-        document.getElementById('edit_lokasi').value = data.lokasi || '';
-        document.getElementById('edit_tanggal_mulai').value = data.tanggal_mulai || '';
-        document.getElementById('edit_status').value = data.status || '';
-        document.getElementById('edit_tanggal_selesai').value = data.tanggal_selesai || '';
-        document.getElementById('edit_deskripsi').value = data.deskripsi || '';
-        document.getElementById('edit_id_mitra').value = data.id_mitra || '';
+    document.getElementById('edit_nama_pelatihan').value = data.nama_pelatihan || '';
+    document.getElementById('edit_jenis_pelatihan').value = data.jenis_pelatihan || '';
+    document.getElementById('edit_id_pendamping').value = data.id_pendamping || '';
+    document.getElementById('edit_lokasi').value = data.lokasi || '';
+    document.getElementById('edit_tanggal_mulai').value = data.tanggal_mulai || '';
+    document.getElementById('edit_status').value = data.status || '';
+    document.getElementById('edit_tanggal_selesai').value = data.tanggal_selesai || '';
+    document.getElementById('edit_deskripsi').value = data.deskripsi || '';
+    document.getElementById('edit_id_mitra').value = data.id_mitra || '';
 
-        // --- BAGIAN PENTING UNTUK CHECKBOX KUBE ---
-        // 1. Reset semua centang checkbox terlebih dahulu
-        let checkboxes = document.querySelectorAll('.edit-kube-checkbox');
-        checkboxes.forEach(cb => cb.checked = false);
+    // -- LOGIKA UNTUK TOMSELECT KUBE --
+    // 1. Reset / kosongkan pilihan di TomSelect terlebih dahulu
+    tsEdit.clear();
 
-        // 2. Ambil array ID KUBE yang dimiliki oleh pelatihan ini
-        if (data.kubes && data.kubes.length > 0) {
-            let selectedKubeIds = data.kubes.map(k => k.id_kube.toString());
-
-            // 3. Centang kembali checkbox yang ID-nya cocok
-            checkboxes.forEach(cb => {
-                if (selectedKubeIds.includes(cb.value)) {
-                    cb.checked = true;
-                }
-            });
-        }
-
-        openModal('modalEdit');
+    // 2. Masukkan array ID KUBE yang sudah tersimpan ke dalam TomSelect
+    if (data.kubes && data.kubes.length > 0) {
+        let selectedKubeIds = data.kubes.map(k => k.id_kube.toString());
+        tsEdit.setValue(selectedKubeIds);
     }
+
+    openModal('modalEdit');
+}
 </script>
 @endsection
