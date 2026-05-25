@@ -127,7 +127,6 @@
                         <span class="bg-red-100 text-red-600 text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap">Non-Aktif</span>
                         @endif
                     </td>
-
                     <td class="px-4 py-3">
                         <div class="flex items-center gap-2">
 
@@ -245,7 +244,6 @@
                                             data-nohp="{{ $user->no_hp ?? '-' }}"
                                             data-email="{{ $user->email ?? '-' }}"
                                             data-alamat="{{ $user->alamat ?? '-' }}"
-
                                             class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg whitespace-nowrap">
                                             Lihat Detail
                                         </button>
@@ -577,9 +575,11 @@
     // ── FILTER STATUS ──
     function filterByStatus(status) {
         const url = new URL(window.location.href);
-        if (status) url.searchParams.set('status', status);
-        else url.searchParams.delete('status');
-
+        if (status) {
+            url.searchParams.set('status', status);
+        } else {
+            url.searchParams.delete('status');
+        }
         window.location.href = url.toString();
     }
 

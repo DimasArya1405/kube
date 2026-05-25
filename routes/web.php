@@ -126,18 +126,18 @@ Route::middleware('auth')->group(function () {
     Route::put('/admin/kategorikube/{id}/edit', [KategoriKubeController::class, 'edit'])->name('kategorikube.edit');
     Route::post('/admin/kategorikube/{id}', [KategoriKubeController::class, 'update'])->name('kategorikube.update');
     Route::get('/admin/kategorikube/delete/{id}', [KategoriKubeController::class, 'destroy'])->name('kategorikube.destroy');
-
+    
+    // Export PDF & Excel Cluster
+    Route::get('/cluster-usaha/pdf', [ClusterUsahaController::class, 'exportPDF'])->name('cluster_usaha.exportPDF');
+    Route::get('/cluster-usaha/excel', [ClusterUsahaController::class, 'exportExcel'])->name('cluster_usaha.exportExcel');
+    
     // Pembagian Koordinator
     Route::resource('pembagian_koordinator', PembagianKoordinatorController::class);
-    Route::get(
-        '/get-pendamping/{id_kecamatan}/{selected?}',
-        [PembagianKoordinatorController::class, 'getPendamping']
-    );
+    Route::get('/get-pendamping/{id_kecamatan}/{selected?}', [PembagianKoordinatorController::class, 'getPendamping']);
+    
     // Ekspor
-    Route::get('/pembagian-koordinator/pdf', [PembagianKoordinatorController::class, 'exportPDF'])
-        ->name('pembagian_koordinator.exportPDF');
-    Route::get('/pembagian-koordinator/excel', [PembagianKoordinatorController::class, 'exportExcel'])
-        ->name('pembagian_koordinator.exportExcel');
+    Route::get('/pembagian-koordinator/pdf', [PembagianKoordinatorController::class, 'exportPDF'])->name('pembagian_koordinator.exportPDF');
+    Route::get('/pembagian-koordinator/excel', [PembagianKoordinatorController::class, 'exportExcel'])->name('pembagian_koordinator.exportExcel');
 
     // PENCAIRAN BANTUAN
     Route::get('/admin/pencairan_bantuan', [PencairanBantuanController::class, 'index'])->name('admin.pencairan_bantuan.index');
