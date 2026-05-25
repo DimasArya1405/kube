@@ -1,10 +1,12 @@
 <nav class="flex-1 px-4 mt-4 space-y-2 overflow-y-auto custom-scrollbar">
-    <a href="#"
-        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group bg-indigo-800 text-white border-l-4 border-white shadow-inner">
+    
+    <!-- Dashboard Statistik -->
+    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group bg-indigo-800 text-white border-l-4 border-white shadow-inner">
         <i data-lucide="pie-chart" class="w-5 h-5"></i>
         <span class="font-medium">Dashboard Statistik</span>
     </a>
 
+    <!-- Monitoring Program -->
     <div class="relative">
         <button onclick="toggleDropdown('monitorDinas', 'monitorIcon')" class="w-full flex items-center justify-between px-4 py-3 hover:bg-indigo-600 rounded-xl transition-all text-indigo-100 hover:text-white group">
             <div class="flex items-center gap-3">
@@ -21,6 +23,7 @@
         </div>
     </div>
 
+    <!-- Analisis Performa -->
     <div class="relative">
         <button onclick="toggleDropdown('analisisDinas', 'analisisIcon')" class="w-full flex items-center justify-between px-4 py-3 hover:bg-indigo-600 rounded-xl transition-all text-indigo-100 hover:text-white group">
             <div class="flex items-center gap-3">
@@ -36,6 +39,7 @@
         </div>
     </div>
 
+    <!-- Arsip & Laporan -->
     <div class="relative">
         <button onclick="toggleDropdown('docDinas', 'docIcon')" class="w-full flex items-center justify-between px-4 py-3 hover:bg-indigo-600 rounded-xl transition-all text-indigo-100 hover:text-white group">
             <div class="flex items-center gap-3">
@@ -49,4 +53,5 @@
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Laporan Keuangan Global</a>
         </div>
     </div>
+
 </nav>

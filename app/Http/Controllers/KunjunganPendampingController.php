@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\KunjunganPendamping;
 use App\Models\PembagianPendamping;
+use Illuminate\Support\Facades\Storage;
 
 
 class KunjunganPendampingController extends Controller
@@ -36,7 +37,7 @@ class KunjunganPendampingController extends Controller
             'kunjunganPendamping',
             'pembagianPendamping',
             'pendamping',
-            'dataPembagian' // ✅ tambahkan ini
+            'dataPembagian' 
         ));
     }
 
@@ -126,5 +127,26 @@ class KunjunganPendampingController extends Controller
 
         return redirect()->back()->with('success','Data berhasil dihapus');
     }
+
+    public function selesai(Request $request, $id)
+{
+    $request->validate([
+        'foto_bukti' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+        'catatan_hasil' => 'nullable|string'
+    ]);
+
+    $kunjungan = KunjunganPendamping::findOrFail($id);
+
+    // upload file
+    $path = $request->file('foto_bukti')->store('bukti_kunjungan', 'public');
+
+    $kunjungan->update([
+        'status' => 'selesai',
+        'foto_bukti' => $path,
+        'catatan_hasil' => $request->catatan_hasil
+    ]);
+
+    return redirect()->back()->with('success', 'Kunjungan selesai');
+}
 }
 

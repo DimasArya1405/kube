@@ -33,13 +33,15 @@ Data Master / <span class="text-gray-800">Data Anggota KUBE</span>
         </div>
 
         <div class="flex gap-2 w-full md:w-auto">
-            <button class="flex items-center px-4 py-2 bg-orange-500 text-white text-sm font-medium rounded-lg hover:bg-orange-600 transition shadow-sm">
+            <a href="{{ route('anggota.export.pdf') }}" class="flex items-center px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-orange-600 transition shadow-sm">
                 <i class="fas fa-file-pdf mr-2"></i> Export PDF
-            </button>
-            <button class="flex items-center px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition shadow-sm">
+            </a>
+
+            <a href="{{ route('anggota.export.excel') }}" class="flex items-center px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition shadow-sm">
                 <i class="fas fa-file-excel mr-2"></i> Export Excel
-            </button>
-            <button onclick="toggleModal('tambahAnggotaModal')" class="flex items-center px-4 py-2 bg-purple-700 text-white text-sm font-medium rounded-lg hover:bg-purple-800 transition shadow-sm">
+            </a>
+            
+            <button onclick="toggleModal('tambahAnggotaModal')" class="flex items-center px-4 py-2 bg-blue-700 text-white text-sm font-medium rounded-lg hover:bg-purple-800 transition shadow-sm">
                 <i class="fas fa-plus mr-2"></i> Tambah Anggota
             </button>
         </div>
@@ -98,20 +100,22 @@ Data Master / <span class="text-gray-800">Data Anggota KUBE</span>
 
                             <button type="button" onclick="toggleModal('editAnggotaModal{{ $anggota->id_anggota }}')" class="text-gray-400 hover:text-yellow-500 transition text-lg"><i class="far fa-edit"></i></button>
 
-                            <form action="{{ route('anggota_kube.destroy', $anggota->id_anggota) }}" method="POST" class="inline">
+                            <form action="{{ route('anggota_kube.destroy', $anggota->id_anggota) }}" method="POST" class="inline" id="deleteForm-{{ $anggota->id_anggota }}">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="text-gray-400 hover:text-red-500 transition text-lg" onclick="return confirm('Yakin ingin menghapus Anggota ini?')">
+                                <button type="button" class="text-gray-400 hover:text-red-500 transition text-lg" onclick="confirmDelete(event, '{{ $anggota->id_anggota }}')">
                                     <i class="far fa-trash-alt"></i>
                                 </button>
                             </form>
                         </div>
                     </td>
                 </tr>
+                @endforeach
+
             </tbody>
         </table>
     </div>
-</div>
+</div> @foreach($anggotas as $index => $anggota)
 
 <div id="detailAnggotaModal{{ $anggota->id_anggota }}" class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center transition-opacity">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden text-left relative">
@@ -271,6 +275,30 @@ Data Master / <span class="text-gray-800">Data Anggota KUBE</span>
     function toggleModal(modalID) {
         const modal = document.getElementById(modalID);
         modal.classList.toggle('hidden');
+    }
+
+    // 🔥 Tangkap 'event'-nya di sini
+    function confirmDelete(event, id_anggota) {
+
+        // 🔥 INI REM TANGANNYA! Tahan form biar ga langsung ke-submit
+        event.preventDefault();
+
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Data Anggota ini akan dihapus secara permanen!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Hapus Data!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Kalau user udah beneran ngeklik "Ya", baru kita lepas remnya dan kirim formnya
+                document.getElementById('deleteForm-' + id_anggota).submit();
+            }
+        });
     }
 </script>
 @endsection

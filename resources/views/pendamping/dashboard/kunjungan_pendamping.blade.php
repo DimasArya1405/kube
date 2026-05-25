@@ -1,6 +1,7 @@
 {{-- MEILITA --}}
 
-@extends('admin.layout')
+
+@extends('pendamping.dashboard.index')
 
 @section('title', 'Data Kunjungan Pendamping - KUBE')
 
@@ -12,8 +13,8 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
 
 <div class="mb-6 flex justify-between items-end">
     <div>
-        <h2 class="text-3xl font-bold text-gray-800">Data Kunjungan Pendamping</h2>
-        <p class="text-gray-500 mt-1">Kelola seluruh data Kunjungan Pendamping KUBE.</p>
+        <h2 class="text-3xl font-bold text-gray-800">Data Jadwal Kunjungan Pendamping</h2>
+        <p class="text-gray-500 mt-1">Kelola seluruh data Jadwal Kunjungan Pendamping KUBE.</p>
     </div>
 </div>
 
@@ -71,7 +72,8 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
                     <th class="px-4 py-3">Waktu</th>
                     <th class="px-4 py-3">Kunjungan Ke-</th>
                     <th class="px-4 py-3">Tujuan Kunjungan</th>
-                    <th class="px-4 py-3">Aksi</th>
+                    <th class="px-4 py-3">Status</th>
+                    <th class="px-4 py-3">Aksi</th>                    
                 </tr>
             </thead>
             <tbody>
@@ -113,6 +115,18 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
                                 <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">Kunjungan Rutin</span>
                             @endif
                         </td>
+                    {{-- Status --}}
+                    <td>
+                        @if($item->status == 'terjadwal')
+                            <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">
+                                Terjadwal
+                            </span>
+                        @else
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">
+                                Selesai
+                            </span>
+                        @endif
+                    </td>
 
                     {{-- Aksi --}}
                     <td class="px-4 py-3">
@@ -143,6 +157,17 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
                                     </svg>
                                 </button>
                             </form>
+
+                            {{-- Selesai --}}
+                            @if($item->status == 'terjadwal')
+                            <button 
+                                data-modal-target="modalSelesai{{ $item->id_kunjungan }}"
+                                data-modal-toggle="modalSelesai{{ $item->id_kunjungan }}"
+                                class="text-green-600 hover:text-green-800"
+                                title="Tandai Selesai">
+                                ✓
+                            </button>
+                            @endif
 
                            
                             </form>
@@ -435,6 +460,30 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
                 {{ $item->catatan ?? '-' }}
             </div>
 
+            <div>
+            @if($item->status == 'selesai')
+
+            <div class="mt-4">
+                <p class="font-semibold">Status:</p>
+                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">
+                    Selesai
+                </span>
+            </div>
+
+            <div class="mt-4">
+                <p class="font-semibold">Catatan Hasil:</p>
+                <p>{{ $item->catatan_hasil }}</p>
+            </div>
+
+            <div class="mt-4">
+                <p class="font-semibold">Bukti Foto:</p>
+                <img src="{{ asset('storage/'.$item->foto_bukti) }}" 
+                    class="w-48 rounded shadow mt-2">
+            </div>
+
+        @endif
+            </div>
+
         </div>
 
         <div class="mt-4 text-right">
@@ -448,6 +497,56 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
 </div>
 @endforeach
 
+{{-- MODAL SELESAI KUNJUNGAN --}}
+@foreach($kunjunganPendamping as $item)
+<div id="modalSelesai{{ $item->id_kunjungan }}" tabindex="-1"
+     class="hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full bg-black bg-opacity-50">
+
+    <div class="bg-white rounded-lg shadow p-6 w-full max-w-md">
+
+        <h3 class="text-lg font-semibold mb-4">
+            Konfirmasi Kunjungan
+        </h3>
+
+        <p class="text-sm mb-3">
+            KUBE:
+            <strong>{{ $item->pembagian->kube->nama_kube }}</strong>
+        </p>
+
+        <form action="{{ route('kunjungan.selesai', $item->id_kunjungan) }}"
+              method="POST"
+              enctype="multipart/form-data">
+            @csrf
+            @method('PATCH')
+
+            <div class="mb-3">
+                <label class="text-sm">Upload Bukti Foto *</label>
+                <input type="file" name="foto_bukti" required class="w-full border p-2 rounded">
+            </div>
+
+            <div class="mb-3">
+                <label class="text-sm">Catatan Hasil</label>
+                <textarea name="catatan_hasil" class="w-full border p-2 rounded"></textarea>
+            </div>
+
+            <div class="flex justify-end gap-2">
+                <button type="button"
+                        data-modal-hide="modalSelesai{{ $item->id_kunjungan }}"
+                        class="px-3 py-1 bg-gray-300 rounded">
+                    Batal
+                </button>
+
+                <button type="submit"
+                        class="px-3 py-1 bg-green-600 text-white rounded">
+                    Simpan & Selesai
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+@endforeach
 
 <script>
     const dataPembagian = JSON.parse('{!! json_encode($dataPembagian) !!}');
