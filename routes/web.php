@@ -52,8 +52,24 @@ Route::middleware('auth')->group(function () {
 
     // CLUSTER USAHA
     Route::resource('cluster_usaha', ClusterUsahaController::class);
+
+    // Export PDF & Excel Cluster
+    Route::get('/cluster-usaha/pdf',
+        [ClusterUsahaController::class, 'exportPDF'])
+        ->name('cluster_usaha.exportPDF');
+
+    Route::get('/cluster-usaha/excel',
+        [ClusterUsahaController::class, 'exportExcel'])
+        ->name('cluster_usaha.exportExcel');
     // Pembagian Koordinator
     Route::resource('pembagian_koordinator', PembagianKoordinatorController::class);
+    Route::get('/get-pendamping/{id_kecamatan}/{selected?}',
+    [PembagianKoordinatorController::class, 'getPendamping']);
+    // Ekspor
+    Route::get('/pembagian-koordinator/pdf', [PembagianKoordinatorController::class, 'exportPDF'])
+    ->name('pembagian_koordinator.exportPDF');
+    Route::get('/pembagian-koordinator/excel', [PembagianKoordinatorController::class, 'exportExcel'])
+    ->name('pembagian_koordinator.exportExcel');
 
     // PENCAIRAN BANTUAN
     Route::get('/admin/pencairan_bantuan', [PencairanBantuanController::class, 'index'])->name('admin.pencairan_bantuan.index');

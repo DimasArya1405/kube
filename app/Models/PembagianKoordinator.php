@@ -15,18 +15,37 @@ class PembagianKoordinator extends Model
     protected $fillable = [
         'id_koor',
         'id_pembagian',
-        'status'
+        'status',
+        'tgl_mulai',
+        'tgl_selesai'
     ];
 
-    // RELASI KE KOORDINATOR
+    // 🔥 WAJIB BIAR TANGGAL KEBACA BENAR
+    protected $casts = [
+        'tgl_mulai' => 'date',
+        'tgl_selesai' => 'date',
+    ];
+
     public function koordinator()
     {
         return $this->belongsTo(Koordinator::class, 'id_koor', 'id_koor');
     }
 
-    // RELASI KE PEMBAGIAN PENDAMPING
     public function pembagianPendamping()
     {
         return $this->belongsTo(PembagianPendamping::class, 'id_pembagian', 'id_pembagian');
+    }
+
+    public function exportPDF()
+    {
+        $data = PembagianKoordinator::with([
+            'koordinator',
+            'pembagianPendamping.pendamping',
+            'pembagianPendamping.kube'
+        ])->get()->groupBy('id_koor');
+
+        return Pdf::loadView('admin.penugasan.pembagian_koordinator_pdf', [
+            'data' => $data
+        ])->download('laporan_pembagian_koordinator.pdf');
     }
 }
