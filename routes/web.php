@@ -294,13 +294,16 @@ Route::get('/rekap_kube/export/excel', [RekapKubeController::class, 'exportExcel
     // Rute untuk Ekspor PER KUBE (Bisa dipakai Admin & Ketua)
     Route::get('/laporan-keuangan/export/excel-single/{id_kube}', [KeuanganController::class, 'exportExcelSingle'])->name('laporan.export.excel.single');
     Route::get('/laporan-keuangan/export/pdf-single/{id_kube}', [KeuanganController::class, 'exportPdfSingle'])->name('laporan.export.pdf.single');
-    // Pastikan strukturnya sama persis dengan yang dipanggil JavaScript di fungsi showDetail
     Route::get('/laporan-keuangan/export/pdf-detail/{id}', [KeuanganController::class, 'exportPdfDetail'])->name('laporan.export.pdf.detail');
+    
     // MONITORING
     Route::get('/monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
     Route::post('/monitoringbantuan/store', [MonitoringController::class, 'store'])->name('monitoring.store');
     Route::delete('/monitoringbantuan/delete/{id}', [MonitoringController::class, 'delete'])->name('monitoring.delete');
-
+    Route::get('/monitoring/edit/{id}', [MonitoringController::class, 'edit'])->name('monitoring.edit');
+    Route::post('/monitoring/update/{id}', [MonitoringController::class, 'update'])->name('monitoring.update');
+    Route::get('/monitoring/detail/{id}', [MonitoringController::class, 'detail'])->name('monitoring.detail');
+    Route::get('/monitoring/pdf', [MonitoringController::class, 'exportPdf'])->name('monitoring.pdf');
 
     Route::get('/pengajuan-kube/create', [PengajuanKubeController::class, 'create'])->name('pengajuan.create');
     Route::post('/pengajuan-kube/store', [PengajuanKubeController::class, 'store'])->name('pengajuan.store');
