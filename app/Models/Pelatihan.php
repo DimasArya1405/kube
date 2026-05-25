@@ -15,7 +15,7 @@ class Pelatihan extends Model
 
     protected $fillable = [
         'id_pendamping',
-        // 'id_kube',  <--- INI HARUS DIHAPUS KARENA SUDAH TIDAK ADA DI TABEL PELATIHAN
+        // 'id_kube',  <--- INI HARUS DIHAPUS KARENA SUDAH GAK ADA DI TABEL PELATIHAN
         'id_mitra',
         'nama_pelatihan',
         'jenis_pelatihan',
@@ -26,7 +26,6 @@ class Pelatihan extends Model
         'status'
     ];
 
-    // INI YANG DIUBAH! Dari kube() menjadi kubes() (jamak) dan pakai belongsToMany
     public function kubes()
     {
         return $this->belongsToMany(Kube::class, 'kube_pelatihan', 'id_pelatihan', 'id_kube');

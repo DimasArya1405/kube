@@ -10,12 +10,10 @@ use Carbon\Carbon;
 
 class PelatihanExport implements FromCollection, WithHeadings, WithMapping
 {
-    /**
-    * Mengambil data relasi
-    */
+    
     public function collection()
     {
-        return Pelatihan::with(['kube', 'pendamping'])->get();
+        return Pelatihan::with(['kubes', 'pendamping'])->get();
     }
 
     public function map($pelatihan): array
@@ -24,12 +22,12 @@ class PelatihanExport implements FromCollection, WithHeadings, WithMapping
             $pelatihan->nama_pelatihan,
             $pelatihan->kube->nama_kube ?? '-',
             $pelatihan->pendamping->nama_pendamping ?? '-',
-            $pelatihan->mitra->nama_mitra ?? '-', // <-- Tambah Mitra
-            $pelatihan->tanggal_mulai,            // <-- Tambah Tanggal Mulai
-            $pelatihan->tanggal_selesai,          // <-- Tambah Tanggal Selesai
+            $pelatihan->mitra->nama_mitra ?? '-', 
+            $pelatihan->tanggal_mulai,            
+            $pelatihan->tanggal_selesai,         
             $pelatihan->lokasi,
             $pelatihan->status,
-            $pelatihan->deskripsi,                // <-- Tambah Deskripsi
+            $pelatihan->deskripsi,                
         ];
     }
 
