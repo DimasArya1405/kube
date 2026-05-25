@@ -161,6 +161,7 @@
                                 data-jk="{{ $item->jenis_kelamin ?? '' }}"
                                 data-tgl="{{ $item->tanggal_lahir ?? '' }}"
                                 data-foto="{{ $item->foto ? asset('storage/' . $item->foto) : '' }}"
+
                                 onclick="openEditModal(this)"
                                 class="text-yellow-500 hover:text-yellow-700" title="Edit">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -186,12 +187,14 @@
                 @empty
                 <tr>
                     <td colspan="8" class="px-6 py-8 text-center text-gray-400">Belum ada data koordinator.</td>
+
                 </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
 </div>
+
 
 {{-- ==================== MODAL TAMBAH (Step 1: Pilih User) ==================== --}}
 <div id="modal-tambah-koor" tabindex="-1"
@@ -202,6 +205,7 @@
                 <div>
                     <h3 class="text-lg font-semibold text-gray-800">Tambah Koordinator</h3>
                     <p class="text-xs text-gray-400 mt-0.5">Pilih user koordinator yang belum diproses, review datanya, lalu tambah koordinator.</p>
+
                 </div>
                 <button onclick="closeTambahModal()"
                     class="text-gray-400 hover:bg-gray-200 rounded-lg w-8 h-8 flex items-center justify-center">✕</button>
@@ -212,6 +216,7 @@
                     <p class="text-center text-gray-400 py-6">Tidak ada user koordinator yang belum diproses.</p>
                 @else
                     <p class="text-sm text-gray-500 mb-3">Klik <strong>Lihat Detail</strong></p>
+
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm text-left text-gray-500">
                             <thead class="text-xs text-gray-700 bg-gray-100">
@@ -233,12 +238,14 @@
                                     <td class="px-3 py-2">
                                         <button
                                             onclick="toggleDetail(this)"
+
                                             data-id="{{ $user->id_user }}"
                                             data-nama="{{ $user->nama }}"
                                             data-nik="{{ $user->nik ?? '-' }}"
                                             data-nohp="{{ $user->no_hp ?? '-' }}"
                                             data-email="{{ $user->email ?? '-' }}"
                                             data-alamat="{{ $user->alamat ?? '-' }}"
+
                                             class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg whitespace-nowrap">
                                             Lihat Detail
                                         </button>
@@ -273,6 +280,7 @@
                                         </div>
                                     </td>
                                 </tr>
+
                                 @endforeach
                             </tbody>
                         </table>
@@ -571,6 +579,7 @@
         const url = new URL(window.location.href);
         if (status) url.searchParams.set('status', status);
         else url.searchParams.delete('status');
+
         window.location.href = url.toString();
     }
 

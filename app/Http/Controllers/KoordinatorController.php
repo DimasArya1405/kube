@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Koordinator;
+use App\Models\Kecamatan;
 use App\Models\User;
 use App\Exports\KoordinatorExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -112,6 +113,7 @@ class KoordinatorController extends Controller
             $query->where('status', $request->status);
         }
         $koordinator  = $query->get();
+
         $filterStatus = $request->status;
 
         $pdf = Pdf::loadView('admin.data_master.koordinator_pdf', compact('koordinator', 'filterStatus'))

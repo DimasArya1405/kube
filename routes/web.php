@@ -92,18 +92,15 @@ Route::middleware('auth')->group(function () {
 
     // CLUSTER USAHA
     Route::resource('cluster_usaha', ClusterUsahaController::class);
-
-    // KATEGORI KUBE
-    Route::get('/admin/kategorikube', [KategoriKubeController::class, 'index'])->name('kategorikube.index');
-    Route::get('/admin/kategorikube/create', [KategoriKubeController::class, 'create'])->name('kategorikube.create');
-    Route::post('/admin/kategorikube', [KategoriKubeController::class, 'store'])->name('kategorikube.store');
-    Route::get('/admin/kategorikube/{id}', [KategoriKubeController::class, 'show'])->name('kategorikube.show');
-    Route::put('/admin/kategorikube/{id}/edit', [KategoriKubeController::class, 'edit'])->name('kategorikube.edit');
-    Route::post('/admin/kategorikube/{id}', [KategoriKubeController::class, 'update'])->name('kategorikube.update');
-    Route::get('/admin/kategorikube/delete/{id}', [KategoriKubeController::class, 'destroy'])->name('kategorikube.destroy');
-
     // Pembagian Koordinator
     Route::resource('pembagian_koordinator', PembagianKoordinatorController::class);
+    Route::get('/get-pendamping/{id_kecamatan}/{selected?}',
+    [PembagianKoordinatorController::class, 'getPendamping']);
+    // Ekspor
+    Route::get('/pembagian-koordinator/pdf', [PembagianKoordinatorController::class, 'exportPDF'])
+    ->name('pembagian_koordinator.exportPDF');
+    Route::get('/pembagian-koordinator/excel', [PembagianKoordinatorController::class, 'exportExcel'])
+    ->name('pembagian_koordinator.exportExcel');
 
     // PENCAIRAN BANTUAN
     Route::get('/admin/pencairan_bantuan', [PencairanBantuanController::class, 'index'])->name('admin.pencairan_bantuan.index');
@@ -164,9 +161,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/get-kube/{id}', [PrediksiController::class, 'getKube']);
     Route::get('/get-kube-detail/{id}', [PrediksiController::class, 'getDetail']);
 
-    Route::get('/admin/koordinator', [KoordinatorController::class, 'index'])->name('koordinator.index');
-    Route::post('/admin/koordinator/store', [KoordinatorController::class, 'store'])->name('koordinator.store');
-    Route::delete('/admin/koordinator/{id}', [KoordinatorController::class, 'destroy'])->name('koordinator.delete');
+    // Route::get('/admin/koordinator', [KoordinatorController::class, 'index'])->name('koordinator.index');
+    // Route::post('/admin/koordinator/store', [KoordinatorController::class, 'store'])->name('koordinator.store');
+    // Route::delete('/admin/koordinator/{id}', [KoordinatorController::class, 'destroy'])->name('koordinator.delete');
 
     // PELATIHAN
     Route::get('/pelatihan', [PelatihanController::class, 'index'])->name('pelatihan.index');
