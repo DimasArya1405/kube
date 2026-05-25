@@ -47,9 +47,4 @@ class PengajuanKube extends Model
     {
         return $this->hasMany(PencairanBantuan::class, 'id_pengajuan', 'id_pengajuan_kube');
     }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'id_user', 'id_user');
-    }
 }

@@ -45,4 +45,12 @@ class Kube extends Model
     {
         return $this->belongsTo(PembagianPendamping::class, 'id_kube', 'id_kube');
     }
+
+    public function pembagianPendampingAktif()
+    {
+        return $this->hasOne(PembagianPendamping::class, 'id_kube', 'id_kube')
+            ->where('status', 'Aktif');
+        // ->where('status', '!=', 'Selesai'); 
+
+    }
 }
