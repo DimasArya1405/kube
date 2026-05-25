@@ -22,6 +22,7 @@ use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\RankingKubeController;
 use App\Http\Controllers\KunjunganPendampingController;
 use App\Http\Controllers\DataPerkembanganUsahaController;
+use App\Http\Controllers\Kadis\PencairanBantuanController as KadisPencairanBantuanController;
 use App\Http\Controllers\KubeController;
 use App\Http\Controllers\LaporanKecamatanController;
 use App\Http\Controllers\PembagianKoordinatorController;
@@ -47,6 +48,10 @@ Route::get('/get-desa/{id_kecamatan}', function($id_kecamatan) {
 
 // DASHBOARD & MASTER DATA (Wajib Login)
 Route::middleware('auth')->group(function () {
+
+    // KEPALA DINAS
+    Route::get('/kadis/pencairan_bantuan/index', [KadisPencairanBantuanController::class, 'index'])->name('kadis.pencairan_bantuan.index');
+
     Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
     Route::get('/dashboard/ketua', [DashboardController::class, 'ketua'])->name('ketua_kube.dashboard');
     Route::get('/dashboard/pendamping', [DashboardController::class, 'pendamping'])->name('pendamping.dashboard');
