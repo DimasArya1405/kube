@@ -1,15 +1,12 @@
-@extends('admin.layout')
+@extends('ketua_kube.layout')
 
 @section('breadcrumb')
-Dashboard / Data Master / <span class="text-gray-800">Detail KUBE</span>
+Manajemen Internal / <span class="text-gray-800">Detail KUBE</span>
 @stop
 
 @section('content')
 <div class="p-6">
     <div class="flex items-center mb-6 border-b pb-4">
-        <a href="{{ route('kube.index') }}" class="text-gray-600 hover:text-purple-700 transition mr-4 text-2xl">
-            <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
-        </a>
         <div>
             <h2 class="text-2xl font-bold text-gray-800">Manajemen Detail KUBE {{ $kube->nama_kube }}</h2>
             <p class="text-gray-500 text-sm mt-1">Kelola informasi Kelompok Usaha Bersama, status, dan pembagian pendamping.</p>
@@ -155,17 +152,17 @@ Dashboard / Data Master / <span class="text-gray-800">Detail KUBE</span>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Jabatan</label>
                     @if($anggota->jabatan == 'Ketua')
-                    <input type="text" value="Ketua (Tidak bisa diubah)" disabled class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 font-bold cursor-not-allowed">
-                    <input type="hidden" name="jabatan" value="Ketua">
+                        <input type="text" value="Ketua (Tidak bisa diubah)" disabled class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 font-bold cursor-not-allowed">
+                        <input type="hidden" name="jabatan" value="Ketua">
                     @else
-                    <select name="jabatan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500" required>
-                        <option value="Sekretaris" {{ $anggota->jabatan == 'Sekretaris' ? 'selected' : '' }}>Sekretaris</option>
-                        <option value="Bendahara" {{ $anggota->jabatan == 'Bendahara' ? 'selected' : '' }}>Bendahara</option>
-                        <option value="Anggota" {{ $anggota->jabatan == 'Anggota' ? 'selected' : '' }}>Anggota</option>
-                    </select>
+                        <select name="jabatan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500" required>
+                            <option value="Sekretaris" {{ $anggota->jabatan == 'Sekretaris' ? 'selected' : '' }}>Sekretaris</option>
+                            <option value="Bendahara" {{ $anggota->jabatan == 'Bendahara' ? 'selected' : '' }}>Bendahara</option>
+                            <option value="Anggota" {{ $anggota->jabatan == 'Anggota' ? 'selected' : '' }}>Anggota</option>
+                        </select>
                     @endif
                 </div>
-
+                
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">No. HP</label>
                     <input type="text" name="no_hp" value="{{ $anggota->no_hp }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500" required>
@@ -245,7 +242,7 @@ Dashboard / Data Master / <span class="text-gray-800">Detail KUBE</span>
     }
 
     function confirmDeleteAnggota(event, id_anggota) {
-        event.preventDefault();
+        event.preventDefault(); 
         Swal.fire({
             title: 'Keluarkan Anggota?',
             text: "Data anggota ini akan dihapus permanen dari KUBE!",
