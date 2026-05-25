@@ -30,6 +30,7 @@ use App\Http\Controllers\PengajuanKubeController;
 use App\Http\Controllers\PembagianPendampingController;
 use App\Http\Controllers\KolaborasiBantuanController;
 use App\Http\Controllers\PenyaluranKolaborasiController;
+use App\Http\Controllers\KepalaDinasController;
 
 use Dflydev\DotAccessData\Data;
 
@@ -277,6 +278,9 @@ Route::middleware('auth')->group(function () {
 
     // REKAP KUBE
     Route::get('/rekap_kube', [RekapKubeController::class, 'index'])->name('rekap_kube.index');
+Route::get('/rekap_kube/detail/{id_kecamatan}', [RekapKubeController::class, 'detail'])->name('rekap_kube.detail');
+Route::get('/rekap_kube/export/pdf', [RekapKubeController::class, 'exportPdf'])->name('rekap_kube.export.pdf');
+Route::get('/rekap_kube/export/excel', [RekapKubeController::class, 'exportExcel'])->name('rekap_kube.export.excel');
 
     // LAPORAN KEUANGAN
     Route::get('/laporan-keuangan', [KeuanganController::class, 'index'])->name('laporan.index');
