@@ -99,13 +99,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/koordinator/store', [KoordinatorController::class, 'store'])->name('koordinator.store');
     Route::delete('/admin/koordinator/{id}', [KoordinatorController::class, 'destroy'])->name('koordinator.delete');
 
-    //PERKEMBANGAN USAHA
 
-    Route::get('/admin/perkembangan-usaha', [DataPerkembanganUsahaController::class, 'index'])->name('perkembangan.index');
-    Route::get('/admin/perkembangan-usaha/periode/{id_cluster}', [DataPerkembanganUsahaController::class, 'getPeriodeByKube'])->name('perkembangan.periode');
-    Route::post('/admin/perkembangan-usaha/store', [DataPerkembanganUsahaController::class, 'store'])->name('perkembangan.store');
-    Route::delete('/admin/perkembangan-usaha/{id}', [DataPerkembanganUsahaController::class, 'destroy'])->name('perkembangan.delete');
-
+// PERKEMBANGAN USAHA
+Route::get('/admin/perkembangan-usaha', [DataPerkembanganUsahaController::class, 'index'])->name('perkembangan.index');
+Route::get('/admin/perkembangan-usaha/grafik', [DataPerkembanganUsahaController::class, 'getGrafikData'])->name('perkembangan.grafik');
+Route::get('/admin/perkembangan-usaha/periode/{id_cluster}', [DataPerkembanganUsahaController::class, 'getPeriodeByKube'])->name('perkembangan.periode');
+Route::get('/admin/perkembangan-usaha/{id}/detail', [DataPerkembanganUsahaController::class, 'show'])->name('perkembangan.show');
+Route::get('/admin/perkembangan-usaha/{id}/edit', [DataPerkembanganUsahaController::class, 'edit'])->name('perkembangan.edit');
+Route::post('/admin/perkembangan-usaha/store', [DataPerkembanganUsahaController::class, 'store'])->name('perkembangan.store');
+Route::put('/admin/perkembangan-usaha/{id}', [DataPerkembanganUsahaController::class, 'update'])->name('perkembangan.update');
+Route::delete('/admin/perkembangan-usaha/{id}', [DataPerkembanganUsahaController::class, 'destroy'])->name('perkembangan.delete');
+Route::get('/admin/perkembangan-usaha/export/pdf', [DataPerkembanganUsahaController::class, 'exportPdf'])->name('perkembangan.export.pdf');
+Route::get('/admin/perkembangan-usaha/export/excel', [DataPerkembanganUsahaController::class, 'exportExcel'])->name('perkembangan.export.excel');
     // HALAMAN FORM PREDIKSI PENDAMPING & ADMIN
     Route::get('/pendamping/prediksi/form', [PrediksiController::class, 'index'])
         ->name('prediksi.index');
