@@ -11,6 +11,19 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
         <p class="text-gray-500 text-sm mt-1">Kelola data pembagian pendamping untuk setiap Kelompok Usaha Bersama.</p>
     </div>
 
+    @if(session('success'))
+    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <span class="block sm:inline">{{ session('success') }}</span>
+    </div>
+    @endif
+
+    @if(session('error'))
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <strong class="font-bold">Oops!</strong>
+        <span class="block sm:inline">{{ session('error') }}</span>
+    </div>
+    @endif
+
     <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
         <div class="relative w-full md:w-1/3">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
@@ -20,9 +33,9 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
         </div>
 
         <div class="flex gap-2 w-full md:w-auto">
-            <button class="flex items-center px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition shadow-sm">
+            <a href="{{ route('pembagian_pendamping.export.excel') }}" class="flex items-center px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition shadow-sm">
                 <i class="fas fa-file-excel mr-2"></i> Export Excel
-            </button>
+            </a>
             <button onclick="toggleModal('tambahPembagianModal')" class="flex items-center px-4 py-2 bg-purple-700 text-white text-sm font-medium rounded-lg hover:bg-purple-800 transition shadow-sm">
                 <i class="fas fa-plus mr-2"></i> Tambah Pembagian
             </button>
@@ -61,10 +74,10 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
 
                     <td class="py-3 px-5 text-center">
                         <div class="flex justify-center space-x-3">
-                            <form action="{{ route('pembagian_pendamping.destroy', $p->id_pembagian) }}" method="POST" class="inline">
+                            <form action="{{ route('pembagian_pendamping.destroy', $p->id_pembagian) }}" method="POST" class="inline" id="deleteForm-{{ $p->id_pembagian }}">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="text-gray-400 hover:text-red-500 transition text-lg" onclick="return confirm('Hapus data pembagian ini?')">
+                                <button type="button" class="text-gray-400 hover:text-red-500 transition text-lg" onclick="confirmDelete(event, '{{ $p->id_pembagian }}')">
                                     <i class="far fa-trash-alt"></i>
                                 </button>
                             </form>
@@ -131,6 +144,30 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
 <script>
     function toggleModal(modalID) {
         document.getElementById(modalID).classList.toggle('hidden');
+    }
+
+    // 🔥 Tangkap 'event'-nya di sini
+    function confirmDelete(event, id_kube) {
+
+        // 🔥 INI REM TANGANNYA! Tahan form biar ga langsung ke-submit
+        event.preventDefault();
+
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Data Pembagian Pendamping ini akan dihapus secara permanen!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Hapus Data!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Kalau user udah beneran ngeklik "Ya", baru kita lepas remnya dan kirim formnya
+                document.getElementById('deleteForm-' + id_kube).submit();
+            }
+        });
     }
 </script>
 @endsection

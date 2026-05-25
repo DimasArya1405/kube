@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Kecamatan;
 use App\Models\DesaKelurahan;
+use App\Models\Kube;          // 🔥 Tambahin ini
+use App\Models\ClusterUsaha;  // 🔥 Tambahin ini
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -25,41 +28,41 @@ class DashboardController extends Controller
 
     public function store(Request $request)
     {
-    User::create([
-        'nama' => $request->nama,
-        'nik' => $request->nik,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'no_hp' => $request->no_hp,
-        'alamat' => $request->alamat,
-        'id_kecamatan' => $request->id_kecamatan,
-        'id_desa_kelurahan' => $request->id_desa_kelurahan,
-        'role' => $request->role,
-        'status' => $request->status,
-    ]);
-    return redirect()->back()->with('success', 'User berhasil ditambahkan');
+        User::create([
+            'nama' => $request->nama,
+            'nik' => $request->nik,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
+            'id_kecamatan' => $request->id_kecamatan,
+            'id_desa_kelurahan' => $request->id_desa_kelurahan,
+            'role' => $request->role,
+            'status' => $request->status,
+        ]);
+        return redirect()->back()->with('success', 'User berhasil ditambahkan');
     }
     // EDIT (ambil data)
-public function edit($id)
-{
-    $user = User::with(['kecamatan', 'desa'])->findOrFail($id);
-    return response()->json($user);
-}
+    public function edit($id)
+    {
+        $user = User::with(['kecamatan', 'desa'])->findOrFail($id);
+        return response()->json($user);
+    }
     // UPDATE
     public function update(Request $request, $id)
     {
-    $user = User::findOrFail($id);
-    $user->update([
-        'nama' => $request->nama,
-        'nik' => $request->nik,
-        'email' => $request->email,
-        'no_hp' => $request->no_hp,
-        'alamat' => $request->alamat,
-        'id_kecamatan' => $request->id_kecamatan,
-        'id_desa_kelurahan' => $request->id_desa_kelurahan,
-        'role' => $request->role,
-        'status' => $request->status,
-    ]);
+        $user = User::findOrFail($id);
+        $user->update([
+            'nama' => $request->nama,
+            'nik' => $request->nik,
+            'email' => $request->email,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
+            'id_kecamatan' => $request->id_kecamatan,
+            'id_desa_kelurahan' => $request->id_desa_kelurahan,
+            'role' => $request->role,
+            'status' => $request->status,
+        ]);
         return back()->with('success', 'User berhasil diupdate');
     }
     // DELETE
@@ -70,7 +73,24 @@ public function edit($id)
     }
     public function ketua()
     {
-        return view('ketua_kube.dashboard.index');
+        // 1. Cek apakah akun ketua ini sudah punya data di tabel KUBE
+        $kube = Kube::with(['desa', 'clusterUsaha', 'anggota'])
+            ->where('id_user', Auth::id())
+            ->first();
+
+        // 2. Kalau KUBE BELUM ADA (Berarti dia baru pertama kali login)
+        if (!$kube) {
+            // Ambil data untuk form dropdown
+            $desas = DesaKelurahan::orderBy('nama_desa_kelurahan', 'asc')->get();
+            $clusters = ClusterUsaha::all();
+
+            // Arahkan ke halaman form pengajuan (Kak Yana harus bikin view ini)
+            return view('ketua_kube.manajemen_internal.pengajuan_kube_baru', compact('desas', 'clusters'));
+        }
+
+        // 3. Kalau KUBE SUDAH ADA 
+        // Arahkan ke halaman dashboard utama dia, dan bawa data $myKube-nya
+        return view('ketua_kube.manajemen_internal.detail_kube', compact('kube'));
     }
 
     public function pendamping()

@@ -6,6 +6,8 @@ use App\Models\PembagianPendamping;
 use App\Models\Kube;
 use App\Models\Pendamping; // Ganti jadi 'use App\Models\User;' kalau gabung di tabel user
 use Illuminate\Http\Request;
+use App\Exports\PembagianPendampingExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PembagianPendampingController extends Controller
 {
@@ -49,5 +51,10 @@ class PembagianPendampingController extends Controller
         $pembagian->delete();
 
         return redirect()->back()->with('success', 'Data Pembagian berhasil dihapus!');
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(new PembagianPendampingExport, 'Data_Pembagian_Pendamping.xlsx');
     }
 }

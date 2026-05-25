@@ -1,7 +1,7 @@
 <nav class="flex-1 px-4 mt-4 space-y-2 overflow-y-auto custom-scrollbar">
-    <a href="{{ route('admin.dashboard') }}"
+    <a href="{{ route('ketua_kube.dashboard') }}"
         class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group
-       {{ request()->routeIs('admin.dashboard') 
+       {{ request()->routeIs('ketua_kube.dashboard') 
           ? 'bg-indigo-800 text-white border-l-4 border-white shadow-inner' 
           : 'text-indigo-100 hover:bg-indigo-600 hover:text-white' }}">
         <i data-lucide="layout-grid" class="w-5 h-5"></i>
@@ -17,8 +17,7 @@
             <i data-lucide="chevron-down" id="masterIcon" class="w-4 h-4 transition-transform duration-300"></i>
         </button>
         <div id="masterMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
-            <a href="{{ url('/kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Detail Kube</a>
-            <a href="{{ url('/anggota_kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data Anggota</a>
+            <a href="{{ url('/detail_kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Detail Kube (Yana)</a>
             <a href="" class="py-2 px-3 text-indigo-200 hover:text-white">Laporan Keuangan</a>
             <a href="" class="py-2 px-3 text-indigo-200 hover:text-white">Dokumentasi Kegiatan</a>
         </div>
