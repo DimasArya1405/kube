@@ -18,11 +18,72 @@
     <div class="min-h-screen flex items-center justify-center p-4">
         <div class="flex flex-col md:flex-row w-full max-w-[1000px] bg-white rounded-xl overflow-hidden shadow-xl">
             
-            <div class="w-full md:w-5/12 bg-slate-100 p-10 flex flex-col justify-center border-b md:border-b-0 border-gray-200">
-                <h2 class="text-3xl font-bold text-green-600 leading-tight">
-                    Sistem<br>Kelompok Usaha Bersama
-                </h2>
+<div class="relative w-full md:w-5/12 bg-gradient-to-br from-slate-100 to-slate-200 p-10 flex flex-col justify-center overflow-hidden border-b md:border-b-0 border-gray-200">
+    
+    <div class="absolute -top-10 -left-10 w-40 h-40 bg-green-200/30 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-200/30 rounded-full blur-3xl"></div>
+
+    <div class="relative z-10">
+        <!-- Judul Utama -->
+        <h2 class="text-3xl font-extrabold text-slate-800 leading-tight">
+            Gabung <span class="text-green-600">KUBE</span> Digital
+        </h2>
+        <div class="w-12 h-1 bg-green-500 rounded-full mt-4 mb-6"></div>
+
+        <!-- Grid Fokus Ikon Persyaratan -->
+        <div class="grid grid-cols-2 gap-4 max-w-sm">
+            <!-- Item 1: Validasi KTP -->
+            <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
+                <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-green-600"></i>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-slate-700">Data Valid</p>
+                    <p class="text-[10px] text-slate-500 leading-tight mt-0.5">NIK & Alamat sesuai KTP asli.</p>
+                </div>
             </div>
+            
+            <!-- Item 2: Email Aktif -->
+            <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
+                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-blue-600"></i>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-slate-700">Akun Aman</p>
+                    <p class="text-[10px] text-slate-500 leading-tight mt-0.5">Gunakan email aktif verifikasi.</p>
+                </div>
+            </div>
+
+            <!-- Item 3: Akses Manajemen -->
+            <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
+                <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4 text-purple-600"></i>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-slate-700">Fitur Digital</p>
+                    <p class="text-[10px] text-slate-500 leading-tight mt-0.5">Akses manajemen & pelaporan.</p>
+                </div>
+            </div>
+
+            <!-- Item 4: Pengembangan Usaha -->
+            <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
+                <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
+                    <i data-lucide="trending-up" class="w-4 h-4 text-amber-600"></i>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-slate-700">Skala Usaha</p>
+                    <p class="text-[10px] text-slate-500 leading-tight mt-0.5">Pengembangan potensi bisnis.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lokasi Footer -->
+    <div class="absolute bottom-6 left-10 flex items-center gap-2 text-slate-400">
+        <i data-lucide="map-pin" class="w-3 h-3"></i>
+        <span class="text-[10px] font-medium tracking-wide">CILACAP REGENCY</span>
+    </div>
+</div>
 
             <div class="w-full md:w-7/12 p-8 md:p-12 flex flex-col justify-center">
                 <div class="text-center mb-6">
@@ -110,8 +171,6 @@
                                 <option value="ketua_kube">Ketua KUBE</option>
                                 <option value="pendamping">Pendamping</option>
                                 <option value="koordinator">Koordinator</option>
-                                <option value="ketua_tim_kube">Ketua Tim KUBE</option>
-                                <option value="kepala_dinas">Kepala Dinas</option>
                             </select>
                         </div>
                     </div>

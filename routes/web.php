@@ -54,12 +54,14 @@ Route::post('/register', [AuthController::class, 'register']);
 
 // LOGOUT
 Route::post('/logout', [AuthController::class, 'logout']);
-Route::get('/get-desa/{id_kecamatan}', function ($id_kecamatan) {
+
+// AJAX: Dapatkan Desa/Kelurahan berdasarkan Kecamatan
+Route::get('/get-desa/{id_kecamatan}', function($id_kecamatan) {
     $desa = \App\Models\DesaKelurahan::where('id_kecamatan', $id_kecamatan)->get(['id_desa_kelurahan', 'nama_desa_kelurahan']);
     return response()->json($desa);
 });
 
-// DASHBOARD & MASTER DATA (Wajib Login)
+// SEMUA ROUTE YANG MEMBUTUHKAN AUTENTIKASI
 Route::middleware('auth')->group(function () {
 
     // KEPALA DINAS
@@ -77,6 +79,41 @@ Route::middleware('auth')->group(function () {
     Route::get('/koordinator/dashboard', [DashboardController::class, 'koordinator'])->name('dashboard.koordinator');
     Route::get('/dashboard/tim', [DashboardController::class, 'tim'])->name('dashboard.tim');
     Route::get('/kepala_dinas/dashboard', [DashboardController::class, 'dinas'])->name('dashboard.dinas');
+    
+    // --- DASHBOARD ADMIN ---
+    Route::prefix('admin')->group(function() {
+        Route::get('/dashboard', [DashboardController::class, 'admin'])
+            ->middleware('checkrole:admin') // Kita akan buat middleware ini
+            ->name('admin.dashboard');
+    });
+
+    // --- DASHBOARD KOORDINATOR ---
+    Route::prefix('koordinator')->group(function() {
+        Route::get('/dashboard', [DashboardController::class, 'koordinator'])
+            ->middleware('checkrole:koordinator')
+            ->name('koordinator.dashboard');
+    });
+
+    // --- DASHBOARD KEPALA DINAS ---
+    Route::prefix('kepala_dinas')->group(function() {
+        Route::get('/dashboard', [DashboardController::class, 'kepala_dinas'])
+            ->middleware('checkrole:kepala_dinas')
+            ->name('kepala_dinas.dashboard');
+    });
+
+    // --- DASHBOARD PENDAMPING ---
+    Route::prefix('pendamping')->group(function() {
+        Route::get('/dashboard', [DashboardController::class, 'pendamping'])
+            ->middleware('checkrole:pendamping')
+            ->name('pendamping.dashboard');
+    });
+
+    // --- DASHBOARD KETUA KUBE ---
+    Route::prefix('ketua_kube')->group(function() {
+        Route::get('/dashboard', [DashboardController::class, 'ketua'])
+            ->middleware('checkrole:ketua_kube')
+            ->name('ketua_kube.dashboard');
+    });
 
     // KELOLA DATA USER
     Route::get('/admin/users', [UsersController::class, 'index'])->name('admin.users');
