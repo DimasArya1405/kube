@@ -42,10 +42,6 @@ Dashboard / <span class="text-gray-800">Jenis Bantuan</span>
                     <td>
                         {{-- aksi --}}
                         <div class="flex gap-2 items-center">
-                            <a href=""
-                                class="text-white bg-yellow-600 hover:bg-yellow-700 px-5 py-2.5 rounded-lg">
-                                Edit
-                            </a>
                             <a href="{{route('admin.alur_bantuan.jenis_bantuan.hapus',$row->id_jenis_bantuan)}}" onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')"
                                 class="text-white bg-red-600 hover:bg-red-700 px-5 py-2.5 rounded-lg button-hapus">
                                 Hapus
@@ -63,7 +59,6 @@ Dashboard / <span class="text-gray-800">Jenis Bantuan</span>
 <div id="modal-tambah" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">
     <div class="bg-white rounded-lg p-6 w-96">
         <h3 class="text-lg font-semibold mb-4">Tambah Jenis Bantuan</h3>
-
         <form action="{{route('admin.alur_bantuan.jenis_bantuan.tambah')}}" method="POST">
             @csrf
             @method('post')

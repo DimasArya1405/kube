@@ -24,6 +24,7 @@
             <a href="{{ route('koordinator.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data Koordinator (Katrina)</a>
             <a href="{{ route('kategorikube.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Kategori KUBE (Tika)</a>
             <a href="{{ route('cluster_usaha.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Cluster (Ana)</a>
+            <a href="{{ route('admin.alur_bantuan.jenis_bantuan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Jenis Bantuan (Dimas)</a>
         </div>
     </div>
 

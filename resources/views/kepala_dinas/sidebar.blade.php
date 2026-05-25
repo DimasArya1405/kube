@@ -15,7 +15,7 @@
         </button>
         <div id="monitorDinas" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Sebaran KUBE (Alva)</a>
-            <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Progres Pencairan (Dimas)</a>
+            <a href="{{route('kadis.pencairan_bantuan.index')}}" class="py-2 px-3 text-indigo-200 hover:text-white">Progres Pencairan (Dimas)</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Penggunaan Bantuan (Noni)</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Galeri Kegiatan (Tika)</a>
         </div>
