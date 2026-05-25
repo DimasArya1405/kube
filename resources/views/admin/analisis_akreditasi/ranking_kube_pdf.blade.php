@@ -28,6 +28,15 @@
         tr:nth-child(even) { background-color: #f9fafb; }
         .aktif    { color: #15803d; font-weight: bold; }
         .nonaktif { color: #dc2626; font-weight: bold; }
+
+        /* Baris total */
+        tfoot tr {
+            background-color: #1e40af;
+            color: white;
+            font-weight: bold;
+        }
+        tfoot td { border-color: #3b5fcf; }
+        tfoot td.right { text-align: right; }
     </style>
 </head>
 <body>
@@ -42,6 +51,12 @@
             'Kategori'  => request('kategori') ? $filtered->first()?->nama_kategori : null,
             'Status'    => request('status'),
         ])->filter()->toArray();
+
+        // Hitung total langsung di blade
+        $totalOmset      = $filtered->sum('total_omset');
+        $totalPengeluaran = $filtered->sum('total_pengeluaran');
+        $totalLabaBersih  = $filtered->sum('total_laba_bersih');
+        $colSpan          = count($filterAktif) ? 10 : 9;
     @endphp
 
     @if(count($filterAktif))
@@ -86,12 +101,25 @@
             </tr>
             @empty
             <tr>
-                <td colspan="{{ count($filterAktif) ? 10 : 9 }}" style="text-align:center;padding:16px;color:#999">
+                <td colspan="{{ $colSpan }}" style="text-align:center;padding:16px;color:#999">
                     Tidak ada data.
                 </td>
-            </tr>
             @endforelse
         </tbody>
+
+        {{-- Baris total --}}
+        @if($filtered->isNotEmpty())
+        <tfoot>
+            <tr>
+                <td colspan="4" class="center">TOTAL</td>
+                <td class="right">Rp {{ number_format($totalOmset, 0, ',', '.') }}</td>
+                <td class="right">Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}</td>
+                <td class="right">Rp {{ number_format($totalLabaBersih, 0, ',', '.') }}</td>
+                {{-- Kolom Status, Peringkat, (opsional Peringkat Filter) dikosongkan --}}
+                <td colspan="{{ count($filterAktif) ? 3 : 2 }}"></td>
+            </tr>
+        </tfoot>
+        @endif
     </table>
 </body>
 </html>
