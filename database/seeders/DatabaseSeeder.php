@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             KategoriSeeder::class,
             ClusterUsahaSeeder::class,
-            KubeSeeder::class,
+            // KubeSeeder::class,
             // KoordinatorSeeder::class,
             PendampingSeeder::class,
         ]);

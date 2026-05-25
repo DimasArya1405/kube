@@ -37,7 +37,15 @@ class KubeController extends Controller
 
     public function index()
     {
-        // Siapkan data pendukung yang dipakai bareng-bareng
+
+        $kubes = Kube::with([
+            'desa.kecamatan',
+            'clusterUsaha.kategori',
+            // Rute baru: Penugasan -> Tabel Pendamping -> Penugasan Koor -> Tabel Koordinator
+            'pembagianPendamping.pendamping.pembagianKoordinator.koordinator',
+            'pembagianPendamping.pembagianKoordinator.koordinator'
+        ])->get();
+        
         $desas = DesaKelurahan::orderBy('nama_desa_kelurahan', 'asc')->get();
         $clusters = ClusterUsaha::all();
         $role = Auth::user()->role; // Cek siapa yang lagi login

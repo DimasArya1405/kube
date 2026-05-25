@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
+
 class KubeSeeder extends Seeder
 {
     public function run(): void
@@ -36,7 +37,7 @@ class KubeSeeder extends Seeder
                 'keterangan'        => 'Kelompok binaan baru periode 2026 - KUBE ' . $k['nama'],
                 'created_at'        => now(),
                 'updated_at'        => now(),
-            ]);
+           ]);
         }
     }
 }

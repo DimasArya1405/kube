@@ -2,7 +2,7 @@
     
     <!-- Dashboard Statistik -->
     <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group bg-indigo-800 text-white border-l-4 border-white shadow-inner">
-        <i data-lucide="pie-chart" class="w-5 h-5"></i>
+    <i data-lucide="pie-chart" class="w-5 h-5"></i>
         <span class="font-medium">Dashboard Statistik</span>
     </a>
 
@@ -53,5 +53,4 @@
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Laporan Keuangan Global</a>
         </div>
     </div>
-
 </nav>

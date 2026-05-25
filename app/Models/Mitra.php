@@ -9,12 +9,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Mitra extends Model
 {
     use HasFactory;
+    
+    protected $table = 'mitra'; //nama tabel
 
-    protected $table = 'mitra';
+    protected $primaryKey = 'id_mitra'; //mendefinisikan primary key
 
-    protected $primaryKey = 'id_mitra';
-
-    protected $fillable = [
+    protected $fillable = [ //kolom yang boleh diisi melalui form store/update
         'nama_mitra',
         'jenis_mitra',
         'no_telp',
@@ -25,15 +25,19 @@ class Mitra extends Model
         'mou',
         'tgl_mou',
         'masa_berlaku',
-        'status',
+        
     ];
-
+    
+    // Mengubah string dari database menjadi objek Date secara otomatis,
+    // sehingga kita bisa pakai fungsi tgl->format() atau operasi matematika tanggal.
     protected $casts = [
         'tgl_mou' => 'date:Y-m-d',
     ];
 
+    //Relasi : satu mitra memilik banyak bantuan kolaborasi
     public function bantuanKolaborasi(): HasMany
     {
+        // hasMany(NamaModelTujuan, Foreign_Key_di_tabel_tujuan, Local_Key_di_tabel_ini)
         return $this->hasMany(KolaborasiBantuan::class, 'id_mitra');
     }
 
@@ -44,5 +48,23 @@ class Mitra extends Model
     public function pelatihans()
     {
         return $this->hasMany(Pelatihan::class, 'id_mitra', 'id_mitra');
+    }
+
+    //Jika hari ini melewati (Tanggal MOU + Masa Berlaku), maka otomatis 'Tidak Aktif'.
+    public function getStatusAttribute()
+    {
+        // Hitung tanggal berakhir (Tanggal MOU + Masa Berlaku Tahun)
+        $tanggalBerakhir = \Carbon\Carbon::parse($this->tgl_mou)->addYears($this->masa_berlaku);
+
+        // Jika sekarang > tanggal berakhir, return 'Tidak Aktif'
+        if (\Carbon\Carbon::now()->greaterThan($tanggalBerakhir)) {
+            return 'Tidak Aktif';
+        }
+
+        return 'Aktif';
+    }
+    public function bantuan_kolaborasi()
+    {
+        return $this->hasMany(KolaborasiBantuan::class, 'id_mitra', 'id_mitra');
     }
 }

@@ -28,12 +28,24 @@ use App\Http\Controllers\LaporanKecamatanController;
 use App\Http\Controllers\PembagianKoordinatorController;
 use App\Http\Controllers\PengajuanKubeController;
 use App\Http\Controllers\PembagianPendampingController;
+use App\Http\Controllers\KolaborasiBantuanController;
+use App\Http\Controllers\PenyaluranKolaborasiController;
+
 use Dflydev\DotAccessData\Data;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/', function () {return redirect('/login');});
+Route::get('/', function () {
+    return view('/welcome');
+});
+
+// DATA USER
+Route::get('/admin/users', [DashboardController::class, 'users'])->name('admin.users');
+Route::post('/admin/users/store', [DashboardController::class, 'store'])->name('admin.users.store');
+Route::get('/admin/users/edit/{id}', [DashboardController::class, 'edit'])->name('admin.users.edit');
+Route::put('/admin/users/update/{id}', [DashboardController::class, 'update'])->name('admin.users.update');
+Route::delete('/admin/users/delete/{id}', [DashboardController::class, 'destroy'])->name('admin.users.delete');
 
 // REGISTER
 Route::get('/register', [AuthController::class, 'showRegister']);
@@ -90,8 +102,22 @@ Route::middleware('auth')->group(function () {
     // Ini akan otomatis menghandle route bimbingan.index, bimbingan.create, bimbingan.store, dll.
     Route::resource('bimbingan', BimbinganKubeController::class);
 
+    // BIMBINGAN KUBE OLEH PENDAMPING (Tambahan Baru)
+    // Ini akan otomatis menghandle route bimbingan.index, bimbingan.create, bimbingan.store, dll.
+    Route::resource('bimbingan', BimbinganKubeController::class);
+
     // CLUSTER USAHA
     Route::resource('cluster_usaha', ClusterUsahaController::class);
+
+    // KATEGORI KUBE
+    Route::get('/admin/kategorikube', [KategoriKubeController::class, 'index'])->name('kategorikube.index');
+    Route::get('/admin/kategorikube/create', [KategoriKubeController::class, 'create'])->name('kategorikube.create');
+    Route::post('/admin/kategorikube', [KategoriKubeController::class, 'store'])->name('kategorikube.store');
+    Route::get('/admin/kategorikube/{id}', [KategoriKubeController::class, 'show'])->name('kategorikube.show');
+    Route::put('/admin/kategorikube/{id}/edit', [KategoriKubeController::class, 'edit'])->name('kategorikube.edit');
+    Route::post('/admin/kategorikube/{id}', [KategoriKubeController::class, 'update'])->name('kategorikube.update');
+    Route::get('/admin/kategorikube/delete/{id}', [KategoriKubeController::class, 'destroy'])->name('kategorikube.destroy');
+
     // Pembagian Koordinator
     Route::resource('pembagian_koordinator', PembagianKoordinatorController::class);
     Route::get('/get-pendamping/{id_kecamatan}/{selected?}',
@@ -175,6 +201,7 @@ Route::middleware('auth')->group(function () {
 
 
 
+
     // KELOLA MITRA & KOLABORASI
     Route::get('/admin/mitra', [MitraController::class, 'index'])->name('mitra.index');
     Route::get('/admin/mitra/create', [MitraController::class, 'create'])->name('mitra.create');
@@ -183,6 +210,19 @@ Route::middleware('auth')->group(function () {
     Route::put('/admin/mitra/{id}', [MitraController::class, 'update'])->name('mitra.update');
     Route::delete('/admin/mitra/{id}', [MitraController::class, 'destroy'])->name('mitra.delete');
     Route::get('/admin/mitra/view-pdf/{id}', [MitraController::class, 'viewPdf'])->name('mitra.viewPdf');
+    Route::get('/admin/bantuan', [KolaborasiBantuanController::class, 'index'])->name('bantuan.index');
+    Route::post('/admin/bantuan/store', [KolaborasiBantuanController::class, 'store'])->name('bantuan.store');
+    Route::get('/admin/bantuan/{id}/edit', [KolaborasiBantuanController::class, 'edit'])->name('bantuan.edit');
+    Route::put('/admin/bantuan/update/{id}', [KolaborasiBantuanController::class, 'update'])->name('bantuan.update');
+    Route::delete('/admin/bantuan/delete/{id}', [KolaborasiBantuanController::class, 'destroy'])->name('bantuan.delete');
+    Route::get('/admin/bantuan/lihat-foto/{filename}', [KolaborasiBantuanController::class, 'lihatFoto'])->name('bantuan.lihat_foto');
+    Route::post('/penyaluran-kolaborasi/store/{id_kolaborasi}', [PenyaluranKolaborasiController::class, 'store'])->name('penyaluran.kolaborasi.store');
+    Route::delete('/penyaluran-kolaborasi/destroy/{id_kolaborasi}', [PenyaluranKolaborasiController::class, 'destroy'])->name('penyaluran.destroy');
+    Route::get('/mitra/export-excel', [MitraController::class, 'exportExcel'])->name('mitra.excel');
+    Route::get('/mitra/export-pdf', [MitraController::class, 'exportPdf'])->name('mitra.pdf');
+    Route::get('/kolaborasi/export-pdf', [KolaborasiBantuanController::class, 'exportPdf'])->name('kolaborasi.pdf');
+    Route::get('/kolaborasi/export-excel', [KolaborasiBantuanController::class, 'exportExcel'])->name('kolaborasi.excel');
+    Route::get('/admin/bantuan-kolaborasi', [KolaborasiBantuanController::class, 'index'])->name('kolaborasi.index');
 
     // PENDAMPING
     Route::get('/admin/pendamping', [PendampingController::class, 'index'])->name('pendamping.index');
@@ -248,9 +288,20 @@ Route::middleware('auth')->group(function () {
     // Route::get('/pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'show'])->name('kunjungan.show');
     // Route::delete('pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'destroy'])->name('kunjungan.delete');
 
+    Route::get('/kategori-kube', function () {return view('coming-soon');})->name('kategorikube.index');
+
+    // KUNJUNGAN PENDAMPING
+    Route::get('/pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'index'])->name('kunjungan.index');
+    Route::post('pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'store'])->name('kunjungan.store');
+    Route::get('/pendamping/kunjungan_pendamping/{id}/edit', [KunjunganPendampingController::class, 'edit'])->name('kunjungan.edit');
+    Route::put('/pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'update'])->name('kunjungan.update');
+    Route::get('/pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'show'])->name('kunjungan.show');
+    Route::delete('pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'destroy'])->name('kunjungan.delete');
+
     // LAPORAN KECAMATAN
     Route::get('/admin/laporan-kecamatan', [LaporanKecamatanController::class, 'index'])->name('laporan.kecamatan');
     Route::get('/admin/laporan-kecamatan/{id}', [LaporanKecamatanController::class, 'detail'])->name('laporan.kecamatan.detail');
     Route::get('/admin/laporan-kecamatan/pdf/{id}', [LaporanKecamatanController::class, 'exportPdf'])->name('laporan.pdf');
 });
+
 

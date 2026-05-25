@@ -111,7 +111,6 @@ Data Master / <span class="text-gray-800">Data Anggota KUBE</span>
                     </td>
                 </tr>
                 @endforeach
-
             </tbody>
         </table>
     </div>

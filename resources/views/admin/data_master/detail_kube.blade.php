@@ -31,7 +31,6 @@ Dashboard / Data Master / <span class="text-gray-800">Detail KUBE</span>
 
                 <p>Tanggal Dibentuk : <span>{{ $kube->tanggal_terbentuk ? \Carbon\Carbon::parse($kube->tanggal_terbentuk)->format('d F Y') : '-' }}</span></p>
 
-
             </div>
         </div>
 
