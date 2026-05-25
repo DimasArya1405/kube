@@ -174,7 +174,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">No. Handphone</label>
-                            <input type="text" name="no_hp" placeholder="Masukkan No. HP" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all">
+                            <input type="text" name="no_hp" placeholder="Masukkan No. HP" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all" required>
                         </div>
                     </div>
 
@@ -192,7 +192,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Kecamatan</label>
-                            <select name="id_kecamatan" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 border bg-white outline-none appearance-none transition-all cursor-pointer">
+                            <select name="id_kecamatan" id="selectKecamatan" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 border bg-white outline-none appearance-none transition-all cursor-pointer" required>
                                 <option value="">Pilih Kecamatan</option>
                                 @foreach ($kecamatan as $kec)
                                     <option value="{{ $kec->id_kecamatan }}">{{ $kec->nama_kecamatan }}</option>
@@ -201,11 +201,8 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Desa/Kelurahan</label>
-                            <select name="id_desa_kelurahan" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 border bg-white outline-none appearance-none transition-all cursor-pointer">
-                                <option value="">Pilih Desa</option>
-                                @foreach ($desa as $d)
-                                    <option value="{{ $d->id_desa_kelurahan }}">{{ $d->nama_desa_kelurahan }}</option>
-                                @endforeach
+                            <select name="id_desa_kelurahan" id="selectDesa" disabled class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 border text-gray-600 disabled:bg-gray-100 outline-none appearance-none transition-all disabled:cursor-not-allowed" required>
+                                <option value="">Pilih Desa/Kelurahan</option>
                             </select>
                         </div>
                         <div class="md:col-span-2">
@@ -216,11 +213,10 @@
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Hak Akses (Role)</label>
                             <select name="role" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 border bg-white outline-none transition-all cursor-pointer">
                                 <option value="">Pilih Role</option>
-                                <option value="admin">Administrator</option>
+                                <option value="admin">Admin</option>
                                 <option value="ketua_kube">Ketua KUBE</option>
                                 <option value="pendamping">Pendamping</option>
                                 <option value="koordinator">Koordinator</option>
-                                <option value="ketua_tim_kube">Ketua Tim Kube</option>
                                 <option value="kepala_dinas">Kepala Dinas</option>
                             </select>
                         </div>
@@ -312,7 +308,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Desa/Kelurahan</label>
-                            <select name="id_desa_kelurahan" id="edit_desa" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 border bg-white outline-none transition-all cursor-pointer appearance-none">
+                            <select name="id_desa_kelurahan" id="edit_desa" disabled class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 border text-gray-600 disabled:bg-gray-100 outline-none appearance-none transition-all disabled:cursor-not-allowed" required>
                                 @foreach ($desa as $d)
                                     <option value="{{ $d->id_desa_kelurahan }}">{{ $d->nama_desa_kelurahan }}</option>
                                 @endforeach
@@ -329,11 +325,10 @@
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Hak Akses (Role)</label>
                             <select name="role" id="edit_role" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 border bg-white outline-none transition-all cursor-pointer">
-                                <option value="admin">Administrator</option>
+                                <option value="admin">Admin</option>
                                 <option value="ketua_kube">Ketua KUBE</option>
                                 <option value="pendamping">Pendamping</option>
                                 <option value="koordinator">Koordinator</option>
-                                <option value="ketua_tim_kube">Ketua Tim Kube</option>
                                 <option value="kepala_dinas">Kepala Dinas</option>
                             </select>
                         </div>
@@ -360,8 +355,8 @@
     </div>
 </div>
 
-    {{-- Modal: Detail User --}}
-    <div id="modal-detail-user" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 backdrop-blur-sm p-4">
+{{-- Modal: Detail User --}}
+<div id="modal-detail-user" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 backdrop-blur-sm p-4">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
             <div class="relative h-24 bg-gradient-to-r from-blue-600 to-indigo-700">
                 <button onclick="closeDetailModal()" class="absolute top-4 right-4 text-white/80 hover:text-white">
@@ -428,34 +423,122 @@
                 </div>
             </div>
         </div>
-    </div>
+</div>
 
-    <script>
+<script>
+        lucide.createIcons();
+
         const modalEdit = document.getElementById('modal-edit-user');
         const modalDetail = document.getElementById('modal-detail-user');
+        const selectKecamatan = document.getElementById('selectKecamatan');
+        const selectDesa = document.getElementById('selectDesa');
+
+        selectKecamatan.addEventListener('change', function() {
+            const idKecamatan = this.value;
+
+            // Reset dropdown desa
+            selectDesa.innerHTML = '<option value="">Pilih Desa/Kelurahan</option>';
+            
+            if (idKecamatan) {
+                // Aktifkan dropdown desa
+                selectDesa.disabled = false;
+                selectDesa.classList.remove('bg-gray-100');
+                selectDesa.classList.add('bg-white');
+                selectDesa.innerHTML = '<option value="">Memuat...</option>';
+
+                // Ambil data menggunakan AJAX/Fetch
+                fetch(`/get-desa/${idKecamatan}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        selectDesa.innerHTML = '<option value="">Pilih Desa/Kelurahan</option>';
+                        data.forEach(desa => {
+                            const option = document.createElement('option');
+                            option.value = desa.id_desa_kelurahan;
+                            option.textContent = desa.nama_desa_kelurahan;
+                            selectDesa.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Gagal mengambil data desa');
+                    });
+            } else {
+                // Jika kecamatan dikosongkan lagi
+                selectDesa.disabled = true;
+                selectDesa.classList.add('bg-gray-100');
+            }
+        });
 
         // -- EDIT USER --
         function editUser(id) {
             fetch('/admin/users/edit/' + id)
-                .then(res => res.json())
-                .then(data => {
-                    document.getElementById('edit_nama').value = data.nama;
-                    document.getElementById('edit_nik').value = data.nik;
-                    document.getElementById('edit_email').value = data.email;
-                    document.getElementById('edit_no_hp').value = data.no_hp;
-                    document.getElementById('edit_alamat').value = data.alamat;
-                    document.getElementById('edit_role').value = data.role;
-                    document.getElementById('edit_status').value = data.status;
-                    document.getElementById('edit_kecamatan').value = data.id_kecamatan;
-                    document.getElementById('edit_desa').value = data.id_desa_kelurahan;
-                    document.getElementById('form-edit').action = '/admin/users/update/' + id;
-                    modalEdit.classList.remove('hidden');
-                });
-        }
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('edit_nama').value = data.nama;
+                document.getElementById('edit_nik').value = data.nik;
+                document.getElementById('edit_email').value = data.email;
+                document.getElementById('edit_no_hp').value = data.no_hp;
+                document.getElementById('edit_alamat').value = data.alamat;
+                document.getElementById('edit_role').value = data.role;
+                document.getElementById('edit_status').value = data.status;
+                document.getElementById('edit_kecamatan').value = data.id_kecamatan;
+                document.getElementById('form-edit').action = '/admin/users/update/' + id;
+
+            // PENTING: Ambil data desa berdasarkan kecamatan user tersebut
+            const selectDesaEdit = document.getElementById('edit_desa');
+            
+            if (data.id_kecamatan) {
+                selectDesaEdit.disabled = false;
+                selectDesaEdit.classList.remove('bg-gray-100');
+                
+                fetch(`/get-desa/${data.id_kecamatan}`)
+                    .then(res => res.json())
+                    .then(desaData => {
+                        selectDesaEdit.innerHTML = '<option value="">Pilih Desa/Kelurahan</option>';
+                        desaData.forEach(desa => {
+                            const option = document.createElement('option');
+                            option.value = desa.id_desa_kelurahan;
+                            option.textContent = desa.nama_desa_kelurahan;
+                            // Cek jika ini adalah desa milik si user
+                            if(desa.id_desa_kelurahan == data.id_desa_kelurahan) {
+                                option.selected = true;
+                            }
+                            selectDesaEdit.appendChild(option);
+                        });
+                    });
+                }
+            modalEdit.classList.remove('hidden');
+        });
+    }
 
         function closeEditModal() {
-            modalEdit.classList.add('hidden');
+                modalEdit.classList.add('hidden');
+            }
+        // Listener untuk perubahan kecamatan di Modal EDIT
+        document.getElementById('edit_kecamatan').addEventListener('change', function() {
+        const idKecamatan = this.value;
+        const selectDesaEdit = document.getElementById('edit_desa');
+        selectDesaEdit.innerHTML = '<option value="">Memuat...</option>';
+    
+    if (idKecamatan) {
+        fetch(`/get-desa/${idKecamatan}`)
+            .then(response => response.json())
+            .then(data => {
+                selectDesaEdit.innerHTML = '<option value="">Pilih Desa/Kelurahan</option>';
+                data.forEach(desa => {
+                    const option = document.createElement('option');
+                    option.value = desa.id_desa_kelurahan;
+                    option.textContent = desa.nama_desa_kelurahan;
+                    selectDesaEdit.appendChild(option);
+                });
+                selectDesaEdit.disabled = false;
+                selectDesaEdit.classList.remove('bg-gray-100');
+            });
+    } else {
+        selectDesaEdit.disabled = true;
+        selectDesaEdit.classList.add('bg-gray-100');
         }
+    });
 
         // -- DETAIL USER --
         function detailUser(id) {
@@ -470,7 +553,6 @@
 
                     const namaKecamatan = data.kecamatan?.nama_kecamatan || '-';
                     const namaDesa = data.desa?.nama_desa_kelurahan || '-';
-
                     document.getElementById('detail_kecamatan').innerText = "Kecamatan " + namaKecamatan;
                     document.getElementById('detail_desa').innerText = "Desa/Kelurahan " + namaDesa;
 
@@ -483,7 +565,6 @@
                     const statusPing = document.getElementById('detail_status_ping');
                     const statusDot = document.getElementById('detail_status_dot');
                     const statusText = document.getElementById('detail_status');
-
                     statusText.innerText = data.status;
 
                     if (data.status.toLowerCase() === 'aktif') {
@@ -495,14 +576,13 @@
                         statusPing.className = "";
                         statusDot.className = "relative inline-flex rounded-full h-3 w-3 bg-red-500";
                     }
-
                     modalDetail.classList.remove('hidden');
                 })
                 .catch(error => {
                     console.error('Error:', error);
                     alert('Gagal mengambil data user.');
                 });
-        }
+            }
 
         function closeDetailModal() {
             modalDetail.classList.add('hidden');
@@ -512,6 +592,6 @@
             if (event.target == modalEdit) closeEditModal();
             if (event.target == modalDetail) closeDetailModal();
         }
-    </script>
+</script>
 
 @endsection

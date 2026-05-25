@@ -25,12 +25,7 @@ class DashboardController extends Controller
         return view('koordinator.dashboard.index');
     }
 
-    public function tim()
-    {
-        return view('dashboard.tim');
-    }
-
-    public function dinas()
+    public function kepala_dinas()
     {
         return view('kepala_dinas.dashboard.index');
     }
