@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Kube;
+use App\Models\KategoriKube;
 
 class ClusterUsaha extends Model
 {

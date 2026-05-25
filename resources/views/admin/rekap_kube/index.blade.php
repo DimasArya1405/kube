@@ -31,7 +31,8 @@
         {{-- FILTER --}}
         <form action="{{ route('rekap_kube.index') }}" method="GET" class="flex flex-wrap items-end gap-3">
 
-            <div class="w-full md:w-64">
+            {{-- FILTER KECAMATAN --}}
+            <div class="w-full md:w-52">
                 <label class="block mb-1 text-xs font-bold text-gray-900">Kecamatan</label>
                 <select name="id_kecamatan"
                     class="bg-gray-50 border border-gray-300 text-sm rounded-lg w-full p-2">
@@ -45,30 +46,45 @@
                 </select>
             </div>
 
+            {{-- FILTER KATEGORI --}}
+            <div class="w-full md:w-52">
+                <label class="block mb-1 text-xs font-bold text-gray-900">Kategori</label>
+                <select name="id_kategori"
+                    class="bg-gray-50 border border-gray-300 text-sm rounded-lg w-full p-2">
+                    <option value="">Semua Kategori</option>
+                    @foreach ($kategoriList as $kategori)
+                        <option value="{{ $kategori->id_kategori }}"
+                            {{ request('id_kategori') == $kategori->id_kategori ? 'selected' : '' }}>
+                            {{ $kategori->nama_kategori }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- TOMBOL FILTER --}}
             <div class="flex gap-2">
                 <button type="submit"
                     class="text-white bg-[#3A83A5] text-xs font-bold px-4 py-2 rounded">
                     Filter
                 </button>
-
                 <a href="{{ route('rekap_kube.index') }}"
                     class="text-[#3A83A5] border border-[#3A83A5] text-xs px-4 py-2 rounded">
                     Reset
                 </a>
             </div>
+
         </form>
 
         {{-- EXPORT --}}
         <div class="flex gap-2">
-            <button onclick="alert('Fitur PDF belum tersedia')"
+            <a href="{{ route('rekap_kube.export.pdf', ['id_kecamatan' => request('id_kecamatan'), 'id_kategori' => request('id_kategori')]) }}"
                 class="text-white bg-[#F27431] text-xs px-3 py-2 rounded">
                 Ekspor PDF
-            </button>
-
-            <button onclick="alert('Fitur Excel belum tersedia')"
+            </a>
+            <a href="{{ route('rekap_kube.export.excel', ['id_kecamatan' => request('id_kecamatan'), 'id_kategori' => request('id_kategori')]) }}"
                 class="text-white bg-[#22AD42] text-xs px-3 py-2 rounded">
                 Ekspor Excel
-            </button>
+            </a>
         </div>
 
     </div>
@@ -98,26 +114,21 @@
                         <td class="px-4 py-2.5 text-center font-medium">
                             {{ $index + 1 }}
                         </td>
-
                         <td class="px-4 py-2.5">
                             {{ $item['nama_kecamatan'] }}
                         </td>
-
                         <td class="px-4 py-2.5 text-center font-semibold">
                             {{ $item['jumlah_kube'] }}
                         </td>
-
                         <td class="px-4 py-2.5 text-center text-green-600 font-semibold">
                             {{ $item['kube_aktif'] }}
                         </td>
-
                         <td class="px-4 py-2.5 text-center text-red-600 font-semibold">
                             {{ $item['kube_tidak_aktif'] }}
                         </td>
-
                         {{-- AKSI --}}
                         <td class="px-4 py-2.5 text-center">
-                            <a href="{{ route('rekap_kube.detail', $item['id_kecamatan']) }}"
+                            <a href="{{ route('rekap_kube.detail', $item['id_kecamatan']) }}?id_kategori={{ request('id_kategori') }}"
                                 class="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1.5 rounded">
                                 Detail
                             </a>
@@ -136,22 +147,10 @@
             @if($rekap->isNotEmpty())
                 <tfoot class="bg-gray-200 text-gray-700 uppercase text-xs">
                     <tr class="font-semibold">
-                        <td colspan="2" class="px-4 py-2.5">
-                            Total Keseluruhan
-                        </td>
-
-                        <td class="px-4 py-2.5 text-center">
-                            {{ number_format($totalSemuaKube) }}
-                        </td>
-
-                        <td class="px-4 py-2.5 text-center text-green-600">
-                            {{ number_format($totalSemuaAktif) }}
-                        </td>
-
-                        <td class="px-4 py-2.5 text-center text-red-600">
-                            {{ number_format($totalSemuaTidakAktif) }}
-                        </td>
-
+                        <td colspan="2" class="px-4 py-2.5">Total Keseluruhan</td>
+                        <td class="px-4 py-2.5 text-center">{{ number_format($totalSemuaKube) }}</td>
+                        <td class="px-4 py-2.5 text-center text-green-600">{{ number_format($totalSemuaAktif) }}</td>
+                        <td class="px-4 py-2.5 text-center text-red-600">{{ number_format($totalSemuaTidakAktif) }}</td>
                         <td></td>
                     </tr>
                 </tfoot>
@@ -160,4 +159,5 @@
         </table>
     </div>
 </div>
+
 @stop

@@ -6,12 +6,18 @@
 
 <div class="mb-6">
     <h2 class="text-2xl font-bold text-gray-800">Detail KUBE</h2>
-    <p class="text-gray-500 text-sm">Daftar KUBE berdasarkan kecamatan</p>
+    {{-- Subtitle dinamis sesuai filter --}}
+    <p class="text-gray-500 text-sm">
+        Daftar KUBE di Kecamatan {{ $namaKecamatan }}
+        @if($namaKategori)
+            &mdash; Kategori: <span class="font-semibold text-gray-700">{{ $namaKategori }}</span>
+        @endif
+    </p>
 </div>
 
 {{-- BUTTON KEMBALI --}}
 <div class="mb-4">
-    <a href="{{ route('rekap_kube.index') }}"
+    <a href="{{ route('rekap_kube.index') }}{{ $id_kategori ? '?id_kategori=' . $id_kategori : '' }}"
        class="bg-gray-500 text-white px-4 py-2 rounded text-sm">
         ← Kembali
     </a>
@@ -27,6 +33,7 @@
                     <th class="px-4 py-2 text-center">No</th>
                     <th class="px-4 py-2 text-left">Nama KUBE</th>
                     <th class="px-4 py-2 text-left">Desa/Kelurahan</th>
+                    <th class="px-4 py-2 text-left">Kategori</th>
                     <th class="px-4 py-2 text-center">Status</th>
                 </tr>
             </thead>
@@ -44,6 +51,10 @@
                             {{ $item->desa->nama_desa_kelurahan ?? '-' }}
                         </td>
 
+                        <td class="px-4 py-2">
+                            {{ $item->clusterUsaha->kategori->nama_kategori ?? '-' }}
+                        </td>
+
                         <td class="px-4 py-2 text-center">
                             @if($item->status == 'Aktif')
                                 <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">
@@ -58,7 +69,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="text-center py-4 text-gray-500">
+                        <td colspan="5" class="text-center py-4 text-gray-500">
                             Tidak ada data
                         </td>
                     </tr>

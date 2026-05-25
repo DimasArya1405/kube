@@ -27,6 +27,7 @@ use App\Http\Controllers\LaporanKecamatanController;
 use App\Http\Controllers\PembagianKoordinatorController;
 use App\Http\Controllers\PembagianPendampingController;
 use App\Http\Controllers\PengajuanKubeController; // ✅ PUNYAMU
+use App\Http\Controllers\KepalaDinasController;
 
 use Dflydev\DotAccessData\Data;
 
@@ -55,7 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/pendamping', [DashboardController::class, 'pendamping']);
     Route::get('/dashboard/koordinator', [DashboardController::class, 'koordinator']);
     Route::get('/dashboard/tim', [DashboardController::class, 'tim']);
-    Route::get('/dashboard/dinas', [DashboardController::class, 'dinas']);
+    Route::get('/dashboard/dinas', [KepalaDinasController::class, 'dashboard'])->name('kepala_dinas.dashboard');
 
     // KELOLA DATA KUBE & ANGGOTA
     Route::resource('kube', KubeController::class);
@@ -161,8 +162,9 @@ Route::middleware('auth')->group(function () {
 
     // REKAP KUBE
     Route::get('/rekap_kube', [RekapKubeController::class, 'index'])->name('rekap_kube.index');
-    Route::get('/rekap_kube/detail/{id_kecamatan}', [RekapKubeController::class, 'detail'])
-    ->name('rekap_kube.detail');
+Route::get('/rekap_kube/detail/{id_kecamatan}', [RekapKubeController::class, 'detail'])->name('rekap_kube.detail');
+Route::get('/rekap_kube/export/pdf', [RekapKubeController::class, 'exportPdf'])->name('rekap_kube.export.pdf');
+Route::get('/rekap_kube/export/excel', [RekapKubeController::class, 'exportExcel'])->name('rekap_kube.export.excel');
 
     // LAPORAN KEUANGAN
     Route::get('/laporan-keuangan', [KeuanganController::class, 'index'])->name('laporan.index');
