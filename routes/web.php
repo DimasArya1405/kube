@@ -33,15 +33,17 @@ use Dflydev\DotAccessData\Data;
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/', function () {return redirect('/login');});
+Route::get('/', function () {
+    return redirect('/login');
+});
 
 // REGISTER
 Route::get('/register', [AuthController::class, 'showRegister']);
 Route::post('/register', [AuthController::class, 'register']);
- 
+
 // LOGOUT
 Route::post('/logout', [AuthController::class, 'logout']);
-Route::get('/get-desa/{id_kecamatan}', function($id_kecamatan) {
+Route::get('/get-desa/{id_kecamatan}', function ($id_kecamatan) {
     $desa = \App\Models\DesaKelurahan::where('id_kecamatan', $id_kecamatan)->get(['id_desa_kelurahan', 'nama_desa_kelurahan']);
     return response()->json($desa);
 });
@@ -190,7 +192,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/pendamping/export/pdf', [PendampingController::class, 'exportPdf'])->name('pendamping.export.pdf');
     Route::get('/admin/pendamping/export/excel', [PendampingController::class, 'exportExcel'])->name('pendamping.export.excel');
     Route::put('/admin/pendamping/{id}', [PendampingController::class, 'update'])->name('pendamping.update');
-    Route::get('/admin/pendamping/{id}', [PendampingController::class,'show'])->name('pendamping.show');
+    Route::get('/admin/pendamping/{id}', [PendampingController::class, 'show'])->name('pendamping.show');
 
     // REKAP KUBE
     Route::get('/rekap_kube', [RekapKubeController::class, 'index'])->name('rekap_kube.index');
@@ -228,21 +230,22 @@ Route::middleware('auth')->group(function () {
     // KUNJUNGAN PENDAMPING
 
     Route::prefix('pendamping')
-    ->middleware(['role:pendamping'])
-    ->group(function () {
+        ->middleware(['role:pendamping'])
+        ->group(function () {
 
-        Route::get('/kunjungan_pendamping', [KunjunganPendampingController::class, 'index'])->name('kunjungan.index');
-        Route::post('/kunjungan_pendamping', [KunjunganPendampingController::class, 'store'])->name('kunjungan.store');
-        Route::get('/kunjungan_pendamping/{id}/edit', [KunjunganPendampingController::class, 'edit'])->name('kunjungan.edit');
-        Route::put('/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'update'])->name('kunjungan.update');
-        Route::get('/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'show'])->name('kunjungan.show');
-        Route::delete('/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'destroy'])->name('kunjungan.delete');
-        Route::patch('/pendamping/kunjungan_pendamping/{id}/selesai', [KunjunganPendampingController::class, 'selesai'])->name('kunjungan.selesai');
-    });
+            Route::get('/kunjungan_pendamping', [KunjunganPendampingController::class, 'index'])->name('kunjungan.index');
+            Route::post('/kunjungan_pendamping', [KunjunganPendampingController::class, 'store'])->name('kunjungan.store');
+            Route::get('/kunjungan_pendamping/{id}/edit', [KunjunganPendampingController::class, 'edit'])->name('kunjungan.edit');
+            Route::put('/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'update'])->name('kunjungan.update');
+            Route::get('/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'show'])->name('kunjungan.show');
+            Route::delete('/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'destroy'])->name('kunjungan.delete');
+            Route::patch('/pendamping/kunjungan_pendamping/{id}/selesai', [KunjunganPendampingController::class, 'selesai'])->name('kunjungan.selesai');
+            Route::get('/pendamping/kunjungan/export/excel',[KunjunganPendampingController::class, 'exportExcel'])->name('kunjungan.export.excel');
+            Route::get('/pendamping/kunjungan/export/pdf',[KunjunganPendampingController::class, 'exportPdf'])->name('kunjungan.export.pdf');
+        });
 
     // LAPORAN KECAMATAN
     Route::get('/admin/laporan-kecamatan', [LaporanKecamatanController::class, 'index'])->name('laporan.kecamatan');
     Route::get('/admin/laporan-kecamatan/{id}', [LaporanKecamatanController::class, 'detail'])->name('laporan.kecamatan.detail');
     Route::get('/admin/laporan-kecamatan/pdf/{id}', [LaporanKecamatanController::class, 'exportPdf'])->name('laporan.pdf');
 });
-
