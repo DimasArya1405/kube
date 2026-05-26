@@ -235,23 +235,34 @@ Route::get('/kepala_dinas/dashboard', [KepalaDinasController::class, 'dashboard'
     Route::get('/admin/perkembangan-usaha/export/pdf', [DataPerkembanganUsahaController::class, 'exportPdf'])->name('perkembangan.export.pdf');
     Route::get('/admin/perkembangan-usaha/export/excel', [DataPerkembanganUsahaController::class, 'exportExcel'])->name('perkembangan.export.excel');
 
-    // HALAMAN FORM PREDIKSI PENDAMPING & ADMIN
-    Route::get('/pendamping/prediksi/form', [PrediksiController::class, 'index'])
-        ->name('prediksi.index');
-    Route::post('/pendamping/prediksi', [PrediksiController::class, 'store'])
-        ->name('prediksi.store');
-    Route::get('/pendamping/prediksi/daftar', [PrediksiController::class, 'daftarPrediksi'])
-        ->name('prediksi.daftar');
-    Route::get('/pendamping/prediksi/detail/{id_prediksi}', [PrediksiController::class, 'detailPrediksi'])
-        ->name('prediksi.detail');
-    Route::get('/pendamping/prediksi/edit/{id_prediksi}', [PrediksiController::class, 'editPrediksi'])
-        ->name('prediksi.edit');
-    Route::put('/pendamping/prediksi/update/{id_prediksi}', [PrediksiController::class, 'updatePrediksi'])
-        ->name('prediksi.update');
-    Route::get('/pendamping/prediksi/track/{id_kube}/{tahun}', [PrediksiController::class, 'trackRecord'])
-        ->name('prediksi.track');
-    Route::get('/pendamping/prediksi/bulan-tersedia', [PrediksiController::class, 'getBulanTersedia'])
-        ->name('prediksi.bulanTersedia');
+// KELOLA DATA PREDIKSI PENDAMPING & ADMIN
+Route::get('/pendamping/prediksi/form', [PrediksiController::class, 'index'])
+    ->name('prediksi.index');
+Route::post('/pendamping/prediksi', [PrediksiController::class, 'store'])
+    ->name('prediksi.store');
+Route::get('/pendamping/prediksi/daftar', [PrediksiController::class, 'daftarPrediksi'])
+    ->name('prediksi.daftar');
+Route::get('/pendamping/prediksi/detail/{id_prediksi}', [PrediksiController::class, 'detailPrediksi'])
+    ->name('prediksi.detail');
+Route::get('/pendamping/prediksi/edit/{id_prediksi}', [PrediksiController::class, 'editPrediksi'])
+    ->name('prediksi.edit');
+Route::put('/pendamping/prediksi/update/{id_prediksi}', [PrediksiController::class, 'updatePrediksi'])
+    ->name('prediksi.update');
+Route::get('/pendamping/prediksi/track/{id_kube}/{tahun}', [PrediksiController::class, 'trackRecord'])
+    ->name('prediksi.track');
+Route::get('/pendamping/prediksi/bulan-tersedia', [PrediksiController::class, 'getBulanTersedia'])
+    ->name('prediksi.bulanTersedia');
+Route::get('/pendamping/perkembangan-usaha/{id_kube}', [PerkembanganUsahaController::class, 'showPendamping'])
+    ->name('pendamping.perkembangan-usaha.show');
+// AJAX 
+Route::get('/get-kube', [PrediksiController::class, 'getKube']);
+Route::get('/get-kube-detail/{id}', [PrediksiController::class, 'getDetail']);
+//PREDIKSI UNTUK ADMIN
+Route::prefix('admin/prediksi-kube')->name('admin.prediksi-kube.')->group(function () {
+    Route::get('/daftar', [PrediksiController::class, 'daftarPrediksiAdmin'])->name('daftar');
+    Route::get('/detail/{id_prediksi}', [PrediksiController::class, 'detailPrediksiAdmin'])->name('detail');
+    Route::get('/track/{id_kube}/{tahun}', [PrediksiController::class, 'trackRecordAdmin'])->name('track');
+});
 
     // AJAX 
     Route::get('/get-kube', [PrediksiController::class, 'getKube']);
