@@ -38,8 +38,10 @@ use Dflydev\DotAccessData\Data;
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/', function () {
-    return view('/welcome');
+
+    return redirect('/login');
 });
+
 
 // DATA USER
 Route::get('/admin/users', [DashboardController::class, 'users'])->name('admin.users');
@@ -47,6 +49,7 @@ Route::post('/admin/users/store', [DashboardController::class, 'store'])->name('
 Route::get('/admin/users/edit/{id}', [DashboardController::class, 'edit'])->name('admin.users.edit');
 Route::put('/admin/users/update/{id}', [DashboardController::class, 'update'])->name('admin.users.update');
 Route::delete('/admin/users/delete/{id}', [DashboardController::class, 'destroy'])->name('admin.users.delete');
+
 
 // REGISTER
 Route::get('/register', [AuthController::class, 'showRegister']);
@@ -56,6 +59,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
 // AJAX: Dapatkan Desa/Kelurahan berdasarkan Kecamatan
+
 Route::get('/get-desa/{id_kecamatan}', function ($id_kecamatan) {
     $desa = \App\Models\DesaKelurahan::where('id_kecamatan', $id_kecamatan)->get(['id_desa_kelurahan', 'nama_desa_kelurahan']);
     return response()->json($desa);
@@ -336,15 +340,10 @@ Route::prefix('admin/prediksi-kube')->name('admin.prediksi-kube.')->group(functi
             Route::get('/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'show'])->name('kunjungan.show');
             Route::delete('/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'destroy'])->name('kunjungan.delete');
             Route::patch('/pendamping/kunjungan_pendamping/{id}/selesai', [KunjunganPendampingController::class, 'selesai'])->name('kunjungan.selesai');
+            Route::get('/pendamping/kunjungan/export/excel',[KunjunganPendampingController::class, 'exportExcel'])->name('kunjungan.export.excel');
+            Route::get('/pendamping/kunjungan/export/pdf',[KunjunganPendampingController::class, 'exportPdf'])->name('kunjungan.export.pdf');
         });
 
-    // KUNJUNGAN PENDAMPING
-    Route::get('/pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'index'])->name('kunjungan.index');
-    Route::post('pendamping/kunjungan_pendamping', [KunjunganPendampingController::class, 'store'])->name('kunjungan.store');
-    Route::get('/pendamping/kunjungan_pendamping/{id}/edit', [KunjunganPendampingController::class, 'edit'])->name('kunjungan.edit');
-    Route::put('/pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'update'])->name('kunjungan.update');
-    Route::get('/pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'show'])->name('kunjungan.show');
-    Route::delete('pendamping/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'destroy'])->name('kunjungan.delete');
 
     // LAPORAN KECAMATAN
     Route::get('/admin/laporan-kecamatan', [LaporanKecamatanController::class, 'index'])->name('laporan.kecamatan');
