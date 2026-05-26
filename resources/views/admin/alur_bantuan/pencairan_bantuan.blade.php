@@ -241,12 +241,12 @@ Dashboard / <span class="text-gray-800">Pencairan Bantuan</span>
         </div>
     </div>
 
-        <div class="p-4 border-t bg-gray-50 flex justify-end">
+        <!-- <div class="p-4 border-t bg-gray-50 flex justify-end">
             <button type="button" onclick="toggleModal('modal-tambah')"
                 class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
                 Tutup
             </button>
-        </div>
+        </div> -->
     </div>
 </div>
 

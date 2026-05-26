@@ -28,6 +28,10 @@ class PengajuanKube extends Model
     {
         return $this->belongsTo(Kube::class, 'id_kube', 'id_kube');
     }
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
 
     public function pengaju()
     {

@@ -104,35 +104,22 @@ Dashboard / <span class="text-gray-800">Pengajuan Bantuan KUBE</span>
 
                     <td class="px-6 py-4">
                         <div class="flex gap-2 items-center flex-wrap">
-                            <a href="{{ route('admin.persetujuan_bantuan_kube.detail', $row->id_pengajuan_kube) }}"
+                            <a href="{{ route('kadis.persetujuan_bantuan_kube.detail', $row->id_pengajuan_kube) }}"
                                 class="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600">
                                 Detail
                             </a>
 
-                            @if (in_array($row->status_pengajuan, ['diajukan', 'menunggu']))
-                            @else
-                            @if(in_array($row->status_pengajuan, ['disetujui','cair']))
-                            <a href="{{ route('admin.persetujuan_bantuan_kube.unduh_berita_acara', $row->id_pengajuan_kube) }}"
+                            @if (in_array($row->status_pengajuan, ['disetujui', 'cair']))
+                            <a href="{{ route('kadis.persetujuan_bantuan_kube.unduh_berita_acara', $row->id_pengajuan_kube) }}"
                                 class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-1">
                                 <i class="bi bi-download"></i>
                                 Unduh Berita Acara
                             </a>
-                            @else
+                            @elseif (!in_array($row->status_pengajuan, ['diajukan', 'menunggu']))
                             <span class="text-gray-500 italic">Sudah diproses</span>
                             @endif
-                            @endif
                         </div>
-                        @else
-                        @if(in_array($row->status_pengajuan, ['disetujui','cair']))
-                        <button type="button"
-                            class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-1">
-                            <i class="bi bi-download"></i>
-                            Unduh Berita Acara
-                        </button>
-                        @else
-                        <span class="text-gray-500 italic">Sudah diproses</span>
-                        @endif
-                        @endif
+                    </td>
                     </td>
                 </tr>
 
