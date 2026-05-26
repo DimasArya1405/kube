@@ -104,7 +104,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/perkembangan-usaha/store', [DataPerkembanganUsahaController::class, 'store'])->name('perkembangan.store');
     Route::delete('/admin/perkembangan-usaha/{id}', [DataPerkembanganUsahaController::class, 'destroy'])->name('perkembangan.delete');
 
-// HALAMAN FORM PREDIKSI PENDAMPING & ADMIN
+// KELOLA DATA PREDIKSI PENDAMPING & ADMIN
 Route::get('/pendamping/prediksi/form', [PrediksiController::class, 'index'])
     ->name('prediksi.index');
 Route::post('/pendamping/prediksi', [PrediksiController::class, 'store'])
@@ -121,6 +121,8 @@ Route::get('/pendamping/prediksi/track/{id_kube}/{tahun}', [PrediksiController::
     ->name('prediksi.track');
 Route::get('/pendamping/prediksi/bulan-tersedia', [PrediksiController::class, 'getBulanTersedia'])
     ->name('prediksi.bulanTersedia');
+Route::get('/pendamping/perkembangan-usaha/{id_kube}', [PerkembanganUsahaController::class, 'showPendamping'])
+    ->name('pendamping.perkembangan-usaha.show');
 // AJAX 
 Route::get('/get-kube', [PrediksiController::class, 'getKube']);
 Route::get('/get-kube-detail/{id}', [PrediksiController::class, 'getDetail']);
