@@ -38,12 +38,12 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
         <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
             <i data-lucide="search" class="h-4 w-4"></i>
         </span>
-        <input type="text" id="searchInput" placeholder="Cari nama mitra atau PIC..."
+        <input type="text" id="searchInput" placeholder="Cari nama mitra...."
             class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
     </div>
 
     {{-- Ekspor PDF --}}
-    <a href="#"
+    <a href="{{ route('mitra.pdf') }}"
         class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
@@ -52,7 +52,7 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
     </a>
 
     {{-- Ekspor Excel --}}
-    <a href="#"
+    <a href="{{ route('mitra.excel') }}"
         class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6M3 17V7a2 2 0 012-2h14a2 2 0 012 2v10" />
@@ -65,6 +65,7 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
         class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all">
         + Tambah Mitra
     </button>
+   
 </div>
 
 {{-- TABLE --}}
@@ -106,7 +107,7 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
                     <td class="px-4 py-3">
                         <div class="flex flex-col items-center">
                             <span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-md border border-indigo-100">
-                                {{ rand(1, 10) }} Kali
+                                {{ $item->bantuan_kolaborasi_count }} Kali
                             </span>
                             <p class="text-[10px] text-gray-400 mt-1 uppercase font-semibold italic">Kolaborasi</p>
                         </div>
@@ -120,21 +121,24 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
                     </td>
                     <td class="px-4 py-3 text-center">
                         <div class="flex justify-center items-center gap-2">
-                            <button type="button" onclick='openDetailModal( json_encode($item) )' 
-                                class="text-blue-500 hover:text-blue-700">
+                            <a href="{{ route('bantuan.index', ['id_mitra' => $item->id_mitra]) }}" 
+                            class="text-indigo-500 hover:text-indigo-700" title="Riwayat Bantuan">
+                                <i data-lucide="handshake" class="w-4 h-4"></i>
+                            </a>
+                            <button type="button" onclick='openDetailModal(@json($item))' class="text-blue-500 hover:text-blue-700">
                                 <i data-lucide="eye" class="w-4 h-4"></i>
                             </button>
                             <button type="button" 
-                                onclick="openEditModal( json_encode($item) )" 
+                                onclick='openEditModal(@json($item))'' 
                                 class="text-amber-500 hover:text-amber-700">
                                 <i data-lucide="edit-3" class="w-4 h-4"></i>
                             </button>
-                            <form action="{{ route('mitra.delete', $item->id_mitra) }}" method="POST" onsubmit="return confirm('Hapus data ini?')">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="text-red-500 hover:text-red-700">
-                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                </button>
-                            </form>
+                            <button type="button" 
+                                    class="trigger-hapus-mitra text-red-500 hover:text-red-700"
+                                    data-id="{{ $item->id_mitra }}"
+                                    data-nama="{{ $item->nama_mitra }}">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -180,11 +184,8 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Status</label>
-                        <select name="status" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none" required>
-                            <option value="Aktif">Aktif</option>
-                            <option value="Tidak Aktif">Tidak Aktif</option>
-                        </select>
+                        <label class="block text-sm font-bold text-gray-700 mb-1"></label>
+                        <input type="hidden" name="status" value="Aktif">
                     </div>
 
                     {{-- Baris 3: Telepon & Email --}}
@@ -211,7 +212,7 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
                             </div>
                             <div>
                                 <span class="text-[10px] text-gray-500 italic">Masa (Tahun)</span>
-                                <input type="number" name="masa_berlaku" placeholder="Thn" class="w-full border border-gray-300 rounded-lg px-2 py-2 text-xs outline-none" required>
+                                <input type="number" name="masa_berlaku" min="1" oninput="if(this.value <1) this.value = 1;" placeholder="Thn" class="w-full border border-gray-300 rounded-lg px-2 py-2 text-xs outline-none" required>
                             </div>
                         </div>
                     </div>
@@ -229,12 +230,19 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
                     {{-- Baris 6: Dokumen Pendukung (MOU) --}}
                     <div class="col-span-2">
                         <label class="block text-sm font-bold text-gray-700 mb-1">Dokumen Pendukung</label>
-                        <div class="flex items-center border-2 border-dashed border-gray-300 rounded-lg p-4 justify-center flex-col hover:bg-gray-50 transition-colors cursor-pointer" onclick="document.getElementById('mouInput').click()">
-                            <i data-lucide="upload-cloud" class="w-8 h-8 text-gray-400 mb-2"></i>
+                        <div class="flex items-center border-2 border-dashed {{ $errors->has('mou') ? 'border-red-500 bg-red-50' : 'border-gray-300' }} rounded-lg p-4 justify-center flex-col hover:bg-gray-50 transition-colors cursor-pointer" onclick="document.getElementById('mouInput').click()">
+                            <i data-lucide="upload-cloud" class="w-8 h-8 {{ $errors->has('mou') ? 'text-red-500' : 'text-gray-400' }} mb-2"></i>
                             <input type="file" name="mou" id="mouInput" class="hidden" accept=".pdf,.jpg,.jpeg,.png" required>
-                            <input type="text" id="mouLabel" readonly placeholder="Silahkan Upload MOU"
-                                class="text-center text-sm text-gray-500 bg-transparent outline-none cursor-pointer w-full">
+                            <input type="text" id="mouLabel" readonly placeholder= "{{ $errors->has('mou') ? 'Gagal Upload!' : 'Silahkan Upload MOU'}}"
+                                class="text-center text-sm {{ $errors->has('mou') ? 'text-red-600 font-bold' : 'text-gray-500' }} bg-transparent outline-none cursor-pointer w-full">
                         </div>
+                        {{-- Pesan Error --}}
+                        @if ($errors->has('mou'))
+                            <div class="text-red-600 text-xs mt-2 font-bold flex items-center gap-1">
+                                <span class="bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">!</span>
+                                {{ $errors->first('mou') }}
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -280,12 +288,9 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
                             <option value="Pemerintah">Pemerintah</option>
                         </select>
                     </div>
-                    <div>
+                    <div class="invisible">
                         <label class="block text-sm font-bold text-gray-700 mb-1">Status</label>
-                        <select name="status" id="edit_status" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none" required>
-                            <option value="Aktif">Aktif</option>
-                            <option value="Tidak Aktif">Tidak Aktif</option>
-                        </select>
+                        <input type="hidden" name="status" id="edit_status">
                     </div>
 
                     {{-- Telepon & Email --}}
@@ -312,7 +317,7 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
                             </div>
                             <div>
                                 <span class="text-[10px] text-gray-400 italic">Durasi (Tahun)</span>
-                                <input type="number" name="masa_berlaku" id="edit_masa_berlaku" placeholder="Thn" class="w-full border border-gray-300 rounded-lg px-2 py-2 text-xs outline-none" required>
+                                <input type="number" name="masa_berlaku" id="edit_masa_berlaku" min="1" oninput="if(this.value < 1) this.value = 1;" placeholder="Thn" class="w-full border border-gray-300 rounded-lg px-2 py-2 text-xs outline-none" required>
                             </div>
                         </div>
                     </div>
@@ -413,32 +418,100 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
     </div>
 </div>
 
+<div id="modalDeleteMitra" tabindex="-1" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-black bg-opacity-50 p-4">
+    <div class="relative w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden">
+        <div class="p-6 text-center">
+            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-4">
+                <i data-lucide="alert-triangle" class="h-10 w-10 text-red-600"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Konfirmasi Hapus</h3>
+            <p class="text-sm text-gray-500 mb-6" id="textDeleteNameMitra"></p>
+            
+            <div class="flex gap-3">
+                <button type="button" onclick="closeDeleteModalMitra()" class="flex-1 px-4 py-2 bg-gray-100 text-gray-800 font-bold rounded-lg">Batal</button>
+                <form id="formDeleteMitra" method="POST" class="flex-1">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="w-full px-4 py-2 bg-red-600 text-white font-bold rounded-lg shadow-md">Ya, Hapus</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-{{-- SCRIPT SEARCH --}}
+
+
 <script>
-    // Penanganan Input File Label
-    const mouInput = document.getElementById('mouInput');
-    const mouLabel = document.getElementById('mouLabel');
+    document.addEventListener('DOMContentLoaded', function() {
 
-    if (mouInput) {
-        mouInput.addEventListener('change', function() {
-            mouLabel.value = this.files.length > 0 ? this.files[0].name : "Belum ada file dipilih...";
-        });
-    }
+        @if ($errors->any())
+        const modalTambah = document.getElementById('modal-tambah-mitra');
+        if (modalTambah) {
+            modalTambah.classList.remove('hidden');
+            modalTambah.classList.add('flex');
+            // Opsional: Jika menggunakan backdrop manual, pastikan ditampilkan juga
+        }
+        @endif
+        // --- 1. PENANGANAN LABEL & VALIDASI FILE (TAMBAH MITRA) ---
+        const mouInput = document.getElementById('mouInput');
+        const mouLabel = document.getElementById('mouLabel');
 
-    // Fungsi Search
-    document.getElementById('searchInput').addEventListener('keyup', function () {
-        const keyword = this.value.toLowerCase();
-        document.querySelectorAll('.searchable-row').forEach(row => {
-            row.style.display = row.textContent.toLowerCase().includes(keyword) ? '' : 'none';
+        if (mouInput) {
+            mouInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    const fileSize = this.files[0].size / 1024 / 1024; // Convert ke MB
+                    if (fileSize > 5) {
+                        alert('Ukuran file terlalu besar! Maksimal 5MB. File Anda: ' + fileSize.toFixed(2) + ' MB');
+                        this.value = ''; // Reset input
+                        mouLabel.value = "Silahkan Upload MOU";
+                    } else {
+                        mouLabel.value = this.files[0].name;
+                        mouLabel.classList.add('text-indigo-600', 'font-bold');
+                    }
+                }
+            });
+        }
+
+        // --- 2. PENANGANAN SEARCH ---
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('keyup', function () {
+                const keyword = this.value.toLowerCase();
+                document.querySelectorAll('.searchable-row').forEach(row => {
+                    row.style.display = row.textContent.toLowerCase().includes(keyword) ? '' : 'none';
+                });
+            });
+        }
+
+        // --- 3. TRIGGER HAPUS MITRA ---
+        const btnHapus = document.querySelectorAll('.trigger-hapus-mitra');
+        btnHapus.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+
+                const id = this.getAttribute('data-id');
+                const nama = this.getAttribute('data-nama');
+                const modal = document.getElementById('modalDeleteMitra');
+                const textLabel = document.getElementById('textDeleteNameMitra');
+                const form = document.getElementById('formDeleteMitra');
+
+                const baseUrl = window.location.origin + window.location.pathname.split('/mitra')[0];
+                form.action = baseUrl + "/mitra/" + id;
+                textLabel.innerText = `Apakah Anda yakin ingin menghapus mitra "${nama}"?`;
+
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                if(window.lucide) lucide.createIcons();
+            }, true);
         });
     });
 
-    // Fungsi Modal Edit
+    // --- 4. FUNGSI MODAL EDIT ---
     function openEditModal(mitra) {
         const modal = document.getElementById('modal-edit-mitra');
         const form = document.getElementById('editForm');
-        
         form.action = "/admin/mitra/" + mitra.id_mitra;
         
         document.getElementById('edit_nama_mitra').value = mitra.nama_mitra || '';
@@ -456,23 +529,42 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
         document.getElementById('edit_nama_pic').value = mitra.nama_pic || '';
         document.getElementById('edit_telp_pic').value = mitra.telp_pic || '';
 
-        
+        const labelFile = document.getElementById('mouEditLabel');
+        if (mitra.mou) {
+            labelFile.value = "File Aktif: " + mitra.mou;
+            labelFile.classList.add('text-indigo-600', 'font-bold');
+        } else {
+            labelFile.value = "Belum ada dokumen diunggah";
+            labelFile.classList.remove('text-indigo-600');
+        }
         
         modal.classList.remove('hidden');
         modal.classList.add('flex');
         if(window.lucide) lucide.createIcons();
     }
 
-    function closeEditModal() {
-        const modal = document.getElementById('modal-edit-mitra');
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
+    // Event Listener untuk Input File di Modal Edit
+    const editMouInput = document.getElementById('mouEditInput');
+    if(editMouInput) {
+        editMouInput.addEventListener('change', function() {
+            const labelFile = document.getElementById('mouEditLabel');
+            if (this.files && this.files.length > 0) {
+                const fileSize = this.files[0].size / 1024 / 1024;
+                if (fileSize > 5) {
+                    alert('Ukuran file terlalu besar! Maksimal 5MB.');
+                    this.value = '';
+                    labelFile.value = "Klik untuk ganti file MOU";
+                } else {
+                    labelFile.value = "File baru terpilih: " + this.files[0].name;
+                    labelFile.classList.replace('text-indigo-600', 'text-green-600');
+                }
+            }
+        });
     }
 
-    // Fungsi Modal Detail
+    // --- 5. FUNGSI MODAL DETAIL ---
     function openDetailModal(mitra) {
         const modal = document.getElementById('modal-detail-mitra');
-        
         document.getElementById('detail_nama_mitra').value = mitra.nama_mitra || '';
         document.getElementById('detail_jenis_mitra').value = mitra.jenis_mitra || '';
         document.getElementById('detail_status').value = mitra.status || '';
@@ -480,7 +572,6 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
         document.getElementById('detail_email').value = mitra.email || '';
         document.getElementById('detail_alamat').value = mitra.alamat || '';
         
-        // Format Tanggal untuk tampilan
         if(mitra.tgl_mou) {
             const d = new Date(mitra.tgl_mou);
             document.getElementById('detail_tgl_mou').value = d.toLocaleDateString('id-ID');
@@ -490,12 +581,10 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
         document.getElementById('detail_nama_pic').value = mitra.nama_pic || '';
         document.getElementById('detail_telp_pic').value = mitra.telp_pic || '';
         
-        // Handle Dokumen (Hanya satu deklarasi 'container')
         const container = document.getElementById('detail_mou_container');
         if(mitra.mou) {
             
             const pdfUrl = `/admin/mitra/view-pdf/${mitra.id_mitra}`;
-            
             container.innerHTML = `
                 <a href="${pdfUrl}" target="_blank" 
                 class="flex items-center gap-2 w-fit bg-blue-100 text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-200 transition-all font-bold text-sm">
@@ -510,10 +599,20 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
         if(window.lucide) lucide.createIcons();
     }
 
+    // --- 6. FUNGSI CLOSE MODALS ---
+    function closeEditModal() {
+        const modal = document.getElementById('modal-edit-mitra');
+        modal.classList.replace('flex', 'hidden');
+    }
+
     function closeDetailModal() {
         const modal = document.getElementById('modal-detail-mitra');
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
+        modal.classList.replace('flex', 'hidden');
+    }
+
+    function closeDeleteModalMitra() {
+        const modal = document.getElementById('modalDeleteMitra');
+        modal.classList.replace('flex', 'hidden');
     }
 </script>
 

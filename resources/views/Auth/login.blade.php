@@ -16,11 +16,53 @@
     <div class="min-h-screen flex items-center justify-center p-4">
         <div class="flex flex-col md:flex-row w-full max-w-[900px] h-auto md:h-[500px] bg-white rounded-xl overflow-hidden shadow-xl">
             
-            <div class="w-full md:w-1/2 bg-slate-100 p-10 flex flex-col justify-center">
-                <h2 class="text-3xl font-bold text-green-600 leading-tight">
-                    Sistem<br>Kelompok Usaha Bersama
-                </h2>
+<div class="relative w-full md:w-1/2 bg-gradient-to-br from-slate-100 to-slate-200 p-10 flex flex-col justify-center overflow-hidden">
+    <div class="absolute -top-10 -left-10 w-40 h-40 bg-green-200/30 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-200/30 rounded-full blur-3xl"></div>
+
+    <div class="relative z-10">
+
+        <h2 class="text-4xl font-extrabold text-slate-800 leading-tight">
+            Sistem <span class="text-green-600">KUBE</span>
+        </h2>
+        
+        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mt-1">
+            Kelompok Usaha Bersama
+        </p>
+        
+        <div class="w-16 h-1.5 bg-blue-600 rounded-full mt-4 mb-6"></div>
+
+        <div class="grid grid-cols-2 gap-4 max-w-sm">
+            <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
+                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <i data-lucide="bar-chart-3" class="w-4 h-4 text-blue-600"></i>
+                </div>
+                <span class="text-xs font-bold text-slate-700">Monitoring Real-time</span>
             </div>
+            
+            <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
+                <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                    <i data-lucide="users" class="w-4 h-4 text-green-600"></i>
+                </div>
+                <span class="text-xs font-bold text-slate-700">Manajemen Anggota</span>
+            </div>
+
+            <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
+                <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <i data-lucide="database" class="w-4 h-4 text-purple-600"></i>
+                </div>
+                <span class="text-xs font-bold text-slate-700">Integrasi Data</span>
+            </div>
+
+            <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
+                <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
+                    <i data-lucide="zap" class="w-4 h-4 text-amber-600"></i>
+                </div>
+                <span class="text-xs font-bold text-slate-700">Efisiensi Operasional</span>
+            </div>
+        </div>
+    </div>
+</div>
 
             <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
                 <div class="text-center mb-8">

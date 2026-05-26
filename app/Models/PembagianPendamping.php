@@ -36,3 +36,4 @@ class PembagianPendamping extends Model
         return $this->belongsTo(PembagianKoordinator::class, 'id_pembagian', 'id_pembagian');
     }
 }
+

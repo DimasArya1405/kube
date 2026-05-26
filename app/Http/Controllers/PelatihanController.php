@@ -17,7 +17,6 @@ class PelatihanController extends Controller
     {
         $search = $request->query('search');
 
-        // UBAH 'kube' jadi 'kubes' karena relasinya sekarang Many-to-Many
         $pelatihans = Pelatihan::with(['kubes', 'pendamping', 'mitra'])
             ->when($search, function ($query, $search) {
                 return $query->where('nama_pelatihan', 'like', '%' . $search . '%')
@@ -41,15 +40,13 @@ class PelatihanController extends Controller
     {
         $request->validate([
             'nama_pelatihan' => 'required|string|max:150',
-            'id_kube' => 'required|array', // Validasi pastikan id_kube adalah array
+            'id_kube' => 'required|array', 
             'tanggal_mulai' => 'required|date',
             'status' => 'required'
         ]);
 
-        // 1. Buat data pelatihan, TAPI KECUALIKAN id_kube karena tidak ada di tabel pelatihan
         $pelatihan = Pelatihan::create($request->except('id_kube'));
 
-        // 2. Hubungkan banyak KUBE ke pelatihan ini lewat tabel pivot
         if ($request->has('id_kube')) {
             $pelatihan->kubes()->attach($request->id_kube);
         }
@@ -61,14 +58,12 @@ class PelatihanController extends Controller
     {
         $pelatihan = Pelatihan::findOrFail($id);
 
-        // 1. Update data pelatihannya, kecualikan id_kube
         $pelatihan->update($request->except('id_kube'));
 
-        // 2. Sinkronisasi KUBE yang baru (otomatis update ke tabel pivot)
         if ($request->has('id_kube')) {
             $pelatihan->kubes()->sync($request->id_kube);
         } else {
-            // Kalau misal pas edit user gak milih KUBE sama sekali
+
             $pelatihan->kubes()->detach();
         }
 
@@ -79,7 +74,6 @@ class PelatihanController extends Controller
     {
         $pelatihan = Pelatihan::findOrFail($id);
 
-        // Karena relasi FK di database kamu hapus, kita detach manual biar tabel pivot bersih
         $pelatihan->kubes()->detach();
 
         $pelatihan->delete();
@@ -94,7 +88,7 @@ class PelatihanController extends Controller
 
     public function exportPdf()
     {
-        // Pastikan with()-nya memanggil 'kubes', bukan 'kube'
+        // 'kubes', bukan 'kube'
         $pelatihans = Pelatihan::with(['kubes', 'pendamping'])->get();
         $pdf = Pdf::loadView('admin.monevbimbingan.pelatihan_pdf', compact('pelatihans'));
         return $pdf->download('data-pelatihan.pdf');

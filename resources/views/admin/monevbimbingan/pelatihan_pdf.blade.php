@@ -17,13 +17,13 @@
 
         th,
         td {
-            border: 1px solid #ddd;
+            border: 1px solid #000000;
             padding: 8px;
             text-align: left;
         }
 
         th {
-            background-color: #f2f2f2;
+            background-color: #9091e2;
             font-weight: bold;
         }
 
