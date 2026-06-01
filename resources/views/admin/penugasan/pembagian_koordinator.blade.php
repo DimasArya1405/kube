@@ -104,9 +104,9 @@
 
                     {{-- HEADER KOORDINATOR --}}
                     <tr class="bg-blue-50"
-                        data-koor="{{ strtolower($koorHeader->nama_koor ?? '') }}">
+                        data-koor="{{ strtolower($koorHeader->user?->nama ?? '') }}">
                         <td colspan="7" class="px-4 py-3 font-bold text-blue-700">
-                            👤 {{ $koorHeader->nama_koor ?? '-' }}
+                            👤 {{ $koorHeader->user?->nama ?? '-' }}
                         </td>
                     </tr>
 
@@ -196,7 +196,7 @@
             <select name="id_koor" class="w-full mb-2 border p-2 rounded" required>
                 <option value="" selected disabled>Pilih Koordinator</option>
                 @foreach($koor as $k)
-                    <option value="{{ $k->id_koor }}">{{ $k->nama_koor }}</option>
+                    <option value="{{ $k->id_koor }}">{{ $k->user?->nama ?? 'User tidak ditemukan' }}</option>
                 @endforeach
             </select>
 
@@ -240,7 +240,7 @@
 
             <select name="id_koor" id="edit_koor" class="w-full mb-2 border p-2 rounded">
                 @foreach($koor as $k)
-                    <option value="{{ $k->id_koor }}">{{ $k->nama_koor }}</option>
+                    <option value="{{ $k->id_koor }}">{{ $k->user?->nama ?? 'User tidak ditemukan' }}</option>
                 @endforeach
             </select>
 
@@ -342,7 +342,35 @@ function openModal(id){
 // FILTER TAMBAH
 document.getElementById('kecamatan').addEventListener('change', function () {
     fetch(`/get-pendamping/${this.value}`)
-    .then(res => res.json())
+    .then(res => {
+        if (!res.ok) throw new Error('Error dari server');
+        return res.json();
+    })
+    .then(data => {
+        let select = document.getElementById('pendamping');
+        select.innerHTML = '<option value="">Pilih Pendamping</option>';
+        
+        data.forEach(item => {
+            select.innerHTML += `<option value="${item.id_pembagian}">
+                ${item.nama_pendamping} - ${item.nama_kube}
+            </option>`;
+        });
+    })
+    .catch(err => {
+        // Notifikasi pop-up (alert) dihapus.
+        // Error hanya dicatat secara diam-diam di background (console).
+        console.error("Kesalahan background:", err);
+        
+        // Opsional: Bikin dropdown pendamping jadi kosong/reset otomatis
+        let select = document.getElementById('pendamping');
+        select.innerHTML = '<option value="">Pendamping tidak tersedia</option>';
+    });
+});    fetch(`/get-pendamping/${this.value}`)
+    .then(res => {
+        // Cek jika response dari Laravel gagal (bukan 200 OK)
+        if (!res.ok) throw new Error('Gagal mengambil data! Status: ' + res.status);
+        return res.json();
+    })
     .then(data => {
         let select = document.getElementById('pendamping');
         select.innerHTML = '<option value="">Pilih Pendamping</option>';
@@ -351,8 +379,12 @@ document.getElementById('kecamatan').addEventListener('change', function () {
                 ${item.nama_pendamping} - ${item.nama_kube}
             </option>`;
         });
+    })
+    .catch(err => {
+        // Tangkap error agar tidak diam saja
+        console.error("Terjadi kesalahan AJAX:", err);
+        alert("Gagal memuat daftar pendamping. Silakan cek console (F12).");
     });
-});
 
 // EDIT
 document.querySelectorAll('.btn-edit').forEach(btn => {
