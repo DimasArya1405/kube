@@ -31,6 +31,7 @@ use App\Http\Controllers\PembagianPendampingController;
 use App\Http\Controllers\KolaborasiBantuanController;
 use App\Http\Controllers\PenyaluranKolaborasiController;
 use App\Http\Controllers\KepalaDinasController;
+use App\Http\Controllers\ketua_kube\PencairanBantuanController as Ketua_kubePencairanBantuanController;
 use App\Http\Controllers\PersetujuanBantuanKubeKadisController;
 use Dflydev\DotAccessData\Data;
 
@@ -38,8 +39,7 @@ use Dflydev\DotAccessData\Data;
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/', function () {
-
-    return redirect('/login');
+    return view('welcome');
 });
 
 
@@ -117,6 +117,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'ketua'])
             ->middleware('checkrole:ketua_kube')
             ->name('ketua_kube.dashboard');
+        Route::get('/ketua-kube/pencairan-bantuan', [Ketua_kubePencairanBantuanController::class, 'index'])->name('ketua_kube.pencairan_bantuan.index');
+        Route::get('/ketua-kube/pencairan-bantuan/konfirmasi/{id}', [Ketua_kubePencairanBantuanController::class, 'konfirmasi'])->name('ketua_kube.pencairan_bantuan.konfirmasi');
     });
 
 Route::get('/kepala_dinas/dashboard', [KepalaDinasController::class, 'dashboard'])->name('kadis.dashboard');
