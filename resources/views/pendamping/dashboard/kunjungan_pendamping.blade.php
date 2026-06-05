@@ -19,6 +19,98 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
 </div>
 
 
+{{-- FILTER TAHUN & STATUS (Layout grid horizontal disamakan dengan kode pertama) --}}
+<div class="bg-white mb-4 rounded-lg shadow-sm border p-4">
+    <form action="{{ route('kunjungan.index') }}" method="GET">
+
+        <div class="flex flex-col md:flex-row gap-4 md:items-end">
+
+            {{-- Tujuan Kunjungan --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Tujuan Kunjungan
+                </label>
+
+                <select name="tujuan_kunjungan"
+                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[220px] text-sm">
+
+                    <option value="">Semua Tujuan</option>
+
+                    <option value="Monitoring"
+                        {{ request('tujuan_kunjungan') == 'Monitoring' ? 'selected' : '' }}>
+                        Monitoring
+                    </option>
+
+                    <option value="Evaluasi"
+                        {{ request('tujuan_kunjungan') == 'Evaluasi' ? 'selected' : '' }}>
+                        Evaluasi
+                    </option>
+
+                    <option value="Koordinasi"
+                        {{ request('tujuan_kunjungan') == 'Koordinasi' ? 'selected' : '' }}>
+                        Koordinasi
+                    </option>
+
+                    <option value="Kunjungan Rutin"
+                        {{ request('tujuan_kunjungan') == 'Kunjungan Rutin' ? 'selected' : '' }}>
+                        Kunjungan Rutin
+                    </option>
+
+                </select>
+            </div>
+
+            {{-- Status --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Status
+                </label>
+
+                <select name="status"
+                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[220px] text-sm">
+
+                    <option value="">Semua Status</option>
+
+                    <option value="terjadwal"
+                        {{ request('status') == 'terjadwal' ? 'selected' : '' }}>
+                        Terjadwal
+                    </option>
+
+                    <option value="selesai"
+                        {{ request('status') == 'selesai' ? 'selected' : '' }}>
+                        Selesai
+                    </option>
+
+                </select>
+            </div>
+
+            {{-- Tombol --}}
+            <div class="flex gap-2">
+
+                <button type="submit"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm transition">
+                    Filter
+                </button>
+            </div>
+
+            <a href="{{ route('kunjungan.index') }}"
+                    class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 text-sm transition">
+                    Reset
+                </a>
+            <div class="ml-auto">
+                
+            {{-- Tambah Kunjungan --}}
+            <button data-modal-target="modal-tambah-kunjungan" data-modal-toggle="modal-tambah-kunjungan"
+                class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg">
+                Tambah Kunjungan
+            </button>
+            </div>
+            
+
+        </div>
+
+    </form>
+</div>
+
 {{-- TOOLBAR: Search + Export + Tambah --}}
 <div class="flex flex-wrap items-center gap-3 mb-4">
 
@@ -34,28 +126,24 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
     </div>
 
     {{-- Ekspor PDF --}}
-    <a href="{{ route('kunjungan.export.pdf') }}"
-        class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-        </svg>
-        Ekspor PDF
-    </a>
+            <a href="{{ route('kunjungan.export.pdf') }}"
+                class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                </svg>
+                Ekspor PDF
+            </a>
 
-    {{-- Ekspor Excel --}}
-    <a href="{{ route('kunjungan.export.excel') }}"
-        class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6M3 17V7a2 2 0 012-2h14a2 2 0 012 2v10" />
-        </svg>
-        Ekspor Excel
-    </a>
+            {{-- Ekspor Excel --}}
+            <a href="{{ route('kunjungan.export.excel') }}"
+                class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6M3 17V7a2 2 0 012-2h14a2 2 0 012 2v10" />
+                </svg>
+                Ekspor Excel
+            </a>
 
-    {{-- Tambah Kunjungan --}}
-    <button data-modal-target="modal-tambah-kunjungan" data-modal-toggle="modal-tambah-kunjungan"
-        class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg">
-        + Tambah Kunjungan
-    </button>
+
 
 </div>
 
