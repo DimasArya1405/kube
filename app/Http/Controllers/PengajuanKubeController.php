@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\PengajuanKube;
 use App\Models\JenisBantuan;
 use App\Models\Kube;
+use App\Models\DetailPengajuan;
+use Illuminate\Support\Facades\DB;
 
 class PengajuanKubeController extends Controller
 {
-    // Tampilkan form
+    // 🔹 FORM CREATE
     public function create()
     {
         $jenisBantuan = JenisBantuan::all();
@@ -18,29 +20,66 @@ class PengajuanKubeController extends Controller
         return view('admin.pengajuan_kube.create', compact('jenisBantuan', 'kube'));
     }
 
-    // Simpan data
+    // 🔹 STORE (FINAL MULTI ITEM)
     public function store(Request $request)
     {
         $request->validate([
             'id_kube' => 'required',
-            'id_jenis_bantuan' => 'required',
-            'jumlah_bantuan' => 'nullable|numeric',
-            'tujuan_pengajuan' => 'required',
-            'tanggal_pengajuan' => 'required|date'
+            'items'   => 'required'
         ]);
 
-        PengajuanKube::create([
-            'id_kube' => $request->id_kube,
-            'id_user' => auth()->user()->id_user,
-            'disetujui_oleh' => auth()->user()->id_user, // sementara
-            'id_jenis_bantuan' => $request->id_jenis_bantuan,
-            'jumlah_bantuan' => $request->jumlah_bantuan,
-            'tujuan_pengajuan' => $request->tujuan_pengajuan,
-            'tanggal_pengajuan' => $request->tanggal_pengajuan,
-            'status_pengajuan' => 'diajukan',
-            'status_penerima' => 'menunggu'
-        ]);
+        DB::beginTransaction();
 
-        return redirect()->back()->with('success', 'Pengajuan berhasil ditambahkan!');
+        try {
+
+            $items = json_decode($request->items, true);
+
+            // ✅ 1x pengajuan (HEADER)
+            $pengajuan = PengajuanKube::create([
+                'id_kube' => $request->id_kube,
+                'tanggal_pengajuan' => now(),
+                'status_pengajuan' => 'diajukan',
+                'status_penerima' => 'menunggu'
+            ]);
+
+            // ❗ validasi tambahan (biar aman)
+            if (!$items || count($items) == 0) {
+                throw new \Exception('Item pengajuan kosong');
+            }
+
+            // ✅ loop detail (MULTI ITEM)
+            foreach ($items as $item) {
+
+                DetailPengajuan::create([
+                    'pengajuan_id'      => $pengajuan->id_pengajuan_kube,
+                    'id_jenis_bantuan'  => $item['id_jenis'],null, // 🔥 penting!
+                    'nama_item'         => $item['nama'],
+                    'jumlah'            => $item['jumlah']
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->route('pengajuan.index')
+                ->with('success', 'Pengajuan berhasil disimpan!');
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return back()
+                ->withInput()
+                ->withErrors('Gagal menyimpan: ' . $e->getMessage());
+        }
+    }
+
+    // 🔹 INDEX (LIST)
+    public function index()
+    {
+        $data = PengajuanKube::with('kube', 'detail.jenisBantuan')
+                ->latest()
+                ->get();
+
+        return view('admin.pengajuan_kube.index', compact('data'));
     }
 }

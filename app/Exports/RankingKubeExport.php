@@ -6,7 +6,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithEvents;
-use Maatwebsite\Excel\Concerns\WithCustomStartCell; // ← tambah ini
+use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -19,7 +19,7 @@ class RankingKubeExport implements
     WithMapping,
     WithStyles,
     WithEvents,
-    WithCustomStartCell // ← tambah ini
+    WithCustomStartCell
 {
     protected $data;
     protected $filterAktif;
@@ -87,7 +87,6 @@ class RankingKubeExport implements
 
     public function styles(Worksheet $sheet)
     {
-        // Heading row sudah otomatis di baris yang benar karena startCell()
         $headingRow = $this->adaFilter ? 4 : 3;
 
         return [
@@ -110,9 +109,9 @@ class RankingKubeExport implements
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $sheet      = $event->sheet->getDelegate();
-                $lastCol    = $this->adaFilter ? 'J' : 'I';
-                $headingRow = $this->adaFilter ? 4 : 3;
+                $sheet        = $event->sheet->getDelegate();
+                $lastCol      = $this->adaFilter ? 'J' : 'I';
+                $headingRow   = $this->adaFilter ? 4 : 3;
                 $firstDataRow = $headingRow + 1;
                 $totalRows    = $this->data->count() + $headingRow;
 
@@ -185,8 +184,44 @@ class RankingKubeExport implements
                     }
                 }
 
-                // ── Border seluruh tabel ─────────────────────────────────────
-                $sheet->getStyle("A{$headingRow}:{$lastCol}{$totalRows}")
+                // ── Baris TOTAL ──────────────────────────────────────────────
+                $totalRow = $totalRows + 1;
+
+                // Merge kolom A–D untuk label "TOTAL"
+                $sheet->mergeCells("A{$totalRow}:D{$totalRow}");
+                $sheet->setCellValue("A{$totalRow}", 'TOTAL');
+
+                // SUM otomatis untuk Omset, Pengeluaran, Laba Bersih
+                $sheet->setCellValue("E{$totalRow}", "=SUM(E{$firstDataRow}:E{$totalRows})");
+                $sheet->setCellValue("F{$totalRow}", "=SUM(F{$firstDataRow}:F{$totalRows})");
+                $sheet->setCellValue("G{$totalRow}", "=SUM(G{$firstDataRow}:G{$totalRows})");
+
+                // Style baris total: biru gelap, teks putih, bold
+                $sheet->getStyle("A{$totalRow}:{$lastCol}{$totalRow}")->applyFromArray([
+                    'font' => [
+                        'bold'  => true,
+                        'size'  => 11,
+                        'color' => ['argb' => 'FFFFFFFF'],
+                    ],
+                    'fill' => [
+                        'fillType'   => Fill::FILL_SOLID,
+                        'startColor' => ['argb' => 'FF1E40AF'],
+                    ],
+                    'alignment' => [
+                        'horizontal' => Alignment::HORIZONTAL_CENTER,
+                        'vertical'   => Alignment::VERTICAL_CENTER,
+                    ],
+                ]);
+
+                // Format mata uang di baris total
+                $sheet->getStyle("E{$totalRow}:G{$totalRow}")
+                    ->getNumberFormat()
+                    ->setFormatCode('"Rp "#,##0');
+
+                $sheet->getRowDimension($totalRow)->setRowHeight(20);
+
+                // ── Border seluruh tabel (heading s/d baris total) ───────────
+                $sheet->getStyle("A{$headingRow}:{$lastCol}{$totalRow}")
                     ->getBorders()
                     ->getAllBorders()
                     ->setBorderStyle(Border::BORDER_THIN)

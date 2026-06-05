@@ -4,35 +4,52 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Faker\Factory as Faker;
 
 class KubeSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
-        $kubes = [
-            ['nama' => 'Maju Jaya', 'cluster' => 1, 'desa' => 1],
-            ['nama' => 'Ternak Sejahtera', 'cluster' => 2, 'desa' => 2],
-            ['nama' => 'Mina Berkah', 'cluster' => 3, 'desa' => 3],
-            ['nama' => 'Dapur Wangi', 'cluster' => 4, 'desa' => 4],
-            ['nama' => 'Bambu Sakti', 'cluster' => 5, 'desa' => 5],
-            ['nama' => 'Jahit Rapi', 'cluster' => 6, 'desa' => 6],
-            ['nama' => 'Bengkel Kuat', 'cluster' => 7, 'desa' => 7],
-            ['nama' => 'Warung Kita', 'cluster' => 8, 'desa' => 8],
-            ['nama' => 'Sampah Emas', 'cluster' => 9, 'desa' => 9],
-            ['nama' => 'Jamur Makmur', 'cluster' => 10, 'desa' => 10],
-        ];
+        $faker = Faker::create('id_ID');
 
-        foreach ($kubes as $k) {
-            DB::table('kube')->insert([
-                'nama_kube' => $k['nama'],
-                'id_cluster' => $k['cluster'],
-                'id_desa_kelurahan' => $k['desa'],
-                'tanggal_terbentuk' => now()->format('Y-m-d'),
-                'status' => 'Aktif',
-                'keterangan' => 'Kelompok binaan baru periode 2026',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+        // Ambil maksimal 10 user yang memiliki role 'ketua_kube'
+        $ketuaKubeUsers = DB::table('users')
+            ->where('role', 'ketua_kube')
+            ->take(10)
+            ->get();
+
+        $dataKube = [];
+
+        // Daftar status yang mungkin (karena di migration tipenya string, bukan enum)
+        $pilihanStatus = ['Menunggu', 'Aktif', 'Disetujui', 'Ditolak'];
+
+        foreach ($ketuaKubeUsers as $user) {
+            $dataKube[] = [
+                // Membuat nama KUBE yang unik, contoh: "KUBE Sejahtera", "KUBE Mandiri"
+                'nama_kube'         => 'KUBE ' . $faker->company, 
+                
+                // Relasi diambil dari tabel users agar sinkron
+                'id_user'           => $user->id_user,
+                'id_desa_kelurahan' => $user->id_desa_kelurahan, // Disamakan dengan domisili ketua
+                
+                // Karena FK id_cluster di-komen, kita isi angka dummy antara 1 sampai 3
+                'id_cluster'        => $faker->numberBetween(1, 3), 
+                
+                // Tanggal terbentuk diacak antara 2 tahun lalu sampai hari ini
+                'tanggal_terbentuk' => $faker->dateTimeBetween('-2 years', 'now')->format('Y-m-d'),
+                
+                'status'            => $faker->randomElement($pilihanStatus),
+                'keterangan'        => $faker->paragraph(2), // Keterangan acak
+                
+                'created_at'        => now(),
+                'updated_at'        => now(),
+            ];
         }
+
+        // Insert ke tabel kube
+        DB::table('kube')->insert($dataKube);
     }
 }

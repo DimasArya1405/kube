@@ -18,6 +18,7 @@ class Kube extends Model
 
     protected $fillable = [
         'nama_kube',
+        'id_user',         // <--- INI BIANG KEROKNYA
         'id_desa_kelurahan',
         'id_cluster',
         'tanggal_terbentuk',
@@ -43,5 +44,13 @@ class Kube extends Model
     public function pembagianPendamping()
     {
         return $this->belongsTo(PembagianPendamping::class, 'id_kube', 'id_kube');
+    }
+    
+    public function pembagianPendampingAktif()
+    {
+        return $this->hasOne(PembagianPendamping::class, 'id_kube', 'id_kube')
+            ->where('status', 'Aktif');
+        // ->where('status', '!=', 'Selesai'); 
+
     }
 }
