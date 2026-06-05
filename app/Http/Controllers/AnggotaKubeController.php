@@ -97,6 +97,7 @@ class AnggotaKubeController extends Controller
         // 1. Validasi
         $request->validate([
             // 'id_kube' => 'required|integer',
+
             'nik' => 'required|string|max:16',
             'nama_anggota' => 'required|string|max:100',
             'jabatan' => 'required|string|max:20',
@@ -122,6 +123,7 @@ class AnggotaKubeController extends Controller
         // 4. Update data
         $anggota->update([
             // 'id_kube' => $request->id_kube,
+
             'nik' => $request->nik,
             'nama_anggota' => $request->nama_anggota,
             'jabatan' => $request->jabatan,
@@ -150,4 +152,5 @@ class AnggotaKubeController extends Controller
 
         return $pdf->download('Laporan_Anggota_KUBE.pdf');
     }
+
 }

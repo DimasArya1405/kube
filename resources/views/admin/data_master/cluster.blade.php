@@ -24,10 +24,20 @@ Dashboard / <span class="text-gray-800">Cluster Usaha</span>
         class="border px-3 py-2 rounded-lg text-sm w-full max-w-xs"
         placeholder="Cari...">
 
+        <a href="{{ route('cluster_usaha.exportPDF') }}"
+        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg">
+        PDF
+        </a>
+
+        <a href="{{ route('cluster_usaha.exportExcel') }}"
+        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+        Excel
+        </a>
+
     {{-- TAMBAH --}}
     <button data-modal-target="modal-tambah" data-modal-toggle="modal-tambah"
         class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
-        + Tambah Cluster
+        Tambah Cluster
     </button>
 
 </div>

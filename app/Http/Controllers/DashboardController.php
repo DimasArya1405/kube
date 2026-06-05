@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Kecamatan;
 use App\Models\DesaKelurahan;
-use App\Models\Kube;          
-use App\Models\ClusterUsaha;  
+use App\Models\Kube;
+use App\Models\ClusterUsaha;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
@@ -71,7 +71,7 @@ class DashboardController extends Controller
         User::findOrFail($id)->delete();
         return back()->with('success', 'User berhasil dihapus');
     }
-
+    
     public function ketua()
     {
         // 1. Cek apakah akun ketua ini sudah punya data di tabel KUBE
@@ -104,12 +104,7 @@ class DashboardController extends Controller
         return view('koordinator.dashboard.index');
     }
 
-    public function tim()
-    {
-        return view('dashboard.tim');
-    }
-
-    public function dinas()
+    public function kepala_dinas()
     {
         return view('kepala_dinas.dashboard.index');
     }

@@ -100,19 +100,17 @@
         </section>
 
     </main>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
     @stack('scripts')
-    
+
     <script>
-        // Inisialisasi Ikon Lucide
         lucide.createIcons();
 
-        // Fungsi Dropdown Dinamis
         function toggleDropdown(menuId, iconId) {
             const menu = document.getElementById(menuId);
             const icon = document.getElementById(iconId);
 
-            // Akordion: Tutup semua menu lain kecuali yang diklik
             const allMenus = document.querySelectorAll('[id$="Menu"]');
             const allIcons = document.querySelectorAll('[id$="Icon"]');
 
@@ -123,7 +121,6 @@
                 if (i.id !== iconId) i.style.transform = 'rotate(0deg)';
             });
 
-            // Toggle menu target
             const isHidden = menu.classList.toggle('hidden');
             icon.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
         }
@@ -140,7 +137,5 @@
     </script>
     @endif
 
-
 </body>
-
 </html>

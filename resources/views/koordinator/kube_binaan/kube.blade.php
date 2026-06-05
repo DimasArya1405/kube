@@ -51,9 +51,9 @@ Data Master / <span class="text-gray-800">Data KUBE</span>
             <a href="{{ route('kube.export.excel') }}" class="flex items-center px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition shadow-sm">
                 <i class="fas fa-file-excel mr-2"></i> Export Excel
             </a>
-            <button onclick="toggleModal('tambahKubeModal')" class="flex items-center px-4 py-2 bg-purple-700 text-white text-sm font-medium rounded-lg hover:bg-purple-800 transition shadow-sm">
+            <!-- <button onclick="toggleModal('tambahKubeModal')" class="flex items-center px-4 py-2 bg-purple-700 text-white text-sm font-medium rounded-lg hover:bg-purple-800 transition shadow-sm">
                 <i class="fas fa-plus mr-2"></i> Tambah KUBE
-            </button>
+            </button> -->
         </div>
     </div>
 
@@ -89,17 +89,17 @@ Data Master / <span class="text-gray-800">Data KUBE</span>
                         <div class="flex justify-center space-x-3">
                             <a href="{{ route('kube.show', $k->id_kube) }}" class="text-gray-400 hover:text-purple-600 transition text-lg"><i class="far fa-eye"></i></a>
 
-                            <button type="button" onclick="toggleModal('editKubeModal{{ $k->id_kube }}')" class="text-gray-400 hover:text-yellow-500 transition text-lg">
+                            <!-- <button type="button" onclick="toggleModal('editKubeModal{{ $k->id_kube }}')" class="text-gray-400 hover:text-yellow-500 transition text-lg">
                                 <i class="far fa-edit"></i>
-                            </button>
+                            </button> -->
 
-                            <form action="{{ route('kube.destroy', $k->id_kube) }}" method="POST" class="inline" id="deleteForm-{{ $k->id_kube }}">
+                            <!-- <form action="{{ route('kube.destroy', $k->id_kube) }}" method="POST" class="inline" id="deleteForm-{{ $k->id_kube }}">
                                 @csrf
                                 @method('DELETE')
                                 <button type="button" class="text-gray-400 hover:text-red-500 transition text-lg" onclick="confirmDelete(event, '{{ $k->id_kube }}')">
                                     <i class="far fa-trash-alt"></i>
                                 </button>
-                            </form>
+                            </form> -->
                         </div>
                     </td>
                 </tr>

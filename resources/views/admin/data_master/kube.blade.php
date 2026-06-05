@@ -165,7 +165,7 @@ Data Master / <span class="text-gray-800">Data KUBE</span>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Koordinator</label>
                         <input type="text"
-                            value="{{ $k->pembagianPendampingAktif->pembagianKoordinator->koordinator->nama_koor ?? 'Belum ada Koordinator' }}"
+                            value="{{ $k->pembagianPendamping->pembagianKoordinator->koordinator->nama_koor ?? 'Belum ada Koordinator' }}"
                             disabled
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed">
                     </div>
@@ -173,7 +173,7 @@ Data Master / <span class="text-gray-800">Data KUBE</span>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Pendamping</label>
                         <input type="text"
-                            value="{{ $k->pembagianPendampingAktif->pendamping->nama_pendamping ?? 'Belum ada Pendamping' }}"
+                            value="{{ $k->pembagianPendamping->pendamping->nama_pendamping ?? 'Belum ada Pendamping' }}"
                             disabled
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed">
                     </div>
