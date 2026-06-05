@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Pendamping;
 
@@ -17,16 +18,22 @@ class PembagianPendamping extends Model
     // Relasi ke tabel KUBE
     public function kube()
     {
-        return $this->belongsTo(Kube::class, 'id_kube');
+        return $this->belongsTo(Kube::class, 'id_kube', 'id_kube');
     }
 
     public function pendamping()
     {
-        return $this->belongsTo(Pendamping::class, 'id_pendamping');
+        return $this->belongsTo(Pendamping::class, 'id_pendamping', 'id_pendamping');
     }
 
     public function kunjungan()
-{
-    return $this->hasMany(KunjunganPendamping::class, 'id_pembagian');
+    {
+        return $this->hasMany(KunjunganPendamping::class, 'id_pembagian', 'id_pembagian');
+    }
+
+    public function pembagianKoordinator()
+    {
+        return $this->belongsTo(PembagianKoordinator::class, 'id_pembagian', 'id_pembagian');
+    }
 }
-}
+
