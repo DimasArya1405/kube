@@ -7,13 +7,16 @@ use App\Models\User;
 use App\Models\Kecamatan;
 use App\Models\DesaKelurahan;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Galeri;
 
 class DashboardController extends Controller
 {
     public function admin()
     {
         $users = User::all();
-        return view('admin.dashboard.index', compact('users'));
+        $galeri = Galeri::latest()->take(6)->get();
+
+        return view('admin.dashboard.index', compact('users', 'galeri'));
     }
     public function users()
     {

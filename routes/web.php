@@ -26,7 +26,8 @@ use App\Http\Controllers\KubeController;
 use App\Http\Controllers\LaporanKecamatanController;
 use App\Http\Controllers\PembagianKoordinatorController;
 use App\Http\Controllers\PembagianPendampingController;
-use App\Http\Controllers\PengajuanKubeController; // ✅ PUNYAMU
+use App\Http\Controllers\PengajuanKubeController;
+use App\Http\Controllers\GaleriController;
 
 use Dflydev\DotAccessData\Data;
 
@@ -81,6 +82,16 @@ Route::middleware('auth')->group(function () {
     Route::put('/admin/kategorikube/{id}/edit', [KategoriKubeController::class, 'edit'])->name('kategorikube.edit');
     Route::post('/admin/kategorikube/{id}', [KategoriKubeController::class, 'update'])->name('kategorikube.update');
     Route::get('/admin/kategorikube/delete/{id}', [KategoriKubeController::class, 'destroy'])->name('kategorikube.destroy');
+    Route::get('/admin/kategorikube/export/pdf',[KategoriKubeController::class, 'exportPdf'])->name('kategorikube.export.pdf');
+    Route::get('/admin/kategorikube/export/excel',[KategoriKubeController::class, 'exportExcel'])->name('kategorikube.export.excel');
+    
+    // GALERI KUBE
+    Route::get('/admin/galeri', [GaleriController::class, 'index'])->name('galeri.index');
+    Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
+    Route::post('/admin/galeri/store', [GaleriController::class, 'store'])->name('galeri.store');
+    Route::post('/admin/galeri/update/{id}', [GaleriController::class, 'update'])->name('galeri.update');
+    Route::get('/admin/galeri/delete/{id}', [GaleriController::class, 'destroy'])->name('galeri.delete');
+    Route::get('/galeri/{id}', [GaleriController::class, 'show'])->name('galeri.detail');
 
     // Pembagian Koordinator
     Route::resource('pembagian_koordinator', PembagianKoordinatorController::class);
