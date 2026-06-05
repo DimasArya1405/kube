@@ -10,13 +10,12 @@ class PengajuanKube extends Model
     protected $primaryKey = 'id_pengajuan_kube';
 
     protected $fillable = [
-        'id_pengajuan_kube',
         'id_kube',
         'id_user',
         'disetujui_oleh',
         'id_jenis_bantuan',
         'jumlah_bantuan',
-        'tujuan_pengajuan',
+        'tujuan_pengajuan', // opsional
         'tanggal_pengajuan',
         'tanggal_disetujui',
         'keterangan',
@@ -47,8 +46,14 @@ class PengajuanKube extends Model
     {
         return $this->belongsTo(JenisBantuan::class, 'id_jenis_bantuan', 'id_jenis_bantuan');
     }
+
     public function pencairanBantuan()
     {
         return $this->hasMany(PencairanBantuan::class, 'id_pengajuan', 'id_pengajuan_kube');
+    }
+
+    public function detail()
+    {
+        return $this->hasMany(DetailPengajuan::class, 'pengajuan_id', 'id_pengajuan_kube');
     }
 }

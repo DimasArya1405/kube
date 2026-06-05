@@ -301,9 +301,10 @@ Route::prefix('admin/prediksi-kube')->name('admin.prediksi-kube.')->group(functi
     Route::post('/monitoring/update/{id}', [MonitoringController::class, 'update'])->name('monitoring.update');
     Route::get('/monitoring/detail/{id}', [MonitoringController::class, 'detail'])->name('monitoring.detail');
     Route::get('/monitoring/pdf', [MonitoringController::class, 'exportPdf'])->name('monitoring.pdf');
-
+// PENGAJUAN KUBE
     Route::get('/pengajuan-kube/create', [PengajuanKubeController::class, 'create'])->name('pengajuan.create');
     Route::post('/pengajuan-kube/store', [PengajuanKubeController::class, 'store'])->name('pengajuan.store');
+    Route::get('/pengajuan-kube', [PengajuanKubeController::class, 'index'])->name('pengajuan.index');
 
     // KELOLA DATA PERSETUJUAN KUBE (ADMIN)
     Route::get('/admin/persetujuan-bantuan-kube', [PersetujuanPengajuanKubeController::class, 'index'])->name('admin.persetujuan_bantuan_kube.index');
