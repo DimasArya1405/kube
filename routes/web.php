@@ -158,9 +158,10 @@ Route::post('/pendamping/prediksi', [PrediksiController::class, 'store'])
     Route::post('/monitoringbantuan/store', [MonitoringController::class, 'store'])->name('monitoring.store');
     Route::delete('/monitoringbantuan/delete/{id}', [MonitoringController::class, 'delete'])->name('monitoring.delete');
 
-   
+   // PENGAJUAN KUBE
     Route::get('/pengajuan-kube/create', [PengajuanKubeController::class, 'create'])->name('pengajuan.create');
     Route::post('/pengajuan-kube/store', [PengajuanKubeController::class, 'store'])->name('pengajuan.store');
+    Route::get('/pengajuan-kube', [PengajuanKubeController::class, 'index'])->name('pengajuan.index');
 
     // KELOLA DATA PERSETUJUAN KUBE (PROBO)
     Route::get('/admin/persetujuan-bantuan-kube', [PersetujuanPengajuanKubeController::class, 'index'])->name('admin.persetujuan_bantuan_kube.index');
