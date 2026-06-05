@@ -106,7 +106,7 @@
                     <tr class="bg-blue-50"
                         data-koor="{{ strtolower($koorHeader->user?->nama ?? '') }}">
                         <td colspan="7" class="px-4 py-3 font-bold text-blue-700">
-                            👤 {{ $koorHeader->user?->nama ?? '-' }}
+                             {{ $koorHeader->user?->nama ?? '-' }}
                         </td>
                     </tr>
 
