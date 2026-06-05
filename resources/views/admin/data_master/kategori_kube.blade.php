@@ -14,7 +14,6 @@ Dashboard / <span class="text-gray-800">Kategori KUBE</span>
         <h2 class="text-3xl font-bold text-gray-800">Manajemen Kategori</h2>
         <p class="text-gray-500 mt-1">Kelola data kategori KUBE.</p>
     </div>
-
 </div>
 
 <div class="flex justify-between items-center mb-6">
@@ -77,18 +76,8 @@ Dashboard / <span class="text-gray-800">Kategori KUBE</span>
                         </span>
                     </td> -->
 
-                    <td class="px-4 py-3 flex gap-2">
-                        <!-- Detail -->
-                         <button data-modal-target="modal-detail-{{ $item->id_kategori }}"
-                         data-modal-toggle="modal-detail-{{ $item->id_kategori }}"
-                            class="text-blue-500 hover:text-blue-700" title="Detail">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                        </button>
-            
-
+                    <!-- Aksi -->
+                    <td class="px-4 py-3 flex gap-2">            
                         <!-- EDIT -->
                         <button data-modal-target="modal-edit-{{ $item->id_kategori }}"
                         data-modal-toggle="modal-edit-{{ $item->id_kategori }}"
@@ -101,55 +90,26 @@ Dashboard / <span class="text-gray-800">Kategori KUBE</span>
                         <!-- HAPUS -->
                         <a href="{{ route('kategorikube.destroy', $item->id_kategori) }}" method="POST" style="display:inline;">
                             @csrf
-                            
                             <button onclick="return confirm('Yakin mau hapus?')"
                             class="text-red-500 hover:text-red-700" title="Hapus">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                     </svg>
-                        </button>
-
-
-                    
-                    </form>
-
-
+                            </button>
                     </td>
                 </tr>
-
-                @empty
-                <tr>
-                    <td colspan="4" class="text-center py-6 text-gray-500">
-                        Data kategori belum ada
-                    </td>
-                </tr>
-                @endforelse
+                    @empty
+                    <tr>
+                        <td colspan="4" class="text-center py-6 text-gray-500">
+                            Data kategori belum ada
+                        </td>
+                    </tr>
+                    @endforelse
             </tbody>
-
         </table>
     </div>
 </div>
-<!-- MODAL DETAIL -->
-@foreach($data as $item)
-<div id="modal-detail-{{ $item->id_kategori }}" 
-class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/50">
 
-    <div class="bg-white p-6 rounded-lg w-[400px]">
-        
-        <h2 class="text-xl font-bold mb-4">Detail Kategori</h2>
-
-        <p><b>Nama:</b> {{ $item->nama_kategori }}</p>
-        <p><b>Deskripsi:</b> {{ $item->deskripsi }}</p>
-
-        <button 
-        data-modal-toggle="modal-detail-{{ $item->id_kategori }}"
-        class="bg-gray-500 text-white px-3 py-1 rounded mt-3">
-            Tutup
-        </button>
-
-    </div>
-</div>
-@endforeach
 <!-- MODAL TAMBAH -->
 <div id="modal-tambah" class="hidden fixed top-0 left-0 right-0 z-50 justify-center items-center w-full h-full bg-black/50">
     <div class="relative p-4 w-full max-w-md">
@@ -191,6 +151,7 @@ class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/50">
     </div>
 </div>
 @stop
+
 <!-- MODAL EDIT -->
 @foreach($data as $index => $item)
 <div id="modal-edit-{{ $item->id_kategori }}"
@@ -236,5 +197,4 @@ class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/50">
         </div>
     </div>
 </div>
-@endforeach
-        
+@endforeach  

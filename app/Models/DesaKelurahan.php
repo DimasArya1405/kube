@@ -18,4 +18,10 @@ class DesaKelurahan extends Model
     {
     return $this->belongsTo(Kecamatan::class, 'id_kecamatan', 'id_kecamatan');
     }
+
+    // ← tambahkan ini
+    public function kube()
+    {
+        return $this->hasMany(Kube::class, 'id_desa_kelurahan', 'id_desa_kelurahan');
+    }
 }

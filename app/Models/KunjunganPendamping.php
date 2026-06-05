@@ -16,7 +16,11 @@ class KunjunganPendamping extends Model
     'tanggal_kunjungan',
     'waktu_kunjungan',
     'tujuan_kunjungan',
-    'kunjungan_ke'
+    'kunjungan_ke',
+    'catatan',
+    'status',
+    'foto_bukti',
+    'catatan_hasil'
     ];
 
     public function pembagian()

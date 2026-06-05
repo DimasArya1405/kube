@@ -25,6 +25,8 @@ return new class extends Migration
 
         $table->integer('kunjungan_ke');
 
+        $table->text('catatan')->nullable(); 
+
         $table->timestamps();
 
         // FK

@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -27,20 +26,27 @@ return new class extends Migration
             $table->string('pendidikan_terakhir', 50);
 
             $table->unsignedBigInteger('id_kecamatan');
+            $table->unsignedBigInteger('id_user'); // Tambahan baru
 
-            $table->year('tahun_mulai');
+            $table->date('tanggal_mulai');
+            $table->date('tanggal_selesai')->nullable();
 
             $table->enum('status', ['Aktif', 'Tidak Aktif']);
 
             $table->string('foto', 255)->nullable();
 
-            $table->dateTime('created_at')->nullable();
-            $table->dateTime('updated_at')->nullable();
+            $table->timestamps(); // Ganti dateTime manual dengan ini (Otomatis bikin created_at & updated_at)
 
-            // Foreign Key
+            // Foreign Key untuk Kecamatan
             $table->foreign('id_kecamatan')
                 ->references('id_kecamatan')
                 ->on('kecamatan')
+                ->onDelete('cascade');
+                
+            // Foreign Key untuk User (JANGAN LUPA DITAMBAHKAN)
+            $table->foreign('id_user')
+                ->references('id_user')
+                ->on('users')
                 ->onDelete('cascade');
         });
     }

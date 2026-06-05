@@ -4,10 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Kube;
-use App\Models\Pendamping;
-use App\Models\Mitra;
-
+// Hapus atau biarkan use App\Models\Kube; dll (bebas)
 
 class Pelatihan extends Model
 {
@@ -18,7 +15,7 @@ class Pelatihan extends Model
 
     protected $fillable = [
         'id_pendamping',
-        'id_kube',
+        // 'id_kube',  <--- INI HARUS DIHAPUS KARENA SUDAH GAK ADA DI TABEL PELATIHAN
         'id_mitra',
         'nama_pelatihan',
         'jenis_pelatihan',
@@ -29,15 +26,18 @@ class Pelatihan extends Model
         'status'
     ];
 
-    public function kube()
-{
-    return $this->belongsTo(Kube::class, 'id_kube', 'id_kube');
-}
+    public function kubes()
+    {
+        return $this->belongsToMany(Kube::class, 'kube_pelatihan', 'id_pelatihan', 'id_kube');
+    }
 
-public function pendamping()
-{
-    return $this->belongsTo(Pendamping::class, 'id_pendamping', 'id_pendamping');
-}
-    // Relasi 
-    public function mitra() { return $this->belongsTo(Mitra::class, 'id_mitra'); }
+    public function pendamping()
+    {
+        return $this->belongsTo(Pendamping::class, 'id_pendamping', 'id_pendamping');
+    }
+    
+    public function mitra() 
+    { 
+        return $this->belongsTo(Mitra::class, 'id_mitra'); 
+    }
 }
