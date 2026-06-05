@@ -228,6 +228,9 @@ Route::middleware('auth')->group(function () {
     })->name('kategorikube.index');
 
     // KUNJUNGAN PENDAMPING
+    // KUNJUNGAN PENDAMPING - ADMIN (VIEW ONLY)
+    Route::get('/admin/kunjungan-pendamping', [KunjunganPendampingController::class, 'adminIndex'])->name('admin.kunjungan.index');
+
 
     Route::prefix('pendamping')
         ->middleware(['role:pendamping'])
@@ -240,8 +243,10 @@ Route::middleware('auth')->group(function () {
             Route::get('/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'show'])->name('kunjungan.show');
             Route::delete('/kunjungan_pendamping/{id}', [KunjunganPendampingController::class, 'destroy'])->name('kunjungan.delete');
             Route::patch('/pendamping/kunjungan_pendamping/{id}/selesai', [KunjunganPendampingController::class, 'selesai'])->name('kunjungan.selesai');
-            Route::get('/pendamping/kunjungan/export/excel',[KunjunganPendampingController::class, 'exportExcel'])->name('kunjungan.export.excel');
-            Route::get('/pendamping/kunjungan/export/pdf',[KunjunganPendampingController::class, 'exportPdf'])->name('kunjungan.export.pdf');
+            Route::get('/pendamping/kunjungan/export/excel', [KunjunganPendampingController::class, 'exportExcel'])->name('kunjungan.export.excel');
+            Route::get('/pendamping/kunjungan/export/pdf', [KunjunganPendampingController::class, 'exportPdf'])->name('kunjungan.export.pdf');
+
+            
         });
 
     // LAPORAN KECAMATAN
