@@ -334,7 +334,7 @@ Route::prefix('admin/prediksi-kube')->name('admin.prediksi-kube.')->group(functi
 
 
     Route::prefix('pendamping')
-        ->middleware(['role:pendamping'])
+        ->middleware(['checkrole:pendamping'])
         ->group(function () {
 
             Route::get('/kunjungan_pendamping', [KunjunganPendampingController::class, 'index'])->name('kunjungan.index');
@@ -346,8 +346,7 @@ Route::prefix('admin/prediksi-kube')->name('admin.prediksi-kube.')->group(functi
             Route::patch('/pendamping/kunjungan_pendamping/{id}/selesai', [KunjunganPendampingController::class, 'selesai'])->name('kunjungan.selesai');
             Route::get('/pendamping/kunjungan/export/excel', [KunjunganPendampingController::class, 'exportExcel'])->name('kunjungan.export.excel');
             Route::get('/pendamping/kunjungan/export/pdf', [KunjunganPendampingController::class, 'exportPdf'])->name('kunjungan.export.pdf');
-
-            
+ 
         });
 
 
