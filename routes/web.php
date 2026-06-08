@@ -32,6 +32,7 @@ use App\Http\Controllers\KolaborasiBantuanController;
 use App\Http\Controllers\PenyaluranKolaborasiController;
 use App\Http\Controllers\KepalaDinasController;
 use App\Http\Controllers\PersetujuanBantuanKubeKadisController;
+use App\Http\Controllers\GaleriController;
 use Dflydev\DotAccessData\Data;
 
 // LOGIN
@@ -168,10 +169,6 @@ Route::get('/kepala_dinas/dashboard', [KepalaDinasController::class, 'dashboard'
     Route::put('/admin/kategorikube/{id}/edit', [KategoriKubeController::class, 'edit'])->name('kategorikube.edit');
     Route::post('/admin/kategorikube/{id}', [KategoriKubeController::class, 'update'])->name('kategorikube.update');
     Route::get('/admin/kategorikube/delete/{id}', [KategoriKubeController::class, 'destroy'])->name('kategorikube.destroy');
-
-    // Export PDF & Excel Cluster
-    Route::get('/cluster-usaha/pdf', [ClusterUsahaController::class, 'exportPDF'])->name('cluster_usaha.exportPDF');
-    Route::get('/cluster-usaha/excel', [ClusterUsahaController::class, 'exportExcel'])->name('cluster_usaha.exportExcel');
 
     // Pembagian Koordinator
     Route::resource('pembagian_koordinator', PembagianKoordinatorController::class);
