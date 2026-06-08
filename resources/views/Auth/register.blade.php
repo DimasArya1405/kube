@@ -39,7 +39,6 @@
                 </div>
                 <div>
                     <p class="text-xs font-bold text-slate-700">Data Valid</p>
-                    <p class="text-[10px] text-slate-500 leading-tight mt-0.5">NIK & Alamat sesuai KTP asli.</p>
                 </div>
             </div>
             
@@ -50,7 +49,6 @@
                 </div>
                 <div>
                     <p class="text-xs font-bold text-slate-700">Akun Aman</p>
-                    <p class="text-[10px] text-slate-500 leading-tight mt-0.5">Gunakan email aktif verifikasi.</p>
                 </div>
             </div>
 
@@ -61,7 +59,6 @@
                 </div>
                 <div>
                     <p class="text-xs font-bold text-slate-700">Fitur Digital</p>
-                    <p class="text-[10px] text-slate-500 leading-tight mt-0.5">Akses manajemen & pelaporan.</p>
                 </div>
             </div>
 
@@ -72,7 +69,6 @@
                 </div>
                 <div>
                     <p class="text-xs font-bold text-slate-700">Skala Usaha</p>
-                    <p class="text-[10px] text-slate-500 leading-tight mt-0.5">Pengembangan potensi bisnis.</p>
                 </div>
             </div>
         </div>
