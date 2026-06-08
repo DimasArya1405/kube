@@ -1,146 +1,193 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('kepala_dinas.layout')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Dashboard KUBE')</title>
+@section('title', 'Dashboard Statistik - Kepala Dinas')
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://unpkg.com/flowbite@latest/dist/flowbite.js"></script>
+@section('breadcrumb')
+<nav class="flex text-gray-700 mb-4" aria-label="Breadcrumb">
+    <ol class="inline-flex items-center space-x-1 md:space-x-3 text-sm">
+        <li class="inline-flex items-center text-gray-500">Kepala Dinas</li>
+        <li>
+            <div class="flex items-center">
+                <span class="mx-2 text-gray-400">/</span>
+                <span class="text-gray-800 font-bold">Dashboard Statistik</span>
+            </div>
+        </li>
+    </ol>
+</nav>
+@stop
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+@section('content')
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+{{-- HEADER --}}
+<div class="mb-6">
+    <h2 class="text-2xl font-extrabold text-gray-900">Dashboard Statistik KUBE</h2>
+    <p class="text-gray-500 text-sm">Ringkasan data KUBE Kabupaten Cilacap</p>
+</div>
 
-        body {
-            font-family: 'Inter', sans-serif;
-        }
+{{-- KARTU STATISTIK --}}
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
 
-        /* Custom Scrollbar untuk Sidebar & Content */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 5px;
-        }
+    <div class="bg-blue-500 text-white rounded-xl p-5 flex items-center justify-between shadow">
+        <div>
+            <p class="text-4xl font-extrabold">{{ $data->totalKube }}</p>
+            <p class="text-sm font-semibold mt-1">Total KUBE</p>
+        </div>
+        <div class="bg-white/20 p-3 rounded-lg">
+            <i data-lucide="store" class="w-8 h-8"></i>
+        </div>
+    </div>
 
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.05);
-        }
+    <div class="bg-green-500 text-white rounded-xl p-5 flex items-center justify-between shadow">
+        <div>
+            <p class="text-4xl font-extrabold">{{ $data->kubeAktif }}</p>
+            <p class="text-sm font-semibold mt-1">KUBE Aktif</p>
+        </div>
+        <div class="bg-white/20 p-3 rounded-lg">
+            <i data-lucide="check-circle" class="w-8 h-8"></i>
+        </div>
+    </div>
 
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
+    <div class="bg-red-500 text-white rounded-xl p-5 flex items-center justify-between shadow">
+        <div>
+            <p class="text-4xl font-extrabold">{{ $data->kubeTidakAktif }}</p>
+            <p class="text-sm font-semibold mt-1">KUBE Tidak Aktif</p>
+        </div>
+        <div class="bg-white/20 p-3 rounded-lg">
+            <i data-lucide="x-circle" class="w-8 h-8"></i>
+        </div>
+    </div>
 
-        .bg-indigo-700 .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-        }
+</div>
 
-        .bg-indigo-700 .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-        }
-    </style>
-</head>
+{{-- GRAFIK & TOP KECAMATAN --}}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
 
-<body class="bg-gray-50 flex h-screen overflow-hidden">
+    {{-- GRAFIK BAR PER KECAMATAN --}}
+    <div class="lg:col-span-2 bg-white rounded-xl shadow border border-gray-200 p-5">
+        <h3 class="text-base font-bold text-gray-800 mb-4">Rekap KUBE per Kecamatan</h3>
+        <canvas id="chartKecamatan" height="120"></canvas>
+    </div>
 
-    <aside class="w-64 flex-shrink-0 bg-indigo-700 text-white flex flex-col shadow-xl h-full">
-        <div class="p-6 flex-shrink-0">
-            <div class="flex items-center gap-3">
-                <div class="bg-white p-2 rounded-lg shadow-sm">
-                    <i data-lucide="layout-dashboard" class="text-indigo-700 w-6 h-6"></i>
+    {{-- DONUT STATUS --}}
+    <div class="bg-white rounded-xl shadow border border-gray-200 p-5">
+        <h3 class="text-base font-bold text-gray-800 mb-4">Status KUBE</h3>
+        <canvas id="chartDonut" height="200"></canvas>
+        <div class="flex justify-center gap-6 mt-4">
+            <div class="text-center">
+                {{-- PERBAIKAN: Hapus tanda dollar pada properti objek --}}
+                <p class="text-2xl font-extrabold text-green-600">{{ $data->kubeAktif }}</p>
+                <p class="text-xs text-gray-500">Aktif</p>
+            </div>
+            <div class="text-center">
+                {{-- PERBAIKAN: Hapus tanda dollar pada properti objek --}}
+                <p class="text-2xl font-extrabold text-red-500">{{ $data->kubeTidakAktif }}</p>
+                <p class="text-xs text-gray-500">Tidak Aktif</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{{-- TOP 5 KECAMATAN --}}
+<div class="bg-white rounded-xl shadow border border-gray-200 p-5">
+    <h3 class="text-base font-bold text-gray-800 mb-4">Top 5 Kecamatan dengan KUBE Terbanyak</h3>
+
+    {{-- PERBAIKAN: Tambahkan $data-> sebelum top5Kecamatan --}}
+    @forelse ($data->top5Kecamatan as $index => $item)
+        <div class="flex items-center gap-3 mb-3">
+            <div class="w-7 h-7 rounded-full bg-indigo-600 text-white text-xs flex items-center justify-center font-bold flex-shrink-0">
+                {{ $index + 1 }}
+            </div>
+            <div class="flex-1">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-sm font-semibold text-gray-700">{{ $item->nama_kecamatan }}</span>
+                    <span class="text-xs font-bold text-indigo-600">{{ $item->total }} KUBE</span>
                 </div>
-                <h1 class="text-2xl font-bold tracking-wider">KUBE</h1>
-            </div>
-        </div>
-
-        <div class="flex-1 overflow-y-auto custom-scrollbar px-4 space-y-2">
-            @include('kepala_dinas.sidebar')
-        </div>
-
-        <div class="p-4 border-t border-indigo-600 flex-shrink-0">
-            <div class="bg-indigo-800/50 p-4 rounded-2xl">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 rounded-full bg-white text-indigo-700 flex items-center justify-center font-bold shadow-sm flex-shrink-0">
-                        {{ strtoupper(substr(auth()->user()->nama ?? 'A', 0, 1)) }}
-                    </div>
-                    <div class="overflow-hidden text-sm font-semibold truncate">
-                        {{ auth()->user()->nama ?? 'Admin User' }}
+                <div class="w-full bg-gray-100 rounded-full h-2">
+                    {{-- PERBAIKAN: Tambahkan $data-> sebelum maxTotal --}}
+                    <div class="bg-indigo-500 h-2 rounded-full"
+                        style="width: {{ $data->maxTotal > 0 ? ($item->total / $data->maxTotal) * 100 : 0 }}%">
                     </div>
                 </div>
-                <form method="POST" action="/logout">
-                    @csrf
-                    <button type="submit" class="w-full flex items-center justify-center gap-2 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-colors">
-                        <i data-lucide="log-out" class="w-4 h-4"></i> Logout
-                    </button>
-                </form>
+                <div class="flex gap-4 mt-1">
+                    <span class="text-xs text-green-600">Aktif: {{ $item->aktif }}</span>
+                    <span class="text-xs text-red-500">Tidak Aktif: {{ $item->tidak_aktif }}</span>
+                </div>
             </div>
         </div>
-    </aside>
+    @empty
+        <p class="text-sm text-gray-500 text-center py-4">Belum ada data</p>
+    @endforelse
+</div>
 
-    <main class="flex-1 flex flex-col min-w-0 h-full">
+@stop
 
-        <header class="h-16 flex-shrink-0 bg-white border-b border-gray-200 flex items-center justify-between px-8 shadow-sm z-10">
-            <div class="text-gray-500 font-medium truncate">
-                @yield('breadcrumb', 'Dashboard')
-            </div>
-            <div class="flex items-center gap-4 text-gray-400 flex-shrink-0">
-                <i data-lucide="bell" class="w-5 h-5 cursor-pointer hover:text-indigo-600"></i>
-                <div class="h-6 w-px bg-gray-200"></div>
-                <span class="text-sm text-gray-600 font-medium">{{ now()->format('d M Y') }}</span>
-            </div>
-        </header>
-
-        <section class="flex-1 overflow-y-auto p-8 custom-scrollbar bg-gray-50">
-            <div class="max-w-7xl mx-auto">
-                @yield('content')
-            </div>
-        </section>
-
-    </main>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-    @stack('scripts')
-    
-    <script>
-        // Inisialisasi Ikon Lucide
-        lucide.createIcons();
-
-        // Fungsi Dropdown Dinamis
-        function toggleDropdown(menuId, iconId) {
-            const menu = document.getElementById(menuId);
-            const icon = document.getElementById(iconId);
-
-            // Akordion: Tutup semua menu lain kecuali yang diklik
-            const allMenus = document.querySelectorAll('[id$="Menu"]');
-            const allIcons = document.querySelectorAll('[id$="Icon"]');
-
-            allMenus.forEach(m => {
-                if (m.id !== menuId) m.classList.add('hidden');
-            });
-            allIcons.forEach(i => {
-                if (i.id !== iconId) i.style.transform = 'rotate(0deg)';
-            });
-
-            // Toggle menu target
-            const isHidden = menu.classList.toggle('hidden');
-            icon.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctxBar = document.getElementById('chartKecamatan').getContext('2d');
+    new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: @json($data->chartLabels),
+            datasets: [
+                {
+                    label: 'Total KUBE',
+                    data: @json($data->chartTotal),
+                    backgroundColor: 'rgba(99, 102, 241, 0.7)',
+                    borderRadius: 4,
+                },
+                {
+                    label: 'Aktif',
+                    // PERBAIKAN: Tambahkan $data-> sebelum chartAktif
+                    data: @json($data->chartAktif),
+                    backgroundColor: 'rgba(34, 197, 94, 0.7)',
+                    borderRadius: 4,
+                },
+                {
+                    label: 'Tidak Aktif',
+                    // PERBAIKAN: Tambahkan $data-> sebelum chartTidakAktif
+                    data: @json($data->chartTidakAktif),
+                    backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                    borderRadius: 4,
+                },
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom', labels: { font: { size: 11 } } }
+            },
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1 } }
+            }
         }
-    </script>
+    });
 
-    @if (session('success'))
-    <script>
-        Swal.fire({
-            title: 'Berhasil!',
-            text: "{{ session('success') }}",
-            icon: 'success',
-            confirmButtonColor: '#4f46e5',
-        });
-    </script>
-    @endif
-
-
-</body>
-
-</html>
+    // CHART DONUT STATUS
+    const ctxDonut = document.getElementById('chartDonut').getContext('2d');
+    new Chart(ctxDonut, {
+        type: 'doughnut',
+        data: {
+            labels: ['Aktif', 'Tidak Aktif'],
+            datasets: [{
+                // PERBAIKAN: Hapus tanda dollar tambahan pada properti objek
+                data: [{{ $data->kubeAktif }}, {{ $data->kubeTidakAktif }}],
+                backgroundColor: [
+                    'rgba(34, 197, 94, 0.8)',
+                    'rgba(239, 68, 68, 0.8)',
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom', labels: { font: { size: 11 } } }
+            },
+            cutout: '65%'
+        }
+    });
+</script>
+@endpush

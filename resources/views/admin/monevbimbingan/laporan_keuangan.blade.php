@@ -1,117 +1,267 @@
 @extends('admin.layout')
 
 @section('content')
-<div class="p-6 bg-gray-50 min-h-screen">
-   {{-- Header Section --}}
-<div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-    <div>
-        <h1 class="text-3xl font-bold text-gray-800">Laporan Keuangan KUBE</h1>
-        <p class="text-gray-500 mt-1">Kelola data omset dan laba berdasarkan KUBE yang disetujui.</p>
-    </div>
-    <div class="flex flex-wrap items-center gap-3">
-        {{-- Button Export Excel --}}
-        <a href="#" class="flex items-center gap-2 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 px-5 py-2.5 rounded-xl font-bold border border-emerald-100 transition shadow-sm">
-            <span>📊</span> Export to Excel
-        </a>
-        
-        {{-- Button Export PDF --}}
-        <a href="#" class="flex items-center gap-2 bg-red-50 text-red-600 hover:bg-red-100 px-5 py-2.5 rounded-xl font-bold border border-red-100 transition shadow-sm">
-            <span>📕</span> Export toPDF
-        </a>
+<div class="p-4 bg-gray-50 min-h-screen font-sans">
 
-        {{-- Button Tambah Laporan --}}
-        <button data-modal-target="modal-tambah-lk" data-modal-toggle="modal-tambah-lk" class="bg-sky-600 hover:bg-sky-700 text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-sky-100 transition">
-            + Tambah Laporan
-        </button>
+{{-- Header Section --}}
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-5 gap-3">
+    <div class="flex items-center gap-3">
+        @if(request('id_kube'))
+            <a href="{{ route('laporan.index') }}" 
+               class="group p-2 bg-white hover:bg-sky-50 border border-gray-200 hover:border-sky-300 rounded-xl transition-all duration-300 shadow-sm flex items-center justify-center" 
+               title="Kembali ke Daftar KUBE">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 group-hover:text-sky-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+            </a>
+        @endif
+
+        <div>
+            <h1 class="text-xl font-bold text-gray-800 tracking-tight">Keuangan KUBE</h1>
+            <p class="text-[11px] text-gray-500">Monitoring omset dan laba bulanan KUBE.</p>
+        </div>
+    </div>
+
+    <div class="flex items-center gap-2">
+        @if(!request('id_kube'))
+            <a href="{{ route('laporan.export.pdf.all') }}" class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all shadow-sm">
+                    <span>📄</span> Ekspor PDF
+                </a>
+                <a href="{{ route('laporan.export.excel.all') }}" class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all shadow-sm">
+                    <span>📊</span> Ekspor Excel
+                </a>
+        @endif
+
+        @if(auth()->user()->role == 'ketua_kube')
+            <button data-modal-target="modal-tambah-lk" data-modal-toggle="modal-tambah-lk"
+                class="flex items-center gap-2 bg-sky-700 hover:bg-sky-900 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all">
+                + Tambah Laporan
+            </button>
+        @endif
     </div>
 </div>
-    {{-- Stats Cards --}}
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center gap-4">
-            <div class="w-12 h-12 bg-orange-100 rounded-2xl flex items-center justify-center text-xl">💰</div>
-            <div>
-                <p class="text-xs text-gray-400 font-bold uppercase">Total Omset</p>
-                <h3 class="text-xl font-extrabold text-gray-800">Rp {{ number_format($totalOmset, 0, ',', '.') }}</h3>
+
+{{-- Search Section --}}
+@if(auth()->user()->role === 'admin')
+<div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm mb-6">
+    <form action="{{ request()->url() }}" method="GET" class="flex flex-wrap items-end gap-3">
+        
+        <div class="flex flex-col gap-1 flex-1 min-w-[240px]">
+            <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Cari Kelompok KUBE</label>
+            <div class="relative">
+                <input type="text" name="search" value="{{ request('search') }}" 
+                       placeholder="Ketik nama KUBE... (Contoh: Jaya)" 
+                       class="w-full bg-gray-50 border border-gray-200 text-gray-700 text-xs rounded-xl pl-3 pr-10 py-2.5 focus:ring-sky-500 focus:border-sky-500 transition-all">
+                
+                @if(request('search'))
+                    <a href="{{ route('laporan.index') }}" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-xs font-bold">
+                        ✕
+                    </a>
+                @endif
             </div>
         </div>
-        <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center gap-4">
-            <div class="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-xl">📈</div>
-            <div>
-                <p class="text-xs text-gray-400 font-bold uppercase">Laba Bersih</p>
-                <h3 class="text-xl font-extrabold text-emerald-600">Rp {{ number_format($totalLaba, 0, ',', '.') }}</h3>
+
+        <div>
+            <button type="submit" class="px-5 py-2.5 bg-gray-200 hover:bg-gray-400 text-gray-600 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1">
+                🔍 
+            </button>
+        </div>
+    </form>
+
+    @if(isset($searchResult))
+        <div class="mt-4 pt-3 border-t border-gray-50">
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Hasil Pencarian Kelompok:</p>
+            <div class="flex flex-wrap gap-2">
+                @forelse($searchResult as $kube)
+                    <a href="{{ route('laporan.index', ['id_kube' => $kube->id_kube]) }}" 
+                       class="inline-flex items-center gap-2 bg-sky-50 hover:bg-sky-100 border border-sky-100 text-sky-700 text-xs font-bold px-4 py-2 rounded-xl transition-all shadow-sm">
+                        🏢 KUBE "{{ $kube->nama_kube }}" <span class="text-sky-400">→</span>
+                    </a>
+                @empty
+                    <p class="text-xs text-gray-400 italic py-1">Kelompok KUBE dengan nama tersebut tidak ditemukan.</p>
+                @endforelse
             </div>
         </div>
-        <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center gap-4">
-            <div class="w-12 h-12 bg-sky-100 rounded-2xl flex items-center justify-center text-xl">📊</div>
-            <div>
-                <p class="text-xs text-gray-400 font-bold uppercase">Perkembangan</p>
-                <h3 class="text-xl font-extrabold text-sky-600">{{ $perkembangan }}</h3>
+    @endif
+</div>
+@endif
+
+
+@if(request('id_kube'))
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        
+        {{-- Card 1: Total Omset --}}
+        <div class="group bg-white border border-gray-100/50 rounded-[2rem] p-6 shadow-sm hover:shadow-xl hover:shadow-sky-500/10 hover:-translate-y-2 transition-all duration-300">
+            <div class="flex items-center justify-between mb-4">
             </div>
+            <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] mb-1">Total Omset</p>
+            <div class="flex items-baseline gap-1">
+                <span class="text-xs font-bold text-gray-300">Rp</span>
+                <h3 class="text-2xl font-black text-slate-800 tracking-tight">
+                    {{ number_format($totalOmset, 0, ',', '.') }}
+                </h3>
+            </div>
+        </div>
+
+        {{-- Card 2: Laba Bersih --}}
+        <div class="group bg-white border border-gray-100/50 rounded-[2rem] p-6 shadow-sm hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-2 transition-all duration-300">
+            <div class="flex items-center justify-between mb-4">
+            </div>
+            <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] mb-1">Laba Bersih</p>
+            <div class="flex items-baseline gap-1">
+                <span class="text-xs font-bold text-gray-300">Rp</span>
+                <h3 class="text-2xl font-black text-emerald-600 tracking-tight">
+                    {{ number_format($totalLaba, 0, ',', '.') }}
+                </h3>
+            </div>
+        </div>
+
+        {{-- Card 3: Perkembangan --}}
+        <div class="group bg-white border border-gray-100/50 rounded-[2rem] p-6 shadow-sm hover:shadow-xl hover:shadow-sky-500/10 hover:-translate-y-2 transition-all duration-300">
+            <div class="flex items-center justify-between mb-4">
+            </div>
+            <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] mb-1">Perkembangan</p>
+            <div class="flex items-center gap-2">
+                <div class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+                </div>
+                <h3 class="text-sm font-black text-sky-700 uppercase tracking-tight">
+                    {{ $perkembangan }}
+                </h3>
+            </div>
+        </div>
+
+    </div>
+@else
+
+    <div class="mb-8">
+        <div class="flex items-center gap-3 mb-5 px-2">
+            <div class="w-1 h-6 bg-sky-600 rounded-full"></div>
+            <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest">Pilih Kelompok KUBE</h3>
+        </div>
+
+        <div class="grid grid-cols-1 gap-3">
+            @foreach($daftarKube as $k)
+            <a href="{{ route('laporan.index', ['id_kube' => $k->id_kube]) }}" 
+               class="group flex items-center justify-between p-4 bg-white border border-gray-100 rounded-2xl hover:border-sky-500 hover:shadow-md hover:shadow-sky-500/5 transition-all duration-300">
+                
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 bg-slate-50 text-slate-400 group-hover:bg-sky-100 group-hover:text-sky-600 rounded-xl flex items-center justify-center font-black text-sm transition-colors">
+                        {{ substr($k->nama_kube, 0, 1) }}
+                    </div>
+                    
+                    <div>
+                        <span class="block text-xs font-black text-slate-700 group-hover:text-sky-600 transition-colors uppercase tracking-tight">
+                            {{ $k->nama_kube }}
+                        </span>
+                        <span class="block text-[9px] text-gray-400 font-medium uppercase mt-0.5">
+                            Klik untuk memantau laporan
+                        </span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <span class="text-[10px] font-bold text-gray-300 group-hover:text-sky-500 transition-colors uppercase">Buka Laporan</span>
+                    <div class="w-8 h-8 rounded-lg bg-gray-50 group-hover:bg-sky-600 flex items-center justify-center transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                </div>
+            </a>
+            @endforeach
         </div>
     </div>
+@endif
+@if(request('id_kube'))
+    <div class="flex gap-2 mb-4 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm items-center justify-between">
+        <div>
+            
+           
+        </div>
+        <div class="flex gap-2">
+             <a href="{{ route('laporan.export.pdf.single', request('id_kube')) }}" class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all shadow-sm">
+                    <span>📄</span> Ekspor PDF 
+                </a>
+                <a href="{{ route('laporan.export.excel.single', request('id_kube')) }}"  class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all shadow-sm">
+                    <span>📊</span> Ekspor Excel 
+                </a>
+        </div>
+    </div>
+@endif
 
     {{-- Table Section --}}
-    <div class="bg-white border border-gray-200 rounded-[2.5rem] shadow-sm overflow-hidden">
+    <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full text-left">
-                <thead class="bg-gray-50/50 border-b">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-gray-50 border-b border-gray-100">
                     <tr>
-                        <th class="p-6 text-xs font-bold text-gray-500 uppercase">Tanggal Laporan</th>
-                        <th class="p-6 text-xs font-bold text-gray-500 uppercase">KUBE & Cluster</th>
-                        <th class="p-6 text-xs font-bold text-gray-500 uppercase text-center">Periode</th>
-                        <th class="p-6 text-xs font-bold text-gray-500 uppercase text-center pr-6">Omset</th>
-                        <th class="p-6 text-xs font-bold text-gray-500 uppercase text-center pr-6">Laba Bersih</th>
-                        <th class="p-6 text-xs font-bold text-gray-500 uppercase text-center">Progres</th>
-                        <th class="p-6 text-xs font-bold text-gray-500 uppercase text-center">Berkas</th>
-                        <th class="p-6 text-xs font-bold text-gray-500 uppercase text-center">Aksi</th>
+                        <th class="px-4 py-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Tgl Lapor</th>
+                        <th class="px-4 py-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest">KUBE & Cluster</th>
+                        <th class="px-4 py-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-center">Periode</th>
+                        <th class="px-4 py-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-right">Omset</th>
+                        <th class="px-4 py-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-right">Laba</th>
+                        <th class="px-4 py-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-center">Status</th>
+                        <th class="px-4 py-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-center">Lampiran</th>
+                        <th class="px-4 py-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50">
                     @forelse($laporan as $row)
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="p-6 text-xs font-medium text-gray-500">
-                            {{ \Carbon\Carbon::parse($row->tanggal_laporan)->translatedFormat('d/m/Y') }}
+                    <tr class="hover:bg-gray-50/50 transition">
+                        <td class="px-4 py-2.5 text-xs text-gray-600">
+                            {{ \Carbon\Carbon::parse($row->tanggal_laporan)->translatedFormat('d/m/y') }}
                         </td>
-                        <td class="p-6">
+                        <td class="px-4 py-2.5">
                             @php
                                 $dataKube = \DB::table('pengajuan_kube')
                                     ->join('kube', 'pengajuan_kube.id_kube', '=', 'kube.id_kube')
                                     ->where('pengajuan_kube.id_pengajuan_kube', $row->id_persetujuan)
                                     ->first();
                             @endphp
-                            <div class="font-bold text-gray-800">{{ $dataKube->nama_kube ?? 'N/A' }}</div>
-                            <div class="text-[10px] text-gray-400 font-bold uppercase tracking-tight">{{ $row->cluster->nama_cluster ?? '-' }}</div>
+                            <div class="font-bold text-gray-700 text-xs">{{ $dataKube->nama_kube ?? 'N/A' }}</div>
+                            <div class="text-[10px] text-gray-400 font-medium uppercase">{{ $row->cluster->nama_cluster ?? '-' }}</div>
                         </td>
-                        <td class="p-6 text-center">
-                            <span class="px-3 py-1 bg-gray-100 rounded-lg text-xs font-bold text-gray-600">
-                                {{ date('M Y', mktime(0, 0, 0, $row->periode_bulan, 10)) }}
+                        <td class="px-4 py-2.5 text-center">
+                            <span class="px-2 py-0.5 bg-gray-100 rounded text-[10px] font-bold text-gray-500 uppercase">
+                                {{ date('M y', mktime(0, 0, 0, $row->periode_bulan, 10)) }}
                             </span>
                         </td>
-                        <td class="p-6 text-right font-semibold text-gray-700 pr-6">
-                            Rp {{ number_format($row->omset_pendapatan, 0, ',', '.') }}
+                        <td class="px-4 py-2.5 text-right font-medium text-gray-600 text-xs">
+                            {{ number_format($row->omset_pendapatan, 0, ',', '.') }}
                         </td>
-                        <td class="p-6 text-right font-bold text-emerald-600 pr-6">
-                            Rp {{ number_format($row->laba_bersih, 0, ',', '.') }}
+                        <td class="px-4 py-2.5 text-right font-bold text-emerald-600 text-xs">
+                            {{ number_format($row->laba_bersih, 0, ',', '.') }}
                         </td>
-                        <td class="p-6 text-center">
+                        <td class="px-4 py-2.5 text-center text-[10px]">
                             @if($row->progres_keuangan == 'Meningkat')
-                                <span class="text-emerald-500 font-bold text-[10px] uppercase">▲ Naik</span>
+                                <span class="text-emerald-500 font-black">▲</span>
                             @elseif($row->progres_keuangan == 'Menurun')
-                                <span class="text-red-500 font-bold text-[10px] uppercase">▼ Turun</span>
+                                <span class="text-red-500 font-black">▼</span>
                             @else
-                                <span class="text-sky-500 font-bold text-[10px] uppercase">● Tetap</span>
+                                <span class="text-sky-400 font-black">●</span>
                             @endif
                         </td>
-                        <td class="p-6 text-center">
-                            @if($row->lampiran_keuangan)
-                                <a href="{{ asset('uploads/keuangan/'.$row->lampiran_keuangan) }}" target="_blank" class="bg-white border border-gray-100 hover:bg-sky-50 text-sky-500 p-2 rounded-lg transition inline-block shadow-sm">📂</a>
-                            @else
-                                <span class="text-gray-300 text-[10px] italic">Nihil</span>
-                            @endif
-                        </td>
-                        <td class="p-6 text-center">
-                            <div class="flex justify-center gap-2">
-                                <button onclick="showDetail(this)"
+                        <td class="px-6 py-4 text-center">
+                    @if($row->lampiran_keuangan)
+                        <a href="{{ asset('uploads/keuangan/' . $row->lampiran_keuangan) }}" target="_blank" 
+                           class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-sky-50 hover:bg-sky-100 text-sky-600 rounded-lg text-[9px] font-black uppercase tracking-wider transition-all">
+                            <span>📄</span> Berkas
+                        </a>
+                    @else
+                        <span class="inline-flex items-center px-2 py-1 bg-slate-100 text-slate-400 rounded-lg text-[9px] font-bold">
+                            Kosong
+                        </span>
+                    @endif
+                </td>
+                        <td class="px-4 py-2.5 text-center">
+                            <div class="flex justify-center gap-1.5">
+                                
+                                <button type="button" 
+                                    onclick="showDetail(this)"
+                                     data-id="{{ $row->id_laporan }}"
+                                           data-id="{{ $row->id_laporan ?? $row->id_laporan ?? $row->id }}"
                                     data-kube="{{ $dataKube->nama_kube ?? 'N/A' }}"
                                     data-cluster="{{ $row->cluster->nama_cluster ?? '-' }}"
                                     data-periode="{{ date('F Y', mktime(0, 0, 0, $row->periode_bulan, 10)) }}"
@@ -120,8 +270,9 @@
                                     data-pengeluaran="Rp {{ number_format($row->total_pengeluaran, 0, ',', '.') }}"
                                     data-laba="Rp {{ number_format($row->laba_bersih, 0, ',', '.') }}"
                                     data-ket="{{ $row->keterangan ?? '-' }}"
-                                    class="p-2 text-sky-400 hover:bg-sky-50 rounded-lg transition">👁️</button>
+                                    class="p-1.5 text-sky-400 hover:bg-sky-50 rounded-md transition text-xs z-10">👁️</button>
                                 
+                                    @if(auth()->user()->role == 'ketua_kube')
                                 <button onclick="openEditModal(this)"
                                     data-id="{{ $row->id_laporan }}"
                                     data-kube="{{ $row->id_persetujuan }}"
@@ -132,20 +283,35 @@
                                     data-tahun="{{ $row->periode_tahun }}"
                                     data-tgl="{{ $row->tanggal_laporan }}"
                                     data-ket="{{ $row->keterangan }}"
-                                    class="p-2 text-amber-500 hover:bg-amber-50 rounded-lg transition">✏️</button>
-                                
+                                    data-file="{{ $row->lampiran_keuangan }}"
+                                    class="p-1.5 text-amber-500 hover:bg-amber-50 rounded-md transition text-xs">✏️</button>
+                                @endif
+
+                                @if(auth()->user()->role == 'ketua_kube')
                                 <form id="delete-form-{{ $row->id_laporan }}" action="{{ route('laporan.destroy', $row->id_laporan) }}" method="POST" class="inline">
                                     @csrf @method('DELETE')
-                                    <button type="button" onclick="confirmDelete('{{ $row->id_laporan }}')" class="p-2 text-red-400 hover:bg-red-50 rounded-lg transition">
+                                    <button type="button" onclick="confirmDelete('{{ $row->id_laporan }}')" class="p-1.5 text-red-400 hover:bg-red-50 rounded-md transition text-xs">
                                         🗑️
                                     </button>
-                                </form>
+                                </form> @endif
                             </div>
                         </td>
                     </tr>
-                    @empty
-                    <tr><td colspan="8" class="p-20 text-center text-gray-400 italic">Data belum tersedia.</td></tr>
-                    @endforelse
+                   @empty
+<tr>
+    <td colspan="8" class="p-16 text-center">
+        <div class="flex flex-col items-center justify-center space-y-3">
+            <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center text-2xl">📊</div>
+            @if(auth()->user()->role == 'admin' && !request('id_kube'))
+                <p class="text-xs font-bold text-gray-500 uppercase tracking-widest">Silahkan pilih salah satu KUBE di atas</p>
+                <p class="text-[10px] text-gray-400 italic">Data laporan akan muncul setelah kelompok dipilih.</p>
+            @else
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest italic">Belum ada data laporan untuk kelompok ini.</p>
+            @endif
+        </div>
+    </td>
+</tr>
+@endforelse
                 </tbody>
             </table>
         </div>
@@ -153,173 +319,216 @@
 </div>
 
 {{-- MODAL TAMBAH --}}
-<div id="modal-tambah-lk" tabindex="-1" class="hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full bg-black/60 backdrop-blur-sm p-4">
-    <div class="relative w-full max-w-2xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-sky-100">
-        <div class="p-6 border-b flex justify-between items-center bg-sky-50/30">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-sky-100 rounded-xl flex items-center justify-center text-lg">+</div>
-                <div>
-                    <h3 class="text-xl font-extrabold text-gray-800">Input Laporan Baru</h3>
-                    <p class="text-[10px] font-bold text-sky-600 uppercase tracking-widest">Pencatatan Keuangan KUBE</p>
-                </div>
-            </div>
-            <button data-modal-toggle="modal-tambah-lk" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 transition">✕</button>
+
+<div id="modal-tambah-lk" tabindex="-1" class="hidden fixed inset-0 z-[100] flex justify-center items-center w-full h-full bg-slate-900/40 backdrop-blur-sm p-4">
+    <div class="relative w-full max-w-[420px] bg-white rounded-[2rem] shadow-2xl overflow-hidden">
+        <div class="px-6 py-3 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
+            <h3 class="text-sm font-black text-slate-800 uppercase tracking-tight">Tambah Laporan Keuangan</h3>
+            <button onclick="document.getElementById('modal-tambah-lk').classList.add('hidden')" class="w-7 h-7 flex items-center justify-center rounded-full bg-white shadow-sm border border-slate-100 text-slate-400 hover:text-red-500 transition-all text-xs">✕</button>
         </div>
-        <form action="{{ route('laporan.store') }}" method="POST" enctype="multipart/form-data" class="p-8">
+
+        <form action="{{ route('laporan.store') }}" method="POST" enctype="multipart/form-data" class="p-5 space-y-3">
             @csrf
-            <div class="grid grid-cols-2 gap-5">
-                <div class="col-span-2 md:col-span-1">
-                    <label class="text-[10px] font-bold text-gray-400 uppercase mb-2 block ml-1">Kelompok KUBE</label>
-                    <select name="id_persetujuan" class="w-full border-gray-100 rounded-2xl p-3.5 bg-gray-50 font-bold focus:ring-2 focus:ring-sky-500 transition" required>
-                        <option value="">-- Pilih KUBE --</option>
-                        @foreach($kubeDisetujui as $k) <option value="{{ $k->id_pengajuan_kube }}">{{ $k->nama_tampilan }}</option> @endforeach
-                    </select>
+            <div class="space-y-1">
+                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Kelompok KUBE</label>
+                <select name="id_persetujuan" class="w-full bg-slate-50 border-none rounded-xl px-3 py-2 text-[10px] font-bold text-slate-700 focus:ring-2 focus:ring-sky-500/20" required>
+                    <option value="">-- Pilih Kelompok KUBE --</option>
+                    @foreach($kubeDisetujui as $item)
+                        <option value="{{ $item->id_pengajuan_kube }}">{{ $item->nama_tampilan }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="space-y-1">
+                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Cluster</label>
+                <select name="id_cluster" class="w-full bg-slate-50 border-none rounded-xl px-3 py-2 text-[10px] font-bold text-slate-700 focus:ring-2 focus:ring-sky-500/20" required>
+                    <option value="">-- Pilih Cluster --</option>
+                    @foreach($clusters as $c) 
+                        <option value="{{ $c->id_cluster }}">{{ $c->nama_cluster }}</option> 
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div class="p-2.5 bg-emerald-50/40 rounded-2xl border border-emerald-100/50">
+                    <label class="text-[8px] font-black text-emerald-600 uppercase block mb-1 text-center">Omset (Rp)</label>
+                    <input type="number" name="omset_pendapatan" placeholder="0" class="w-full bg-transparent border-none text-xs font-black text-emerald-700 text-center focus:ring-0 p-0" required>
                 </div>
-                <div class="col-span-2 md:col-span-1">
-                    <label class="text-[10px] font-bold text-gray-400 uppercase mb-2 block ml-1">Cluster Usaha</label>
-                    <select name="id_cluster" class="w-full border-gray-100 rounded-2xl p-3.5 bg-gray-50 font-bold focus:ring-2 focus:ring-sky-500 transition" required>
-                        <option value="">-- Pilih Cluster --</option>
-                        @foreach($clusters as $c) <option value="{{ $c->id_cluster }}">{{ $c->nama_cluster }}</option> @endforeach
-                    </select>
-                </div>
-                <div class="col-span-1">
-                    <label class="text-[10px] font-bold text-emerald-600 uppercase mb-2 block ml-1 text-center">Omset (Rp)</label>
-                    <input type="number" name="omset_pendapatan" class="w-full border-emerald-100 rounded-2xl p-4 bg-emerald-50/50 font-black text-emerald-700 focus:ring-2 focus:ring-emerald-500 transition text-center" required>
-                </div>
-                <div class="col-span-1">
-                    <label class="text-[10px] font-bold text-red-600 uppercase mb-2 block ml-1 text-center">Pengeluaran (Rp)</label>
-                    <input type="number" name="total_pengeluaran" class="w-full border-red-100 rounded-2xl p-4 bg-red-50/50 font-black text-red-700 focus:ring-2 focus:ring-red-500 transition text-center" required>
-                </div>
-                <div class="col-span-2">
-                    <div class="grid grid-cols-3 gap-4 bg-gray-50 p-5 rounded-[2rem] border border-gray-100">
-                        <div>
-                            <label class="text-[9px] font-bold text-gray-400 uppercase mb-1 block">Tgl Laporan</label>
-                            <input type="date" name="tanggal_laporan" value="{{ date('Y-m-d') }}" class="w-full border-none bg-white rounded-xl p-2 font-bold text-sm shadow-sm" required>
-                        </div>
-                        <div>
-                            <label class="text-[9px] font-bold text-gray-400 uppercase mb-1 block">Bulan</label>
-                            <select name="periode_bulan" class="w-full border-none bg-white rounded-xl p-2 font-bold text-sm shadow-sm">
-                                @for($m=1;$m<=12;$m++) <option value="{{$m}}" {{date('n')==$m?'selected':''}}>{{date('F',mktime(0,0,0,$m,10))}}</option> @endfor
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-[9px] font-bold text-gray-400 uppercase mb-1 block">Tahun</label>
-                            <input type="number" name="periode_tahun" value="{{date('Y')}}" class="w-full border-none bg-white rounded-xl p-2 font-bold text-sm shadow-sm">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-span-2">
-                    <label class="text-[10px] font-bold text-gray-400 uppercase mb-2 block ml-1">Catatan Laporan</label>
-                    <textarea name="keterangan" rows="2" class="w-full border-gray-100 rounded-2xl p-4 bg-gray-50 font-medium focus:ring-2 focus:ring-sky-500 transition text-sm"></textarea>
-                </div>
-                <div class="col-span-2">
-                    <div class="border-2 border-dashed border-gray-100 rounded-2xl p-4 flex flex-col items-center justify-center bg-gray-50/30">
-                        <label class="text-[10px] font-bold text-gray-400 uppercase mb-2">Unggah Bukti Transaksi</label>
-                        <input type="file" name="lampiran_keuangan" class="text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-bold file:bg-sky-100 file:text-sky-700 cursor-pointer">
-                    </div>
+                <div class="p-2.5 bg-rose-50/40 rounded-2xl border border-rose-100/50">
+                    <label class="text-[8px] font-black text-rose-600 uppercase block mb-1 text-center">Pengeluaran (Rp)</label>
+                    <input type="number" name="total_pengeluaran" placeholder="0" class="w-full bg-transparent border-none text-xs font-black text-rose-700 text-center focus:ring-0 p-0" required>
                 </div>
             </div>
-            <button type="submit" class="mt-8 w-full py-4 bg-sky-600 text-white font-extrabold rounded-2xl shadow-lg hover:bg-sky-700 hover:-translate-y-1 transition-all uppercase tracking-widest text-xs">Simpan Laporan</button>
+
+            <div class="bg-slate-50/50 p-2.5 rounded-2xl flex items-center gap-3 border border-slate-100">
+                <div class="flex-1 flex items-center gap-1.5 text-slate-500">
+                    <span class="text-xs">📅</span>
+                    <input type="date" name="tanggal_laporan" value="{{ date('Y-m-d') }}" class="w-full bg-transparent border-none p-0 text-[10px] font-bold text-slate-600 focus:ring-0">
+                </div>
+                <div class="h-4 w-px bg-slate-200"></div>
+                <div class="flex-1">
+                    <select name="periode_bulan" class="w-full bg-transparent border-none p-0 text-[10px] font-bold text-slate-600 focus:ring-0">
+                        @for($m=1;$m<=12;$m++) <option value="{{$m}}" {{date('n')==$m?'selected':''}}>{{date('M',mktime(0,0,0,$m,10))}}</option> @endfor
+                    </select>
+                </div>
+                <div class="h-4 w-px bg-slate-200"></div>
+                <div class="flex-1">
+                    <input type="number" name="periode_tahun" value="{{date('Y')}}" class="w-full bg-transparent border-none p-0 text-[10px] font-bold text-slate-600 focus:ring-0 text-center">
+                </div>
+            </div>
+
+            <div class="space-y-1">
+                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Keterangan</label>
+                <textarea name="keterangan" rows="2" placeholder="Catatan singkat..." class="w-full bg-slate-50 border-none rounded-xl text-[10px] font-medium text-slate-600 placeholder:text-slate-300 focus:ring-2 focus:ring-sky-500/20 resize-none p-2.5"></textarea>
+            </div>
+
+            <div class="relative group border-2 border-dashed border-slate-100 hover:border-sky-300 rounded-xl px-4 py-2 flex items-center gap-3 transition-all">
+                <input type="file" name="lampiran_keuangan" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                <div class="text-lg text-sky-500">📂</div>
+                <div class="text-left leading-tight">
+                    <p class="text-[10px] font-bold text-slate-500 group-hover:text-sky-600 truncate max-w-[250px]">Klik untuk unggah Bukti Transaksi</p>
+                    <p class="text-[8px] text-slate-300 uppercase font-bold tracking-tight">JPG, PNG, PDF, Excel (Max 5MB)</p>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full h-11 bg-sky-600 text-white font-black rounded-xl shadow-lg shadow-sky-100 hover:bg-sky-700 transition-all text-[10px] uppercase tracking-[0.2em]">
+                Simpan Laporan
+            </button>
         </form>
     </div>
 </div>
 
 {{-- MODAL EDIT --}}
-<div id="modal-edit-lk" tabindex="-1" class="hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full bg-black/60 backdrop-blur-sm p-4">
-    <div class="relative w-full max-w-2xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-amber-100">
-        <div class="p-6 border-b flex justify-between items-center bg-amber-50/30">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center text-lg">✏️</div>
-                <div>
-                    <h3 class="text-xl font-extrabold text-gray-800">Perbarui Laporan</h3>
-                    <p class="text-[10px] font-bold text-amber-600 uppercase tracking-widest">Perbarui Data Laporan</p>
-                </div>
-            </div>
-            <button onclick="closeEditModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 transition">✕</button>
+<div id="modal-edit-lk" tabindex="-1" class="hidden fixed inset-0 z-[100] flex justify-center items-center w-full h-full bg-black/40 backdrop-blur-[2px] p-4">
+    <div class="relative w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div class="px-5 py-4 border-b flex justify-between items-center bg-amber-50/20">
+            <h3 class="text-sm font-bold text-gray-800">EDIT LAPORAN</h3>
+            <button type="button" onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 transition text-sm">✕</button>
         </div>
-        <form id="form-edit-lk" method="POST" enctype="multipart/form-data" class="p-8">
+        <form id="form-edit-lk" method="POST" enctype="multipart/form-data" class="p-5">
             @csrf @method('PUT')
-            <div class="grid grid-cols-2 gap-5">
-                <div class="col-span-2 md:col-span-1">
-                    <label class="text-[10px] font-bold text-gray-400 uppercase mb-2 block ml-1">KUBE</label>
-                    <select name="id_persetujuan" id="edit-kube" class="w-full border-gray-100 rounded-2xl p-3.5 bg-gray-50 font-bold focus:ring-2 focus:ring-amber-500 transition" required>
+            <div class="grid grid-cols-2 gap-3 text-xs">
+                <div class="col-span-2">
+                    <label class="text-[10px] font-bold text-gray-400 uppercase block">KUBE</label>
+                    <select name="id_persetujuan" id="edit-kube" class="w-full border-gray-100 rounded-lg p-2 bg-gray-50 font-bold" required>
                         @foreach($kubeDisetujui as $k) <option value="{{$k->id_pengajuan_kube}}">{{$k->nama_tampilan}}</option> @endforeach
                     </select>
                 </div>
-                <div class="col-span-2 md:col-span-1">
-                    <label class="text-[10px] font-bold text-gray-400 uppercase mb-2 block ml-1">Cluster</label>
-                    <select name="id_cluster" id="edit-cluster" class="w-full border-gray-100 rounded-2xl p-3.5 bg-gray-50 font-bold focus:ring-2 focus:ring-amber-500 transition" required>
+                <div class="col-span-2">
+                    <label class="text-[10px] font-bold text-gray-400 uppercase block">Cluster</label>
+                    <select name="id_cluster" id="edit-cluster" class="w-full border-gray-100 rounded-lg p-2 bg-gray-50 font-bold" required>
                         @foreach($clusters as $c) <option value="{{$c->id_cluster}}">{{$c->nama_cluster}}</option> @endforeach
                     </select>
                 </div>
-                <div class="col-span-1">
-                    <label class="text-[10px] font-bold text-emerald-600 uppercase mb-2 block ml-1 text-center">Omset</label>
-                    <input type="number" name="omset_pendapatan" id="edit-omset" class="w-full border-emerald-100 rounded-2xl p-4 bg-emerald-50/50 font-black text-emerald-700 focus:ring-2 focus:ring-emerald-500 transition text-center" required>
+                <div>
+                    <label class="text-[10px] font-bold text-emerald-600 uppercase block">Omset</label>
+                    <input type="number" name="omset_pendapatan" id="edit-omset" class="w-full border-emerald-100 rounded-lg p-2 bg-emerald-50/30 font-bold text-emerald-700" required>
                 </div>
-                <div class="col-span-1">
-                    <label class="text-[10px] font-bold text-red-600 uppercase mb-2 block ml-1 text-center">Pengeluaran</label>
-                    <input type="number" name="total_pengeluaran" id="edit-pengeluaran" class="w-full border-red-100 rounded-2xl p-4 bg-red-50/50 font-black text-red-700 focus:ring-2 focus:ring-red-500 transition text-center" required>
+                <div>
+                    <label class="text-[10px] font-bold text-red-600 uppercase block">Pengeluaran</label>
+                    <input type="number" name="total_pengeluaran" id="edit-pengeluaran" class="w-full border-red-100 rounded-lg p-2 bg-red-50/30 font-bold text-red-700" required>
                 </div>
-                <div class="col-span-2">
-                    <div class="grid grid-cols-3 gap-4 bg-gray-50 p-5 rounded-[2rem] border border-gray-100">
-                        <div>
-                            <label class="text-[9px] font-bold text-gray-400 uppercase mb-1 block">Tgl Lapor</label>
-                            <input type="date" name="tanggal_laporan" id="edit-tgl-lapor" class="w-full border-none bg-white rounded-xl p-2 font-bold text-sm shadow-sm" required>
-                        </div>
-                        <div>
-                            <label class="text-[9px] font-bold text-gray-400 uppercase mb-1 block">Bulan</label>
-                            <select name="periode_bulan" id="edit-bulan" class="w-full border-none bg-white rounded-xl p-2 font-bold text-sm shadow-sm">
-                                @for($m=1;$m<=12;$m++) <option value="{{$m}}">{{date('F',mktime(0,0,0,$m,10))}}</option> @endfor
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-[9px] font-bold text-gray-400 uppercase mb-1 block">Tahun</label>
-                            <input type="number" name="periode_tahun" id="edit-tahun" class="w-full border-none bg-white rounded-xl p-2 font-bold text-sm shadow-sm">
-                        </div>
-                    </div>
+                <div class="col-span-2 grid grid-cols-3 gap-2 py-2">
+                    <input type="date" name="tanggal_laporan" id="edit-tgl-lapor" class="border-gray-100 rounded-lg p-1.5 font-bold text-[11px] bg-gray-50">
+                    <select name="periode_bulan" id="edit-bulan" class="border-gray-100 rounded-lg p-1.5 font-bold text-[11px] bg-gray-50">
+                        @for($m=1;$m<=12;$m++) <option value="{{$m}}">{{date('M',mktime(0,0,0,$m,10))}}</option> @endfor
+                    </select>
+                    <input type="number" name="periode_tahun" id="edit-tahun" class="border-gray-100 rounded-lg p-1.5 font-bold text-[11px] bg-gray-50">
                 </div>
                 <div class="col-span-2">
-                    <label class="text-[10px] font-bold text-gray-400 uppercase mb-2 block ml-1">Keterangan</label>
-                    <textarea name="keterangan" id="edit-ket" rows="2" class="w-full border-gray-100 rounded-2xl p-4 bg-gray-50 font-medium focus:ring-2 focus:ring-amber-500 transition text-sm"></textarea>
+                    <textarea name="keterangan" id="edit-ket" rows="2" class="w-full border-gray-100 rounded-lg p-2 bg-gray-50"></textarea>
                 </div>
-                <div class="col-span-2">
-                    <div class="border-2 border-dashed border-gray-100 rounded-2xl p-4 flex flex-col items-center justify-center bg-gray-50/30">
-                        <label class="text-[10px] font-bold text-gray-400 uppercase mb-2">Ganti Berkas</label>
-                        <input type="file" name="lampiran_keuangan" class="text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-bold file:bg-amber-100 file:text-amber-700 cursor-pointer">
-                    </div>
-                </div>
+               <div class="col-span-2">
+    <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Lampiran Baru</label>
+
+    <div class="relative group border-2 border-dashed border-slate-100 hover:border-amber-300 rounded-xl px-4 py-2 flex items-center gap-3 transition-all mt-1">
+        <input type="file" name="lampiran_keuangan" id="edit-file-upload" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+        <div class="text-lg text-amber-500">📂</div>
+        <div class="text-left leading-tight">
+            <p id="edit-file-name" class="text-[10px] font-bold text-slate-500 group-hover:text-amber-600 truncate max-w-[200px]">
+                Klik untuk ganti bukti transaksi
+            </p>
+            <p class="text-[8px] text-slate-300 uppercase font-bold tracking-tight">JPG, PNG, PDF, EXCEL (Max 5MB)</p>
+        </div>
+    </div>
+</div>
             </div>
-            <button type="submit" class="mt-8 w-full py-4 bg-amber-500 text-white font-extrabold rounded-2xl shadow-lg hover:bg-amber-600 hover:-translate-y-1 transition-all uppercase tracking-widest text-xs">Update Laporan</button>
+            <button type="submit" class="mt-5 w-full py-2.5 bg-amber-500 text-white font-bold rounded-lg shadow hover:bg-amber-600 transition text-xs uppercase">Perbarui</button>
         </form>
     </div>
 </div>
 
 {{-- MODAL DETAIL --}}
-<div id="modal-detail-lk" tabindex="-1" class="hidden fixed inset-0 z-[60] flex justify-center items-center w-full h-full bg-black/60 backdrop-blur-sm p-4">
-    <div class="relative w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 overflow-hidden">
-        <div class="p-8 text-center">
-            <p id="det-cluster" class="text-[10px] font-black text-sky-600 uppercase tracking-widest mb-2"></p>
-            <h4 id="det-kube" class="text-2xl font-black text-gray-900 mb-1 leading-tight"></h4>
-            <p id="det-periode" class="text-xs font-bold text-gray-400 mb-6"></p>
-            <div class="grid grid-cols-2 gap-4 text-left bg-gray-50 p-6 rounded-3xl mb-6">
-                <div><p class="text-[10px] font-bold text-gray-400 uppercase">Omset</p><p id="det-omset" class="font-bold text-gray-800 text-sm"></p></div>
-                <div><p class="text-[10px] font-bold text-gray-400 uppercase">Laba</p><p id="det-laba" class="font-bold text-emerald-600 text-sm"></p></div>
-                <div><p class="text-[10px] font-bold text-gray-400 uppercase">Pengeluaran</p><p id="det-pengeluaran" class="font-bold text-red-500 text-sm"></p></div>
-                <div><p class="text-[10px] font-bold text-gray-400 uppercase">Tgl Input</p><p id="det-tgl" class="font-bold text-gray-800 text-sm"></p></div>
-                <div class="col-span-2 pt-4 border-t border-gray-200 mt-2">
-                    <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Catatan</p>
-                    <p id="det-ket" class="text-xs text-gray-600 italic leading-relaxed"></p>
-                </div>
+<div id="modal-detail-lk" class="hidden fixed inset-0 z-[150] flex justify-center items-center w-full h-full bg-black/50 backdrop-blur-sm p-4">
+    <div class="relative w-full max-w-sm bg-white rounded-[2rem] shadow-2xl p-6">
+        <div class="flex justify-between items-start mb-4">
+            <div>
+                <p id="det-cluster" class="text-[9px] font-bold text-sky-500 uppercase tracking-widest"></p>
+                <h4 id="det-kube" class="text-base font-black text-gray-900 tracking-tight"></h4>
+                <p id="det-periode" class="text-[10px] text-gray-400 font-bold uppercase"></p>
+                <p id="det-tgl" class="hidden"></p>
             </div>
-            <button onclick="closeDetail()" class="w-full py-4 bg-gray-900 text-white font-bold rounded-2xl text-[10px] tracking-widest hover:bg-black transition">TUTUP DETAIL</button>
+            <button onclick="closeDetail()" class="text-gray-300 hover:text-gray-600 transition text-xl">✕</button>
         </div>
+        <div class="space-y-3 py-4 border-y border-gray-50 mb-4">
+            <div class="flex justify-between"><span class="text-[10px] font-bold text-gray-400">Total Omset</span><span id="det-omset" class="text-xs font-bold text-gray-700"></span></div>
+            <div class="flex justify-between"><span class="text-[10px] font-bold text-gray-400">Pengeluaran</span><span id="det-pengeluaran" class="text-xs font-bold text-red-500"></span></div>
+            <div class="flex justify-between pt-2 border-t"><span class="text-[10px] font-black text-gray-900">Laba Bersih</span><span id="det-laba" class="text-sm font-black text-emerald-500"></span></div>
+        </div>
+        <div class="mb-6 bg-gray-50 p-3 rounded-xl border border-gray-100">
+            <p id="det-ket" class="text-[11px] text-gray-500 italic text-center leading-relaxed"></p>
+        </div>
+          <button id="btn-cetak-modal" type="button" onclick="printFormalReport()" class="w-full py-2.5 bg-sky-700 text-white font-bold rounded-xl text-[10px] tracking-widest hover:bg-sky-900 transition-all flex items-center justify-center gap-2 shadow-lg">
+                    🖨️ CETAK PDF
+                </button>
+                <button type="button" onclick="closeDetail()" class="w-full py-2 bg-transparent text-gray-400 font-bold rounded-lg text-[10px] hover:text-gray-600 transition">
+                    KEMBALI
+                </button>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    function showDetail(btn) {
+         const idLaporan = btn.getAttribute('data-id');
+        const kube = btn.getAttribute('data-kube');
+        const cluster = btn.getAttribute('data-cluster');
+        const periode = btn.getAttribute('data-periode');
+        const tgl = btn.getAttribute('data-tgl');
+        const omset = btn.getAttribute('data-omset');
+        const pengeluaran = btn.getAttribute('data-pengeluaran');
+        const laba = btn.getAttribute('data-laba');
+        const ket = btn.getAttribute('data-ket');
+
+    
+        document.getElementById('det-kube').innerText = kube;
+        document.getElementById('det-cluster').innerText = cluster;
+        document.getElementById('det-periode').innerText = "Periode " + periode;
+        document.getElementById('det-omset').innerText = omset;
+        document.getElementById('det-pengeluaran').innerText = pengeluaran;
+        document.getElementById('det-laba').innerText = laba;
+        document.getElementById('det-ket').innerText = ket;
+        document.getElementById('det-tgl').innerText = tgl;
+
+   const btnCetak = document.getElementById('btn-cetak-modal');
+    if (btnCetak) {
+        const urlCetak = `/laporan-keuangan/export/pdf-detail/${idLaporan}`;
+        btnCetak.setAttribute('onclick', `printLaporan('${urlCetak}')`);
+    }
+        const modal = document.getElementById('modal-detail-lk');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex'); 
+    }
+
+    function closeDetail() {
+        const modal = document.getElementById('modal-detail-lk');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+
     function openEditModal(btn) {
         const id = btn.getAttribute('data-id');
+        const file = btn.getAttribute('data-file');
         document.getElementById('form-edit-lk').action = `/laporan-keuangan/${id}`;
         document.getElementById('edit-kube').value = btn.getAttribute('data-kube');
         document.getElementById('edit-cluster').value = btn.getAttribute('data-cluster');
@@ -330,26 +539,17 @@
         document.getElementById('edit-tahun').value = btn.getAttribute('data-tahun');
         document.getElementById('edit-ket').value = btn.getAttribute('data-ket');
         document.getElementById('modal-edit-lk').classList.remove('hidden');
+        document.getElementById('modal-edit-lk').classList.add('flex');
+    const fileInfo = document.getElementById('edit-file-info');
+    fileInfo.innerText = file ? `File saat ini: ${file}` : "Belum ada lampiran.";
     }
 
-    function closeEditModal() { document.getElementById('modal-edit-lk').classList.add('hidden'); }
-
-    function showDetail(btn) {
-        document.getElementById('det-kube').innerText = btn.getAttribute('data-kube');
-        document.getElementById('det-cluster').innerText = btn.getAttribute('data-cluster');
-        document.getElementById('det-periode').innerText = "Periode " + btn.getAttribute('data-periode');
-        document.getElementById('det-tgl').innerText = btn.getAttribute('data-tgl');
-        document.getElementById('det-omset').innerText = btn.getAttribute('data-omset');
-        document.getElementById('det-pengeluaran').innerText = btn.getAttribute('data-pengeluaran');
-        document.getElementById('det-laba').innerText = btn.getAttribute('data-laba');
-        document.getElementById('det-ket').innerText = btn.getAttribute('data-ket');
-        document.getElementById('modal-detail-lk').classList.remove('hidden');
+    function closeEditModal() {
+        document.getElementById('modal-edit-lk').classList.add('hidden');
+        document.getElementById('modal-edit-lk').classList.remove('flex');
     }
 
-    function closeDetail() { document.getElementById('modal-detail-lk').classList.add('hidden'); }
-
-    // SWEETALERT HAPUS
-    function confirmDelete(id) {
+   function confirmDelete(id) {
         Swal.fire({
             title: 'Apakah Anda yakin?',
             text: "Data laporan ini akan dihapus permanen!",
@@ -366,17 +566,124 @@
             }
         })
     }
+    function printLaporan(url) {
+    const iframe = document.getElementById('print-frame');
+    if (iframe) {
+        iframe.src = url;
+        iframe.onload = function() {
+            try {
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
+            } catch (e) {
+                window.open(url, '_blank');
+            }
+        };
+    } else {
+        console.error("Elemen iframe dengan id 'print-frame' tidak ditemukan!");
+    }
+}
 
-    // NOTIFIKASI SUKSES (TAMBAH/EDIT/HAPUS)
-    @if(session('success'))
-        Swal.fire({
-            icon: 'success',
-            title: 'Berhasil!',
-            text: "{{ session('success') }}",
-            showConfirmButton: false,
-            timer: 2000,
-            customClass: { popup: 'rounded-[2.5rem]' }
-        });
-    @endif
+    function printFormalReport() {
+        const kube = document.getElementById('det-kube').innerText;
+        const cluster = document.getElementById('det-cluster').innerText;
+        const periode = document.getElementById('det-periode').innerText;
+        const tglLapor = document.getElementById('det-tgl').innerText;
+        const omset = document.getElementById('det-omset').innerText;
+        const pengeluaran = document.getElementById('det-pengeluaran').innerText;
+        const laba = document.getElementById('det-laba').innerText;
+        const keterangan = document.getElementById('det-ket').innerText;
+
+        let iframe = document.getElementById('printFrame');
+        if (!iframe) {
+            iframe = document.createElement('iframe');
+            iframe.id = 'printFrame';
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+        }
+
+        const doc = iframe.contentWindow.document;
+        doc.open();
+        doc.write(`
+            <html>
+            <head>
+                <title>Laporan Keuangan - ${kube}</title>
+                <style>
+                    body { font-family: 'Arial', sans-serif; padding: 40px; color: #333; line-height: 1.6; }
+                    .header { text-align: center; border-bottom: 3px double #000; padding-bottom: 20px; margin-bottom: 30px; }
+                    .header h2 { margin: 0; text-transform: uppercase; }
+                    .header p { margin: 5px 0; font-size: 12px; }
+                    .title { text-align: center; text-decoration: underline; margin: 30px 0 20px; font-weight: bold; font-size: 16px; }
+                    .info-table { width: 100%; margin-bottom: 30px; border-collapse: collapse; }
+                    .info-table td { padding: 8px 0; vertical-align: top; }
+                    .info-table td.label { width: 150px; font-weight: bold; }
+                    .data-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                    .data-table th, .data-table td { border: 1px solid #000; padding: 12px; text-align: left; }
+                    .data-table th { background-color: #f2f2f2; }
+                    .footer-container { margin-top: 50px; display: flex; justify-content: space-between; }
+                    .signature-box { width: 250px; text-align: center; }
+                    .signature-space { height: 80px; }
+                    @media print { .no-print { display: none; } }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h2>DINAS SOSIAL KABUPATEN CILACAP</h2>
+                    <p>Program Kelompok Usaha Bersama (KUBE) - Cluster ${cluster}</p>
+                    <p>Jl. Bromo Timur No.13, Sidakaya Dua, Sidakaya, Kec. Cilacap Sel., Kabupaten Cilacap, Jawa Tengah 53223</p>
+                </div>
+                <div class="title">LAPORAN REKAPITULASI KEUANGAN BULANAN</div>
+                <table class="info-table">
+                    <tr><td class="label">Nama KUBE</td><td>: ${kube}</td></tr>
+                    <tr><td class="label">Cluster Usaha</td><td>: ${cluster}</td></tr>
+                    <tr><td class="label">Periode</td><td>: ${periode}</td></tr>
+                    <tr><td class="label">Tanggal Input</td><td>: ${tglLapor}</td></tr>
+                </table>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Deskripsi</th><th>Nilai (Rupiah)</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Total Omset / Pendapatan</td><td>${omset}</td></tr>
+                        <tr><td>Total Pengeluaran Operasional</td><td>${pengeluaran}</td></tr>
+                        <tr style="font-weight: bold;"><td>Laba Bersih</td><td>${laba}</td></tr>
+                    </tbody>
+                </table>
+                <p><strong>Catatan/Keterangan:</strong><br>${keterangan}</p>
+                <div class="footer-container">
+                    <div class="signature-box">
+                        <p>&nbsp;</p>
+                        <p>Ketua KUBE,</p>
+                        <div class="signature-space"></div>
+                        <p><strong>( ____________________ )</strong></p>
+                    </div>
+                    <div class="signature-box">
+                        <p>Cilacap, ${new Date().toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'})}</p>
+                        <p>Pendamping KUBE,</p>
+                        <div class="signature-space"></div>
+                        <p><strong>( ____________________ )</strong></p>
+                    </div>
+                </div>
+            </body>
+            </html>
+        `);
+        doc.close();
+        setTimeout(() => {
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+        }, 500);
+    }
+
+document.getElementById('file-upload').addEventListener('change', function(e) {
+    const fileName = e.target.files[0] ? e.target.files[0].name : "Klik atau seret file ke sini";
+    const label = document.getElementById('file-name');
+    label.innerText = fileName;
+    label.classList.add('text-sky-600');
+
+document.getElementById('edit-file-upload').addEventListener('change', function(e) {
+    const fileName = e.target.files[0] ? e.target.files[0].name : "Klik untuk ganti bukti transaksi";
+    document.getElementById('edit-file-name').innerText = fileName;
+});
+});
 </script>
+  <iframe id="print-frame" class="hidden" style="display:none;"></iframe>
 @endsection

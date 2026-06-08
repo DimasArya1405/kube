@@ -1,6 +1,7 @@
 {{-- MEILITA --}}
 
-@extends('admin.layout')
+
+@extends('pendamping.dashboard.index')
 
 @section('title', 'Data Kunjungan Pendamping - KUBE')
 
@@ -12,11 +13,103 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
 
 <div class="mb-6 flex justify-between items-end">
     <div>
-        <h2 class="text-3xl font-bold text-gray-800">Data Kunjungan Pendamping</h2>
-        <p class="text-gray-500 mt-1">Kelola seluruh data Kunjungan Pendamping KUBE.</p>
+        <h2 class="text-3xl font-bold text-gray-800">Data Jadwal Kunjungan Pendamping</h2>
+        <p class="text-gray-500 mt-1">Kelola seluruh data Jadwal Kunjungan Pendamping KUBE.</p>
     </div>
 </div>
 
+
+{{-- FILTER TAHUN & STATUS (Layout grid horizontal disamakan dengan kode pertama) --}}
+<div class="bg-white mb-4 rounded-lg shadow-sm border p-4">
+    <form action="{{ route('kunjungan.index') }}" method="GET">
+
+        <div class="flex flex-col md:flex-row gap-4 md:items-end">
+
+            {{-- Tujuan Kunjungan --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Tujuan Kunjungan
+                </label>
+
+                <select name="tujuan_kunjungan"
+                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[220px] text-sm">
+
+                    <option value="">Semua Tujuan</option>
+
+                    <option value="Monitoring"
+                        {{ request('tujuan_kunjungan') == 'Monitoring' ? 'selected' : '' }}>
+                        Monitoring
+                    </option>
+
+                    <option value="Evaluasi"
+                        {{ request('tujuan_kunjungan') == 'Evaluasi' ? 'selected' : '' }}>
+                        Evaluasi
+                    </option>
+
+                    <option value="Koordinasi"
+                        {{ request('tujuan_kunjungan') == 'Koordinasi' ? 'selected' : '' }}>
+                        Koordinasi
+                    </option>
+
+                    <option value="Kunjungan Rutin"
+                        {{ request('tujuan_kunjungan') == 'Kunjungan Rutin' ? 'selected' : '' }}>
+                        Kunjungan Rutin
+                    </option>
+
+                </select>
+            </div>
+
+            {{-- Status --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Status
+                </label>
+
+                <select name="status"
+                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[220px] text-sm">
+
+                    <option value="">Semua Status</option>
+
+                    <option value="terjadwal"
+                        {{ request('status') == 'terjadwal' ? 'selected' : '' }}>
+                        Terjadwal
+                    </option>
+
+                    <option value="selesai"
+                        {{ request('status') == 'selesai' ? 'selected' : '' }}>
+                        Selesai
+                    </option>
+
+                </select>
+            </div>
+
+            {{-- Tombol --}}
+            <div class="flex gap-2">
+
+                <button type="submit"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm transition">
+                    Filter
+                </button>
+            </div>
+
+            <a href="{{ route('kunjungan.index') }}"
+                    class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 text-sm transition">
+                    Reset
+                </a>
+            <div class="ml-auto">
+                
+            {{-- Tambah Kunjungan --}}
+            <button data-modal-target="modal-tambah-kunjungan" data-modal-toggle="modal-tambah-kunjungan"
+                class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg">
+                Tambah Kunjungan
+            </button>
+            </div>
+            
+
+        </div>
+
+    </form>
+</div>
 
 {{-- TOOLBAR: Search + Export + Tambah --}}
 <div class="flex flex-wrap items-center gap-3 mb-4">
@@ -33,28 +126,24 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
     </div>
 
     {{-- Ekspor PDF --}}
-    <a href="#"
-        class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-        </svg>
-        Ekspor PDF
-    </a>
+            <a href="{{ route('kunjungan.export.pdf') }}"
+                class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                </svg>
+                Ekspor PDF
+            </a>
 
-    {{-- Ekspor Excel --}}
-    <a href="#"
-        class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6M3 17V7a2 2 0 012-2h14a2 2 0 012 2v10" />
-        </svg>
-        Ekspor Excel
-    </a>
+            {{-- Ekspor Excel --}}
+            <a href="{{ route('kunjungan.export.excel') }}"
+                class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6M3 17V7a2 2 0 012-2h14a2 2 0 012 2v10" />
+                </svg>
+                Ekspor Excel
+            </a>
 
-    {{-- Tambah Kunjungan --}}
-    <button data-modal-target="modal-tambah-kunjungan" data-modal-toggle="modal-tambah-kunjungan"
-        class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg">
-        + Tambah Kunjungan
-    </button>
+
 
 </div>
 
@@ -71,13 +160,14 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
                     <th class="px-4 py-3">Waktu</th>
                     <th class="px-4 py-3">Kunjungan Ke-</th>
                     <th class="px-4 py-3">Tujuan Kunjungan</th>
+                    <th class="px-4 py-3">Status</th>
                     <th class="px-4 py-3">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($kunjunganPendamping as $item)
                 <tr class="border-t border-gray-100 hover:bg-gray-50 searchable-row">
-                   
+
                     {{-- No --}}
                     <td class="px-4 py-3">{{ $loop->iteration }}</td>
 
@@ -102,17 +192,29 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
                     </td>
 
                     {{-- Tujuan --}}
-                        <td class="px-4 py-3">
-                            @if($item->tujuan_kunjungan == 'Monitoring')
-                                <span class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full">Monitoring</span>
-                            @elseif($item->tujuan_kunjungan == 'Evaluasi')
-                                <span class="bg-red-100 text-red-700 text-xs px-2 py-1 rounded-full">Evaluasi</span>
-                            @elseif($item->tujuan_kunjungan == 'Koordinasi')
-                                <span class="bg-yellow-100 text-yellow-700 text-xs px-2 py-1 rounded-full">Koordinasi</span>
-                            @else
-                                <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">Kunjungan Rutin</span>
-                            @endif
-                        </td>
+                    <td class="px-4 py-3">
+                        @if($item->tujuan_kunjungan == 'Monitoring')
+                        <span class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full">Monitoring</span>
+                        @elseif($item->tujuan_kunjungan == 'Evaluasi')
+                        <span class="bg-red-100 text-red-700 text-xs px-2 py-1 rounded-full">Evaluasi</span>
+                        @elseif($item->tujuan_kunjungan == 'Koordinasi')
+                        <span class="bg-yellow-100 text-yellow-700 text-xs px-2 py-1 rounded-full">Koordinasi</span>
+                        @else
+                        <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">Kunjungan Rutin</span>
+                        @endif
+                    </td>
+                    {{-- Status --}}
+                    <td>
+                        @if($item->status == 'terjadwal')
+                        <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">
+                            Terjadwal
+                        </span>
+                        @else
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">
+                            Selesai
+                        </span>
+                        @endif
+                    </td>
 
                     {{-- Aksi --}}
                     <td class="px-4 py-3">
@@ -126,7 +228,7 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
                             </a>
 
                             {{-- Edit --}}
-                            <a href="#" data-modal-target="modal-edit-{{ $item->id_kunjungan }}"data-modal-toggle="modal-edit-{{ $item->id_kunjungan }}" class="text-yellow-500 hover:text-yellow-700" title="Edit">
+                            <a href="#" data-modal-target="modal-edit-{{ $item->id_kunjungan }}" data-modal-toggle="modal-edit-{{ $item->id_kunjungan }}" class="text-yellow-500 hover:text-yellow-700" title="Edit">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
@@ -144,7 +246,18 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
                                 </button>
                             </form>
 
-                           
+                            {{-- Selesai --}}
+                            @if($item->status == 'terjadwal')
+                            <button
+                                data-modal-target="modalSelesai{{ $item->id_kunjungan }}"
+                                data-modal-toggle="modalSelesai{{ $item->id_kunjungan }}"
+                                class="text-green-600 hover:text-green-800"
+                                title="Tandai Selesai">
+                                ✓
+                            </button>
+                            @endif
+
+
                             </form>
                         </div>
                     </td>
@@ -178,53 +291,75 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
                 </button>
             </div>
 
-            <form action="{{ route('kunjungan.store') }}" method="POST" enctype="multipart/form-data" class="p-5">
+            <form action="{{ route('kunjungan.store') }}"
+                method="POST"
+                enctype="multipart/form-data"
+                class="p-5">
+
                 @csrf
 
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Nama Pendamping
-                    </label>
-
-                    <select id="pendamping" name="id_pendamping" class="w-full border px-3 py-2">
-                        <option value="">-- Pilih Pendamping --</option>
-
-                        @foreach($pendamping as $id => $items)
-                            <option value="{{ $id }}">
-                                {{ $items->first()->pendamping->nama_pendamping }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
                 <div class="grid grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama KUBE</label>
-                    <select id="kube" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" required
-                            onchange="document.getElementById('id_kube_hidden').value = this.value">
-                        <option value="">-- Pilih KUBE --</option>
-                    </select>
-                    <!-- Hidden input sebagai pengganti name, agar tetap terkirim walau disabled -->
-                    <input type="hidden" name="id_pembagian" id="id_kube_hidden">
+
+                    {{-- KUBE --}}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Nama KUBE
+                        </label>
+
+                        <select name="id_pembagian"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            required>
+
+                            <option value="">-- Pilih KUBE --</option>
+
+                            @foreach($pembagianPendamping as $item)
+                            <option value="{{ $item->id_pembagian }}">
+                                {{ $item->kube->nama_kube }}
+                            </option>
+                            @endforeach
+
+                        </select>
+                    </div>
+
+                    {{-- TANGGAL --}}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Tanggal
+                        </label>
+
+                        <input type="date"
+                            name="tanggal_kunjungan"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            required>
+                    </div>
+
+                    {{-- WAKTU --}}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Waktu
+                        </label>
+
+                        <input type="time"
+                            name="waktu_kunjungan"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            required>
+                    </div>
+
+                    {{-- KUNJUNGAN KE --}}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Kunjungan Ke-
+                        </label>
+
+                        <input type="number"
+                            name="kunjungan_ke"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            required>
+                    </div>
 
                 </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
-                        <input type="date" name="tanggal_kunjungan"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Waktu</label>
-                        <input type="time" name="waktu_kunjungan"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Kunjungan Ke-</label>
-                        <input type="number" name="kunjungan_ke"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" required>
-                    </div>
-                    
-                </div>
+
+                {{-- TUJUAN --}}
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Tujuan Kunjungan
@@ -243,24 +378,31 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
                     </select>
                 </div>
 
-                
+                {{-- CATATAN --}}
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Catatan</label>
-                    <textarea name="catatan" rows="3"
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Catatan
+                    </label>
+
+                    <textarea name="catatan"
+                        rows="3"
                         class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
                 </div>
 
-               
-
+                {{-- BUTTON --}}
                 <div class="flex justify-end gap-3">
-                    <button type="button" data-modal-toggle="modal-tambah-kunjungan"
+
+                    <button type="button"
+                        data-modal-toggle="modal-tambah-kunjungan"
                         class="bg-gray-400 hover:bg-gray-500 text-white text-sm font-medium px-5 py-2 rounded-lg">
                         Batal
                     </button>
+
                     <button type="submit"
                         class="bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-5 py-2 rounded-lg">
                         Simpan
                     </button>
+
                 </div>
 
             </form>
@@ -291,27 +433,14 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
                 @csrf
                 @method('PUT')
 
-                <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                Nama Pendamping
-            </label>
-
-            <input type="text"
-                value="{{ $item->pembagian->pendamping->nama_pendamping }}"
-                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-gray-100"
-                readonly>
-
-            <input type="hidden" name="id_pembagian" value="{{ $item->id_pembagian }}">
-        </div>
-
                 <div class="grid grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama KUBE</label>
-                    <input type="text" id="edit_nama_kube"
-                        value="{{ $item->pembagian->kube->nama_kube }}"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-gray-100"
-                        readonly>
-                </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama KUBE</label>
+                        <input type="text" id="edit_nama_kube"
+                            value="{{ $item->pembagian->kube->nama_kube }}"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-gray-100"
+                            readonly>
+                    </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
                         <input type="date" name="tanggal_kunjungan" value="{{ $item->tanggal_kunjungan }}"
@@ -326,7 +455,7 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Kunjungan Ke-</label>
                         <input type="number" name="kunjungan_ke" value="{{ $item->kunjungan_ke }}"
                             class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" required>
-                    </div>                    
+                    </div>
                 </div>
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -337,22 +466,22 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
 
                         <option value="">-- Pilih Tujuan --</option>
 
-                        <option value="Monitoring" 
+                        <option value="Monitoring"
                             {{ $item->tujuan_kunjungan == 'Monitoring' ? 'selected' : '' }}>
                             Monitoring
                         </option>
 
-                        <option value="Evaluasi" 
+                        <option value="Evaluasi"
                             {{ $item->tujuan_kunjungan == 'Evaluasi' ? 'selected' : '' }}>
                             Evaluasi
                         </option>
 
-                        <option value="Koordinasi" 
+                        <option value="Koordinasi"
                             {{ $item->tujuan_kunjungan == 'Koordinasi' ? 'selected' : '' }}>
                             Koordinasi
                         </option>
 
-                        <option value="Kunjungan Rutin" 
+                        <option value="Kunjungan Rutin"
                             {{ $item->tujuan_kunjungan == 'Kunjungan Rutin' ? 'selected' : '' }}>
                             Kunjungan Rutin
                         </option>
@@ -360,14 +489,14 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
                     </select>
                 </div>
 
-                
+
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Catatan</label>
                     <textarea name="catatan" rows="3"
-                    class="w-full border px-3 py-2">{{ $item->catatan }}</textarea>
+                        class="w-full border px-3 py-2">{{ $item->catatan }}</textarea>
                 </div>
 
-               
+
 
                 <div class="flex justify-end gap-3">
                     <button type="button" data-modal-toggle="modal-edit-{{ $item->id_kunjungan }}"
@@ -435,6 +564,30 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
                 {{ $item->catatan ?? '-' }}
             </div>
 
+            <div>
+                @if($item->status == 'selesai')
+
+                <div class="mt-4">
+                    <p class="font-semibold">Status:</p>
+                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">
+                        Selesai
+                    </span>
+                </div>
+
+                <div class="mt-4">
+                    <p class="font-semibold">Catatan Hasil:</p>
+                    <p>{{ $item->catatan_hasil }}</p>
+                </div>
+
+                <div class="mt-4">
+                    <p class="font-semibold">Bukti Foto:</p>
+                    <img src="{{ asset('storage/'.$item->foto_bukti) }}"
+                        class="w-48 rounded shadow mt-2">
+                </div>
+
+                @endif
+            </div>
+
         </div>
 
         <div class="mt-4 text-right">
@@ -448,10 +601,57 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
 </div>
 @endforeach
 
+{{-- MODAL SELESAI KUNJUNGAN --}}
+@foreach($kunjunganPendamping as $item)
+<div id="modalSelesai{{ $item->id_kunjungan }}" tabindex="-1"
+    class="hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full bg-black bg-opacity-50">
 
-<script>
-    const dataPembagian = JSON.parse('{!! json_encode($dataPembagian) !!}');
-</script>
+    <div class="bg-white rounded-lg shadow p-6 w-full max-w-md">
+
+        <h3 class="text-lg font-semibold mb-4">
+            Konfirmasi Kunjungan
+        </h3>
+
+        <p class="text-sm mb-3">
+            KUBE:
+            <strong>{{ $item->pembagian->kube->nama_kube }}</strong>
+        </p>
+
+        <form action="{{ route('kunjungan.selesai', $item->id_kunjungan) }}"
+            method="POST"
+            enctype="multipart/form-data">
+            @csrf
+            @method('PATCH')
+
+            <div class="mb-3">
+                <label class="text-sm">Upload Bukti Foto *</label>
+                <input type="file" name="foto_bukti" required class="w-full border p-2 rounded">
+            </div>
+
+            <div class="mb-3">
+                <label class="text-sm">Catatan Hasil</label>
+                <textarea name="catatan_hasil" class="w-full border p-2 rounded"></textarea>
+            </div>
+
+            <div class="flex justify-end gap-2">
+                <button type="button"
+                    data-modal-hide="modalSelesai{{ $item->id_kunjungan }}"
+                    class="px-3 py-1 bg-gray-300 rounded">
+                    Batal
+                </button>
+
+                <button type="submit"
+                    class="px-3 py-1 bg-green-600 text-white rounded">
+                    Simpan & Selesai
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+@endforeach
+
 
 {{-- SCRIPT: Search --}}
 <script>
@@ -462,45 +662,6 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
             const text = row.textContent.toLowerCase();
             row.style.display = text.includes(keyword) ? '' : 'none';
         });
-    });
-
-    document.getElementById('pendamping').addEventListener('change', function() {
-        let idPendamping = this.value;
-        let kubeSelect   = document.getElementById('kube');
-
-        // Reset
-        kubeSelect.innerHTML = '<option value="">-- Pilih KUBE --</option>';
-        kubeSelect.disabled  = false;
-        document.getElementById('id_kube_hidden').value = '';
-
-        if (!idPendamping) return;
-
-        let filtered = dataPembagian.filter(item => item.id_pendamping == idPendamping);
-
-        if (filtered.length === 1) {
-            let opt      = document.createElement('option');
-            opt.value    = filtered[0].id_pembagian;
-            opt.text     = filtered[0].kube.nama_kube;
-            opt.selected = true;
-            kubeSelect.appendChild(opt);
-            kubeSelect.disabled = true;
-
-            // ✅ Di dalam sini, filtered sudah terdefinisi
-            document.getElementById('id_kube_hidden').value = filtered[0].id_pembagian;
-
-        } else {
-            filtered.forEach(item => {
-                let opt   = document.createElement('option');
-                opt.value = item.id_pembagian;
-                opt.text  = item.kube.nama_kube;
-                kubeSelect.appendChild(opt);
-            });
-
-            // ✅ Di dalam sini, kubeSelect sudah terdefinisi
-            kubeSelect.addEventListener('change', function() {
-                document.getElementById('id_kube_hidden').value = this.value;
-            });
-        }
     });
 </script>
 

@@ -17,7 +17,9 @@ return new class extends Migration
             $table->unsignedSmallInteger('periode_tahun'); // INT 4
 
             $table->decimal('omset_pendapatan', 12, 2)->nullable();
-
+            $table->decimal('total_pengeluaran', 15, 2);
+            $table->decimal('laba_bersih', 15, 2);
+            $table->decimal('total_omset', 15, 2);
             $table->unsignedSmallInteger('jumlah_tenaga_kerja')->nullable();
 
             $table->enum('perkembangan_usaha', ['Meningkat', 'Tetap', 'Menurun'])->nullable();

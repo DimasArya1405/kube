@@ -9,6 +9,7 @@ class Keuangan extends Model
     protected $primaryKey = 'id_laporan';
 
     protected $fillable = [
+        'id_kube',
         'id_persetujuan', 
         'id_cluster',
         'tanggal_laporan',
@@ -28,4 +29,8 @@ class Keuangan extends Model
     {
         return $this->belongsTo(ClusterUsaha::class, 'id_cluster', 'id_cluster');
     }
+   public function kube()
+{
+    return $this->belongsTo(Kube::class, 'id_kube', 'id_kube'); 
+}
 }

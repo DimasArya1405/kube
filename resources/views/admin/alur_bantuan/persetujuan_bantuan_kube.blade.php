@@ -103,31 +103,23 @@ Dashboard / <span class="text-gray-800">Pengajuan Bantuan KUBE</span>
                     </td>
 
                     <td class="px-6 py-4">
-                        @if (in_array($row->status_pengajuan, ['diajukan', 'menunggu']))
-                        <div class="flex gap-2 items-center">
-                            <button type="button"
-                                onclick="document.getElementById('modal-setujui-{{ $row->id_pengajuan_kube }}').classList.remove('hidden')"
-                                class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
-                                Setujui
-                            </button>
+                        <div class="flex gap-2 items-center flex-wrap">
+                            <a href="{{ route('kadis.persetujuan_bantuan_kube.detail', $row->id_pengajuan_kube) }}"
+                                class="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600">
+                                Detail
+                            </a>
 
-                            <button type="button"
-                                onclick="document.getElementById('modal-tolak-{{ $row->id_pengajuan_kube }}').classList.remove('hidden')"
-                                class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
-                                Tolak
-                            </button>
+                            @if (in_array($row->status_pengajuan, ['disetujui', 'cair']))
+                            <a href="{{ route('kadis.persetujuan_bantuan_kube.unduh_berita_acara', $row->id_pengajuan_kube) }}"
+                                class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-1">
+                                <i class="bi bi-download"></i>
+                                Unduh Berita Acara
+                            </a>
+                            @elseif (!in_array($row->status_pengajuan, ['diajukan', 'menunggu']))
+                            <span class="text-gray-500 italic">Sudah diproses</span>
+                            @endif
                         </div>
-                        @else
-                        @if(in_array($row->status_pengajuan, ['disetujui','cair']))
-                        <button type="button"
-                            class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-1">
-                            <i class="bi bi-download"></i>
-                            Unduh Berita Acara
-                        </button>
-                        @else
-                        <span class="text-gray-500 italic">Sudah diproses</span>
-                        @endif
-                        @endif
+                    </td>
                     </td>
                 </tr>
 

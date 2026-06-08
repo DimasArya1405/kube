@@ -15,16 +15,17 @@ class DataPerkembanganUsaha extends Model
         'id_laporan',
         'periode_bulan',
         'periode_tahun',
+        'omset_pendapatan',
+        'total_pengeluaran',
+        'laba_bersih',
+        'total_omset',
         'jumlah_tenaga_kerja',
         'perkembangan_usaha',
         'hasil_evaluasi',
         'rekomendasi',
-        'status_hasil'
+        'status_hasil',
     ];
 
-    /**
-     * Relasi ke laporan keuangan
-     */
     public function laporan()
     {
         return $this->belongsTo(Keuangan::class, 'id_laporan', 'id_laporan');
