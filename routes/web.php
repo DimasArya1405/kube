@@ -37,19 +37,7 @@ use Dflydev\DotAccessData\Data;
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/', function () {
-
-    return redirect('/login');
-});
-
-
-// DATA USER
-Route::get('/admin/users', [DashboardController::class, 'users'])->name('admin.users');
-Route::post('/admin/users/store', [DashboardController::class, 'store'])->name('admin.users.store');
-Route::get('/admin/users/edit/{id}', [DashboardController::class, 'edit'])->name('admin.users.edit');
-Route::put('/admin/users/update/{id}', [DashboardController::class, 'update'])->name('admin.users.update');
-Route::delete('/admin/users/delete/{id}', [DashboardController::class, 'destroy'])->name('admin.users.delete');
-
+Route::get('/', function () {return redirect('/login');});
 
 // REGISTER
 Route::get('/register', [AuthController::class, 'showRegister']);
@@ -59,18 +47,13 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
 // AJAX: Dapatkan Desa/Kelurahan berdasarkan Kecamatan
-
-Route::get('/get-desa/{id_kecamatan}', function ($id_kecamatan) {
-    $desa = \App\Models\DesaKelurahan::where('id_kecamatan', $id_kecamatan)->get(['id_desa_kelurahan', 'nama_desa_kelurahan']);
-    return response()->json($desa);
-});
+Route::get('/get-desa/{id_kecamatan}', function ($id_kecamatan) {$desa = \App\Models\DesaKelurahan::where('id_kecamatan', $id_kecamatan)->get(['id_desa_kelurahan', 'nama_desa_kelurahan']);return response()->json($desa);});
 
 // SEMUA ROUTE YANG MEMBUTUHKAN AUTENTIKASI
 Route::middleware('auth')->group(function () {
 
     // KEPALA DINAS
     Route::get('/kadis/pencairan_bantuan/index', [KadisPencairanBantuanController::class, 'index'])->name('kadis.pencairan_bantuan.index');
-
     Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
     Route::get('/dashboard/ketua', [DashboardController::class, 'ketua'])->name('ketua_kube.dashboard');
     Route::get('/dashboard/pendamping', [DashboardController::class, 'pendamping'])->name('pendamping.dashboard');
@@ -86,37 +69,33 @@ Route::middleware('auth')->group(function () {
 
     // --- DASHBOARD ADMIN ---
     Route::prefix('admin')->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'admin'])
-            ->middleware('checkrole:admin') // Kita akan buat middleware ini
-            ->name('admin.dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'admin'])->middleware('checkrole:admin')->name('admin.dashboard');
+    // DATA USER
+    Route::get('/users', [DashboardController::class, 'users'])->name('admin.users');
+    Route::post('/users/store', [DashboardController::class, 'store'])->name('admin.users.store');
+    Route::get('/users/edit/{id}', [DashboardController::class, 'edit'])->name('admin.users.edit');
+    Route::put('users/update/{id}', [DashboardController::class, 'update'])->name('admin.users.update');
+    Route::delete('users/delete/{id}', [DashboardController::class, 'destroy'])->name('admin.users.delete');
     });
 
     // --- DASHBOARD KOORDINATOR ---
     Route::prefix('koordinator')->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'koordinator'])
-            ->middleware('checkrole:koordinator')
-            ->name('koordinator.dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'koordinator'])->middleware('checkrole:koordinator')->name('koordinator.dashboard');
     });
 
     // --- DASHBOARD KEPALA DINAS ---
     Route::prefix('kepala_dinas')->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'kepala_dinas'])
-            ->middleware('checkrole:kepala_dinas')
-            ->name('kepala_dinas.dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'kepala_dinas'])->middleware('checkrole:kepala_dinas')->name('kepala_dinas.dashboard');
     });
 
     // --- DASHBOARD PENDAMPING ---
     Route::prefix('pendamping')->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'pendamping'])
-            ->middleware('checkrole:pendamping')
-            ->name('pendamping.dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'pendamping'])->middleware('checkrole:pendamping')->name('pendamping.dashboard');
     });
 
     // --- DASHBOARD KETUA KUBE ---
     Route::prefix('ketua_kube')->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'ketua'])
-            ->middleware('checkrole:ketua_kube')
-            ->name('ketua_kube.dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'ketua'])->middleware('checkrole:ketua_kube')->name('ketua_kube.dashboard');
     });
 
 Route::get('/kepala_dinas/dashboard', [KepalaDinasController::class, 'dashboard'])->name('kadis.dashboard');

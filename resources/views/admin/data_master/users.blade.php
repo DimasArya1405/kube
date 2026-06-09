@@ -16,77 +16,69 @@
         </div>
 
         <button data-modal-target="modal-tambah-user" data-modal-toggle="modal-tambah-user"
-            class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition">
-            Tambah User Baru
+            class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium transition">
+            Tambah User
         </button>
     </div>
 
-    {{-- Stats Section --}}
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {{-- Total User --}}
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-5 transition-all hover:shadow-md">
-            <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-            </div>
-            <div>
-                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Total User</p>
-                <h4 class="text-2xl font-black text-gray-800">{{ $total_user }}</h4>
-            </div>
-        </div>
-
-        {{-- User Aktif --}}
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-5 transition-all hover:shadow-md">
-            <div class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center text-green-600">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            </div>
-            <div>
-                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">User Aktif</p>
-                <h4 class="text-2xl font-black text-gray-800">{{ $user_aktif }}</h4>
-            </div>
-        </div>
-
-        {{-- User Nonaktif --}}
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-5 transition-all hover:shadow-md">
-            <div class="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center text-red-600">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            </div>
-            <div>
-                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">User Nonaktif</p>
-                <h4 class="text-2xl font-black text-gray-800">{{ $user_nonaktif }}</h4>
-            </div>
-        </div>
+{{-- Stats Section --}}
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    {{-- Total User --}}
+    <div class="bg-white p-4 rounded-lg shadow border">
+        <p class="text-sm text-gray-500">Total User</p>
+        <h3 class="text-2xl font-bold text-gray-800">
+            {{ $total_user }}
+        </h3>
     </div>
 
+    {{-- User Aktif --}}
+    <div class="bg-green-50 p-4 rounded-lg shadow border border-green-200">
+        <p class="text-sm text-green-600">User Aktif</p>
+        <h3 class="text-2xl font-bold text-green-700">
+            {{ $user_aktif }} User
+        </h3>
+    </div>
+
+    {{-- User Nonaktif --}}
+    <div class="bg-red-50 p-4 rounded-lg shadow border border-red-200">
+        <p class="text-sm text-red-600">User Nonaktif</p>
+        <h3 class="text-2xl font-bold text-red-700">
+            {{ $user_nonaktif }} User
+        </h3>
+    </div>
+</div>
+
     {{-- Table Section --}}
-    <div class="bg-white mb-6 rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-600">
-                <thead class="bg-gray-100 text-xs uppercase text-gray-700">
+    <div class="bg-white mb-6 rounded-lg shadow-sm border overflow-hidden">
+        <div class="relative overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500">
+                <thead class="text-sm text-gray-700 bg-gray-200">
                     <tr>
-                        <th class="px-6 py-3">No</th>
-                        <th class="px-6 py-3">Nama</th>
-                        <th class="px-6 py-3">Email</th>
-                        <th class="px-6 py-3">No HP</th>
-                        <th class="px-6 py-3">Alamat</th>
-                        <th class="px-6 py-3">Role</th>
-                        <th class="px-6 py-3">Status</th>
+                        <th class="px-6 py-3 text-center">No</th>
+                        <th class="px-6 py-3 text-center">Nama</th>
+                        <th class="px-6 py-3 text-center">Email</th>
+                        <th class="px-6 py-3 text-center">No HP</th>
+                        <th class="px-6 py-3 text-center">Alamat</th>
+                        <th class="px-6 py-3 text-center">Role</th>
+                        <th class="px-6 py-3 text-center">Status</th>
                         <th class="px-6 py-3 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($users as $index => $user)
-                        <tr class="border-b hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4">{{ $users->firstItem() + $index }}</td>
-                            <td class="px-6 py-4 font-medium text-gray-900">{{ $user->nama }}</td>
-                            <td class="px-6 py-4">{{ $user->email }}</td>
-                            <td class="px-6 py-4">{{ $user->no_hp }}</td>
-                            <td class="px-6 py-4">{{ $user->alamat }}</td>
-                            <td class="px-6 py-4">{{ ucfirst(str_replace('_', ' ', $user->role)) }}</td>
-                            <td class="px-6 py-4">
-                                <span class="px-3 py-1 rounded-full text-xs font-medium 
-                                    {{ $user->status == 'aktif' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
-                                    {{ ucfirst($user->status) }}
-                                </span>
+                        <tr class="border-b bg-white hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 font-medium text-gray-900 text-center">{{ $users->firstItem() + $index }}</td>
+                            <td class="px-6 py-4 font-medium text-gray-900 text-center">{{ $user->nama }}</td>
+                            <td class="px-6 py-4 font-medium text-gray-900 text-center">{{ $user->email }}</td>
+                            <td class="px-6 py-4 font-medium text-gray-900 text-center">{{ $user->no_hp }}</td>
+                            <td class="px-6 py-4 font-medium text-gray-900 text-center">{{ $user->alamat }}</td>
+                            <td class="px-6 py-4 font-medium text-gray-900 text-center">{{ ucfirst(str_replace('_', ' ', $user->role)) }}</td>
+                            <td class="px-6 py-4 font-medium text-gray-900 text-center">
+                                @if ($user->status == 'aktif')
+                                    <span class="bg-emerald-200 px-2 py-1 text-xs rounded-md text-emerald-800">Aktif</span>
+                                @else
+                                    <span class="bg-red-200 px-2 py-1 text-xs rounded-md text-red-800">Nonaktif</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 text-center">
                                 <div class="flex items-center justify-center gap-2">

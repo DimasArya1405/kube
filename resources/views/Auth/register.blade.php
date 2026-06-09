@@ -120,13 +120,14 @@
                         </div>
                         
                         <div class="relative">
-                            <i data-lucide="lock" class="absolute left-3 top-3 w-4 h-4 text-gray-400"></i>
+                            <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
                             <input type="password" name="password" id="inputPassword" placeholder="Password" required
-                            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm">
-                        <button type="button" onclick="togglePassword()" class="absolute right-3 top-3.5 text-gray-400 hover:text-blue-600 transition-colors">
-                            <i data-lucide="eye-off" id="eyeOffIcon" class="w-5 h-5"></i>
-                            <i data-lucide="eye" id="eyeIcon" class="w-5 h-5 hidden"></i>
-                        </button>
+                                class="w-full pl-10 pr-12 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+                            <button type="button" onclick="togglePassword()" 
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors flex items-center justify-center">
+                                <i data-lucide="eye-off" id="eyeOffIcon" class="w-5 h-5"></i>
+                                <i data-lucide="eye" id="eyeIcon" class="w-5 h-5 hidden"></i>
+                            </button>
                         </div>
                         
                         <div class="relative md:col-span-2">
@@ -167,6 +168,7 @@
                                 <option value="ketua_kube">Ketua KUBE</option>
                                 <option value="pendamping">Pendamping</option>
                                 <option value="koordinator">Koordinator</option>
+                                <option value="koordinator">Kepala Dinas</option>
                             </select>
                         </div>
                     </div>
