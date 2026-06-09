@@ -21,6 +21,15 @@ class PencairanBantuan extends Model
         'status_pencairan'
     ];
 
+    public function pengajuan_kube()
+    {
+        return $this->belongsTo(PengajuanKube::class, 'id_pengajuan', 'id_pengajuan_kube');
+    }
+    public function jenis_bantuan()
+    {
+        return $this->belongsTo(JenisBantuan::class, 'id_jenis_bantuan', 'id_jenis_bantuan');
+    }
+
     /**
      * Relasi ke Tabel Pengajuan
      */

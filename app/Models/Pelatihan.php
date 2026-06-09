@@ -38,6 +38,6 @@ public function pendamping()
 {
     return $this->belongsTo(Pendamping::class, 'id_pendamping', 'id_pendamping');
 }
-    // Relasi (Opsional - sesuaikan dengan nama model Anda)
+    // Relasi 
     public function mitra() { return $this->belongsTo(Mitra::class, 'id_mitra'); }
 }
