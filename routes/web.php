@@ -294,13 +294,29 @@ Route::prefix('admin/prediksi-kube')->name('admin.prediksi-kube.')->group(functi
     Route::get('/laporan-keuangan/export/pdf-detail/{id}', [KeuanganController::class, 'exportPdfDetail'])->name('laporan.export.pdf.detail');
 
     // MONITORING
-    Route::get('/monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
-    Route::post('/monitoringbantuan/store', [MonitoringController::class, 'store'])->name('monitoring.store');
-    Route::delete('/monitoringbantuan/delete/{id}', [MonitoringController::class, 'delete'])->name('monitoring.delete');
-    Route::get('/monitoring/edit/{id}', [MonitoringController::class, 'edit'])->name('monitoring.edit');
-    Route::post('/monitoring/update/{id}', [MonitoringController::class, 'update'])->name('monitoring.update');
-    Route::get('/monitoring/detail/{id}', [MonitoringController::class, 'detail'])->name('monitoring.detail');
-    Route::get('/monitoring/pdf', [MonitoringController::class, 'exportPdf'])->name('monitoring.pdf');
+    Route::middleware(['auth'])->group(function () {
+
+    Route::get('/monitoring', [MonitoringController::class, 'index'])
+        ->name('monitoring.index');
+
+    Route::post('/monitoringbantuan/store', [MonitoringController::class, 'store'])
+        ->name('monitoring.store');
+
+    Route::delete('/monitoringbantuan/delete/{id}', [MonitoringController::class, 'delete'])
+        ->name('monitoring.delete');
+
+    // Route::get('/monitoring/edit/{id}', [MonitoringController::class, 'edit'])
+    //     ->name('monitoring.edit');
+
+    Route::post('/monitoring/update/{id}', [MonitoringController::class, 'update'])
+        ->name('monitoring.update');
+
+    // Route::get('/monitoring/detail/{id}', [MonitoringController::class, 'detail'])
+    //     ->name('monitoring.detail');
+
+    Route::get('/monitoring/pdf', [MonitoringController::class, 'exportPdf'])
+        ->name('monitoring.pdf');
+});
 
     Route::get('/pengajuan-kube/create', [PengajuanKubeController::class, 'create'])->name('pengajuan.create');
     Route::post('/pengajuan-kube/store', [PengajuanKubeController::class, 'store'])->name('pengajuan.store');

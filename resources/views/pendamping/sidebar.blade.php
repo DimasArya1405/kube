@@ -63,8 +63,22 @@
                 class="py-2 px-3 text-indigo-200 hover:text-white">
                 Jadwal Kunjungan Pendamping
             </a>
+            
+            <a href="{{ route('monitoring.index') }}"
+            class="py-2 px-3 text-indigo-200 hover:text-white">
+            Monitoring Bantuan
+        </a>
         </div>
     </div>
+
+    <div id="monitoringMenu"
+    class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
+
+    <a href="{{ route('monitoring.index') }}"
+    class="py-2 px-3 text-indigo-200 hover:text-white">
+    Monitoring Bantuan
+</a>
+</div>
 
     <!-- Bimbingan Lapangan -->
     <div class="relative">
