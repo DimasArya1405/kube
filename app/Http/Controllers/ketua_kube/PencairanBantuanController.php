@@ -27,4 +27,13 @@ class PencairanBantuanController extends Controller
             'pencairanBantuan'
         ));
     }
+public function konfirmasi($id)
+{
+    $pencairan = PencairanBantuan::where('id_pencairan', $id)->firstOrFail();
+
+    $pencairan->status_pencairan = 'cair';
+    $pencairan->save();
+
+    return redirect()->back()->with('success', 'Pencairan berhasil dikonfirmasi.');
+}
 }

@@ -74,9 +74,9 @@
                             <form action="{{ route('ketua_kube.pencairan_bantuan.konfirmasi', $pencairan->id_pencairan) }}"
                                 method="POST" id="form-konfirmasi-{{ $pencairan->id_pencairan }}">
                                 @csrf
-                                @method('PUT')
+                                @method('get')
 
-                                <button type="button" onclick="konfirmasiPencairan({{ $pencairan->id_pencairan }})"
+                                <button type="submit" onclick="konfirmasiPencairan({{ $pencairan->id_pencairan }})"
                                     class="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition">
                                     <i class="fas fa-check-circle mr-2"></i>
                                     Konfirmasi Dana Sudah Diterima
