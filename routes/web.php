@@ -149,6 +149,13 @@ Route::get('/kepala_dinas/dashboard', [KepalaDinasController::class, 'dashboard'
     Route::post('/admin/kategorikube/{id}', [KategoriKubeController::class, 'update'])->name('kategorikube.update');
     Route::get('/admin/kategorikube/delete/{id}', [KategoriKubeController::class, 'destroy'])->name('kategorikube.destroy');
 
+    // GALERI
+    Route::get('/admin/galerikube', [GaleriController::class, 'index'])->name('galeri.index');
+    Route::post('/admin/galerikube/store', [GaleriController::class, 'store'])->name('galeri.store');
+    Route::put('/admin/galerikube/update/{id}', [GaleriController::class, 'update'])->name('galeri.update');
+    Route::get('/admin/galerikube/delete/{id}', [GaleriController::class, 'destroy'])->name('galeri.delete');
+    Route::get('/admin/galerikube/detail/{id}', [GaleriController::class, 'show'])->name('galeri.detail');
+
     // Pembagian Koordinator
     Route::resource('pembagian_koordinator', PembagianKoordinatorController::class);
     Route::get('/get-pendamping/{id_kecamatan}/{selected?}', [PembagianKoordinatorController::class, 'getPendamping']);
