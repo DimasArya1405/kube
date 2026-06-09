@@ -31,6 +31,7 @@ use App\Http\Controllers\PembagianPendampingController;
 use App\Http\Controllers\KolaborasiBantuanController;
 use App\Http\Controllers\PenyaluranKolaborasiController;
 use App\Http\Controllers\KepalaDinasController;
+use App\Http\Controllers\ketua_kube\PencairanBantuanController as Ketua_kubePencairanBantuanController;
 use App\Http\Controllers\PersetujuanBantuanKubeKadisController;
 use App\Http\Controllers\GaleriController;
 use Dflydev\DotAccessData\Data;
@@ -38,7 +39,18 @@ use Dflydev\DotAccessData\Data;
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/', function () {return redirect('/login');});
+Route::get('/', function () {
+    return view('welcome');
+});
+
+
+// DATA USER
+Route::get('/admin/users', [DashboardController::class, 'users'])->name('admin.users');
+Route::post('/admin/users/store', [DashboardController::class, 'store'])->name('admin.users.store');
+Route::get('/admin/users/edit/{id}', [DashboardController::class, 'edit'])->name('admin.users.edit');
+Route::put('/admin/users/update/{id}', [DashboardController::class, 'update'])->name('admin.users.update');
+Route::delete('/admin/users/delete/{id}', [DashboardController::class, 'destroy'])->name('admin.users.delete');
+
 
 // REGISTER
 Route::get('/register', [AuthController::class, 'showRegister']);
@@ -96,7 +108,11 @@ Route::middleware('auth')->group(function () {
 
     // --- DASHBOARD KETUA KUBE ---
     Route::prefix('ketua_kube')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'ketua'])->middleware('checkrole:ketua_kube')->name('ketua_kube.dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'ketua'])
+            ->middleware('checkrole:ketua_kube')
+            ->name('ketua_kube.dashboard');
+        Route::get('/ketua-kube/pencairan-bantuan', [Ketua_kubePencairanBantuanController::class, 'index'])->name('ketua_kube.pencairan_bantuan.index');
+        Route::get('/ketua-kube/pencairan-bantuan/konfirmasi/{id}', [Ketua_kubePencairanBantuanController::class, 'konfirmasi'])->name('ketua_kube.pencairan_bantuan.konfirmasi');
     });
 
 Route::get('/kepala_dinas/dashboard', [KepalaDinasController::class, 'dashboard'])->name('kadis.dashboard');
