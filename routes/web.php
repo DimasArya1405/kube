@@ -50,6 +50,7 @@ Route::middleware('auth')->group(function () {
 
     // PEMBAGIAN PENDAMPING
     Route::resource('pembagian_pendamping', PembagianPendampingController::class);
+    Route::get('/bimbingan-pdf', [BimbinganKubeController::class, 'pdf'])->name('bimbingan.pdf');
 
     // BIMBINGAN KUBE OLEH PENDAMPING (Tambahan Baru)
     // Ini akan otomatis menghandle route bimbingan.index, bimbingan.create, bimbingan.store, dll.
