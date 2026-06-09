@@ -1,184 +1,148 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - KUBE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: #f5f5f5;
-        }
-
-        .container {
-            display: flex;
-            height: 100vh;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .card {
-            display: flex;
-            width: 900px;
-            height: 500px;
-            background: #fff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .left {
-            width: 50%;
-            background: #f0f4f8;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .left h2 {
-            color: green;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-
-        .left img {
-            max-width: 100%;
-        }
-
-        /* RIGHT */
-        .right {
-            width: 50%;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .right img {
-            width: 70px;
-            margin: 0 auto 15px;
-        }
-
-        .right h3 {
-            margin: 0;
-            text-align: center;
-        }
-
-        .right p {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #666;
-        }
-
-        /* FORM */
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            font-size: 14px;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-        }
-
-        /* BUTTON */
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #2f6fed;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            background: #1e4fd8;
-        }
-
-        /* LINK */
-        .link {
-            margin-top: 15px;
-            text-align: center;
-            font-size: 14px;
-        }
-
-        .link a {
-            color: #2f6fed;
-            text-decoration: none;
-        }
-
-        .link a:hover {
-            text-decoration: underline;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .card {
-                flex-direction: column;
-                width: 95%;
-                height: auto;
-            }
-
-            .left,
-            .right {
-                width: 100%;
-            }
-        }
+        body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
+<body class="bg-gray-100">
 
-<body>
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="flex flex-col md:flex-row w-full max-w-[900px] h-auto md:h-[500px] bg-white rounded-xl overflow-hidden shadow-xl">
+            
+<div class="relative w-full md:w-1/2 bg-gradient-to-br from-slate-100 to-slate-200 p-10 flex flex-col justify-center overflow-hidden">
+    <div class="absolute -top-10 -left-10 w-40 h-40 bg-green-200/30 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-200/30 rounded-full blur-3xl"></div>
 
-    <div class="container">
-        <div class="card">
+    <div class="relative z-10">
 
-            <!-- LEFT -->
-            <div class="left">
-                <h2>Sistem<br>Kelompok Usaha Bersama</h2>
+        <h2 class="text-4xl font-extrabold text-slate-800 leading-tight">
+            Sistem <span class="text-green-600">KUBE</span>
+        </h2>
+        
+        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mt-1">
+            Kelompok Usaha Bersama
+        </p>
+        
+        <div class="w-16 h-1.5 bg-blue-600 rounded-full mt-4 mb-6"></div>
+
+        <div class="grid grid-cols-2 gap-4 max-w-sm">
+            <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
+                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <i data-lucide="bar-chart-3" class="w-4 h-4 text-blue-600"></i>
+                </div>
+                <span class="text-xs font-bold text-slate-700">Monitoring Real-time</span>
+            </div>
+            
+            <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
+                <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                    <i data-lucide="users" class="w-4 h-4 text-green-600"></i>
+                </div>
+                <span class="text-xs font-bold text-slate-700">Manajemen Anggota</span>
             </div>
 
-            <!-- RIGHT -->
-            <div class="right">
+            <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
+                <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <i data-lucide="database" class="w-4 h-4 text-purple-600"></i>
+                </div>
+                <span class="text-xs font-bold text-slate-700">Integrasi Data</span>
+            </div>
 
-                <h3>Selamat Datang</h3>
-                <p>Silahkan masuk untuk melanjutkan</p>
+            <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
+                <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
+                    <i data-lucide="zap" class="w-4 h-4 text-amber-600"></i>
+                </div>
+                <span class="text-xs font-bold text-slate-700">Efisiensi Operasional</span>
+            </div>
+        </div>
+    </div>
+</div>
 
-                @if(session('error'))
-                <p style="color:red">{{ session('error') }}</p>
+            <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-semibold text-gray-800">Selamat Datang</h3>
+                    <p class="text-gray-500 mt-2 text-sm">Silahkan masuk untuk melanjutkan</p>
+                </div>
+
+                @if(session('success'))
+                <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded shadow-sm flex items-center">
+                    <i data-lucide="check-circle" class="h-5 w-5 mr-3"></i>
+                    <p class="text-sm font-medium italic">{{ session('success') }}</p>
+                </div>
                 @endif
 
-                <form method="POST" action="/login">
+                @if(session('error'))
+                <div class="bg-red-50 text-red-600 p-3 rounded-lg text-sm mb-4 border border-red-100 flex items-center">
+                    <i data-lucide="alert-circle" class="h-4 w-4 mr-2"></i>
+                    {{ session('error') }}
+                </div>
+                @endif
+
+                <form method="POST" action="/login" class="space-y-4">
                     @csrf
-
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" name="email" placeholder="Masukkan email" required>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <div class="relative">
+                            <i data-lucide="mail" class="absolute left-3 top-3.5 w-4 h-4 text-gray-400"></i>
+                            <input type="email" name="email" 
+                                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm" 
+                                placeholder="Masukkan email" required>
+                        </div>
                     </div>
-
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" name="password" placeholder="Masukkan password" required>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <div class="relative">
+                            <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                            <input type="password" name="password" id="passwordField"
+                                class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm" 
+                                placeholder="Masukkan password" required>
+                            <button type="button" onclick="togglePassword()" 
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors flex items-center justify-center">
+                                <i data-lucide="eye-off" id="eyeOffIcon" class="w-5 h-5"></i>
+                                <i data-lucide="eye" id="eyeIcon" class="w-5 h-5 hidden"></i>
+                            </button>
+                        </div>
                     </div>
-
-                    <button type="submit">Masuk</button>
+                    <button type="submit" 
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition-colors shadow-lg shadow-blue-200 flex justify-center items-center gap-2 mt-2">
+                        <i data-lucide="log-in" class="w-5 h-5"></i>
+                        Masuk
+                    </button>
                 </form>
 
+                <div class="mt-6 text-center text-sm text-gray-600">
+                    Belum punya akun? 
+                    <a href="/register" class="text-blue-600 hover:underline font-medium">Buat Akun</a>
+                </div>
             </div>
 
         </div>
     </div>
 
-</body>
+    <script>
+    lucide.createIcons();
+    function togglePassword() {
+    const passwordField = document.getElementById('passwordField');
+    const eyeIcon = document.getElementById('eyeIcon');
+    const eyeOffIcon = document.getElementById('eyeOffIcon');
 
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        eyeIcon.classList.remove('hidden');
+        eyeOffIcon.classList.add('hidden');
+    } else {
+        passwordField.type = 'password';
+        eyeIcon.classList.add('hidden');
+        eyeOffIcon.classList.remove('hidden');
+    }
+    }
+    </script>
+</body>
 </html>

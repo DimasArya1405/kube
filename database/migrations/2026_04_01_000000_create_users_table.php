@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash; 
+use Illuminate\Support\Facades\Hash;
 
 return new class extends Migration
 {
@@ -73,7 +73,14 @@ return new class extends Migration
                 'nama' => 'Ran',
                 'email' => 'ran123@gmail.com',
                 'password' => Hash::make('12345678'),
-                'id_kecamatan' => 1, 'id_desa_kelurahan' => 1
+                'status' => 'aktif',
+                'no_hp' => '081111111111',
+                'alamat' => 'Jl. Mawar No. 1, Kota A',
+                'nik' => '3201012345670001',
+                'id_kecamatan' => 1, 
+                'id_desa_kelurahan' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'id_user' => 2,
@@ -81,7 +88,14 @@ return new class extends Migration
                 'nama' => 'Rana',
                 'email' => 'rana123@gmail.com',
                 'password' => Hash::make('12345678'),
-                'id_kecamatan' => 1, 'id_desa_kelurahan' => 1
+                'status' => 'aktif',
+                'no_hp' => '082222222222',
+                'alamat' => 'Jl. Melati No. 2, Kota A',
+                'nik' => '3201012345670002',
+                'id_kecamatan' => 1, 
+                'id_desa_kelurahan' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'id_user' => 3,
@@ -89,7 +103,14 @@ return new class extends Migration
                 'nama' => 'Rani',
                 'email' => 'rani123@gmail.com',
                 'password' => Hash::make('12345678'),
-                'id_kecamatan' => 1, 'id_desa_kelurahan' => 1
+                'status' => 'aktif',
+                'no_hp' => '083333333333',
+                'alamat' => 'Jl. Anggrek No. 3, Kota A',
+                'nik' => '3201012345670003',
+                'id_kecamatan' => 1, 
+                'id_desa_kelurahan' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'id_user' => 4,
@@ -97,7 +118,14 @@ return new class extends Migration
                 'nama' => 'Rane',
                 'email' => 'rane123@gmail.com',
                 'password' => Hash::make('12345678'),
-                'id_kecamatan' => 1, 'id_desa_kelurahan' => 1
+                'status' => 'aktif',
+                'no_hp' => '084444444444',
+                'alamat' => 'Jl. Kenanga No. 4, Kota A',
+                'nik' => '3201012345670004',
+                'id_kecamatan' => 1, 
+                'id_desa_kelurahan' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'id_user' => 5,
@@ -105,7 +133,14 @@ return new class extends Migration
                 'nama' => 'Ranu',
                 'email' => 'ranu123@gmail.com',
                 'password' => Hash::make('12345678'),
-                'id_kecamatan' => 1, 'id_desa_kelurahan' => 1
+                'status' => 'aktif',
+                'no_hp' => '085555555555',
+                'alamat' => 'Jl. Kamboja No. 5, Kota A',
+                'nik' => '3201012345670005',
+                'id_kecamatan' => 1, 
+                'id_desa_kelurahan' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
         ]);
     }

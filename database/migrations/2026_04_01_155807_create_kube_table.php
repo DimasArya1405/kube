@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('kube', function (Blueprint $table) {
             $table->id('id_kube');
             $table->string('nama_kube', 100);
+            
+            $table->unsignedBigInteger('id_user'); 
             $table->unsignedBigInteger('id_desa_kelurahan');
             $table->unsignedBigInteger('id_cluster');
             $table->date('tanggal_terbentuk')->nullable(); // Boleh kosong di awal

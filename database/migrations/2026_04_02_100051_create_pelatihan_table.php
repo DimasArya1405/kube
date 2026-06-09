@@ -12,16 +12,15 @@ return new class extends Migration
             // Primary Key
             $table->integer('id_pelatihan')->autoIncrement();
 
-            // Foreign Keys (sementara integer dulu)
-            $table->integer('id_pendamping')->unsigned();
-            $table->integer('id_kube')->unsigned();
-            $table->integer('id_mitra')->unsigned();
+            // Foreign Keys (id_kube DIHAPUS DARI SINI)
+            $table->integer('id_pendamping')->unsigned()->nullable(); // Sebaiknya nullable kalau misal belum ada pendamping
+            $table->integer('id_mitra')->unsigned()->nullable();      // Sebaiknya nullable juga
 
             // Data utama
             $table->string('nama_pelatihan', 150);
             $table->string('jenis_pelatihan', 255);
             $table->date('tanggal_mulai');
-            $table->date('tanggal_selesai');
+            $table->date('tanggal_selesai')->nullable();
             $table->string('lokasi', 150);
             $table->text('deskripsi')->nullable();
 
@@ -31,10 +30,10 @@ return new class extends Migration
             // Timestamps
             $table->timestamps();
 
-            // Foreign Key Constraints
-            // $table->foreign('id_pendamping')->references('id_pendamping')->on('pendamping')->onDelete('cascade');
-            // $table->foreign('id_kube')->references('id_kube')->on('kube')->onDelete('cascade');
-            // $table->foreign('id_mitra')->references('id_mitra')->on('mitra')->onDelete('cascade');
+            // Foreign Key Constraints (Buka commentnya biar aman)
+            // Asumsi: tabel pendamping PK-nya id_pendamping, tabel mitra PK-nya id_mitra
+            // $table->foreign('id_pendamping')->references('id_pendamping')->on('pendamping')->onDelete('set null');
+            // $table->foreign('id_mitra')->references('id_mitra')->on('mitra')->onDelete('set null');
         });
     }
 
