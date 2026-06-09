@@ -32,7 +32,20 @@ class KunjunganPendampingController extends Controller
         $kunjunganPendamping = KunjunganPendamping::with([
             'pembagian.pendamping',
             'pembagian.kube'
-        ])->get();
+        ])
+            ->whereHas('pembagian', function ($query) use ($pendampingLogin) {
+                $query->where('id_pendamping', $pendampingLogin->id_pendamping);
+            })
+
+            ->when(request('tujuan_kunjungan'), function ($query) {
+                $query->where('tujuan_kunjungan', request('tujuan_kunjungan'));
+            })
+
+            ->when(request('status'), function ($query) {
+                $query->where('status', request('status'));
+            })
+
+            ->get();
 
         return view('pendamping.dashboard.kunjungan_pendamping', compact(
             'kunjunganPendamping',
@@ -148,6 +161,34 @@ class KunjunganPendampingController extends Controller
         return redirect()->back()->with('success', 'Kunjungan selesai');
     }
 
+    public function adminIndex()
+    {
+        $kunjunganPendamping = KunjunganPendamping::with([
+            'pembagian.pendamping',
+            'pembagian.kube'
+        ])
+
+            ->when(request('tujuan_kunjungan'), function ($query) {
+                $query->where(
+                    'tujuan_kunjungan',
+                    request('tujuan_kunjungan')
+                );
+            })
+
+            ->when(request('status'), function ($query) {
+                $query->where(
+                    'status',
+                    request('status')
+                );
+            })
+
+            ->get();
+
+        return view(
+            'admin.monevbimbingan.kunjungan_pendamping',
+            compact('kunjunganPendamping')
+        );
+    }
     public function exportExcel()
     {
         return Excel::download(

@@ -10,13 +10,16 @@ use App\Models\Kube;
 use App\Models\ClusterUsaha;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Galeri;
 
 class DashboardController extends Controller
 {
     public function admin()
     {
         $users = User::all();
-        return view('admin.dashboard.index', compact('users'));
+        $galeri = Galeri::latest()->take(6)->get();
+
+        return view('admin.dashboard.index', compact('users', 'galeri'));
     }
     public function users()
     {
