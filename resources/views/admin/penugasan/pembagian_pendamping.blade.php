@@ -5,6 +5,10 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
 @stop
 
 @section('content')
+{{-- Tambahkan library CSS & JS Tom Select di sini --}}
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+
 <div class="p-6">
     <div class="mb-6">
         <h2 class="text-2xl font-bold text-gray-800">Manajemen Pembagian Pendamping</h2>
@@ -71,11 +75,9 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
                 <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
                     <td class="py-3 px-5 text-gray-800 text-center font-medium">{{ $index + 1 }}.</td>
                     <td class="py-3 px-5 text-gray-800 text-center">{{ $p->kube->nama_kube ?? 'KUBE Dihapus' }}</td>
-
                     <td class="py-3 px-5 text-gray-800 text-center">{{ $p->pendamping->nama_pendamping ?? 'Pendamping Dihapus' }}</td>
-
                     <td class="py-3 px-5 text-gray-600 text-center">{{ $p->tgl_pembagian ? \Carbon\Carbon::parse($p->tgl_pembagian)->format('d M Y') : '-' }}</td>
-
+                    
                     {{-- Tambahan Tgl Selesai --}}
                     <td class="py-3 px-5 text-gray-600 text-center">
                         {{ $p->tgl_selesai ? \Carbon\Carbon::parse($p->tgl_selesai)->format('d M Y') : '-' }}
@@ -118,6 +120,7 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
     </div>
 </div>
 
+{{-- MODAL TAMBAH --}}
 <div id="tambahPembagianModal" class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center transition-opacity">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
         <div class="flex justify-between items-center px-6 py-4 border-b border-gray-200 bg-gray-50">
@@ -130,15 +133,19 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
         <form action="{{ route('pembagian_pendamping.store') }}" method="POST">
             @csrf
             <div class="px-6 py-4 space-y-4">
+                {{-- KUBE MULTIPLE SELECT --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Pilih KUBE</label>
-                    <select name="id_kube" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-sm transition" required>
-                        <option value="">-- Pilih KUBE --</option>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Pilih KUBE <span class="text-xs text-gray-500 font-normal">(Bisa ketik & pilih banyak)</span>
+                    </label>
+                    {{-- Ubah name menjadi array (id_kube[]) dan tambahkan multiple --}}
+                    <select id="select_kube" name="id_kube[]" multiple placeholder="Ketik nama KUBE..." autocomplete="off" class="w-full" required>
                         @foreach($kubes as $kube)
                         <option value="{{ $kube->id_kube }}">{{ $kube->nama_kube }}</option>
                         @endforeach
                     </select>
                 </div>
+                
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Pendamping</label>
                     <select name="id_pendamping" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-sm transition" required>
@@ -185,14 +192,21 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
         document.getElementById(modalID).classList.toggle('hidden');
     }
 
-    // 🔥 Buka modal otomatis kalau ada error validasi (Versi aman dari linter VS Code)
+    // 🔥 Buka modal otomatis kalau ada error validasi
     let adaError = "{{ $errors->any() ? 'true' : 'false' }}";
 
-    if (adaError === "true") {
-        document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
+        if (adaError === "true") {
             toggleModal('tambahPembagianModal');
+        }
+
+        // INISIALISASI TOM SELECT
+        new TomSelect('#select_kube', {
+            plugins: ['remove_button'],
+            maxOptions: 200, // Membatasi opsi agar tidak lag
+            placeholder: 'Ketik & Pilih KUBE...'
         });
-    }
+    });
 
     function confirmSelesai(event, id_pembagian) {
         event.preventDefault();
@@ -212,9 +226,9 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
             }
         });
     }
+
     // 🔥 Tangkap 'event'-nya di sini
     function confirmDelete(event, id_pembagian) {
-
         // 🔥 INI REM TANGANNYA! Tahan form biar ga langsung ke-submit
         event.preventDefault();
 
