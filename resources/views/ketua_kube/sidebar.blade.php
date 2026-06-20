@@ -70,6 +70,8 @@
             <a href="{{ route('perkembangan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Perkembangan Usaha (Ferina)</a>
             <a href="{{ route('bimbingan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Bimbingan (Shalshabilla)</a>
             <a href="{{ route('pelatihan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Pelatihan KUBE (Devia)</a>
+            <a href="{{ route('ranking.kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Ranking KUBE</a>
+
         </div>
     </div>
 </nav>
