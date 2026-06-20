@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @section('breadcrumb')
-Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
+    Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
 @stop
 
 @section('content')
@@ -9,187 +9,248 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
 <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 
-<div class="p-6">
-    <div class="mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">Manajemen Pembagian Pendamping</h2>
-        <p class="text-gray-500 text-sm mt-1">Kelola data pembagian pendamping untuk setiap Kelompok Usaha Bersama.</p>
-    </div>
+{{-- Custom Style agar Tom Select senada dengan Tailwind Input --}}
+<style>
+    .ts-control {
+        border-radius: 0.75rem !important; /* rounded-xl */
+        padding: 0.75rem !important; /* p-3 */
+        border-color: #e5e7eb !important; /* border-gray-200 */
+        box-shadow: none !important;
+        transition: all 0.3s ease;
+    }
+    .ts-control.focus {
+        border-color: #3b82f6 !important; /* border-blue-500 */
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1) !important; /* focus:ring-4 */
+    }
+</style>
 
-    @if($errors->any())
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-        <strong class="font-bold">Oops! Ada kesalahan input:</strong>
-        <ul class="list-disc pl-5 mt-1 text-sm">
-            @foreach($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+{{-- HEADER --}}
+<div class="mb-8 flex justify-between items-end">
+    <div>
+        <h2 class="text-3xl font-bold text-gray-800">Manajemen Pembagian Pendamping</h2>
+        <p class="text-gray-500 mt-1">Kelola data pembagian pendamping untuk setiap Kelompok Usaha Bersama.</p>
     </div>
-    @endif
-
-    @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-        <span class="block sm:inline">{{ session('success') }}</span>
+    <div>
+        <button type="button" onclick="toggleModal('tambahPembagianModal')"
+            class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium transition flex items-center shadow-sm">
+            <!-- <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+            </svg> -->
+            Tambah Pembagian
+        </button>
     </div>
-    @endif
+</div>
 
-    @if(session('error'))
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-        <strong class="font-bold">Oops!</strong>
-        <span class="block sm:inline">{{ session('error') }}</span>
-    </div>
-    @endif
+{{-- ALERT MESSAGES --}}
+@if($errors->any())
+<div class="bg-red-50 border border-red-200 text-red-700 px-5 py-4 rounded-xl relative mb-6 shadow-sm" role="alert">
+    <strong class="font-bold flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        Oops! Ada kesalahan input:
+    </strong>
+    <ul class="list-disc pl-9 mt-2 text-sm font-medium">
+        @foreach($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
 
-    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+@if(session('success'))
+<div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-lg relative mb-4 shadow-sm" role="alert">
+    <span class="block sm:inline font-medium">{{ session('success') }}</span>
+</div>
+@endif
+
+@if(session('error'))
+<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg relative mb-4 shadow-sm" role="alert">
+    <strong class="font-bold">Oops!</strong>
+    <span class="block sm:inline font-medium">{{ session('error') }}</span>
+</div>
+@endif
+
+{{-- FILTER & SEARCH AREA --}}
+<div class="bg-white mb-6 rounded-lg shadow-sm border p-4">
+    <div class="flex flex-col md:flex-row justify-between md:items-end gap-4">
         <div class="relative w-full md:w-1/3">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
-                <i class="fas fa-search"></i>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </span>
-            <input type="text" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-gray-50 text-sm" placeholder="Cari pembagian...">
+            <input type="text" class="w-full pl-10 pr-4 py-2.5 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all text-sm placeholder:text-gray-400" placeholder="Cari pembagian...">
         </div>
 
         <div class="flex gap-2 w-full md:w-auto">
-            <a href="{{ route('pembagian_pendamping.export.excel') }}" class="flex items-center px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition shadow-sm">
-                <i class="fas fa-file-excel mr-2"></i> Export Excel
+            <a href="{{ route('pembagian_pendamping.export.pdf') }}" target="_blank" class="px-4 py-2.5 bg-red-50 text-red-600 border border-red-200 rounded-xl hover:bg-red-100 text-sm transition shadow-sm flex items-center font-bold">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg> 
+                Export PDF
             </a>
-            <button onclick="toggleModal('tambahPembagianModal')" class="flex items-center px-4 py-2 bg-blue-700 text-white text-sm font-medium rounded-lg hover:bg-purple-800 transition shadow-sm">
-                <i class="fas fa-plus mr-2"></i> Tambah Pembagian
-            </button>
+            <a href="{{ route('pembagian_pendamping.export.excel') }}" class="px-4 py-2.5 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-xl hover:bg-emerald-100 text-sm transition shadow-sm flex items-center font-bold">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                Export Excel
+            </a>
         </div>
     </div>
+</div>
 
-    <div class="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
-        <table class="w-full text-left border-collapse">
-            <thead class="bg-gray-100 border-b border-gray-200">
+{{-- TABEL UTAMA --}}
+<div class="bg-white mb-6 rounded-lg shadow-sm border overflow-hidden">
+    <div class="relative overflow-x-auto">
+        <table class="w-full text-sm text-left text-gray-500">
+            <thead class="text-sm text-gray-700 bg-gray-200">
                 <tr>
-                    <th class="py-3 px-5 text-gray-700 font-semibold text-sm text-center">No.</th>
-                    <th class="py-3 px-5 text-gray-700 font-semibold text-sm text-center">Nama KUBE</th>
-                    <th class="py-3 px-5 text-gray-700 font-semibold text-sm text-center">Nama Pendamping</th>
-                    <th class="py-3 px-5 text-gray-700 font-semibold text-sm text-center">Tgl Mulai</th>
-                    <th class="py-3 px-5 text-gray-700 font-semibold text-sm text-center">Tgl Selesai</th>
-                    <th class="py-3 px-5 text-gray-700 font-semibold text-sm text-center">Status</th>
-                    <th class="py-3 px-5 text-gray-700 font-semibold text-sm text-center">Aksi</th>
+                    <th class="px-6 py-3 text-center">No</th>
+                    <th class="px-6 py-3 text-center">Nama KUBE</th>
+                    <th class="px-6 py-3 text-center">Nama Pendamping</th>
+                    <th class="px-6 py-3 text-center">Tgl Mulai</th>
+                    <th class="px-6 py-3 text-center">Tgl Selesai</th>
+                    <th class="px-6 py-3 text-center">Status</th>
+                    <th class="px-6 py-3 text-center">Aksi</th>
                 </tr>
             </thead>
-            <tbody class="text-sm">
-                @foreach($pembagians as $index => $p)
-                <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
-                    <td class="py-3 px-5 text-gray-800 text-center font-medium">{{ $index + 1 }}.</td>
-                    <td class="py-3 px-5 text-gray-800 text-center">{{ $p->kube->nama_kube ?? 'KUBE Dihapus' }}</td>
-                    <td class="py-3 px-5 text-gray-800 text-center">{{ $p->pendamping->nama_pendamping ?? 'Pendamping Dihapus' }}</td>
-                    <td class="py-3 px-5 text-gray-600 text-center">{{ $p->tgl_pembagian ? \Carbon\Carbon::parse($p->tgl_pembagian)->format('d M Y') : '-' }}</td>
-                    
-                    {{-- Tambahan Tgl Selesai --}}
-                    <td class="py-3 px-5 text-gray-600 text-center">
-                        {{ $p->tgl_selesai ? \Carbon\Carbon::parse($p->tgl_selesai)->format('d M Y') : '-' }}
-                    </td>
-
-                    <td class="py-3 px-5 text-center">
+            <tbody>
+                @forelse($pembagians as $index => $p)
+                <tr class="border-b bg-white hover:bg-gray-50 transition-colors">
+                    <td class="px-6 py-4 text-center font-medium text-gray-900">{{ $index + 1 }}</td>
+                    <td class="px-6 py-4 text-center font-bold text-gray-900">{{ $p->kube->nama_kube ?? 'KUBE Dihapus' }}</td>
+                    <td class="px-6 py-4 text-center font-medium text-gray-800">{{ $p->pendamping->nama_pendamping ?? 'Pendamping Dihapus' }}</td>
+                    <td class="px-6 py-4 text-center font-medium text-gray-600">{{ $p->tgl_pembagian ? \Carbon\Carbon::parse($p->tgl_pembagian)->format('d M Y') : '-' }}</td>
+                    <td class="px-6 py-4 text-center font-medium text-gray-600">{{ $p->tgl_selesai ? \Carbon\Carbon::parse($p->tgl_selesai)->format('d M Y') : '-' }}</td>
+                    <td class="px-6 py-4 text-center">
                         @if(strtolower($p->status) == 'aktif')
-                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold tracking-wide">Aktif</span>
+                            <span class="bg-blue-200 px-3 py-1 text-xs rounded-md text-blue-800 font-bold">Aktif</span>
                         @else
-                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold tracking-wide">Selesai</span>
+                            <span class="bg-emerald-200 px-3 py-1 text-xs rounded-md text-emerald-800 font-bold">Selesai</span>
                         @endif
                     </td>
-
-                    <td class="py-3 px-5 text-center">
-                        <div class="flex justify-center space-x-3">
-                            {{-- Tombol Tandai Selesai (Hanya muncul kalau status masih Aktif) --}}
+                    <td class="px-6 py-4 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            {{-- Tombol Tandai Selesai --}}
                             @if(strtolower($p->status) == 'aktif')
-                            <form action="{{ route('pembagian_pendamping.selesai', $p->id_pembagian) }}" method="POST" class="inline" id="selesaiForm-{{ $p->id_pembagian }}">
+                            <form action="{{ route('pembagian_pendamping.selesai', $p->id_pembagian) }}" method="POST" class="inline-block m-0" id="selesaiForm-{{ $p->id_pembagian }}">
                                 @csrf
                                 @method('PATCH')
-                                <button type="button" class="text-gray-400 hover:text-green-500 transition text-lg" onclick="confirmSelesai(event, '{{ $p->id_pembagian }}')" title="Tandai Selesai">
-                                    <i class="fas fa-check-circle"></i>
+                                <button type="button" onclick="confirmSelesai(event, '{{ $p->id_pembagian }}')" class="w-9 h-9 flex items-center justify-center rounded-lg text-emerald-500 hover:bg-emerald-50 transition-colors" title="Tandai Selesai">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 </button>
                             </form>
                             @endif
 
-                            <form action="{{ route('pembagian_pendamping.destroy', $p->id_pembagian) }}" method="POST" class="inline" id="deleteForm-{{ $p->id_pembagian }}">
+                            {{-- Tombol Delete --}}
+                            <form action="{{ route('pembagian_pendamping.destroy', $p->id_pembagian) }}" method="POST" class="inline-block m-0" id="deleteForm-{{ $p->id_pembagian }}">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" class="text-gray-400 hover:text-red-500 transition text-lg" onclick="confirmDelete(event, '{{ $p->id_pembagian }}')">
-                                    <i class="far fa-trash-alt"></i>
+                                <button type="button" onclick="confirmDelete(event, '{{ $p->id_pembagian }}')" class="w-9 h-9 flex items-center justify-center rounded-lg text-red-500 hover:bg-red-50 transition-colors" title="Hapus Data">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
                                 </button>
                             </form>
                         </div>
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="7" class="text-center py-10 text-gray-500 italic">
+                        Belum ada data pembagian pendamping.
+                    </td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
 </div>
 
-{{-- MODAL TAMBAH --}}
-<div id="tambahPembagianModal" class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center transition-opacity">
-    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
-        <div class="flex justify-between items-center px-6 py-4 border-b border-gray-200 bg-gray-50">
-            <h3 class="text-lg font-bold text-gray-800">Tambah Pembagian</h3>
-            <button type="button" onclick="toggleModal('tambahPembagianModal')" class="text-gray-400 hover:text-gray-600 focus:outline-none">
-                <i class="fas fa-times text-lg"></i>
+{{-- MODAL TAMBAH PEMBAGIAN --}}
+<div id="tambahPembagianModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900/70 backdrop-blur-md p-4 transition-all duration-300">
+    <div class="fixed inset-0" onclick="toggleModal('tambahPembagianModal')"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] border border-gray-100 z-10">
+        
+        <div class="flex justify-between items-center px-8 py-5 bg-gradient-to-r from-blue-600 to-indigo-700 flex-shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white">Tambah Pembagian</h3>
+                    <p class="text-blue-100 text-xs">Atur penugasan pendamping untuk satu atau beberapa KUBE sekaligus</p>
+                </div>
+            </div>
+            <button type="button" onclick="toggleModal('tambahPembagianModal')" class="text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-full transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
 
-        <form action="{{ route('pembagian_pendamping.store') }}" method="POST">
+        <form action="{{ route('pembagian_pendamping.store') }}" method="POST" class="flex flex-col overflow-hidden bg-gray-50/50">
             @csrf
-            <div class="px-6 py-4 space-y-4">
-                {{-- KUBE MULTIPLE SELECT --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Pilih KUBE <span class="text-xs text-gray-500 font-normal">(Bisa ketik & pilih banyak)</span>
-                    </label>
-                    {{-- Ubah name menjadi array (id_kube[]) dan tambahkan multiple --}}
-                    <select id="select_kube" name="id_kube[]" multiple placeholder="Ketik nama KUBE..." autocomplete="off" class="w-full" required>
-                        @foreach($kubes as $kube)
-                        <option value="{{ $kube->id_kube }}">{{ $kube->nama_kube }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Pendamping</label>
-                    <select name="id_pendamping" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-sm transition" required>
-                        <option value="">-- Pilih Pendamping --</option>
-                        @foreach($pendampings as $pendamping)
-                        <option value="{{ $pendamping->id_pendamping }}">{{ $pendamping->nama_pendamping }}</option>
-                        @endforeach
-                    </select>
-                </div>
+            <div class="p-8 overflow-y-auto space-y-6 flex-grow custom-scrollbar">
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-4">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        {{-- KUBE MULTIPLE SELECT --}}
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">
+                                Pilih KUBE <span class="text-gray-400 normal-case font-medium italic">(Bisa ketik & pilih banyak)</span>
+                            </label>
+                            <select id="select_kube" name="id_kube[]" multiple placeholder="Ketik nama KUBE..." autocomplete="off" class="w-full text-sm" required>
+                                @foreach($kubes as $kube)
+                                <option value="{{ $kube->id_kube }}">{{ $kube->nama_kube }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Pilih Pendamping</label>
+                            <select name="id_pendamping" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 border bg-white outline-none transition-all cursor-pointer appearance-none" required>
+                                <option value="">-- Pilih Pendamping --</option>
+                                @foreach($pendampings as $pendamping)
+                                <option value="{{ $pendamping->id_pendamping }}">{{ $pendamping->nama_pendamping }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                {{-- Modifikasi Tanggal Pembagian jadi Tanggal Mulai (untuk kejelasan) --}}
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Tgl Mulai</label>
-                        <input type="date" name="tgl_pembagian" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-sm transition" required>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Tgl Mulai Penugasan</label>
+                            <input type="date" name="tgl_pembagian" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all text-gray-700" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Tgl Selesai <span class="text-gray-400 normal-case font-medium italic">(Opsional)</span></label>
+                            <input type="date" name="tgl_selesai" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all text-gray-500">
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Status Pembagian</label>
+                            <select name="status" class="w-full border-gray-200 rounded-xl p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 border bg-white outline-none transition-all cursor-pointer appearance-none font-bold text-gray-700" required>
+                                <option value="Aktif" class="text-emerald-600 font-bold">AKTIF</option>
+                                <option value="Selesai" class="text-blue-600 font-bold">SELESAI</option>
+                            </select>
+                        </div>
                     </div>
 
-                    {{-- Tambahan Input Tgl Selesai --}}
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Tgl Selesai (Opsional)</label>
-                        <input type="date" name="tgl_selesai" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-sm transition text-gray-500">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Status Pembagian</label>
-                    <select name="status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-sm transition" required>
-                        <option value="Aktif">Aktif</option>
-                        <option value="Selesai">Selesai</option>
-                    </select>
                 </div>
             </div>
 
-            <div class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3 bg-gray-50">
-                <button type="button" onclick="toggleModal('tambahPembagianModal')" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition">Batal</button>
-                <button type="submit" class="px-4 py-2 bg-purple-700 text-white text-sm font-medium rounded-lg hover:bg-purple-800 transition shadow-sm">Simpan Data</button>
+            <div class="p-6 bg-white border-t flex gap-4 flex-shrink-0 px-8">
+                <button type="button" onclick="toggleModal('tambahPembagianModal')" class="flex-1 px-4 py-3 border border-gray-200 text-gray-600 rounded-xl hover:bg-gray-50 font-bold transition-all">
+                    Batal
+                </button>
+                <button type="submit" class="flex-[2] px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 shadow-lg shadow-blue-200 font-bold transition-all transform active:scale-[0.98]">
+                    Simpan Data Pembagian
+                </button>
             </div>
         </form>
     </div>
 </div>
 
+@push('scripts')
 <script>
     function toggleModal(modalID) {
-        document.getElementById(modalID).classList.toggle('hidden');
+        const modal = document.getElementById(modalID);
+        if (modal) {
+            modal.classList.toggle('hidden');
+        }
     }
 
     // 🔥 Buka modal otomatis kalau ada error validasi
@@ -215,11 +276,16 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
             text: "Status penugasan ini akan diubah menjadi Selesai per hari ini!",
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#10b981', // Warna hijau emerald
-            cancelButtonColor: '#6b7280',
+            confirmButtonColor: '#10b981', // Warna hijau emerald Tailwind
+            cancelButtonColor: '#9ca3af',
             confirmButtonText: 'Ya, Selesaikan!',
             cancelButtonText: 'Batal',
-            reverseButtons: true
+            reverseButtons: true,
+            customClass: {
+                popup: 'rounded-2xl',
+                confirmButton: 'rounded-xl px-4 py-2 font-bold',
+                cancelButton: 'rounded-xl px-4 py-2 font-bold'
+            }
         }).then((result) => {
             if (result.isConfirmed) {
                 document.getElementById('selesaiForm-' + id_pembagian).submit();
@@ -227,9 +293,7 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
         });
     }
 
-    // 🔥 Tangkap 'event'-nya di sini
     function confirmDelete(event, id_pembagian) {
-        // 🔥 INI REM TANGANNYA! Tahan form biar ga langsung ke-submit
         event.preventDefault();
 
         Swal.fire({
@@ -237,17 +301,22 @@ Penugasan / <span class="text-gray-800">Data Pembagian Pendamping</span>
             text: "Data Pembagian Pendamping ini akan dihapus secara permanen!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#6b7280',
+            confirmButtonColor: '#ef4444', // Red-500 Tailwind
+            cancelButtonColor: '#9ca3af',
             confirmButtonText: 'Ya, Hapus Data!',
             cancelButtonText: 'Batal',
-            reverseButtons: true
+            reverseButtons: true,
+            customClass: {
+                popup: 'rounded-2xl',
+                confirmButton: 'rounded-xl px-4 py-2 font-bold',
+                cancelButton: 'rounded-xl px-4 py-2 font-bold'
+            }
         }).then((result) => {
             if (result.isConfirmed) {
-                // Kalau user udah beneran ngeklik "Ya", baru kita lepas remnya dan kirim formnya
                 document.getElementById('deleteForm-' + id_pembagian).submit();
             }
         });
     }
 </script>
+@endpush
 @endsection

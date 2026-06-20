@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PembagianPendamping;
 use App\Models\Kube;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Pendamping; // Ganti jadi 'use App\Models\User;' kalau gabung di tabel user
 use Illuminate\Http\Request;
 use App\Exports\PembagianPendampingExport;
@@ -75,4 +76,13 @@ class PembagianPendampingController extends Controller
     {
         return Excel::download(new PembagianPendampingExport, 'Data_Pembagian_Pendamping.xlsx');
     }
+
+    public function exportPdf()
+{
+    $pembagians = PembagianPendamping::with(['kube', 'pendamping'])->get();
+
+    $pdf = PDF::loadView('admin.penugasan.pembagian_pendamping_pdf', compact('pembagians'));
+
+    return $pdf->stream('Data_Pembagian_Pendamping.pdf');
+}
 }
