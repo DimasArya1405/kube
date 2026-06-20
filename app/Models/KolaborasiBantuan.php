@@ -22,6 +22,9 @@ class KolaborasiBantuan extends Model
         'foto_bukti',
         'status',
     ];
+    protected $casts = [
+        'id_kube' => 'array',
+    ];
     public function mitra(): BelongsTo
     {
         return $this->belongsTo(Mitra::class, 'id_mitra', 'id_mitra');

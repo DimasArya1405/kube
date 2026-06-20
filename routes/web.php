@@ -37,9 +37,9 @@ use Dflydev\DotAccessData\Data;
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/', function () {
 
-    return redirect('/login');
+Route::get('/', function () { 
+    return view('welcome');
 });
 
 
@@ -348,7 +348,6 @@ Route::prefix('admin/prediksi-kube')->name('admin.prediksi-kube.')->group(functi
             Route::get('/pendamping/kunjungan/export/pdf', [KunjunganPendampingController::class, 'exportPdf'])->name('kunjungan.export.pdf');
  
         });
-
 
     // LAPORAN KECAMATAN
     Route::get('/admin/laporan-kecamatan/excel',[LaporanKecamatanController::class,'exportExcel'])->name('laporan.kecamatan.excel');
