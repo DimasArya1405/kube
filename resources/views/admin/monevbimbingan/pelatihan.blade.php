@@ -89,7 +89,7 @@
                     <th class="px-6 py-3 text-center">No</th>
                     <th class="px-6 py-3">Nama Pelatihan</th>
                     <th class="px-6 py-3">Mitra</th>
-                    <th class="px-6 py-3">Pendamping</th>
+                    {{-- <th class="px-6 py-3">Pendamping</th> --}}
                     <th class="px-6 py-3">Tanggal</th>
                     <th class="px-6 py-3">Lokasi</th>
                     <th class="px-6 py-3 text-center">Status</th>
@@ -102,8 +102,18 @@
                     <td class="px-6 py-4 font-medium text-gray-900 text-center">{{ $index + 1 }}</td>
                     <td class="px-6 py-4 font-medium text-gray-900">{{ $p->nama_pelatihan }}</td>
                     <td class="px-6 py-4 font-medium text-gray-900">{{ $p->mitra->nama_mitra ?? '-' }}</td>
-                    <td class="px-6 py-4 font-medium text-gray-900">{{ $p->pendamping->nama_pendamping ?? '-' }}</td>
-                    <td class="px-6 py-4 font-medium text-gray-900">{{ $p->tanggal_mulai ? \Carbon\Carbon::parse($p->tanggal_mulai)->format('d/m/Y') : '-' }}</td>
+{{-- <td class="px-6 py-4 font-medium text-gray-900">
+    @if(is_array($p->daftar_pengajar) && count($p->daftar_pengajar) > 0)
+        <ul class="list-disc list-inside">
+            @foreach($p->daftar_pengajar as $pengajar)
+                <li class="text-xs">{{ $pengajar }}</li>
+            @endforeach
+        </ul>
+    @else
+        -
+    @endif
+</td>                    --}}
+ <td class="px-6 py-4 font-medium text-gray-900">{{ $p->tanggal_mulai ? \Carbon\Carbon::parse($p->tanggal_mulai)->format('d/m/Y') : '-' }}</td>
                     <td class="px-6 py-4 font-medium text-gray-900">{{ $p->lokasi }}</td>
                     <td class="px-6 py-4 font-medium text-gray-900 text-center">
                         @if($p->status == 'Terjadwal')
@@ -206,12 +216,16 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Pendamping</label>
-                        <select name="id_pendamping" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
-                            <option value="">Pilih Pendamping</option>
-                            @foreach($pendampings as $p) <option value="{{ $p->id_pendamping }}">{{ $p->nama_pendamping }}</option> @endforeach
-                        </select>
-                    </div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">Pendamping Kegiatan</label>
+    <select id="select_pengajar_tambah" name="id_pendamping[]" multiple class="w-full text-sm" required>
+        <option value="">Pilih Pengajar...</option>
+        @foreach($pengajars as $peng) 
+            <option value="{{ $peng->id_gabungan }}">
+                [{{ $peng->role }}] {{ $peng->nama }}
+            </option> 
+        @endforeach
+    </select>
+</div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Mitra</label>
@@ -289,10 +303,11 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Pendamping</label>
-                        <input type="text" id="detail_pendamping" class="w-full border border-gray-200 bg-gray-50 rounded-lg px-4 py-2 text-gray-600 text-sm cursor-not-allowed" readonly>
-                    </div>
+  <div class="md:col-span-2">
+    <label class="block text-sm font-medium text-gray-700 mb-1">Pendamping Kegiatan</label>
+    <div id="detail_pendamping_list" class="w-full border border-gray-200 bg-gray-50 rounded-lg p-3 text-gray-600 text-sm max-h-32 overflow-y-auto">
+        </div>
+</div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Mitra</label>
@@ -387,12 +402,16 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Pendamping</label>
-                        <select id="edit_id_pendamping" name="id_pendamping" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
-                            <option value="">Pilih Pendamping</option>
-                            @foreach($pendampings as $p) <option value="{{ $p->id_pendamping }}">{{ $p->nama_pendamping }}</option> @endforeach
-                        </select>
-                    </div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">Pendamping Kegiatan</label>
+    <select id="select_pengajar_edit" name="id_pendamping[]" multiple class="w-full text-sm" required>
+        <option value="">Pilih Pengajar...</option>
+        @foreach($pengajars as $peng) 
+            <option value="{{ $peng->id_gabungan }}">
+                [{{ $peng->role }}] {{ $peng->nama }}
+            </option> 
+        @endforeach
+    </select>
+</div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Mitra</label>
@@ -436,7 +455,10 @@
 <script>
     lucide.createIcons();
 
-    // Inisiasi TomSelect
+    // ==========================================
+    // 1. INISIASI TOMSELECT UNTUK KUBE
+    // (Pastikan bagian ini tidak hilang)
+    // ==========================================
     const tsTambah = new TomSelect('#select_kube_tambah', {
         plugins: ['remove_button'],
         maxOptions: 200
@@ -446,6 +468,21 @@
         plugins: ['remove_button'],
         maxOptions: 200
     });
+
+    // ==========================================
+    // 2. INISIASI TOMSELECT UNTUK PENGAJAR
+    // ==========================================
+    const tsPengajarTambah = new TomSelect('#select_pengajar_tambah', {
+        plugins: ['remove_button'],
+        maxOptions: 200
+    });
+
+    const tsPengajarEdit = new TomSelect('#select_pengajar_edit', {
+        plugins: ['remove_button'],
+        maxOptions: 200
+    });
+
+    // ... (lanjutkan dengan fungsi toggleModal, confirmDelete, openDetailModal, dll) ...
 
     // Fungsi seragam toggle Modal (DNA KUBE)
     function toggleModal(modalID) {
@@ -481,68 +518,88 @@
     }
 
     // Modal Detail Logic
-    function openDetailModal(data) {
-        let namaPendamping = data.pendamping ? data.pendamping.nama_pendamping : '-';
-        let namaMitra = data.mitra ? data.mitra.nama_mitra : '-';
+function openDetailModal(data) {
+    let namaMitra = data.mitra ? data.mitra.nama_mitra : '-';
 
-        document.getElementById('detail_nama').value = data.nama_pelatihan || '-';
-        document.getElementById('detail_jenis').value = data.jenis_pelatihan || '-';
-        
-        // Logika Badge List KUBE (Desain disesuaikan ke palet biru DNA KUBE)
-        let kubeContainer = document.getElementById('detail_kube_list');
-        let kubeCountBadge = document.getElementById('detail_kube_count');
-        kubeContainer.innerHTML = '';
+    document.getElementById('detail_nama').value = data.nama_pelatihan || '-';
+    document.getElementById('detail_jenis').value = data.jenis_pelatihan || '-';
+    
+    // Logika Badge List KUBE
+    let kubeContainer = document.getElementById('detail_kube_list');
+    let kubeCountBadge = document.getElementById('detail_kube_count');
+    kubeContainer.innerHTML = '';
 
-        if (data.kubes && data.kubes.length > 0) {
-            kubeCountBadge.innerText = data.kubes.length;
-            kubeCountBadge.classList.remove('hidden');
+    if (data.kubes && data.kubes.length > 0) {
+        kubeCountBadge.innerText = data.kubes.length;
+        kubeCountBadge.classList.remove('hidden');
 
-            data.kubes.forEach(k => {
-                let badge = `<span class="bg-white text-gray-700 px-3 py-1 rounded-md text-xs font-semibold border border-gray-200 shadow-sm">
-                                ${k.nama_kube}
-                             </span>`;
-                kubeContainer.insertAdjacentHTML('beforeend', badge);
-            });
-        } else {
-            kubeCountBadge.innerText = '0';
-            kubeContainer.innerHTML = '<span class="text-gray-400 italic text-sm py-1">- Tidak ada KUBE peserta -</span>';
-        }
-
-        document.getElementById('detail_pendamping').value = namaPendamping;
-        document.getElementById('detail_lokasi').value = data.lokasi || '-';
-        document.getElementById('detail_mulai').value = data.tanggal_mulai || '';
-        document.getElementById('detail_status').value = data.status || '-';
-        document.getElementById('detail_selesai').value = data.tanggal_selesai || '';
-        document.getElementById('detail_deskripsi').value = data.deskripsi || '-';
-        document.getElementById('detail_mitra').value = namaMitra;
-
-        toggleModal('modalDetail');
+        data.kubes.forEach(k => {
+            let badge = `<span class="bg-white text-gray-700 px-3 py-1 rounded-md text-xs font-semibold border border-gray-200 shadow-sm">${k.nama_kube}</span>`;
+            kubeContainer.insertAdjacentHTML('beforeend', badge);
+        });
+    } else {
+        kubeCountBadge.innerText = '0';
+        kubeContainer.innerHTML = '<span class="text-gray-400 italic text-sm py-1">- Tidak ada KUBE peserta -</span>';
     }
+
+    let pendampingContainer = document.getElementById('detail_pendamping_list');
+    pendampingContainer.innerHTML = '';
+    
+    if (data.daftar_pengajar && data.daftar_pengajar.length > 0) {
+        let ul = '<ul class="list-disc list-inside space-y-1">';
+        data.daftar_pengajar.forEach(pengajar => {
+            ul += `<li>${pengajar}</li>`;
+        });
+        ul += '</ul>';
+        pendampingContainer.innerHTML = ul;
+    } else {
+        pendampingContainer.innerHTML = '<span class="text-gray-400 italic text-sm">- Belum ada pengajar -</span>';
+    }
+
+    // Sisa input teks lainnya
+    document.getElementById('detail_lokasi').value = data.lokasi || '-';
+    document.getElementById('detail_mulai').value = data.tanggal_mulai || '';
+    document.getElementById('detail_status').value = data.status || '-';
+    document.getElementById('detail_selesai').value = data.tanggal_selesai || '';
+    document.getElementById('detail_deskripsi').value = data.deskripsi || '-';
+    document.getElementById('detail_mitra').value = namaMitra;
+
+    toggleModal('modalDetail');
+}
 
     // Modal Edit Logic
-    function openEditModal(data) {
-        const form = document.getElementById('formEdit');
-        form.action = `/pelatihan/${data.id_pelatihan}`;
+function openEditModal(data) {
+    const form = document.getElementById('formEdit');
+    form.action = `/pelatihan/${data.id_pelatihan}`;
 
-        document.getElementById('edit_nama_pelatihan').value = data.nama_pelatihan || '';
-        document.getElementById('edit_jenis_pelatihan').value = data.jenis_pelatihan || '';
-        document.getElementById('edit_id_pendamping').value = data.id_pendamping || '';
-        document.getElementById('edit_lokasi').value = data.lokasi || '';
-        document.getElementById('edit_tanggal_mulai').value = data.tanggal_mulai || '';
-        document.getElementById('edit_status').value = data.status || '';
-        document.getElementById('edit_tanggal_selesai').value = data.tanggal_selesai || '';
-        document.getElementById('edit_deskripsi').value = data.deskripsi || '';
-        document.getElementById('edit_id_mitra').value = data.id_mitra || '';
+    document.getElementById('edit_nama_pelatihan').value = data.nama_pelatihan || '';
+    document.getElementById('edit_jenis_pelatihan').value = data.jenis_pelatihan || '';
+    
+    // HAPUS BARIS INI (KARENA KITA PAKE TOMSELECT SEKARANG)
+    // document.getElementById('edit_id_pendamping').value = data.id_pendamping || '';
+    
+    document.getElementById('edit_lokasi').value = data.lokasi || '';
+    document.getElementById('edit_tanggal_mulai').value = data.tanggal_mulai || '';
+    document.getElementById('edit_status').value = data.status || '';
+    document.getElementById('edit_tanggal_selesai').value = data.tanggal_selesai || '';
+    document.getElementById('edit_deskripsi').value = data.deskripsi || '';
+    document.getElementById('edit_id_mitra').value = data.id_mitra || '';
 
-        // Reset TomSelect lalu set ID yang terpilih
-        tsEdit.clear();
-        if (data.kubes && data.kubes.length > 0) {
-            let selectedKubeIds = data.kubes.map(k => k.id_kube.toString());
-            tsEdit.setValue(selectedKubeIds);
-        }
-
-        toggleModal('modalEdit');
+    // Reset TomSelect KUBE lalu set ID yang terpilih
+    tsEdit.clear();
+    if (data.kubes && data.kubes.length > 0) {
+        let selectedKubeIds = data.kubes.map(k => k.id_kube.toString());
+        tsEdit.setValue(selectedKubeIds);
     }
+
+    // Reset TomSelect Pengajar lalu set Array ID yang terpilih
+    tsPengajarEdit.clear();
+    if (data.id_pendamping && Array.isArray(data.id_pendamping)) {
+        tsPengajarEdit.setValue(data.id_pendamping);
+    }
+
+    toggleModal('modalEdit');
+}
 </script>
 @endpush
 @endsection
