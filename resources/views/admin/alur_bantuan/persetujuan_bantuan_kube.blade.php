@@ -48,6 +48,81 @@ Dashboard / <span class="text-gray-800">Pengajuan Bantuan KUBE</span>
 </div>
 @endif --}}
 
+{{-- 🔥 SUMMARY BOX --}}
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+
+    {{-- Total Pengajuan --}}
+    <div class="bg-white p-4 rounded-lg shadow border">
+        <p class="text-sm text-gray-500">Total Pengajuan</p>
+        <h3 class="text-2xl font-bold text-gray-800">
+            {{ $total_pengajuan }}
+        </h3>
+    </div>
+
+    {{-- Menunggu --}}
+    <div class="bg-yellow-50 p-4 rounded-lg shadow border border-yellow-200">
+        <p class="text-sm text-yellow-600">Menunggu</p>
+        <h3 class="text-2xl font-bold text-yellow-700">
+            {{ $total_menunggu }}
+        </h3>
+    </div>
+
+    {{-- Disetujui --}}
+    <div class="bg-green-50 p-4 rounded-lg shadow border border-green-200">
+        <p class="text-sm text-green-600">Disetujui</p>
+        <h3 class="text-2xl font-bold text-green-700">
+            {{ $total_disetujui }}
+        </h3>
+    </div>
+
+    {{-- Ditolak --}}
+    <div class="bg-red-50 p-4 rounded-lg shadow border border-red-200">
+        <p class="text-sm text-red-600">Ditolak</p>
+        <h3 class="text-2xl font-bold text-red-700">
+            {{ $total_ditolak }}
+        </h3>
+    </div>
+</div>
+
+{{-- FILTER TAHUN --}}
+<div class="bg-white mb-4 rounded-lg shadow-sm border p-4">
+    <form action="{{ route('kadis.persetujuan_bantuan_kube.index') }}" method="GET">
+        <div class="flex flex-col md:flex-row gap-3 md:items-center">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Filter Tahun</label>
+                <select name="tahun"
+                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[200px]">
+                    <option value="">Semua Tahun</option>
+                    @foreach ($list_tahun as $item)
+                    <option value="{{ $item }}" {{ request('tahun') == $item ? 'selected' : '' }}>
+                        {{ $item }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="flex gap-2 md:mt-6">
+                <button type="submit"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    Filter
+                </button>
+
+                <a href="{{ route('kadis.persetujuan_bantuan_kube.index') }}"
+                    class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
+                    Reset
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
+@if(request('tahun'))
+    <div class="mb-4 text-sm text-gray-600">
+        Menampilkan data pengajuan tahun:
+        <span class="font-semibold text-gray-800">{{ request('tahun') }}</span>
+    </div>
+@endif
+
 <div class="bg-white mb-6 rounded-lg shadow-sm border overflow-hidden">
     <div class="relative overflow-x-auto">
         <table class="w-full text-sm text-left text-gray-500">
