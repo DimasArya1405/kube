@@ -83,6 +83,7 @@ public function index(Request $request)
 }
    public function store(Request $request) 
 {
+    
     $userId = auth()->id();
     $user = auth()->user();
 

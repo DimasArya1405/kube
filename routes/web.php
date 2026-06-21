@@ -39,10 +39,7 @@ use Dflydev\DotAccessData\Data;
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/', function () {
-    return view('welcome');
-});
-
+Route::get('/', function () { return view('welcome');});
 
 // DATA USER
 Route::get('/admin/users', [DashboardController::class, 'users'])->name('admin.users');
@@ -53,8 +50,17 @@ Route::delete('/admin/users/delete/{id}', [DashboardController::class, 'destroy'
 
 
 // REGISTER
-Route::get('/register', [AuthController::class, 'showRegister']);
-Route::post('/register', [AuthController::class, 'register']);
+// Route Register Ketua KUBE
+Route::get('/register/ketua', [AuthController::class, 'showRegisterKetua'])->name('register.ketua');
+Route::post('/register/ketua', [AuthController::class, 'registerKetua'])->name('register.ketua.store');
+
+// Route Register Pendamping
+Route::get('/register/pendamping', [AuthController::class, 'showRegisterPendamping'])->name('register.pendamping');
+Route::post('/register/pendamping', [AuthController::class, 'registerPendamping'])->name('register.pendamping.store');
+
+// Route Register Koordinator
+Route::get('/register/koordinator', [AuthController::class, 'showRegisterKoordinator'])->name('register.koordinator');
+Route::post('/register/koordinator', [AuthController::class, 'registerKoordinator'])->name('register.koordinator.store');
 
 // LOGOUT
 Route::post('/logout', [AuthController::class, 'logout']);
@@ -348,7 +354,6 @@ Route::prefix('admin/prediksi-kube')->name('admin.prediksi-kube.')->group(functi
             Route::get('/pendamping/kunjungan/export/pdf', [KunjunganPendampingController::class, 'exportPdf'])->name('kunjungan.export.pdf');
  
         });
-
 
     // LAPORAN KECAMATAN
     Route::get('/admin/laporan-kecamatan/excel',[LaporanKecamatanController::class,'exportExcel'])->name('laporan.kecamatan.excel');
