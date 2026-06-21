@@ -65,7 +65,7 @@
         </div>
         
         <a href="{{ route('login') }}" class="group bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-full font-bold transition-all shadow-lg shadow-cyan-600/30 flex items-center gap-2 text-sm md:text-base">
-            <span>Masuk Sistem</span>
+            <span>LOGIN</span>
             <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
         </a>
     </nav>
@@ -76,10 +76,10 @@
             <div class="max-w-3xl mx-auto space-y-4">
                 <span class="px-4 py-1.5 bg-cyan-600/10 text-cyan-800 border border-cyan-200 rounded-full text-xs font-bold uppercase tracking-widest">Sistem Informasi KUBE</span>
                 <h2 class="text-3xl md:text-5xl font-black text-slate-950 tracking-tight leading-tight">
-                    Selamat Datang di Portal Pemberdayaan Ekonomi Masyarakat
+                    Selamat Datang di Portal Kelompok Usaha Bersama (KUBE)
                 </h2>
                 <p class="text-slate-600 text-base md:text-xl leading-relaxed">
-                    Silahkan pilih hak akses login Anda di bawah ini untuk masuk ke dalam dashboard management Kelompok Usaha Bersama.
+                    Silahkan buat akun untuk masuk ke Dashboard Kelompok Usaha Bersama.
                 </p>
             </div>
 
@@ -152,26 +152,27 @@
             </div>
 
             <div id="galeriCarousel" class="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 no-scrollbar select-none">
-                @foreach ([
-                    ['kegiatan1.png', 'Pelatihan Kewirausahaan', 'Pendampingan pembuatan produk lokal.'],
-                    ['kegiatan2.png', 'Penyaluran Modal', 'Bantuan modal usaha produktif kelompok.'],
-                    ['kegiatan3.png', 'Rapat Koordinasi', 'Evaluasi rutin perkembangan usaha KUBE.'],
-                    ['kegiatan4.png', 'Bazar Produk KUBE', 'Pemasaran produk hasil usaha kelompok.'],
-                    ['kegiatan5.png', 'Monitoring Wilayah', 'Kunjungan lapangan ke lokasi usaha.'],
-                    ['kegiatan6.png', 'Pelatihan Digital', 'Edukasi pemasaran produk secara online.']
-                ] as $galeri)
-                <div class="group relative overflow-hidden rounded-2xl aspect-video bg-slate-200 hover-card w-[85%] sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] shrink-0 snap-start">
-                    <img src="{{ asset('img/galeri/' . $galeri[0]) }}" 
-                        alt="{{ $galeri[1] }}" 
-                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        draggable="false">
-                    
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
-                        <h4 class="text-white font-bold text-base">{{ $galeri[1] }}</h4>
-                        <p class="text-slate-300 text-xs mt-1">{{ $galeri[2] }}</p>
+    
+                @forelse ($galeriData as $item)
+                    <div class="group relative overflow-hidden rounded-2xl aspect-video bg-slate-200 hover-card w-[85%] sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] shrink-0 snap-start">
+                        
+                        <img src="{{ asset('images/' . $item->gambar) }}" 
+                            alt="{{ $item->judul }}" 
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                            draggable="false">
+                        
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
+                            <h4 class="text-white font-bold text-base">{{ $item->judul }}</h4>
+                            <p class="text-slate-300 text-xs mt-1">{{ $item->deskripsi }}</p>
+                        </div>
+                        
                     </div>
-                </div>
-                @endforeach
+                @empty
+                    <div class="text-center py-10 w-full text-slate-500">
+                        Belum ada dokumentasi kegiatan galeri saat ini.
+                    </div>
+                @endforelse
+
             </div>
         </section>
 
