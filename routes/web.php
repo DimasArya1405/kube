@@ -32,14 +32,17 @@ use App\Http\Controllers\KolaborasiBantuanController;
 use App\Http\Controllers\PenyaluranKolaborasiController;
 use App\Http\Controllers\KepalaDinasController;
 use App\Http\Controllers\PersetujuanBantuanKubeKadisController;
+use App\Http\Controllers\GaleriController;
 use Dflydev\DotAccessData\Data;
+use App\Models\Galeri;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/', function () { 
-    return view('welcome');
+    $galeriData = Galeri::latest()->take(6)->get();
+    return view('welcome', compact('galeriData'));
 });
 
 
@@ -168,10 +171,6 @@ Route::get('/kepala_dinas/dashboard', [KepalaDinasController::class, 'dashboard'
     Route::put('/admin/kategorikube/{id}/edit', [KategoriKubeController::class, 'edit'])->name('kategorikube.edit');
     Route::post('/admin/kategorikube/{id}', [KategoriKubeController::class, 'update'])->name('kategorikube.update');
     Route::get('/admin/kategorikube/delete/{id}', [KategoriKubeController::class, 'destroy'])->name('kategorikube.destroy');
-
-    // Export PDF & Excel Cluster
-    Route::get('/cluster-usaha/pdf', [ClusterUsahaController::class, 'exportPDF'])->name('cluster_usaha.exportPDF');
-    Route::get('/cluster-usaha/excel', [ClusterUsahaController::class, 'exportExcel'])->name('cluster_usaha.exportExcel');
 
     // Pembagian Koordinator
     Route::resource('pembagian_koordinator', PembagianKoordinatorController::class);
@@ -355,4 +354,13 @@ Route::prefix('admin/prediksi-kube')->name('admin.prediksi-kube.')->group(functi
     Route::get('/admin/laporan-kecamatan', [LaporanKecamatanController::class, 'index'])->name('laporan.kecamatan');
     Route::get('/admin/laporan-kecamatan/{id}', [LaporanKecamatanController::class, 'detail'])->name('laporan.kecamatan.detail');
     Route::get('/admin/laporan-kecamatan/pdf/{id}', [LaporanKecamatanController::class, 'exportPdf'])->name('laporan.pdf');
+
+    // Route untuk Manajemen Galeri KUBE
+Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri.index');
+Route::post('/galeri', [GaleriController::class, 'store'])->name('galeri.store');
+Route::get('/galeri/{id}', [GaleriController::class, 'show'])->name('galeri.detail');
+Route::post('/galeri/update/{id}', [GaleriController::class, 'update'])->name('galeri.update');
+
+// Dibuat GET sesuai dengan tag <a> di file index.blade.php kamu
+Route::get('/galeri/delete/{id}', [GaleriController::class, 'destroy'])->name('galeri.destroy');
 });
