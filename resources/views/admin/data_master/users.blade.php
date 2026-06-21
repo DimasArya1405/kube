@@ -48,87 +48,156 @@
     </div>
 </div>
 
-    {{-- Table Section --}}
-    <div class="bg-white mb-6 rounded-lg shadow-sm border overflow-hidden">
-        <div class="relative overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-500">
-                <thead class="text-sm text-gray-700 bg-gray-200">
-                    <tr>
-                        <th class="px-6 py-3 text-center">No</th>
-                        <th class="px-6 py-3 text-center">Nama</th>
-                        <th class="px-6 py-3 text-center">Email</th>
-                        <th class="px-6 py-3 text-center">No HP</th>
-                        <th class="px-6 py-3 text-center">Alamat</th>
-                        <th class="px-6 py-3 text-center">Role</th>
-                        <th class="px-6 py-3 text-center">Status</th>
-                        <th class="px-6 py-3 text-center">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($users as $index => $user)
-                        <tr class="border-b bg-white hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4 font-medium text-gray-900 text-center">{{ $users->firstItem() + $index }}</td>
-                            <td class="px-6 py-4 font-medium text-gray-900 text-center">{{ $user->nama }}</td>
-                            <td class="px-6 py-4 font-medium text-gray-900 text-center">{{ $user->email }}</td>
-                            <td class="px-6 py-4 font-medium text-gray-900 text-center">{{ $user->no_hp }}</td>
-                            <td class="px-6 py-4 font-medium text-gray-900 text-center">{{ $user->alamat }}</td>
-                            <td class="px-6 py-4 font-medium text-gray-900 text-center">{{ ucfirst(str_replace('_', ' ', $user->role)) }}</td>
-                            <td class="px-6 py-4 font-medium text-gray-900 text-center">
-                                @if ($user->status == 'aktif')
-                                    <span class="bg-emerald-200 px-2 py-1 text-xs rounded-md text-emerald-800">Aktif</span>
-                                @else
-                                    <span class="bg-red-200 px-2 py-1 text-xs rounded-md text-red-800">Nonaktif</span>
-                                @endif
-                            </td>
-                            <td class="px-6 py-4 text-center">
-                                <div class="flex items-center justify-center gap-2">
+{{-- FILTER & SEARCH USER --}}
+<div class="bg-white mb-4 rounded-lg shadow-sm border p-4">
+    <form action="{{ route('admin.users') }}" method="GET">
+        <div class="flex flex-col md:flex-row gap-4 md:items-end">
+            
+            {{-- Input Pencarian Nama --}}
+            <div class="flex-1 min-w-[200px]">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Cari Nama</label>
+                <input type="text" name="search" value="{{ request('search') }}" 
+                    placeholder="Masukkan nama..."
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+            </div>
+            
+            {{-- Filter Role --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Filter Role</label>
+                <select name="role"
+                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[200px] text-sm">
+                    <option value="">Semua Role</option>
+                    <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="ketua_kube" {{ request('role') == 'ketua_kube' ? 'selected' : '' }}>Ketua Kube</option>
+                    <option value="pendamping" {{ request('role') == 'pendamping' ? 'selected' : '' }}>Pendamping</option>
+                    <option value="koordinator" {{ request('role') == 'koordinator' ? 'selected' : '' }}>Koordinator</option>
+                    <option value="kepala_dinas" {{ request('role') == 'kepala_dinas' ? 'selected' : '' }}>Kepala Dinas</option>
+                </select>
+            </div>
 
-                                    {{-- Detail Button --}}
-                                    <button onclick="detailUser('{{ $user->id_user }}')"
-                                        class="w-9 h-9 flex items-center justify-center rounded-lg text-blue-500 hover:bg-blue-50 transition-colors"
-                                        title="Detail">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
-                                    </button>
+            {{-- Filter Status --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select name="status"
+                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[200px] text-sm">
+                    <option value="">Semua Status</option>
+                    <option value="aktif" {{ request('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                    <option value="nonaktif" {{ request('status') == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                </select>
+            </div>
 
-                                    {{-- Edit Button --}}
-                                    <button onclick="editUser('{{ $user->id_user }}')"
-                                        class="w-9 h-9 flex items-center justify-center rounded-lg text-yellow-500 hover:bg-yellow-50 transition-colors"
-                                        title="Edit">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                        </svg>
-                                    </button>
+            {{-- Tombol Aksi --}}
+            <div class="flex gap-2">
+                <button type="submit"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm transition">
+                    Filter & Cari
+                </button>
 
-                                    {{-- Delete Button --}}
-                                    <form action="{{ route('admin.users.delete', $user->id_user) }}" method="POST"
-                                        onsubmit="return confirm('Yakin ingin menghapus data ini?')" class="inline-block m-0">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="w-9 h-9 flex items-center justify-center rounded-lg text-red-500 hover:bg-red-50 transition-colors" title="Hapus">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="8" class="text-center py-10 text-gray-500 italic">Belum ada data user</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                <a href="{{ route('admin.users') }}"
+                    class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 text-sm transition">
+                    Reset
+                </a>
+            </div>
         </div>
-    </div>
+    </form>
+</div>
 
-    <div class="mt-4">
-        {{ $users->links() }}
+{{-- Info Badge Filter Aktif --}}
+@if(request('search') || request('role') || request('status'))
+    <div class="mb-4 text-sm text-gray-600">
+        Menampilkan data filter: 
+        @if(request('search')) Kata kunci <span class="font-semibold text-gray-800">"{{ request('search') }}"</span> @endif
+        @if(request('search') && (request('role') || request('status'))) dengan @endif
+        @if(request('role')) Role <span class="font-semibold text-gray-800">{{ ucfirst(str_replace('_', ' ', request('role'))) }}</span> @endif
+        @if(request('role') && request('status')) dan @endif
+        @if(request('status')) Status <span class="font-semibold text-gray-800">{{ ucfirst(request('status')) }}</span> @endif
     </div>
+@endif
+
+{{-- Table Section (Disertai Penjagaan Query String untuk Pagination) --}}
+<div class="bg-white mb-6 rounded-lg shadow-sm border overflow-hidden">
+    <div class="relative overflow-x-auto">
+        <table class="w-full text-sm text-left text-gray-500">
+            <thead class="text-sm text-gray-700 bg-gray-200">
+                <tr>
+                    <th class="px-6 py-3 text-center">No</th>
+                    <th class="px-6 py-3 text-center">Nama</th>
+                    <th class="px-6 py-3 text-center">Email</th>
+                    <th class="px-6 py-3 text-center">No HP</th>
+                    <th class="px-6 py-3 text-center">Alamat</th>
+                    <th class="px-6 py-3 text-center">Role</th>
+                    <th class="px-6 py-3 text-center">Status</th>
+                    <th class="px-6 py-3 text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($users as $index => $user)
+                    <tr class="border-b bg-white hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-4 font-medium text-gray-900 text-center">{{ $users->firstItem() + $index }}</td>
+                        <td class="px-6 py-4 font-medium text-gray-900 text-center">{{ $user->nama }}</td>
+                        <td class="px-6 py-4 font-medium text-gray-900 text-center">{{ $user->email }}</td>
+                        <td class="px-6 py-4 font-medium text-gray-900 text-center">{{ $user->no_hp }}</td>
+                        <td class="px-6 py-4 font-medium text-gray-900 text-center">{{ $user->alamat }}</td>
+                        <td class="px-6 py-4 font-medium text-gray-900 text-center">
+                            @if (is_null($user->role))
+                                <span class="text-gray-400 font-bold" title="Belum Memiliki Role">-</span>
+                            @else
+                                {{ ucfirst(str_replace('_', ' ', $user->role)) }}
+                            @endif
+                        </td>                        
+                        <td class="px-6 py-4 font-medium text-gray-900 text-center">
+                            @if ($user->status == 'aktif')
+                                <span class="bg-emerald-200 px-2 py-1 text-xs rounded-md text-emerald-800">Aktif</span>
+                            @else
+                                <span class="bg-red-200 px-2 py-1 text-xs rounded-md text-red-800">Nonaktif</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <div class="flex items-center justify-center gap-2">
+                                {{-- Detail Button --}}
+                                <button onclick="detailUser('{{ $user->id_user }}')"
+                                    class="w-9 h-9 flex items-center justify-center rounded-lg text-blue-500 hover:bg-blue-50 transition-colors" title="Detail">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                </button>
+
+                                {{-- Edit Button --}}
+                                <button onclick="editUser('{{ $user->id_user }}')"
+                                    class="w-9 h-9 flex items-center justify-center rounded-lg text-yellow-500 hover:bg-yellow-50 transition-colors" title="Edit">
+                                    <svg xmlns="http://www.w3.org/2000/lg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                </button>
+
+                                {{-- Delete Button --}}
+                                <form action="{{ route('admin.users.delete', $user->id_user) }}" method="POST"
+                                    onsubmit="return confirm('Yakin ingin menghapus data ini?')" class="inline-block m-0">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="w-9 h-9 flex items-center justify-center rounded-lg text-red-500 hover:bg-red-50 transition-colors" title="Hapus">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="8" class="text-center py-10 text-gray-500 italic">Belum ada data user</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="mt-4">
+    {{ $users->appends(request()->query())->links() }}
+</div>
 
 {{-- Modal: Tambah User --}}
 <div id="modal-tambah-user" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900/70 backdrop-blur-md p-4 transition-all duration-300">

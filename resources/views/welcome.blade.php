@@ -83,49 +83,52 @@
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto pt-4">
-                <a href="{{ route('login') }}" class="bg-white border-2 border-cyan-100 p-6 rounded-2xl shadow-sm text-left hover-card flex flex-col justify-between group border-b-4 border-b-emerald-500">
-                    <div>
-                        <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center mb-5 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
-                            <i data-lucide="users" class="w-6 h-6"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-900 mb-2">Ketua KUBE</h3>
-                        <p class="text-sm text-slate-500 leading-relaxed">Akses khusus Ketua Kelompok untuk mengelola data anggota dan laporan keuangan internal KUBE.</p>
-                    </div>
-                    <div class="mt-6 flex items-center gap-2 font-bold text-emerald-600 text-sm group-hover:gap-4 transition-all">
-                        <span>Login Ketua KUBE</span>
-                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                    </div>
-                </a>
-
-                <a href="{{ route('login') }}" class="bg-white border-2 border-cyan-100 p-6 rounded-2xl shadow-sm text-left hover-card flex flex-col justify-between group border-b-4 border-b-cyan-500">
-                    <div>
-                        <div class="w-12 h-12 bg-cyan-100 text-cyan-700 rounded-xl flex items-center justify-center mb-5 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
-                            <i data-lucide="graduation-cap" class="w-6 h-6"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-900 mb-2">Pendamping KUBE</h3>
-                        <p class="text-sm text-slate-500 leading-relaxed">Akses untuk tim pendamping lapangan guna melakukan monitoring, bimbingan, and laporan kunjungan.</p>
-                    </div>
-                    <div class="mt-6 flex items-center gap-2 font-bold text-cyan-600 text-sm group-hover:gap-4 transition-all">
-                        <span>Login Pendamping</span>
-                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                    </div>
-                </a>
-
-                <a href="{{ route('login') }}" class="bg-white border-2 border-cyan-100 p-6 rounded-2xl shadow-sm text-left hover-card flex flex-col justify-between group border-b-4 border-b-amber-500">
-                    <div>
-                        <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center mb-5 group-hover:bg-amber-500 group-hover:text-white transition-colors">
-                            <i data-lucide="shield-check" class="w-6 h-6"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-900 mb-2">Koordinator</h3>
-                        <p class="text-sm text-slate-500 leading-relaxed">Akses tingkat wilayah untuk memantau kinerja seluruh pendamping dan distribusi program bantuan.</p>
-                    </div>
-                    <div class="mt-6 flex items-center gap-2 font-bold text-amber-600 text-sm group-hover:gap-4 transition-all">
-                        <span>Login Koordinator</span>
-                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                    </div>
-                </a>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto pt-4">
+    <!-- Kartu Ketua KUBE -> Mengarah ke Register Ketua -->
+    <a href="{{ route('register.ketua') }}" class="bg-white border-2 border-cyan-100 p-6 rounded-2xl shadow-sm text-left hover-card flex flex-col justify-between group border-b-4 border-b-emerald-500">
+        <div>
+            <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center mb-5 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                <i data-lucide="users" class="w-6 h-6"></i>
             </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">Ketua KUBE</h3>
+            <p class="text-sm text-slate-500 leading-relaxed">Akses khusus Ketua Kelompok untuk mengelola data anggota dan laporan keuangan internal KUBE.</p>
+        </div>
+        <div class="mt-6 flex items-center gap-2 font-bold text-emerald-600 text-sm group-hover:gap-4 transition-all">
+            <span>Daftar Ketua KUBE</span>
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </div>
+    </a>
+
+    <!-- Kartu Pendamping KUBE -> Mengarah ke Register Pendamping -->
+    <a href="{{ route('register.pendamping') }}" class="bg-white border-2 border-cyan-100 p-6 rounded-2xl shadow-sm text-left hover-card flex flex-col justify-between group border-b-4 border-b-cyan-500">
+        <div>
+            <div class="w-12 h-12 bg-cyan-100 text-cyan-700 rounded-xl flex items-center justify-center mb-5 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
+                <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">Pendamping KUBE</h3>
+            <p class="text-sm text-slate-500 leading-relaxed">Akses untuk tim pendamping lapangan guna melakukan monitoring, bimbingan, and laporan kunjungan.</p>
+        </div>
+        <div class="mt-6 flex items-center gap-2 font-bold text-cyan-600 text-sm group-hover:gap-4 transition-all">
+            <span>Daftar Pendamping</span>
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </div>
+    </a>
+
+    <!-- Kartu Koordinator -> Mengarah ke Register Koordinator -->
+    <a href="{{ route('register.koordinator') }}" class="bg-white border-2 border-cyan-100 p-6 rounded-2xl shadow-sm text-left hover-card flex flex-col justify-between group border-b-4 border-b-amber-500">
+        <div>
+            <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center mb-5 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+                <i data-lucide="shield-check" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">Koordinator</h3>
+            <p class="text-sm text-slate-500 leading-relaxed">Akses tingkat wilayah untuk memantau kinerja seluruh pendamping dan distribusi program bantuan.</p>
+        </div>
+        <div class="mt-6 flex items-center gap-2 font-bold text-amber-600 text-sm group-hover:gap-4 transition-all">
+            <span>Daftar Koordinator</span>
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </div>
+    </a>
+</div>
         </section>
 
         <section class="bg-white border border-cyan-200/60 p-6 md:p-10 shadow-sm rounded-3xl">

@@ -12,81 +12,67 @@
     </style>
 </head>
 <body class="bg-gray-100">
-
-    <div class="min-h-screen flex items-center justify-center p-4">
-        <div class="flex flex-col md:flex-row w-full max-w-[900px] h-auto md:h-[500px] bg-white rounded-xl overflow-hidden shadow-xl">
-            
-<div class="relative w-full md:w-1/2 bg-gradient-to-br from-slate-100 to-slate-200 p-10 flex flex-col justify-center overflow-hidden">
-    <div class="absolute -top-10 -left-10 w-40 h-40 bg-green-200/30 rounded-full blur-3xl"></div>
-    <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-200/30 rounded-full blur-3xl"></div>
-
-    <div class="relative z-10">
-
-        <h2 class="text-4xl font-extrabold text-slate-800 leading-tight">
-            Sistem <span class="text-green-600">KUBE</span>
-        </h2>
-        
-        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mt-1">
-            Kelompok Usaha Bersama
-        </p>
-        
-        <div class="w-16 h-1.5 bg-blue-600 rounded-full mt-4 mb-6"></div>
-
-        <div class="grid grid-cols-2 gap-4 max-w-sm">
-            <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
-                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <i data-lucide="bar-chart-3" class="w-4 h-4 text-blue-600"></i>
+    <div class="min-h-screen flex items-center justify-center p-4 relative">
+        <a href="/" class="absolute top-6 left-6 flex items-center gap-2 text-slate-600 hover:text-blue-600 font-medium text-sm bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 transition-all hover:-translate-x-1">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            <span>Kembali ke Beranda</span>
+        </a>
+        <div class="flex flex-col md:flex-row w-full max-w-[900px] h-auto md:h-[500px] bg-white rounded-xl overflow-hidden shadow-xl mt-12 md:mt-0">
+            <div class="relative w-full md:w-1/2 bg-gradient-to-br from-slate-100 to-slate-200 p-10 flex flex-col justify-center overflow-hidden">
+                <div class="absolute -top-10 -left-10 w-40 h-40 bg-green-200/30 rounded-full blur-3xl"></div>
+                <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-200/30 rounded-full blur-3xl"></div>
+                <div class="relative z-10">
+                    <h2 class="text-4xl font-extrabold text-slate-800 leading-tight">Sistem <span class="text-green-600">KUBE</span></h2>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-1">Kelompok Usaha Bersama • Dinsos Cilacap</p>
+                    <p class="text-sm text-slate-400 mt-2 font-medium italic">"Pemberdayaan Ekonomi Masyarakat Menuju Cilacap Bercahaya"</p>
+                    <div class="w-16 h-1.5 bg-blue-600 rounded-full mt-4 mb-6"></div>
+                    <div class="grid grid-cols-2 gap-4 max-w-sm">
+                        <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
+                            <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <i data-lucide="clipboard-check" class="w-4 h-4 text-blue-600"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-700">Validasi Data Kelompok</span>
+                        </div>
+                        <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
+                            <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                                <i data-lucide="wallet" class="w-4 h-4 text-green-600"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-700">Monitoring Bantuan</span>
+                        </div>
+                        <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
+                            <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <i data-lucide="users" class="w-4 h-4 text-purple-600"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-700">Laporan Pendamping</span>
+                        </div>
+                        <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
+                            <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
+                                <i data-lucide="trending-up" class="w-4 h-4 text-amber-600"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-700">Perkembangan Usaha</span>
+                        </div>
+                    </div>
                 </div>
-                <span class="text-xs font-bold text-slate-700">Monitoring Real-time</span>
             </div>
-            
-            <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
-                <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                    <i data-lucide="users" class="w-4 h-4 text-green-600"></i>
-                </div>
-                <span class="text-xs font-bold text-slate-700">Manajemen Anggota</span>
-            </div>
-
-            <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
-                <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <i data-lucide="database" class="w-4 h-4 text-purple-600"></i>
-                </div>
-                <span class="text-xs font-bold text-slate-700">Integrasi Data</span>
-            </div>
-
-            <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
-                <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
-                    <i data-lucide="zap" class="w-4 h-4 text-amber-600"></i>
-                </div>
-                <span class="text-xs font-bold text-slate-700">Efisiensi Operasional</span>
-            </div>
-        </div>
-    </div>
-</div>
-
             <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
                 <div class="text-center mb-8">
                     <h3 class="text-2xl font-semibold text-gray-800">Selamat Datang</h3>
                     <p class="text-gray-500 mt-2 text-sm">Silahkan masuk untuk melanjutkan</p>
                 </div>
-
                 @if(session('success'))
                 <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded shadow-sm flex items-center">
                     <i data-lucide="check-circle" class="h-5 w-5 mr-3"></i>
                     <p class="text-sm font-medium italic">{{ session('success') }}</p>
                 </div>
                 @endif
-
                 @if(session('error'))
                 <div class="bg-red-50 text-red-600 p-3 rounded-lg text-sm mb-4 border border-red-100 flex items-center">
                     <i data-lucide="alert-circle" class="h-4 w-4 mr-2"></i>
                     {{ session('error') }}
                 </div>
                 @endif
-
                 <form method="POST" action="/login" class="space-y-4">
                     @csrf
-                    
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                         <div class="relative">
@@ -116,32 +102,30 @@
                         Masuk
                     </button>
                 </form>
-
                 <div class="mt-6 text-center text-sm text-gray-600">
                     Belum punya akun? 
-                    <a href="/register" class="text-blue-600 hover:underline font-medium">Buat Akun</a>
+                    <a href="/" class="text-blue-600 hover:underline font-medium">Buat Akun</a>
                 </div>
             </div>
-
         </div>
     </div>
 
     <script>
     lucide.createIcons();
     function togglePassword() {
-    const passwordField = document.getElementById('passwordField');
-    const eyeIcon = document.getElementById('eyeIcon');
-    const eyeOffIcon = document.getElementById('eyeOffIcon');
+        const passwordField = document.getElementById('passwordField');
+        const eyeIcon = document.getElementById('eyeIcon');
+        const eyeOffIcon = document.getElementById('eyeOffIcon');
 
-    if (passwordField.type === 'password') {
-        passwordField.type = 'text';
-        eyeIcon.classList.remove('hidden');
-        eyeOffIcon.classList.add('hidden');
-    } else {
-        passwordField.type = 'password';
-        eyeIcon.classList.add('hidden');
-        eyeOffIcon.classList.remove('hidden');
-    }
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            eyeIcon.classList.remove('hidden');
+            eyeOffIcon.classList.add('hidden');
+        } else {
+            passwordField.type = 'password';
+            eyeIcon.classList.add('hidden');
+            eyeOffIcon.classList.remove('hidden');
+        }
     }
     </script>
 </body>
