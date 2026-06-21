@@ -18,11 +18,19 @@ class MitraController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index() //Menampilkan Daftar Mitra
+    public function index() 
     {
-        // menghitung jumlah baris di tabel bantuan_kolaborasi yang terikat ke setiap mitra.
+        $statusFilter = request('status');
         $mitras = Mitra::withCount('bantuan_kolaborasi')->get();
-        return view('admin.alur_bantuan.mitra',compact('mitras')); //data dikirim ke view dalam variabel $mitras
+
+        // Saring koleksi data setelah diambil dari database berdasarkan rumus di model
+        if (!empty($statusFilter)) {
+            $mitras = $mitras->filter(function ($mitra) use ($statusFilter) {
+                return $mitra->status === $statusFilter;
+            });
+        }
+
+        return view('admin.alur_bantuan.mitra', compact('mitras')); 
     }
 
     /**
