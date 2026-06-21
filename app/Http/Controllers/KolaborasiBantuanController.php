@@ -166,8 +166,8 @@ class KolaborasiBantuanController extends Controller
         // 5. Manajemen file upload foto bukti lama & baru
         if ($request->hasFile('foto_bukti')) {
             // Hapus file foto lama di server agar storage tidak penuh
-            if ($bantuan->foto_bukti && \Storage::exists('public/bantuan/' . $bantuan->foto_bukti)) {
-                \Storage::delete('public/bantuan/' . $bantuan->foto_bukti);
+            if ($bantuan->foto_bukti && Storage::exists('public/bantuan/' . $bantuan->foto_bukti)) {
+                Storage::delete('public/bantuan/' . $bantuan->foto_bukti);
             }
 
             // Upload berkas gambar baru ke folder storage/app/public/bantuan
@@ -203,7 +203,7 @@ class KolaborasiBantuanController extends Controller
 
         return redirect()->back()->with('success', 'Data bantuan berhasil dihapus');
     }
-    public function lihatFoto($filename)
+    public function lihatFoto( string $filename)
     {
         $filename = rawurldecode($filename);
         $path = 'private/public/bantuan/' . $filename;

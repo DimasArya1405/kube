@@ -161,7 +161,7 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
 </div>
 
 {{-- MODAL TAMBAH MITRA --}}
-<div id="modal-tambah-mitra" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-950/50 p-4 backdrop-blur-sm">
+<div id="modal-tambah-mitra" class="hidden fixed inset-0 z-50 items-center justify-center bg-gray-950/50 p-4 backdrop-blur-sm">
     
     {{-- Background Overlay untuk menutup modal saat diklik di luar area --}}
     <div class="fixed inset-0" data-modal-toggle="modal-tambah-mitra"></div>
@@ -291,7 +291,7 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
 </div>
 
 {{-- MODAL EDIT MITRA --}}
-<div id="modal-edit-mitra" tabindex="-1" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-950/50 p-4 backdrop-blur-sm">
+<div id="modal-edit-mitra" tabindex="-1" class="hidden fixed inset-0 z-50 items-center justify-center bg-gray-950/50 p-4 backdrop-blur-sm">
     
     {{-- Background Overlay untuk menutup modal saat diklik di luar area --}}
     <div class="fixed inset-0" onclick="closeEditModal()"></div>
@@ -415,7 +415,7 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
 </div>
 
 {{-- MODAL DETAIL MITRA --}}
-<div id="modal-detail-mitra" tabindex="-1" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-950/50 p-4 backdrop-blur-sm">
+<div id="modal-detail-mitra" tabindex="-1" class="hidden fixed inset-0 z-50 items-center justify-center bg-gray-950/50 p-4 backdrop-blur-sm">
     
     {{-- Background Overlay untuk menutup modal saat diklik di luar area --}}
     <div class="fixed inset-0" onclick="closeDetailModal()"></div>

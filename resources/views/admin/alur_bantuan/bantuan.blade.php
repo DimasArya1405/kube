@@ -59,7 +59,7 @@ Dashboard / <span class="text-gray-800">Bantuan Kolaborasi</span>
 
 {{-- TOOLBAR --}}
 <div class="flex flex-wrap items-center gap-3 mb-4">
-    <div class="relative flex-1 min-w-[200px]">
+    <div class="relative flex-1 min-w-200px">
         <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
             <i data-lucide="search" class="h-4 w-4"></i>
         </span>
@@ -182,7 +182,7 @@ Dashboard / <span class="text-gray-800">Bantuan Kolaborasi</span>
 </div>
 
 {{-- MODAL TAMBAH BANTUAN --}}
-<div id="modal-tambah-bantuan" tabindex="-1" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-950/50 p-4 backdrop-blur-sm">
+<div id="modal-tambah-bantuan" tabindex="-1" class="hidden fixed inset-0 z-50 items-center justify-center bg-gray-950/50 p-4 backdrop-blur-sm">
     
     {{-- Background Overlay untuk menutup modal saat diklik di luar area --}}
     <div class="fixed inset-0" data-modal-toggle="modal-tambah-bantuan"></div>
@@ -323,7 +323,7 @@ Dashboard / <span class="text-gray-800">Bantuan Kolaborasi</span>
 </div>
 
 {{-- MODAL EDIT BANTUAN --}}
-<div id="modal-edit-bantuan" tabindex="-1" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-950/50 p-4 backdrop-blur-sm">
+<div id="modal-edit-bantuan" tabindex="-1" class="hidden fixed inset-0 z-50 items-center justify-center bg-gray-950/50 p-4 backdrop-blur-sm">
     
     {{-- Background Overlay untuk menutup modal saat diklik di luar area --}}
     <div class="fixed inset-0" onclick="closeEditModal()"></div>
@@ -459,7 +459,7 @@ Dashboard / <span class="text-gray-800">Bantuan Kolaborasi</span>
 </div>
 
 {{-- MODAL DETAIL BANTUAN --}}
-<div id="modal-detail-bantuan" tabindex="-1" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-950/50 p-4 backdrop-blur-sm">
+<div id="modal-detail-bantuan" tabindex="-1" class="hidden fixed inset-0 z-50 items-center justify-center bg-gray-950/50 p-4 backdrop-blur-sm">
     
     {{-- Background Overlay untuk menutup modal saat diklik di luar area --}}
     <div class="fixed inset-0" onclick="closeDetailModal()"></div>
@@ -488,7 +488,7 @@ Dashboard / <span class="text-gray-800">Bantuan Kolaborasi</span>
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-1">KUBE Penerima</label>
                     {{-- Diubah menjadi area scrollable jika nama KUBE terpilih sangat banyak --}}
-                    <div id="detail_kube" class="w-full border border-gray-300 bg-gray-50 rounded-lg px-3 py-2 text-sm font-semibold text-indigo-700 max-h-[85px] overflow-y-auto leading-relaxed">
+                    <div id="detail_kube" class="w-full border border-gray-300 bg-gray-50 rounded-lg px-3 py-2 text-sm font-semibold text-indigo-700 max-h-85px overflow-y-auto leading-relaxed">
                         {{-- Nama-nama KUBE hasil terjemahan array JavaScript akan disuntikkan di sini --}}
                     </div>
                 </div>
@@ -517,7 +517,7 @@ Dashboard / <span class="text-gray-800">Bantuan Kolaborasi</span>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Foto Bukti Perencanaan</label>
-                        <img id="detail_foto_bukti" src="" alt="Bukti" class="w-full h-[126px] object-cover rounded-lg border border-gray-300 shadow-sm">
+                        <img id="detail_foto_bukti" src="" alt="Bukti" class="w-full h-126px object-cover rounded-lg border border-gray-300 shadow-sm">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Status Pelaksanaan</label>
@@ -530,7 +530,7 @@ Dashboard / <span class="text-gray-800">Bantuan Kolaborasi</span>
                 {{-- Baris 5: Deskripsi Program (Full Width) --}}
                 <div class="col-span-2">
                     <label class="block text-sm font-bold text-gray-700 mb-1">Deskripsi Program</label>
-                    <div id="detail_deskripsi" class="w-full border border-gray-300 bg-gray-50 rounded-lg px-3 py-2 text-sm text-gray-700 leading-relaxed min-h-[60px]"></div>
+                    <div id="detail_deskripsi" class="w-full border border-gray-300 bg-gray-50 rounded-lg px-3 py-2 text-sm text-gray-700 leading-relaxed min-h-60px"></div>
                 </div>
 
                 {{-- SECTION BUKTI PENYALURAN (Muncul jika sudah disalurkan) --}}
@@ -585,7 +585,7 @@ Dashboard / <span class="text-gray-800">Bantuan Kolaborasi</span>
 </div>
 
 {{-- MODAL KONFIRMASI HAPUS --}}
-<div id="modalDelete" class="hidden fixed inset-0 z-[9999] flex items-center justify-center">
+<div id="modalDelete" class="hidden fixed inset-0 z-9999 items-center justify-center">
     <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"></div>
     
     <div class="relative bg-white rounded-xl shadow-xl max-w-sm w-full mx-4 p-6 transition-all">
@@ -617,7 +617,7 @@ Dashboard / <span class="text-gray-800">Bantuan Kolaborasi</span>
 </div>
 
 {{-- MODAL ISI PENYALURAN BANTUAN --}}
-<div id="modal-penyaluran-bantuan" tabindex="-1" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-950/50 p-4 backdrop-blur-sm">
+<div id="modal-penyaluran-bantuan" tabindex="-1" class="hidden fixed inset-0 z-50 items-center justify-center bg-gray-950/50 p-4 backdrop-blur-sm">
     
     {{-- Background Overlay untuk menutup modal saat diklik di luar area --}}
     <div class="fixed inset-0" onclick="closePenyaluranModal()"></div>
