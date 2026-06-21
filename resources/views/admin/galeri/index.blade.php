@@ -285,6 +285,7 @@ Dashboard / <span class="text-gray-800">Galeri KUBE</span>
             class="p-4">
 
             @csrf
+            @method('PUT')
 
             <div class="mb-3">
                 <label>Judul Kegiatan</label>

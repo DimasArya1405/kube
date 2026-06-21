@@ -96,22 +96,20 @@
                                 placeholder="Masukkan email" required>
                         </div>
                     </div>
-
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
                         <div class="relative">
-                            <i data-lucide="lock" class="absolute left-3 top-3.5 w-4 h-4 text-gray-400"></i>
+                            <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
                             <input type="password" name="password" id="passwordField"
                                 class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm" 
                                 placeholder="Masukkan password" required>
-                            
-                        <button type="button" onclick="togglePassword()" class="absolute right-3 top-3.5 text-gray-400 hover:text-blue-600 transition-colors">
-                            <i data-lucide="eye-off" id="eyeOffIcon" class="w-5 h-5"></i>
-                            <i data-lucide="eye" id="eyeIcon" class="w-5 h-5 hidden"></i>
-                        </button>
+                            <button type="button" onclick="togglePassword()" 
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors flex items-center justify-center">
+                                <i data-lucide="eye-off" id="eyeOffIcon" class="w-5 h-5"></i>
+                                <i data-lucide="eye" id="eyeIcon" class="w-5 h-5 hidden"></i>
+                            </button>
                         </div>
                     </div>
-
                     <button type="submit" 
                         class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition-colors shadow-lg shadow-blue-200 flex justify-center items-center gap-2 mt-2">
                         <i data-lucide="log-in" class="w-5 h-5"></i>
@@ -129,9 +127,8 @@
     </div>
 
     <script>
-        lucide.createIcons();
-
-function togglePassword() {
+    lucide.createIcons();
+    function togglePassword() {
     const passwordField = document.getElementById('passwordField');
     const eyeIcon = document.getElementById('eyeIcon');
     const eyeOffIcon = document.getElementById('eyeOffIcon');
@@ -145,7 +142,7 @@ function togglePassword() {
         eyeIcon.classList.add('hidden');
         eyeOffIcon.classList.remove('hidden');
     }
-}
+    }
     </script>
 </body>
 </html>

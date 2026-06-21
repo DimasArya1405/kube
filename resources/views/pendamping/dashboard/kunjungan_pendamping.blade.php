@@ -19,6 +19,44 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
 </div>
 
 
+{{-- SUMMARY BOX --}}
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+
+    {{-- Total Jadwal --}}
+    <div class="bg-white p-4 rounded-lg shadow border">
+        <p class="text-sm text-gray-500">
+            Total Jadwal
+        </p>
+
+        <h3 class="text-2xl font-bold text-gray-800">
+            {{ $totalJadwal ?? 0 }}
+        </h3>
+    </div>
+
+    {{-- Terjadwal --}}
+    <div class="bg-yellow-50 p-4 rounded-lg shadow border border-yellow-200">
+        <p class="text-sm text-yellow-600">
+            Terjadwal
+        </p>
+
+        <h3 class="text-2xl font-bold text-yellow-700">
+            {{ $totalTerjadwal ?? 0 }}
+        </h3>
+    </div>
+
+    {{-- Selesai --}}
+    <div class="bg-green-50 p-4 rounded-lg shadow border border-green-200">
+        <p class="text-sm text-green-600">
+            Selesai
+        </p>
+
+        <h3 class="text-2xl font-bold text-green-700">
+            {{ $totalSelesai ?? 0 }}
+        </h3>
+    </div>
+
+</div>
+
 {{-- FILTER TAHUN & STATUS (Layout grid horizontal disamakan dengan kode pertama) --}}
 <div class="bg-white mb-4 rounded-lg shadow-sm border p-4">
     <form action="{{ route('kunjungan.index') }}" method="GET">
@@ -83,6 +121,27 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
                 </select>
             </div>
 
+            {{-- KUBE --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    KUBE
+                </label>
+
+                <select name="id_pembagian"
+                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[220px] text-sm">
+
+                    <option value="">Semua KUBE</option>
+
+                    @foreach($kubeFilter as $item)
+                    <option value="{{ $item->id_pembagian }}"
+                        {{ request('id_pembagian') == $item->id_pembagian ? 'selected' : '' }}>
+                        {{ $item->kube->nama_kube }}
+                    </option>
+                    @endforeach
+
+                </select>
+            </div>
+
             {{-- Tombol --}}
             <div class="flex gap-2">
 
@@ -93,25 +152,28 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
             </div>
 
             <a href="{{ route('kunjungan.index') }}"
-                    class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 text-sm transition">
-                    Reset
-                </a>
+                class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 text-sm transition">
+                Reset
+            </a>
             <div class="ml-auto">
-                
-            {{-- Tambah Kunjungan --}}
-            <button data-modal-target="modal-tambah-kunjungan" data-modal-toggle="modal-tambah-kunjungan"
-                class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg">
-                Tambah Kunjungan
-            </button>
+
+                <button
+                    type="button"
+                    data-modal-target="modal-tambah-kunjungan"
+                    data-modal-toggle="modal-tambah-kunjungan"
+                    class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg">
+                    Tambah Kunjungan
+                </button>
+
             </div>
-            
+
 
         </div>
 
     </form>
 </div>
 
-{{-- TOOLBAR: Search + Export + Tambah --}}
+{{-- TOOLBAR: Search + Export --}}
 <div class="flex flex-wrap items-center gap-3 mb-4">
 
     {{-- Search --}}
@@ -126,22 +188,22 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
     </div>
 
     {{-- Ekspor PDF --}}
-            <a href="{{ route('kunjungan.export.pdf') }}"
-                class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                </svg>
-                Ekspor PDF
-            </a>
+    <a href="{{ route('kunjungan.export.pdf') }}"
+        class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+        </svg>
+        Ekspor PDF
+    </a>
 
-            {{-- Ekspor Excel --}}
-            <a href="{{ route('kunjungan.export.excel') }}"
-                class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6M3 17V7a2 2 0 012-2h14a2 2 0 012 2v10" />
-                </svg>
-                Ekspor Excel
-            </a>
+    {{-- Ekspor Excel --}}
+    <a href="{{ route('kunjungan.export.excel') }}"
+        class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6M3 17V7a2 2 0 012-2h14a2 2 0 012 2v10" />
+        </svg>
+        Ekspor Excel
+    </a>
 
 
 
@@ -228,23 +290,107 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
                             </a>
 
                             {{-- Edit --}}
-                            <a href="#" data-modal-target="modal-edit-{{ $item->id_kunjungan }}" data-modal-toggle="modal-edit-{{ $item->id_kunjungan }}" class="text-yellow-500 hover:text-yellow-700" title="Edit">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            @if($item->status == 'terjadwal')
+
+                            <a href="#"
+                                data-modal-target="modal-edit-{{ $item->id_kunjungan }}"
+                                data-modal-toggle="modal-edit-{{ $item->id_kunjungan }}"
+                                class="text-yellow-500 hover:text-yellow-700"
+                                title="Edit">
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="h-4 w-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor">
+
+                                    <path stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+
                                 </svg>
+
                             </a>
 
+                            @else
+
+                            <a href="#"
+                                class="text-gray-400 cursor-not-allowed"
+                                title="Kunjungan sudah selesai dan tidak dapat diedit">
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="h-4 w-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor">
+
+                                    <path stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+
+                                </svg>
+
+                            </a>
+
+                            @endif
+
                             {{-- Hapus --}}
-                            <form action="{{ route('kunjungan.delete', $item->id_kunjungan) }}" method="POST" style="display:inline"
+                            @if($item->status == 'terjadwal')
+
+                            <form action="{{ route('kunjungan.delete', $item->id_kunjungan) }}"
+                                method="POST"
+                                style="display:inline"
                                 onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="text-red-500 hover:text-red-700" title="Hapus">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+
+                                <button type="submit"
+                                    class="text-red-500 hover:text-red-700"
+                                    title="Hapus">
+
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="h-4 w-4"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor">
+
+                                        <path stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+
                                     </svg>
+
                                 </button>
+
                             </form>
+
+                            @else
+
+                            <button
+                                disabled
+                                class="text-gray-400 cursor-not-allowed"
+                                title="Kunjungan sudah selesai dan tidak dapat dihapus">
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="h-4 w-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor">
+
+                                    <path stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+
+                                </svg>
+
+                            </button>
+
+                            @endif
 
                             {{-- Selesai --}}
                             @if($item->status == 'terjadwal')
@@ -432,6 +578,10 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
             <form action="{{ route('kunjungan.update', $item->id_kunjungan) }}" method="POST" enctype="multipart/form-data" class="p-5">
                 @csrf
                 @method('PUT')
+
+                <input type="hidden"
+                    name="id_pembagian"
+                    value="{{ $item->id_pembagian }}">
 
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
