@@ -138,8 +138,9 @@ Route::get('/kepala_dinas/dashboard', [KepalaDinasController::class, 'dashboard'
 
     // PEMBAGIAN PENDAMPING
     Route::resource('pembagian_pendamping', PembagianPendampingController::class);
-    Route::patch('/pembagian_pendamping/{id}/selesai', [App\Http\Controllers\PembagianPendampingController::class, 'tandaiSelesai'])->name('pembagian_pendamping.selesai');
-    Route::get('/pembagian_pendamping/export/excel', [App\Http\Controllers\PembagianPendampingController::class, 'exportExcel'])->name('pembagian_pendamping.export.excel');
+    Route::patch('/pembagian_pendamping/{id}/selesai', [PembagianPendampingController::class, 'tandaiSelesai'])->name('pembagian_pendamping.selesai');
+    Route::get('/pembagian_pendamping/export/excel', [PembagianPendampingController::class, 'exportExcel'])->name('pembagian_pendamping.export.excel');
+    Route::get('/pembagian-pendamping/export-pdf', [PembagianPendampingController::class, 'exportPdf'])->name('pembagian_pendamping.export.pdf');
 
     // BIMBINGAN KUBE OLEH PENDAMPING (Tambahan Baru)
     // Ini akan otomatis menghandle route bimbingan.index, bimbingan.create, bimbingan.store, dll.

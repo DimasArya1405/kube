@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Data Pelatihan</title>
+    <title>Laporan Pembagian Pendamping</title>
     <style>
         /* Pengaturan Dasar */
         body { 
@@ -68,50 +68,46 @@
         .text-center { 
             text-align: center !important; 
         }
-        .status-text {
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 10px;
+        .text-gray {
+            color: #9ca3af; /* text-gray-400 */
         }
     </style>
 </head>
 <body>
+
     <div class="header">
-        <h2>DAFTAR DATA PELATIHAN KUBE</h2>
-        <p>Tanggal Cetak: {{ date('d/m/Y') }}</p>
+        <h2>Data Pembagian Pendamping</h2>
+        <p>Laporan Penugasan KUBE</p>
     </div>
 
     <table>
         <thead>
             <tr>
-                <th width="5%">No</th>
-                <th width="20%">Nama Pelatihan</th>
-                <th width="20%">KUBE</th>
-                <th width="15%">Pendamping</th>
-                <th width="10%">Tanggal</th>
-                <th width="15%">Lokasi</th>
+                <th width="5%">No.</th>
+                <th width="25%">Nama KUBE</th>
+                <th width="25%">Nama Pendamping</th>
+                <th width="15%">Tgl Mulai</th>
+                <th width="15%">Tgl Selesai</th>
                 <th width="15%">Status</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($pelatihans as $index => $p)
+            @forelse($pembagians as $index => $p)
             <tr>
-                <td class="text-center">{{ $index + 1 }}</td>
-                <td>{{ $p->nama_pelatihan }}</td>
-                <td>
-                    @if($p->kubes && $p->kubes->count() > 0)
-                    {{ $p->kubes->pluck('nama_kube')->join(', ') }}
-                    @else
-                    -
-                    @endif
-                </td>
-                <td>{{ $p->pendamping->nama_pendamping ?? '-' }}</td>
-                <td class="text-center">{{ $p->tanggal_mulai ? \Carbon\Carbon::parse($p->tanggal_mulai)->format('d/m/Y') : '-' }}</td>
-                <td>{{ $p->lokasi }}</td>
-                <td class="text-center status-text">{{ $p->status }}</td>
+                <td class="text-center">{{ $index + 1 }}.</td>
+                <td>{{ $p->kube->nama_kube ?? 'KUBE Dihapus' }}</td>
+                <td>{{ $p->pendamping->nama_pendamping ?? 'Pendamping Dihapus' }}</td>
+                <td class="text-center">{{ $p->tgl_pembagian ? \Carbon\Carbon::parse($p->tgl_pembagian)->format('d M Y') : '-' }}</td>
+                <td class="text-center">{{ $p->tgl_selesai ? \Carbon\Carbon::parse($p->tgl_selesai)->format('d M Y') : '-' }}</td>
+                <td class="text-center">{{ $p->status }}</td>
             </tr>
-            @endforeach
+            @empty
+            <tr>
+                <td colspan="6" class="text-center text-gray">Tidak ada data pembagian pendamping.</td>
+            </tr>
+            @endforelse
         </tbody>
     </table>
+
 </body>
 </html>
