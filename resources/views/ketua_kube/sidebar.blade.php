@@ -33,7 +33,7 @@
         </button>
         <div id="taskMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
             <a href="" class="py-2 px-3 text-indigo-200 hover:text-white">Pengajuan Bantuan</a>
-            <a href="" class="py-2 px-3 text-indigo-200 hover:text-white">Pencairan Bantuan</a>
+            <a href="{{route('ketua_kube.pencairan_bantuan.index')}}" class="py-2 px-3 text-indigo-200 hover:text-white">Pencairan Bantuan</a>
         </div>
     </div>
 

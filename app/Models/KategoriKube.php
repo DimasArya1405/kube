@@ -13,6 +13,6 @@ class KategoriKube extends Model
     protected $fillable = [
         'nama_kategori',
         'deskripsi',
-        'status'
+        // 'status'
     ];
 }

@@ -15,23 +15,41 @@ Dashboard / <span class="text-gray-800">Kategori KUBE</span>
         <p class="text-gray-500 mt-1">Kelola data kategori KUBE.</p>
     </div>
 </div>
-
+{{-- SUMMARY CARD JUMLAH KATEGORI --}}
+<div class="flex gap-4 mb-6">
+    <div class="bg-blue-500 text-white rounded-lg px-12 py-5 text-center min-w-[150px] shadow">
+        <p class="text-sm font-medium">Total Kategori</p>
+        <p class="text-4xl font-bold mt-1">
+            {{ $data->count() }}
+        </p>
+    </div>
+</div>
 <div class="flex justify-between items-center mb-6">
 
-    <!-- SEARCH -->
-    <input type="text" placeholder="Cari..."
-        class="w-1/2 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-
+   <!-- SEARCH -->
+<form action="{{ route('kategorikube.index') }}" method="GET" class="w-1/2">
+    
+    <input 
+        type="text" 
+        name="search"
+        value="{{ request('search') }}"
+        placeholder="Cari kategori..."
+        onkeyup="this.form.submit()"
+        class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        
+</form>
     <!-- BUTTON -->
     <div class="flex gap-2">
 
-        <button class="bg-red-500 text-white px-4 py-2 rounded-lg">
+        <a href="{{ route('kategorikube.export.pdf') }}"
+            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
             Ekspor PDF
-        </button>
+        </a>
 
-        <button class="bg-green-500 text-white px-4 py-2 rounded-lg">
+        <a href="{{ route('kategorikube.export.excel') }}"
+            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
             Ekspor Excel
-        </button>
+        </a>
 
         <button data-modal-target="modal-tambah" data-modal-toggle="modal-tambah"
             class="bg-blue-600 text-white px-4 py-2 rounded-lg">
@@ -55,6 +73,7 @@ Dashboard / <span class="text-gray-800">Kategori KUBE</span>
             </thead>
 
             <tbody>
+                <tbody id="tableKategori">
                 @forelse($data as $index => $item)
                 <tr class="border-b">
                     <td class="px-6 py-4">
@@ -197,4 +216,22 @@ Dashboard / <span class="text-gray-800">Kategori KUBE</span>
         </div>
     </div>
 </div>
+{{-- SCRIPT: Search --}}
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        const keyword = this.value.toLowerCase();
+        const rows = document.querySelectorAll('.searchable-row');
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(keyword) ? '' : 'none';
+        });
+    });
+
+    // Show filename on file input change
+    document.getElementById('fotoInput').addEventListener('change', function() {
+        const label = document.getElementById('fotoLabel');
+        label.value = this.files[0] ? this.files[0].name : '';
+    });
+</script>
+
 @endforeach  
