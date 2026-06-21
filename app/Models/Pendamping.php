@@ -16,6 +16,7 @@ class Pendamping extends Model
     public $timestamps = true;
 
     protected $fillable = [
+        'id_user',
         'nik',
         'nama_pendamping',
         'jenis_kelamin',
@@ -26,7 +27,7 @@ class Pendamping extends Model
         'email',
         'pendidikan_terakhir',
         'id_kecamatan',
-        'id_user',
+        'id_desa',
         'tanggal_mulai',
         'tanggal_selesai',
         'status',
@@ -34,15 +35,7 @@ class Pendamping extends Model
     ];
 
     /**
-     * Relasi ke Kecamatan
-     */
-    public function kecamatan()
-    {
-        return $this->belongsTo(Kecamatan::class, 'id_kecamatan', 'id_kecamatan');
-    }
-
-    /**
-     * Relasi ke User
+     * Relasi ke User — kecamatan & desa diambil dari sini
      */
     public function user()
     {
@@ -58,7 +51,7 @@ class Pendamping extends Model
     }
 
     /**
-     * Relasi ke Pembagian Koordinator (Perbaikan Foreign/Local Key)
+     * Relasi ke Pembagian Koordinator
      */
     public function pembagianKoordinator()
     {
