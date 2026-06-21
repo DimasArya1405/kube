@@ -33,7 +33,7 @@ Data Master / <span class="text-gray-800">Data Anggota KUBE</span>
         </div>
 
         <div class="flex gap-2 w-full md:w-auto">
-            <a href="{{ route('anggota.export.pdf') }}" class="flex items-center px-4 py-2 bg-orange-500 text-white text-sm font-medium rounded-lg hover:bg-orange-600 transition shadow-sm">
+            <a href="{{ route('anggota.export.pdf') }}" class="flex items-center px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-orange-600 transition shadow-sm">
                 <i class="fas fa-file-pdf mr-2"></i> Export PDF
             </a>
 
@@ -41,7 +41,7 @@ Data Master / <span class="text-gray-800">Data Anggota KUBE</span>
                 <i class="fas fa-file-excel mr-2"></i> Export Excel
             </a>
             
-            <button onclick="toggleModal('tambahAnggotaModal')" class="flex items-center px-4 py-2 bg-purple-700 text-white text-sm font-medium rounded-lg hover:bg-purple-800 transition shadow-sm">
+            <button onclick="toggleModal('tambahAnggotaModal')" class="flex items-center px-4 py-2 bg-blue-700 text-white text-sm font-medium rounded-lg hover:bg-purple-800 transition shadow-sm">
                 <i class="fas fa-plus mr-2"></i> Tambah Anggota
             </button>
         </div>
@@ -110,13 +110,12 @@ Data Master / <span class="text-gray-800">Data Anggota KUBE</span>
                         </div>
                     </td>
                 </tr>
-                @endforeach
-
-            </tbody>
+                @endforeach </tbody>
         </table>
     </div>
-</div> @foreach($anggotas as $index => $anggota)
+</div> 
 
+@foreach($anggotas as $index => $anggota)
 <div id="detailAnggotaModal{{ $anggota->id_anggota }}" class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center transition-opacity">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden text-left relative">
         <div class="flex justify-between items-center px-6 py-4 border-b border-gray-200 bg-gray-50">

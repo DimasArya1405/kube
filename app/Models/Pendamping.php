@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Kecamatan;
 
 class Pendamping extends Model
 {
@@ -14,6 +15,8 @@ class Pendamping extends Model
     protected $primaryKey = 'id_pendamping';
 
     public $timestamps = true;
+
+    protected $guarded = [];
 
     protected $fillable = [
         'id_user',
@@ -40,10 +43,16 @@ class Pendamping extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'id_user', 'id_user');
+     * Relasi ke Kecamatan
+     */
+    public function kecamatan()
+    {
+        return $this->belongsTo(Kecamatan::class, 'id_kecamatan', 'id_kecamatan');
     }
 
     /**
      * Relasi ke Pelatihan
+     * Satu pendamping bisa mendampingi banyak pelatihan
      */
     public function pelatihans()
     {
@@ -55,6 +64,6 @@ class Pendamping extends Model
      */
     public function pembagianKoordinator()
     {
-        return $this->hasOne(PembagianKoordinator::class, 'id_pendamping', 'id_pendamping');
+        return $this->hasOne(PembagianKoordinator::class, 'id_pembagian', 'id_pembagian');
     }
 }

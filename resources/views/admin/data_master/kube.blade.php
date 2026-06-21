@@ -44,14 +44,14 @@ Data Master / <span class="text-gray-800">Data KUBE</span>
         </div>
 
         <div class="flex gap-2 w-full md:w-auto">
-            <a href="{{ route('kube.export.pdf') }}" class="flex items-center px-4 py-2 bg-orange-500 text-white text-sm font-medium rounded-lg hover:bg-orange-600 transition shadow-sm">
+            <a href="{{ route('kube.export.pdf') }}" class="flex items-center px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-orange-600 transition shadow-sm">
                 <i class="fas fa-file-pdf mr-2"></i> Export PDF
             </a>
 
             <a href="{{ route('kube.export.excel') }}" class="flex items-center px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition shadow-sm">
                 <i class="fas fa-file-excel mr-2"></i> Export Excel
             </a>
-            <button onclick="toggleModal('tambahKubeModal')" class="flex items-center px-4 py-2 bg-purple-700 text-white text-sm font-medium rounded-lg hover:bg-purple-800 transition shadow-sm">
+            <button onclick="toggleModal('tambahKubeModal')" class="flex items-center px-4 py-2 bg-blue-700 text-white text-sm font-medium rounded-lg hover:bg-purple-800 transition shadow-sm">
                 <i class="fas fa-plus mr-2"></i> Tambah KUBE
             </button>
         </div>

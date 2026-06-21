@@ -37,7 +37,6 @@ class KubeController extends Controller
 
     public function index()
     {
-        // Siapkan data pendukung yang dipakai bareng-bareng
         $desas = DesaKelurahan::orderBy('nama_desa_kelurahan', 'asc')->get();
         $clusters = ClusterUsaha::all();
         $role = Auth::user()->role; // Cek siapa yang lagi login
@@ -47,33 +46,78 @@ class KubeController extends Controller
             $kubes = Kube::with([
                 'desa.kecamatan',
                 'clusterUsaha.kategori',
-                'pembagianPendamping.pendamping.pembagianKoordinator.koordinator',
+                'pembagianPendamping.pendamping',
                 'pembagianPendamping.pembagianKoordinator.koordinator'
             ])->get();
 
             $calonKetua = User::where('role', 'ketua_kube')->get();
 
-            // Arahkan ke file Blade punya Admin
             return view('admin.data_master.kube', compact('kubes', 'desas', 'clusters', 'calonKetua'));
+        }
+
+        // ================= LOGIKA UNTUK KEPALA DINAS =================
+        elseif ($role == 'kepala_dinas') {
+            // Kepala Dinas melihat SEMUA data (sama seperti Admin)
+            $kubes = Kube::with([
+                'desa.kecamatan',
+                'clusterUsaha.kategori',
+                'pembagianPendamping.pendamping',
+                'pembagianPendamping.pembagianKoordinator.koordinator'
+            ])->latest()->get();
+
+            // Tetap di-load agar variabel di compact() tidak error di view
+            $calonKetua = User::where('role', 'ketua_kube')->get();
+
+            // Arahkan ke file Blade khusus Kepala Dinas 
+            // Pastikan di view ini tombol Edit/Hapus/Tambah dihilangkan (Read-Only)
+            return view('kepala_dinas.monitoring_program.kube', compact('kubes', 'desas', 'clusters', 'calonKetua'));
+        }
+
+        // ================= LOGIKA UNTUK KOORDINATOR =================
+        elseif ($role == 'koordinator') {
+            $nikLogin = Auth::user()->nik;
+
+            // Tarik KUBE yang punya relasi pembagian AKTIF sampai ke tingkat Koordinator
+            $kubes = Kube::whereHas('pembagianPendampingAktif', function ($q) use ($nikLogin) {
+                $q->whereHas('pembagianKoordinator', function ($qKoor) use ($nikLogin) {
+                    $qKoor->where(function ($query) {
+                        $query->whereNull('tgl_selesai')
+                            ->orWhere('tgl_selesai', '>', now());
+                    })
+                        ->whereHas('koordinator.user', function ($qUser) use ($nikLogin) {
+                            $qUser->where('nik', $nikLogin);
+                        });
+                });
+            })->with([
+                'desa.kecamatan',
+                'clusterUsaha.kategori',
+                'pembagianPendampingAktif.pendamping',
+                'pembagianPendampingAktif.pembagianKoordinator.koordinator'
+            ])->get();
+
+            $calonKetua = User::where('role', 'ketua_kube')->get();
+
+            return view('koordinator.kube_binaan.kube', compact('kubes', 'desas', 'clusters', 'calonKetua'));
         }
 
         // ================= LOGIKA UNTUK PENDAMPING =================
         elseif ($role == 'pendamping') {
             $nikLogin = Auth::user()->nik;
 
-            // Tarik KUBE yang relasi NIK pendampingnya cocok dengan yang lagi login
-            $kubes = Kube::whereHas('pembagianPendamping.pendamping', function ($q) use ($nikLogin) {
-                $q->where('nik', $nikLogin);
+            // Tarik KUBE yang punya relasi pembagian AKTIF dengan pendamping
+            $kubes = Kube::whereHas('pembagianPendampingAktif', function ($q) use ($nikLogin) {
+                $q->whereHas('pendamping', function ($queryPendamping) use ($nikLogin) {
+                    $queryPendamping->where('nik', $nikLogin);
+                });
             })->with([
                 'desa.kecamatan',
                 'clusterUsaha.kategori',
-                'pembagianPendamping.pendamping.pembagianKoordinator.koordinator',
-                'pembagianPendamping.pembagianKoordinator.koordinator'
+                'pembagianPendampingAktif.pendamping',
+                'pembagianPendampingAktif.pembagianKoordinator.koordinator'
             ])->get();
 
             $calonKetua = User::where('role', 'ketua_kube')->get();
 
-            // Arahkan ke file Blade khusus Pendamping (biar tombol hapus/edit admin gak muncul)
             return view('pendamping.kube_binaan.kube', compact('kubes', 'desas', 'clusters', 'calonKetua'));
         }
 
@@ -187,23 +231,18 @@ class KubeController extends Controller
 
     public function detail_kube()
     {
-        // 1. Cek apakah akun ketua ini sudah punya data di tabel KUBE
+        // Gunakan latest() untuk memastikan mengambil KUBE yang paling baru dibuat
         $kube = Kube::with(['desa', 'clusterUsaha', 'anggota'])
             ->where('id_user', Auth::id())
+            ->latest('id_kube') // <-- TAMBAHKAN BARIS INI
             ->first();
 
-        // 2. Kalau KUBE BELUM ADA (Berarti dia baru pertama kali login)
         if (!$kube) {
-            // Ambil data untuk form dropdown
             $desas = DesaKelurahan::orderBy('nama_desa_kelurahan', 'asc')->get();
             $clusters = ClusterUsaha::all();
-
-            // Arahkan ke halaman form pengajuan (Kak Yana harus bikin view ini)
             return view('ketua_kube.manajemen_internal.pengajuan_kube_baru', compact('desas', 'clusters'));
         }
 
-        // 3. Kalau KUBE SUDAH ADA 
-        // Arahkan ke halaman dashboard utama dia, dan bawa data $myKube-nya
         return view('ketua_kube.manajemen_internal.detail_kube', compact('kube'));
     }
 
@@ -246,9 +285,9 @@ class KubeController extends Controller
         $kubes = Kube::with([
             'desa.kecamatan',
             'clusterUsaha.kategori',
-            'pembagianPendamping.pendamping.pembagianKoordinator.koordinator',
+            'pembagianPendamping.pendamping',
             'pembagianPendamping.pembagianKoordinator.koordinator',
-            'anggota' // 🔥 Jangan lupa tarik data anggotanya
+            'anggota'
         ])->get();
 
         $pdf = Pdf::loadView('admin.data_master.pdf_kube', compact('kubes'));

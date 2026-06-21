@@ -5,39 +5,81 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\KunjunganPendamping;
 use App\Models\PembagianPendamping;
+use App\Models\Pendamping;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use App\Exports\KunjunganPendampingExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class KunjunganPendampingController extends Controller
 {
     public function index()
     {
-        $kunjunganPendamping = KunjunganPendamping::with([
-            'pembagian.pendamping',
-            'pembagian.kube'
-        ])->get();
+
+        $user = Auth::user();
+
+        $pendampingLogin = Pendamping::where('id_user', $user->id_user)->first();
+
+        if (!$pendampingLogin) {
+            return redirect()->back()->with(
+                'error',
+                'Akun ini belum terhubung dengan data pendamping.'
+            );
+        }
 
         $pembagianPendamping = PembagianPendamping::with([
             'pendamping',
             'kube'
-        ])->get();
+        ])
+            ->where('id_pendamping', $pendampingLogin->id_pendamping)
+            ->get();
 
-        $pendamping = $pembagianPendamping->groupBy('id_pendamping');
+        $kunjunganPendamping = KunjunganPendamping::with([
+            'pembagian.pendamping',
+            'pembagian.kube'
+        ])
+            ->whereHas('pembagian', function ($query) use ($pendampingLogin) {
+                $query->where('id_pendamping', $pendampingLogin->id_pendamping);
+            })
 
-        // Tambahkan ini
-        $dataPembagian = $pembagianPendamping->map(function($item) {
-            return [
-                'id_pembagian'  => $item->id_pembagian,
-                'id_pendamping' => $item->id_pendamping,
-                'kube'          => ['nama_kube' => $item->kube->nama_kube ?? ''],
-            ];
-        })->values();
+            ->when(request('tujuan_kunjungan'), function ($query) {
+                $query->where('tujuan_kunjungan', request('tujuan_kunjungan'));
+            })
 
-        return view('pendamping.dashboard.kunjungan_pendamping', compact(
-            'kunjunganPendamping',
-            'pembagianPendamping',
-            'pendamping',
-            'dataPembagian' // ✅ tambahkan ini
-        ));
+            ->when(request('status'), function ($query) {
+                $query->where('status', request('status'));
+            })
+
+            ->when(request('id_pembagian'), function ($query) {
+                $query->where('id_pembagian', request('id_pembagian'));
+            })
+
+            ->get();
+        $kubeFilter = $pembagianPendamping;
+
+        $totalJadwal = $kunjunganPendamping->count();
+
+        $totalTerjadwal = $kunjunganPendamping
+            ->where('status', 'terjadwal')
+            ->count();
+
+        $totalSelesai = $kunjunganPendamping
+            ->where('status', 'selesai')
+            ->count();
+
+        return view(
+            'pendamping.dashboard.kunjungan_pendamping',
+            compact(
+                'kunjunganPendamping',
+                'pembagianPendamping',
+                'totalJadwal',
+                'totalTerjadwal',
+                'totalSelesai',
+                'kubeFilter'
+            )
+        );
     }
 
     public function create()
@@ -72,11 +114,11 @@ class KunjunganPendampingController extends Controller
 
     public function edit($id)
     {
-        $kunjunganPendamping = KunjunganPendamping::with(['pembagian.pendamping','pembagian.kube'])->get();
+        $kunjunganPendamping = KunjunganPendamping::with(['pembagian.pendamping', 'pembagian.kube'])->get();
 
         $kunjungan = KunjunganPendamping::with('pembagian.kube')->findOrFail($id);
 
-        $pembagianPendamping = PembagianPendamping::with(['pendamping','kube'])->get();
+        $pembagianPendamping = PembagianPendamping::with(['pendamping', 'kube'])->get();
 
         return view('pendamping.dashboard.kunjungan_pendamping', compact(
             'kunjunganPendamping',
@@ -87,16 +129,23 @@ class KunjunganPendampingController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+            $request->validate([
             'id_pembagian' => 'required|exists:pembagian_pendamping,id_pembagian',
             'tanggal_kunjungan' => 'required|date',
             'waktu_kunjungan' => 'required',
             'tujuan_kunjungan' => 'required|in:Monitoring,Evaluasi,Koordinasi,Kunjungan Rutin',
             'kunjungan_ke' => 'required|integer',
-            'catatan' 
+            'catatan'
         ]);
 
         $kunjungan = KunjunganPendamping::findOrFail($id);
+
+        if ($kunjungan->status == 'selesai') {
+            return back()->with(
+                'error',
+                'Kunjungan yang sudah selesai tidak dapat diedit.'
+            );
+        }
 
         $kunjungan->update([
             'id_pembagian' => $request->id_pembagian,
@@ -107,7 +156,7 @@ class KunjunganPendampingController extends Controller
             'catatan' => $request->catatan
         ]);
 
-        return redirect()->back()->with('success','Data berhasil diupdate');
+        return redirect()->back()->with('success', 'Data berhasil diupdate');
     }
 
     public function show($id)
@@ -122,9 +171,119 @@ class KunjunganPendampingController extends Controller
 
     public function destroy($id)
     {
-        KunjunganPendamping::findOrFail($id)->delete();
+        $kunjungan = KunjunganPendamping::findOrFail($id);
 
-        return redirect()->back()->with('success','Data berhasil dihapus');
+        if ($kunjungan->status == 'selesai') {
+            return back()->with(
+                'error',
+                'Kunjungan yang sudah selesai tidak dapat dihapus.'
+            );
+        }
+
+        $kunjungan->delete();
+
+        return back()->with(
+            'success',
+            'Data berhasil dihapus.'
+        );
+    }
+
+    public function selesai(Request $request, $id)
+    {
+        $request->validate([
+            'foto_bukti' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'catatan_hasil' => 'nullable|string'
+        ]);
+
+        $kunjungan = KunjunganPendamping::findOrFail($id);
+
+        // upload file
+        $path = $request->file('foto_bukti')->store('bukti_kunjungan', 'public');
+
+        $kunjungan->update([
+            'status' => 'selesai',
+            'foto_bukti' => $path,
+            'catatan_hasil' => $request->catatan_hasil
+        ]);
+
+        return redirect()->back()->with('success', 'Kunjungan selesai');
+    }
+
+    public function adminIndex()
+    {
+        $kunjunganPendamping = KunjunganPendamping::with([
+            'pembagian.pendamping',
+            'pembagian.kube'
+        ])
+
+            ->when(request('tujuan_kunjungan'), function ($query) {
+                $query->where(
+                    'tujuan_kunjungan',
+                    request('tujuan_kunjungan')
+                );
+            })
+
+            ->when(request('status'), function ($query) {
+                $query->where(
+                    'status',
+                    request('status')
+                );
+            })
+
+            ->when(request('id_pembagian'), function ($query) {
+                $query->where(
+                    'id_pembagian',
+                    request('id_pembagian')
+                );
+            })
+
+            ->get();
+
+        $totalJadwal = $kunjunganPendamping->count();
+
+        $totalTerjadwal = $kunjunganPendamping
+            ->where('status', 'terjadwal')
+            ->count();
+
+        $totalSelesai = $kunjunganPendamping
+            ->where('status', 'selesai')
+            ->count();
+
+        $kubeFilter = PembagianPendamping::with('kube')
+            ->get();
+
+        return view(
+            'admin.monevbimbingan.kunjungan_pendamping',
+            compact(
+                'kunjunganPendamping',
+                'totalJadwal',
+                'totalTerjadwal',
+                'totalSelesai',
+                'kubeFilter'
+            )
+        );
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(
+            new KunjunganPendampingExport,
+            'data-kunjungan-pendamping.xlsx'
+        );
+    }
+
+    public function exportPdf()
+    {
+        $kunjunganPendamping = KunjunganPendamping::with([
+            'pembagian.pendamping',
+            'pembagian.kube'
+        ])->get();
+
+        $pdf = Pdf::loadView(
+            'pendamping.export.kunjungan_pdf',
+            compact('kunjunganPendamping')
+        );
+
+        return $pdf->download('data-kunjungan-pendamping.pdf');
     }
 }
-

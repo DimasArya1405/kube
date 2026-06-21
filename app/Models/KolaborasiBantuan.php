@@ -18,8 +18,12 @@ class KolaborasiBantuan extends Model
         'nama_bantuan',
         'tgl_pelaksanaan',
         'bantuan',
+        'deskripsi',
         'foto_bukti',
         'status',
+    ];
+    protected $casts = [
+        'id_kube' => 'array',
     ];
     public function mitra(): BelongsTo
     {
@@ -28,5 +32,10 @@ class KolaborasiBantuan extends Model
     public function kube(): BelongsTo
     {
         return $this->belongsTo(Kube::class, 'id_kube', 'id_kube');
+    }
+    public function buktiPenyaluran()
+    {
+        // hasOne karena satu kolaborasi biasanya punya satu laporan penyaluran akhir
+        return $this->hasOne(BuktiPenyaluran::class, 'id_kolaborasi', 'id_kolaborasi');
     }
 }

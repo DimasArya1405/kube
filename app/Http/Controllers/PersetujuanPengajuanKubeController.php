@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Kube;
 use App\Models\PengajuanKube;
 use App\Models\User;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class PersetujuanPengajuanKubeController extends Controller
 {
@@ -48,7 +49,7 @@ class PersetujuanPengajuanKubeController extends Controller
             ->orderBy('tahun', 'desc')
             ->pluck('tahun');
 
-        return view('admin.alur_bantuan.persetujuan_bantuan_kube', compact('pengajuan_kube', 'total_pengajuan', 'total_menunggu', 'total_disetujui', 'total_ditolak', 'list_tahun', 'tahun'));
+        return view('kepala_dinas.persetujuan_kube.persetujuan_bantuan_kube', compact('pengajuan_kube', 'total_pengajuan', 'total_menunggu', 'total_disetujui', 'total_ditolak', 'list_tahun', 'tahun'));
     }
 
     public function setujui($id)
@@ -61,8 +62,10 @@ class PersetujuanPengajuanKubeController extends Controller
 
         $pengajuan->update([
             'status_pengajuan' => 'disetujui',
+            'status_penerima' => 'diterima',
             'disetujui_oleh' => Auth::id(),
             'tanggal_disetujui' => now()->toDateString(),
+            'keterangan' => 'Pengajuan disetujui',
         ]);
 
         return redirect()->back()->with('success', 'Pengajuan KUBE berhasil disetujui.');
@@ -94,10 +97,10 @@ class PersetujuanPengajuanKubeController extends Controller
             'kube.clusterUsaha',
             'jenisBantuan',
             'penyetuju',
-            'user'
+            'users'
         ])->where('id_pengajuan_kube', $id)->firstOrFail();
 
-        return view('admin.alur_bantuan.persetujuan_bantuan_detail', compact('pengajuan'));
+        return view('kepala_dinas.persetujuan_kube.persetujuan_bantuan_detail', compact('pengajuan'));
     }
 
     public function unduhBeritaAcara($id)

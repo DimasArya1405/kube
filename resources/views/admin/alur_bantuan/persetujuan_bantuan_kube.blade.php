@@ -12,6 +12,18 @@ Dashboard / <span class="text-gray-800">Pengajuan Bantuan KUBE</span>
         <h2 class="text-3xl font-bold text-gray-800">Pengajuan Bantuan KUBE</h2>
         <p class="text-gray-500 mt-1">Kelola data pengajuan bantuan KUBE.</p>
     </div>
+    <div class="flex justify-end gap-2">
+
+        <!-- <a href="{{ route('admin.alur_bantuan.jenis_bantuan.index') }}"
+            class="text-white bg-green-600 hover:bg-green-700 px-5 py-2.5 rounded-lg">
+            Olah Data Jenis Bantuan
+        </a> -->
+
+        <!-- <button data-modal-target="modal-tambah" data-modal-toggle="modal-tambah"
+            class="text-white bg-blue-600 hover:bg-blue-700 px-5 py-2.5 rounded-lg">
+            Tambah Cluster
+        </button> -->
+    </div>
 </div>
 
 {{-- @if (session('success'))
@@ -74,7 +86,7 @@ Dashboard / <span class="text-gray-800">Pengajuan Bantuan KUBE</span>
 
 {{-- FILTER TAHUN --}}
 <div class="bg-white mb-4 rounded-lg shadow-sm border p-4">
-    <form action="{{ route('admin.persetujuan_bantuan_kube.index') }}" method="GET">
+    <form action="{{ route('kadis.persetujuan_bantuan_kube.index') }}" method="GET">
         <div class="flex flex-col md:flex-row gap-3 md:items-center">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Filter Tahun</label>
@@ -95,7 +107,7 @@ Dashboard / <span class="text-gray-800">Pengajuan Bantuan KUBE</span>
                     Filter
                 </button>
 
-                <a href="{{ route('admin.persetujuan_bantuan_kube.index') }}"
+                <a href="{{ route('kadis.persetujuan_bantuan_kube.index') }}"
                     class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
                     Reset
                 </a>
@@ -136,7 +148,7 @@ Dashboard / <span class="text-gray-800">Pengajuan Bantuan KUBE</span>
                     </td>
 
                     <td class="px-6 py-4">
-                        {{ $row->jenisBantuan->jenis_bantuan ?? '-' }}
+                        {{ $row->jenisBantuan->jenisBantuan->jenis_bantuan ?? '-' }}
                     </td>
 
                     <td class="px-6 py-4">
@@ -167,24 +179,22 @@ Dashboard / <span class="text-gray-800">Pengajuan Bantuan KUBE</span>
 
                     <td class="px-6 py-4">
                         <div class="flex gap-2 items-center flex-wrap">
-                            <a href="{{ route('admin.persetujuan_bantuan_kube.detail', $row->id_pengajuan_kube) }}"
+                            <a href="{{ route('kadis.persetujuan_bantuan_kube.detail', $row->id_pengajuan_kube) }}"
                                 class="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600">
                                 Detail
                             </a>
 
-                            @if (in_array($row->status_pengajuan, ['diajukan', 'menunggu']))
-                            @else
-                            @if(in_array($row->status_pengajuan, ['disetujui','cair']))
-                            <a href="{{ route('admin.persetujuan_bantuan_kube.unduh_berita_acara', $row->id_pengajuan_kube) }}"
+                            @if (in_array($row->status_pengajuan, ['disetujui', 'cair']))
+                            <a href="{{ route('kadis.persetujuan_bantuan_kube.unduh_berita_acara', $row->id_pengajuan_kube) }}"
                                 class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-1">
                                 <i class="bi bi-download"></i>
                                 Unduh Berita Acara
                             </a>
-                            @else
+                            @elseif (!in_array($row->status_pengajuan, ['diajukan', 'menunggu']))
                             <span class="text-gray-500 italic">Sudah diproses</span>
                             @endif
-                            @endif
                         </div>
+                    </td>
                     </td>
                 </tr>
 
@@ -224,25 +234,13 @@ Dashboard / <span class="text-gray-800">Pengajuan Bantuan KUBE</span>
                     <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
                         <h3 class="text-lg font-semibold text-gray-800 mb-4">Tolak Pengajuan</h3>
                         <p class="text-sm text-gray-600 mb-4">
-                            Apakah kamu yakin ingin menolak pengajuan bantuan untuk
+                            Apakah kamu yakin ingin menolat pengajuan bantuan untuk
                             <span class="font-semibold">{{ $row->kube->nama_kube ?? '-' }}</span>?
                         </p>
 
                         <form action="{{ route('admin.persetujuan_bantuan_kube.tolak', $row->id_pengajuan_kube) }}" method="POST">
                             @csrf
                             @method('PUT')
-
-                            <div class="mb-4">
-                                <label for="keterangan-{{ $row->id_pengajuan_kube }}" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Keterangan <span class="text-gray-400">(opsional)</span>
-                                </label>
-                                <textarea
-                                    name="keterangan"
-                                    id="keterangan-{{ $row->id_pengajuan_kube }}"
-                                    rows="4"
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-                                    placeholder="Masukkan alasan penolakan jika perlu..."></textarea>
-                            </div>
 
                             <div class="flex justify-end gap-2">
                                 <button type="button"
@@ -270,5 +268,38 @@ Dashboard / <span class="text-gray-800">Pengajuan Bantuan KUBE</span>
         </table>
     </div>
 </div>
+
+{{-- ================= MODAL TAMBAH ================= --}}
+{{-- <div id="modal-tambah" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div class="bg-white rounded-lg p-6 w-96">
+        <h3 class="text-lg font-semibold mb-4">Tambah Cluster</h3>
+
+        <form action="/cluster_usaha" method="POST">
+            @csrf
+
+            <input type="text" name="nama_cluster" placeholder="Nama Cluster"
+                class="w-full mb-2 border p-2 rounded" required>
+
+            <textarea name="deskripsi" placeholder="Deskripsi"
+                class="w-full mb-2 border p-2 rounded"></textarea>
+
+            <select name="id_kategori" class="w-full mb-2 border p-2 rounded" required>
+                <option value="">Pilih Kategori</option>
+                @foreach ($kategori as $k)
+                    <option value="{{ $k->id_kategori }}">{{ $k->nama_kategori }}</option>
+@endforeach
+</select>
+
+<select name="status" class="w-full mb-3 border p-2 rounded">
+    <option value="Aktif">Aktif</option>
+    <option value="Tidak Aktif">Tidak Aktif</option>
+</select>
+
+<button class="bg-blue-600 text-white px-4 py-2 rounded w-full">
+    Simpan
+</button>
+</form>
+</div>
+</div> --}}
 
 @stop

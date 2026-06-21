@@ -24,6 +24,7 @@
             <a href="{{ route('koordinator.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Data Koordinator (Katrina)</a>
             <a href="{{ route('kategorikube.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Kategori KUBE (Tika)</a>
             <a href="{{ route('cluster_usaha.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Cluster (Ana)</a>
+            <a href="{{ route('admin.alur_bantuan.jenis_bantuan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Jenis Bantuan (Dimas)</a>
         </div>
     </div>
 
@@ -50,8 +51,9 @@
             <i data-lucide="chevron-down" id="bantuanIcon" class="w-4 h-4 transition-transform duration-300"></i>
         </button>
         <div id="bantuanMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
-            <a href="{{ route('pengajuan.create') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Pengajuan KUBE (Putri)</a>
+            <a href="{{ route('pengajuan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Pengajuan KUBE (Putri)</a>
             <a href="{{route('admin.persetujuan_bantuan_kube.index')}}" class="py-2 px-3 text-indigo-200 hover:text-white">Persetujuan (Probo)</a>
+            <a href="{{route('admin.pencairan_bantuan.index')}}" class="py-2 px-3 text-indigo-200 hover:text-white">Tahap Pencairan (Dimas)</a>
             <a href="/admin/mitra" class="py-2 px-3 text-indigo-200 hover:text-white">Mitra & Kolaborasi (Amel)</a>
         </div>
     </div>
@@ -67,7 +69,7 @@
         <div id="monevMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[12px] text-[11px] uppercase tracking-widest font-bold">
             <a href="{{ route('monitoring.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Monitoring Bantuan (Noni)</a>
             <a href="{{ route('laporan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Laporan Keuangan (Fassha)</a>
-            <a href="{{ route('kunjungan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Kunjungan (Meilita)</a>
+            <a href="{{ route('admin.kunjungan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Jadwal Kunjungan Pendamping (Meilita)</a>
             <a href="{{ route('perkembangan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Perkembangan Usaha (Ferina)</a>
             <a href="{{ route('bimbingan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Bimbingan (Shalshabilla)</a>
             <a href="{{ route('pelatihan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Pelatihan KUBE (Devia)</a>

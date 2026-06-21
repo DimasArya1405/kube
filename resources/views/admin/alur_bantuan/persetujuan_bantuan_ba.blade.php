@@ -150,7 +150,7 @@
                 </div>
 
                 <div style="margin-top: 80px;">
-                    <strong><u>{{ $namaPenandatangan }}</u></strong>
+                    <strong><u>......................................</u></strong>
                 </div>
             </td>
         </tr>

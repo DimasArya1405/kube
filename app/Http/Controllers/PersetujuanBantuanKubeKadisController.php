@@ -92,7 +92,7 @@ class PersetujuanBantuanKubeKadisController extends Controller
             'kube.clusterUsaha',
             'jenisBantuan',
             'penyetuju',
-            'user'
+            'users'
         ])->where('id_pengajuan_kube', $id)->firstOrFail();
 
         return view('kepala_dinas.persetujuan_kube.persetujuan_bantuan_detail', compact('pengajuan'));

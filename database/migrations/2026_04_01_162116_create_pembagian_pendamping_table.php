@@ -17,7 +17,9 @@ return new class extends Migration
             $table->unsignedBigInteger('id_kube');
             $table->unsignedBigInteger('id_pendamping');
             
-            $table->date('tgl_pembagian')->nullable();
+            $table->date('tgl_pembagian')->nullable(); 
+            $table->date('tgl_selesai')->nullable();   
+            
             $table->string('status', 15)->default('Aktif');
 
             $table->timestamp('created_at')->useCurrent();

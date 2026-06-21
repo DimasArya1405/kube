@@ -31,7 +31,6 @@ Dashboard / Data Master / <span class="text-gray-800">Detail KUBE</span>
 
                 <p>Tanggal Dibentuk : <span>{{ $kube->tanggal_terbentuk ? \Carbon\Carbon::parse($kube->tanggal_terbentuk)->format('d F Y') : '-' }}</span></p>
 
-
             </div>
         </div>
 
@@ -41,13 +40,13 @@ Dashboard / Data Master / <span class="text-gray-800">Detail KUBE</span>
                 <div>
                     <p class="text-gray-700 font-medium mb-1">Pendamping</p>
                     <div class="flex justify-between items-center bg-gray-300 rounded-full px-6 py-2 shadow-inner">
-                        <span class="font-bold text-gray-800 mx-auto">{{ $kube->pembagianPendamping->pendamping->nama_pendamping ?? 'Belum ada Pendamping' }}</span>
+                        <span class="font-bold text-gray-800 mx-auto">{{ $kube->pembagianPendampingAktif->pendamping->nama_pendamping ?? 'Belum ada Pendamping' }}</span>
                     </div>
                 </div>
                 <div>
                     <p class="text-gray-700 font-medium mb-1">Koordinator</p>
                     <div class="flex justify-between items-center bg-gray-300 rounded-full px-6 py-2 shadow-inner">
-                        <span class="font-bold text-gray-800 mx-auto">{{ $kube->pembagianPendamping->pembagianKoordinator->koordinator->nama_koor ?? 'Belum ada Koordinator' }}</span>
+                        <span class="font-bold text-gray-800 mx-auto">{{ $kube->pembagianPendampingAktif->pembagianKoordinator->koordinator->nama_koor ?? 'Belum ada Koordinator' }}</span>
                     </div>
                 </div>
 
@@ -159,6 +158,7 @@ Dashboard / Data Master / <span class="text-gray-800">Detail KUBE</span>
                     <input type="hidden" name="jabatan" value="Ketua">
                     @else
                     <select name="jabatan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500" required>
+                        <!-- <option value="Ketua" {{ $anggota->jabatan == 'Ketua' ? 'selected' : '' }}>Ketua</option> -->
                         <option value="Sekretaris" {{ $anggota->jabatan == 'Sekretaris' ? 'selected' : '' }}>Sekretaris</option>
                         <option value="Bendahara" {{ $anggota->jabatan == 'Bendahara' ? 'selected' : '' }}>Bendahara</option>
                         <option value="Anggota" {{ $anggota->jabatan == 'Anggota' ? 'selected' : '' }}>Anggota</option>
@@ -213,6 +213,7 @@ Dashboard / Data Master / <span class="text-gray-800">Detail KUBE</span>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Jabatan</label>
                     <select name="jabatan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-sm transition" required>
                         <option value="">-- Pilih Jabatan --</option>
+                        <!-- <option value="Ketua">Ketua</option> -->
                         <option value="Sekretaris">Sekretaris</option>
                         <option value="Bendahara">Bendahara</option>
                         <option value="Anggota">Anggota</option>
