@@ -108,7 +108,7 @@ Dashboard / <span class="text-gray-800">Track Record</span>
                             @endif
                         </td>
 
-                        {{-- AKSI --}}
+                        
                         <td class="px-4 py-3">
                             @if(isset($prediksiPerBulan[$bulan]))
                                 <a href="{{ route('prediksi.detail', $prediksiPerBulan[$bulan]['id_prediksi']) }}"
