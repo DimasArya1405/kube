@@ -1,4 +1,4 @@
-@extends('admin.layout')
+@extends('ketua_kube.layout')
 
 @section('content')
 <div class="p-4 bg-gray-50 min-h-screen font-sans">

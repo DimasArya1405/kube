@@ -56,8 +56,17 @@ Route::delete('/admin/users/delete/{id}', [DashboardController::class, 'destroy'
 
 
 // REGISTER
-Route::get('/register', [AuthController::class, 'showRegister']);
-Route::post('/register', [AuthController::class, 'register']);
+// Route Register Ketua KUBE
+Route::get('/register/ketua', [AuthController::class, 'showRegisterKetua'])->name('register.ketua');
+Route::post('/register/ketua', [AuthController::class, 'registerKetua'])->name('register.ketua.store');
+
+// Route Register Pendamping
+Route::get('/register/pendamping', [AuthController::class, 'showRegisterPendamping'])->name('register.pendamping');
+Route::post('/register/pendamping', [AuthController::class, 'registerPendamping'])->name('register.pendamping.store');
+
+// Route Register Koordinator
+Route::get('/register/koordinator', [AuthController::class, 'showRegisterKoordinator'])->name('register.koordinator');
+Route::post('/register/koordinator', [AuthController::class, 'registerKoordinator'])->name('register.koordinator.store');
 
 // LOGOUT
 Route::post('/logout', [AuthController::class, 'logout']);

@@ -13,16 +13,39 @@ class UsersController extends Controller
     /**
      * Menampilkan daftar user dengan pagination
      */
-    public function index() 
-    {
-        $users = User::paginate(10);
-        $kecamatan = Kecamatan::all();
-        $desa = DesaKelurahan::all();
-        $total_user = User::count();
-        $user_aktif = User::where('status', 'aktif')->count();
-        $user_nonaktif = User::where('status', 'nonaktif')->count();
-        return view('admin.data_master.users', compact('users', 'kecamatan', 'desa', 'total_user', 'user_aktif', 'user_nonaktif'));
+public function index(Request $request) 
+{
+    $query = User::query();
+
+    // 1. Jalankan pencarian Nama
+    if ($request->has('search') && $request->search != '') {
+        $query->where('nama', 'LIKE', $request->search . '%');
     }
+
+    // 2. Jalankan filter role
+    if ($request->has('role') && $request->role != '') {
+        $query->where('role', $request->role);
+    }
+
+    // 3. Jalankan filter status
+    if ($request->has('status') && $request->status != '') {
+        $query->where('status', $request->status);
+    }
+
+    // 🔥 TAMBAHAN: Urutkan status nonaktif dulu, baru aktif.
+    // Jika statusnya sama, urutkan berdasarkan nama dari A-Z (opsional agar rapi)
+    $query->orderBy('status', 'desc')
+          ->orderBy('nama', 'asc');
+
+    // 4. Eksekusi pagination setelah query diurutkan
+    $users = $query->paginate(10);
+    $kecamatan = Kecamatan::all();
+    $desa = DesaKelurahan::all();
+    $total_user = User::count();
+    $user_aktif = User::where('status', 'aktif')->count();
+    $user_nonaktif = User::where('status', 'nonaktif')->count();
+    return view('admin.data_master.users', compact('users', 'kecamatan', 'desa', 'total_user', 'user_aktif', 'user_nonaktif'));
+}
 
     /**
      * Menyimpan user baru ke database
