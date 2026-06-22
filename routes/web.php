@@ -314,8 +314,11 @@ Route::prefix('admin/prediksi-kube')->name('admin.prediksi-kube.')->group(functi
     // Route::get('/monitoring/detail/{id}', [MonitoringController::class, 'detail'])
     //     ->name('monitoring.detail');
 
+    // Tambahkan ini
+    Route::get('/monitoring/create/{id_pencairan}', [MonitoringController::class, 'create'])->name('monitoring.create');
     Route::get('/monitoring/pdf', [MonitoringController::class, 'exportPdf'])
         ->name('monitoring.pdf');
+    Route::post('/monitoring/store', [MonitoringController::class, 'store'])->name('monitoring.store');
 });
 
     Route::get('/pengajuan-kube/create', [PengajuanKubeController::class, 'create'])->name('pengajuan.create');
