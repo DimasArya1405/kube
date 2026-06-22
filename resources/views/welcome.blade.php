@@ -153,7 +153,7 @@
                 @forelse ($galeriData as $item)
                     <div class="group relative overflow-hidden rounded-2xl aspect-video bg-slate-200 hover-card w-[85%] sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] shrink-0 snap-start">
                         
-                        <img src="{{ asset('images/' . $item->gambar) }}" 
+                        <img src="{{ asset('storage/uploads/images/' . $item->gambar) }}" 
                             alt="{{ $item->judul }}" 
                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                             draggable="false">

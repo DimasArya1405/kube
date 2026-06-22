@@ -23,7 +23,7 @@ class GaleriController extends Controller
 
         $gambar = time() . '.' . $request->gambar->extension();
 
-        $request->gambar->move(public_path('images'), $gambar);
+        $request->gambar->move(storage_path('app/public/images'), $gambar);
 
         Galeri::create([
             'judul' => $request->judul,

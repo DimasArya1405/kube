@@ -13,8 +13,7 @@
     </a>
 </div>
 
-    <img src="{{ asset('images/' . $galeri->gambar) }}"
-        class="w-full h-[500px] object-cover rounded-xl mb-6">
+    <img src="{{ asset('images/' . $galeri->gambar) }}"class="w-full h-[500px] object-cover rounded-xl mb-6">
 
     <h1 class="text-4xl font-bold mb-3">
         {{ $galeri->judul }}
