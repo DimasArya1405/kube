@@ -94,15 +94,15 @@ class MonitoringController extends Controller
     }
 
     // ✅ FORM EDIT
-public function edit($id)
-{
-    $data = Monitoring::findOrFail($id);
-    $jenis = JenisBantuan::all();
-    $kube = Kube::all();
-    $pendamping = Pendamping::all();
+// public function edit($id)
+// {
+//     $data = Monitoring::findOrFail($id);
+//     $jenis = JenisBantuan::all();
+//     $kube = Kube::all();
+//     $pendamping = Pendamping::all();
 
-    return view('pendamping.dashboard.monitoring_edit', compact('data','jenis','kube','pendamping'));
-}
+//     return view('pendamping.dashboard.monitoring_edit', compact('data','jenis','kube','pendamping'));
+// }
 
 // ✅ UPDATE
 public function update(Request $request, $id)
@@ -162,12 +162,12 @@ public function update(Request $request, $id)
 // }
 
 // ✅ DETAIL
-public function detail($id)
-{
-    $data = Monitoring::with(['jenisBantuan','kube','pendamping'])->findOrFail($id);
+// public function detail($id)
+// {
+//     $data = Monitoring::with(['jenisBantuan','kube','pendamping'])->findOrFail($id);
 
-    return view('pendamping.dashboard.monitoring_detail', compact('data'));
-}
+//     return view('pendamping.dashboard.monitoring_detail', compact('data'));
+// }
 
 public function exportPdf()
 {
