@@ -40,7 +40,11 @@ use Dflydev\DotAccessData\Data;
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/', function () {
+
     return view('welcome');
+
+
+
 });
 
 
