@@ -602,7 +602,11 @@
                         });
                     });
             }
-            toggleModal('modal-edit-user'); // Menggunakan sistem toggle baru
+            toggleModal('modal-edit-user'); 
+        })
+        .catch(error => {
+            console.error(error);
+            alert('Gagal mengambil data user');
         });
     }
 
@@ -649,8 +653,9 @@
                 document.getElementById('detail_desa').innerText = "Desa/Kelurahan " + namaDesa;
 
                 const roleElement = document.getElementById('detail_role');
-                roleElement.innerText = data.role.replace('_', ' ');
-
+                roleElement.innerText = data.role
+                    ? data.role.replace('_', ' ')
+                    : '-';
                 const initial = data.nama ? data.nama.charAt(0).toUpperCase() : 'U';
                 document.getElementById('detail_initial').innerText = initial;
 
@@ -659,7 +664,7 @@
                 const statusText = document.getElementById('detail_status');
                 statusText.innerText = data.status;
 
-                if (data.status.toLowerCase() === 'aktif') {
+                if ((data.status || '').toLowerCase() === 'aktif') {
                     statusText.className = "text-sm font-bold text-green-600 uppercase tracking-widest";
                     statusPing.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75";
                     statusDot.className = "relative inline-flex rounded-full h-3 w-3 bg-green-500";
@@ -674,7 +679,7 @@
                 console.error('Error:', error);
                 alert('Gagal mengambil data user.');
             });
-    }
+        }
 </script>
 
 @endsection

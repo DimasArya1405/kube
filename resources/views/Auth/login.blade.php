@@ -18,42 +18,22 @@
             <span>Kembali ke Beranda</span>
         </a>
         <div class="flex flex-col md:flex-row w-full max-w-[900px] h-auto md:h-[500px] bg-white rounded-xl overflow-hidden shadow-xl mt-12 md:mt-0">
-            <div class="relative w-full md:w-1/2 bg-gradient-to-br from-slate-100 to-slate-200 p-10 flex flex-col justify-center overflow-hidden">
-                <div class="absolute -top-10 -left-10 w-40 h-40 bg-green-200/30 rounded-full blur-3xl"></div>
-                <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-200/30 rounded-full blur-3xl"></div>
-                <div class="relative z-10">
-                    <h2 class="text-4xl font-extrabold text-slate-800 leading-tight">Sistem <span class="text-green-600">KUBE</span></h2>
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-1">Kelompok Usaha Bersama • Dinsos Cilacap</p>
-                    <p class="text-sm text-slate-400 mt-2 font-medium italic">"Pemberdayaan Ekonomi Masyarakat Menuju Cilacap Bercahaya"</p>
-                    <div class="w-16 h-1.5 bg-blue-600 rounded-full mt-4 mb-6"></div>
-                    <div class="grid grid-cols-2 gap-4 max-w-sm">
-                        <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
-                            <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                                <i data-lucide="clipboard-check" class="w-4 h-4 text-blue-600"></i>
-                            </div>
-                            <span class="text-xs font-bold text-slate-700">Validasi Data Kelompok</span>
-                        </div>
-                        <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
-                            <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                                <i data-lucide="wallet" class="w-4 h-4 text-green-600"></i>
-                            </div>
-                            <span class="text-xs font-bold text-slate-700">Monitoring Bantuan</span>
-                        </div>
-                        <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
-                            <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                                <i data-lucide="users" class="w-4 h-4 text-purple-600"></i>
-                            </div>
-                            <span class="text-xs font-bold text-slate-700">Laporan Pendamping</span>
-                        </div>
-                        <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
-                            <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
-                                <i data-lucide="trending-up" class="w-4 h-4 text-amber-600"></i>
-                            </div>
-                            <span class="text-xs font-bold text-slate-700">Perkembangan Usaha</span>
-                        </div>
-                    </div>
+    <div class="relative w-full md:w-1/2 bg-gradient-to-br from-slate-100 to-slate-200 p-10 flex flex-col justify-center overflow-hidden">    
+    <div class="relative z-10">
+        <div class="flex items-center gap-6 mb-8">
+            <img src="https://caribdt.dinsos.jatengprov.go.id/images/dinsos.png" 
+                 alt="Logo Dinsos" 
+                 class="h-48 w-auto object-contain fallback-image" 
+                 onerror="this.style.display='none'">
+        </div>
+                <h2 class="text-4xl font-extrabold text-slate-800 leading-tight">Sistem <span class="text-green-600">KUBE</span></h2>
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-1">Kelompok Usaha Bersama • Dinsos Cilacap</p>
+                <p class="text-sm text-slate-400 mt-2 font-medium italic">"Pemberdayaan Ekonomi Masyarakat Menuju Cilacap Bercahaya"</p>
+                <div class="w-16 h-1.5 bg-blue-600 rounded-full mt-4 mb-6"></div>
+                <div class="grid grid-cols-2 gap-4 max-w-sm">
                 </div>
             </div>
+        </div>
             <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
                 <div class="text-center mb-8">
                     <h3 class="text-2xl font-semibold text-gray-800">Selamat Datang</h3>

@@ -20,10 +20,13 @@
         </a>
         <div class="flex flex-col md:flex-row w-full max-w-[1000px] bg-white rounded-xl overflow-hidden shadow-xl">
             <div class="relative w-full md:w-5/12 bg-gradient-to-br from-slate-100 to-slate-200 p-10 flex flex-col justify-center overflow-hidden border-b md:border-b-0 border-gray-200">
-                <div class="absolute -top-10 -left-10 w-40 h-40 bg-amber-200/30 rounded-full blur-3xl"></div>
-                <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-200/30 rounded-full blur-3xl"></div>
-
                 <div class="relative z-10">
+                <div class="flex items-center gap-6 mb-8">
+                    <img src="https://caribdt.dinsos.jatengprov.go.id/images/dinsos.png" 
+                         alt="Logo Dinsos" 
+                         class="h-32 w-auto object-contain fallback-image" 
+                         onerror="this.style.display='none'">
+                </div>
                     <h2 class="text-3xl font-extrabold text-slate-800 leading-tight">
                         Daftar <span class="text-amber-600">Koordinator</span>
                     </h2>
@@ -31,38 +34,10 @@
                         Lengkapi data pendaftaran tingkat wilayah/koordinator program.
                     </p>
                     <div class="w-12 h-1 bg-amber-500 rounded-full mt-4 mb-6"></div>
-
-                    <div class="grid grid-cols-2 gap-4 max-w-sm">
-                        <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
-                            <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
-                                <i data-lucide="user-check" class="w-4 h-4 text-amber-600"></i>
-                            </div>
-                            <div><p class="text-xs font-bold text-slate-700">Validasi NIK</p></div>
-                        </div>
-                        <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
-                            <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                                <i data-lucide="shield-check" class="w-4 h-4 text-blue-600"></i>
-                            </div>
-                            <div><p class="text-xs font-bold text-slate-700">Verifikasi Akun</p></div>
-                        </div>
-                        <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
-                            <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                                <i data-lucide="shield-check" class="w-4 h-4 text-purple-600"></i>
-                            </div>
-                            <div><p class="text-xs font-bold text-slate-700">Akses Wilayah</p></div>
-                        </div>
-                        <div class="flex flex-col gap-2 p-3 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-sm">
-                            <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
-                                <i data-lucide="clock" class="w-4 h-4 text-emerald-600"></i>
-                            </div>
-                            <div><p class="text-xs font-bold text-slate-700">Proses Validasi</p></div>
-                        </div>
-                    </div>
                 </div>
-
                 <div class="absolute bottom-6 left-10 flex items-center gap-2 text-slate-400">
-                    <i data-lucide="map-pin" class="w-3 h-3"></i>
-                    <span class="text-[10px] font-medium tracking-wide text-slate-400 uppercase">Dinsos Cilacap</span>
+                    <i data-lucide="map-pin" class="w-5 h-5"></i>
+                    <span class="text-[15px] font-medium tracking-wide text-slate-400 uppercase">Dinsos Cilacap</span>
                 </div>
             </div>
 
