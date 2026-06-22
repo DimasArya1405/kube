@@ -30,7 +30,7 @@ class Pendamping extends Model
         'email',
         'pendidikan_terakhir',
         'id_kecamatan',
-        'id_desa',
+        'id_desa_kelurahan',
         'tanggal_mulai',
         'tanggal_selesai',
         'status',
@@ -43,8 +43,7 @@ class Pendamping extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'id_user', 'id_user');
-     * Relasi ke Kecamatan
-     */
+    }
     public function kecamatan()
     {
         return $this->belongsTo(Kecamatan::class, 'id_kecamatan', 'id_kecamatan');
