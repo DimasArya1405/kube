@@ -35,16 +35,15 @@ use App\Http\Controllers\ketua_kube\PencairanBantuanController as Ketua_kubePenc
 use App\Http\Controllers\PersetujuanBantuanKubeKadisController;
 use App\Http\Controllers\GaleriController;
 use Dflydev\DotAccessData\Data;
+use App\Models\Galeri;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/', function () {
 
-    return view('welcome');
-
-
-
+Route::get('/', function () { 
+    $galeriData = Galeri::latest()->take(6)->get();
+    return view('welcome', compact('galeriData'));
 });
 
 
@@ -377,11 +376,19 @@ Route::prefix('admin/prediksi-kube')->name('admin.prediksi-kube.')->group(functi
  
         });
 
-
     // LAPORAN KECAMATAN
     Route::get('/admin/laporan-kecamatan/excel',[LaporanKecamatanController::class,'exportExcel'])->name('laporan.kecamatan.excel');
     Route::get('/admin/laporan-kecamatan/pdf',[LaporanKecamatanController::class,'exportPdfKecamatan'])->name('laporan.kecamatan.pdf');
     Route::get('/admin/laporan-kecamatan', [LaporanKecamatanController::class, 'index'])->name('laporan.kecamatan');
     Route::get('/admin/laporan-kecamatan/{id}', [LaporanKecamatanController::class, 'detail'])->name('laporan.kecamatan.detail');
     Route::get('/admin/laporan-kecamatan/pdf/{id}', [LaporanKecamatanController::class, 'exportPdf'])->name('laporan.pdf');
+
+    // Route untuk Manajemen Galeri KUBE
+Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri.index');
+Route::post('/galeri', [GaleriController::class, 'store'])->name('galeri.store');
+Route::get('/galeri/{id}', [GaleriController::class, 'show'])->name('galeri.detail');
+Route::post('/galeri/update/{id}', [GaleriController::class, 'update'])->name('galeri.update');
+
+// Dibuat GET sesuai dengan tag <a> di file index.blade.php kamu
+Route::get('/galeri/delete/{id}', [GaleriController::class, 'destroy'])->name('galeri.destroy');
 });

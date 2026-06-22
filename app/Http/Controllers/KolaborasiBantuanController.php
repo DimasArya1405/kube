@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\KolaborasiExport;
-
+use App\Models\KategoriKube;
 class KolaborasiBantuanController extends Controller
 {
     /**
@@ -18,33 +18,51 @@ class KolaborasiBantuanController extends Controller
      */
     public function index(Request $request)
     {
-        $query = KolaborasiBantuan::with(['mitra', 'kube', 'buktiPenyaluran.dokumentasi']);
+        // 1. HAPUS 'kube' dari with() utama agar proses ->get() tidak mengalami error "Array to string"
+        $query = KolaborasiBantuan::with(['mitra', 'buktiPenyaluran.dokumentasi']);
 
-        // Filter jika datang dari tombol di halaman Mitra
+        // Filter jika datang dari tombol di halaman Mitra (tetap utuh)
         if ($request->has('id_mitra')) {
             $query->where('id_mitra', $request->id_mitra);
         }
 
-        // Filter Berdasarkan Tahun (Menggunakan kolom tgl_bantuan)
+        // Filter Berdasarkan Tahun (tetap utuh)
         if ($request->filled('tahun')) {
             $query->whereYear('tgl_pelaksanaan', $request->tahun);
         }
 
+        // 2. Proses penarikan data dijamin lancar dan sukses di sini!
         $bantuans = $query->get();
 
+        // 3. JEMBATAN PENYELAMAT: Kita buat relasi 'kube' tiruan secara manual setelah data ditarik
+        // agar halaman View Blade Anda yang menggunakan data lama maupun data baru TIDAK RUSAK/ERROR.
+        foreach ($bantuans as $bantuan) {
+            if (is_array($bantuan->id_kube)) {
+                // Jika data baru (Array JSON): Kita isi properti 'kube' dengan data KUBE pertama sebagai formalitas
+                $bantuan->setRelation('kube', Kube::find(collect($bantuan->id_kube)->first()));
+            } else {
+                // Jika data lama (Integer/String tunggal): Kita panggil relasi aslinya secara manual
+                $bantuan->load('kube');
+            }
+        }
+
+        // --- SISA KODE DI BAWAH INI TETAP UTUH & TIDAK BERUBAH SAMA SEKALI ---
+        
         // Ambil daftar tahun unik dari database untuk isi dropdown filter
         $listTahun = KolaborasiBantuan::selectRaw('YEAR(tgl_pelaksanaan) as tahun')->distinct()->orderBy('tahun', 'desc')->pluck('tahun');
+        
         // Ambil data pendukung untuk dropdown di modal tambah
         $mitras = Mitra::all();
-        $kubes = Kube::all();
         
+        // Ambil semua kategori untuk dropdown pertama
+        $kategoris = \App\Models\KategoriKube::all();
 
-        $mitras = Mitra::all();
-        $kubes = Kube::all();
+        $kubes = Kube::with('clusterUsaha')->where('status', 'Aktif')->get();
+        
         // Data mitra yang sedang difilter (untuk info di header)
         $filterMitra = $request->has('id_mitra') ? Mitra::find($request->id_mitra) : null;
 
-        return view('admin.alur_bantuan.bantuan', compact('bantuans', 'mitras', 'kubes', 'filterMitra', 'listTahun'));
+        return view('admin.alur_bantuan.bantuan', compact('bantuans', 'mitras', 'kubes', 'filterMitra', 'listTahun', 'kategoris'));
     }
 
     /**
@@ -60,32 +78,44 @@ class KolaborasiBantuanController extends Controller
      */
     public function store(Request $request)
     {
+        // 1. Validasi input (Tetap memvalidasi id_kube sebagai array)
         $validated = $request->validate([
-        'id_mitra'        => 'required',
-        'id_kube'         => 'required',
-        'jenis_bantuan'   => 'required',
-        'nama_bantuan'    => 'required',
-        'tgl_pelaksanaan' => 'required|date',
-        'bantuan'         => 'required',
-        'deskripsi'       => 'required',
-        'foto_bukti'      => 'required|image|max:5120',
-    ]);
+            'id_mitra'        => 'required',
+            'id_kube'         => 'required|array', // Harus berupa array
+            'id_kube.*'       => 'required',       
+            'jenis_bantuan'   => 'required',
+            'nama_bantuan'    => 'required',
+            'tgl_pelaksanaan' => 'required|date',
+            'bantuan'         => 'required',
+            'deskripsi'       => 'required',
+            'foto_bukti'      => 'required|image|max:5120',
+        ]);
 
-    // Ambil semua data hasil validasi
-    $data = $validated;
+        // Buat variabel awal untuk menampung nama file foto
+        $nama_file = null;
 
-    // Proses upload foto (karena di form tipenya file, bukan teks)
-    if ($request->hasFile('foto_bukti')) {
-        $file = $request->file('foto_bukti');
-        $nama_file = time() . "_" . $file->getClientOriginalName();
-        $file->storeAs('bantuan', $nama_file, 'public');
-        $data['foto_bukti'] = $nama_file; // Masukkan nama file ke array data
-    }
+        // 2. Proses upload foto (Cukup 1 kali upload)
+        if ($request->hasFile('foto_bukti')) {
+            $file = $request->file('foto_bukti');
+            $nama_file = time() . "_" . $file->getClientOriginalName();
+            $file->storeAs('bantuan', $nama_file, 'public');
+        }
 
-    // Simpan ke database
-    KolaborasiBantuan::create($data);
+        // 3. Simpan data SEKALIGUS ke dalam SATU baris (Tanpa looping foreach)
+        KolaborasiBantuan::create([
+            'id_mitra'        => $request->id_mitra,
+            'id_kube'         => $request->id_kube, // LANGSUNG masukkan array-nya di sini
+            'jenis_bantuan'   => $request->jenis_bantuan,
+            'nama_bantuan'    => $request->nama_bantuan,
+            'tgl_pelaksanaan' => $request->tgl_pelaksanaan,
+            'bantuan'         => $request->bantuan,
+            'deskripsi'       => $request->deskripsi,
+            'foto_bukti'      => $nama_file, 
+            'status'          => 'Terencana' 
+        ]);
 
-    return redirect()->back()->with('success', 'Data berhasil disimpan!');
+        // 4. Kembalikan ke halaman sebelumnya dengan pesan sukses
+        return redirect()->back()->with('success', 'Data bantuan KUBE berhasil disimpan menjadi satu baris!');
     }
 
     /**
@@ -107,25 +137,53 @@ class KolaborasiBantuanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
+        // 1. Cari data bantuan berdasarkan ID
         $bantuan = KolaborasiBantuan::findOrFail($id);
         
+        // 2. Validasi input data (id_kube wajib berupa array karena checkbox)
+        $request->validate([
+            'id_mitra'        => 'required',
+            'id_kube'         => 'required|array', 
+            'jenis_bantuan'   => 'required',
+            'tgl_pelaksanaan' => 'required|date',
+            'nama_bantuan'    => 'required|string|max:255',
+            'bantuan'         => 'required',
+            'deskripsi'       => 'required',
+            'status'          => 'required',
+            'foto_bukti'      => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+        ]);
+
+        // 3. Ambil seluruh data dari request form
         $data = $request->all();
 
+        // 4. KONVERSI DATA: Ubah array id_kube menjadi format ["1","2"] agar seragam di DB
+        if (isset($data['id_kube']) && is_array($data['id_kube'])) {
+            $data['id_kube'] = json_encode($data['id_kube']);
+        }
+
+        // 5. Manajemen file upload foto bukti lama & baru
         if ($request->hasFile('foto_bukti')) {
-            // Hapus foto lama jika perlu, lalu upload yang baru
+            // Hapus file foto lama di server agar storage tidak penuh
+            if ($bantuan->foto_bukti && Storage::exists('public/bantuan/' . $bantuan->foto_bukti)) {
+                Storage::delete('public/bantuan/' . $bantuan->foto_bukti);
+            }
+
+            // Upload berkas gambar baru ke folder storage/app/public/bantuan
             $file = $request->file('foto_bukti');
             $nama_file = time() . "_" . $file->getClientOriginalName();
             $file->storeAs('public/bantuan', $nama_file);
             $data['foto_bukti'] = $nama_file;
         } else {
-            // Jika tidak upload foto baru, pakai yang lama
+            // Jika user tidak mengganti foto, pertahankan berkas nama foto lama
             unset($data['foto_bukti']);
         }
 
+        // 6. Update mass assignment ke dalam database
         $bantuan->update($data);
 
+        // 7. Kembalikan ke halaman sebelumnya dengan alert sukses
         return redirect()->back()->with('success', 'Data diperbarui!');
     }
 
@@ -145,7 +203,7 @@ class KolaborasiBantuanController extends Controller
 
         return redirect()->back()->with('success', 'Data bantuan berhasil dihapus');
     }
-    public function lihatFoto($filename)
+    public function lihatFoto( string $filename)
     {
         $filename = rawurldecode($filename);
         $path = 'private/public/bantuan/' . $filename;

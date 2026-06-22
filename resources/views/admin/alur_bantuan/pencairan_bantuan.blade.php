@@ -62,7 +62,7 @@ Dashboard / <span class="text-gray-800">Pencairan Bantuan</span>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Filter Tahun</label>
                 <select name="tahun"
-                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[200px] text-sm">
+                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-200px text-sm">
                     <option value="">Semua Tahun</option>
                     @php
                         $tahunSekarang = date('Y');
@@ -78,7 +78,7 @@ Dashboard / <span class="text-gray-800">Pencairan Bantuan</span>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
                 <select name="status"
-                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[200px] text-sm">
+                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-200px text-sm">
                     <option value="">Semua Status</option>
                     <option value="menunggu" {{ request('status') == 'menunggu' ? 'selected' : '' }}>Menunggu</option>
                     <option value="disetujui" {{ request('status') == 'disetujui' ? 'selected' : '' }}>Disetujui</option>
