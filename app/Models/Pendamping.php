@@ -19,6 +19,7 @@ class Pendamping extends Model
     protected $guarded = [];
 
     protected $fillable = [
+        'id_user',
         'nik',
         'nama_pendamping',
         'jenis_kelamin',
@@ -29,12 +30,19 @@ class Pendamping extends Model
         'email',
         'pendidikan_terakhir',
         'id_kecamatan',
-        'tahun_mulai',
+        'id_desa',
+        'tanggal_mulai',
+        'tanggal_selesai',
         'status',
         'foto',
     ];
 
     /**
+     * Relasi ke User — kecamatan & desa diambil dari sini
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
      * Relasi ke Kecamatan
      */
     public function kecamatan()
@@ -51,6 +59,9 @@ class Pendamping extends Model
         return $this->hasMany(Pelatihan::class, 'id_pendamping', 'id_pendamping');
     }
 
+    /**
+     * Relasi ke Pembagian Koordinator
+     */
     public function pembagianKoordinator()
     {
         return $this->hasOne(PembagianKoordinator::class, 'id_pembagian', 'id_pembagian');
