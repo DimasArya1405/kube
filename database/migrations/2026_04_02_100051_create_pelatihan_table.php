@@ -13,7 +13,7 @@ return new class extends Migration
             $table->integer('id_pelatihan')->autoIncrement();
 
             // Foreign Keys (id_kube DIHAPUS DARI SINI)
-            $table->integer('id_pendamping')->unsigned()->nullable(); // Sebaiknya nullable kalau misal belum ada pendamping
+            $table->TEXT('id_pendamping')->nullable(); // Sebaiknya nullable kalau misal belum ada pendamping
             $table->integer('id_mitra')->unsigned()->nullable();      // Sebaiknya nullable juga
 
             // Data utama

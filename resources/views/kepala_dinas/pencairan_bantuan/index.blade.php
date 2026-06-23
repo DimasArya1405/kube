@@ -64,16 +64,16 @@
                             <td class="px-6 py-4">
                                 @if ($row->status_pencairan == 'menunggu')
                                     <div class="flex gap-2">
-                                        <a href="{{ route('admin.pencairan_bantuan.accept', $row->id_pencairan) }}"
-                                            onclick="return confirm('Apakah anda yakin menyetujui pencairan {{ $row->pengajuan_kube?->kube?->nama_kube ?? 'ini' }}?')"
-                                            class="text-white bg-blue-600 hover:bg-blue-700 text-sm px-3 py-1 rounded-md">
-                                            Setujui
-                                        </a>
-                                        <a href="{{ route('admin.pencairan_bantuan.reject', $row->id_pencairan) }}"
-                                            onclick="return confirm('Apakah anda yakin menolak pencairan {{ $row->pengajuan_kube?->kube?->nama_kube ?? 'ini' }}?')"
-                                            class="text-white bg-red-600 hover:bg-red-700 text-sm px-3 py-1 rounded-md">
-                                            Tolak
-                                        </a>
+                                       <a href="{{ route('admin.pencairan_bantuan.accept', $row->id_pencairan) }}"
+   onclick="return confirm('Apakah anda yakin menyetujui pencairan {{ $row->pengajuan_kube?->kube?->nama_kube ?? 'Data Tidak Diketahui' }}?')"
+   class="text-white bg-blue-600 hover:bg-blue-700 text-sm px-3 py-1 rounded-md">
+   Setujui
+</a>
+                                      <a href="{{ route('admin.pencairan_bantuan.reject', $row->id_pencairan) }}"
+   onclick="return confirm('Apakah anda yakin menolak pencairan {{ $row->pengajuan_kube?->kube?->nama_kube ?? 'Data Tidak Diketahui' }}?')"
+   class="text-white bg-red-600 hover:bg-red-700 text-sm px-3 py-1 rounded-md">
+   Tolak
+</a>
                                     </div>
                                 @else
                                     -

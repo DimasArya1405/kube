@@ -24,15 +24,30 @@ class PendampingSeeder extends Seeder
         $dataPendamping = [];
 
         foreach ($pendampingUsers as $user) {
+            
+            // Mencegah error Foreign Key:
+            // Ambil id_desa_kelurahan secara acak berdasarkan id_kecamatan user terkait.
+            // (Abaikan query ini jika tabel 'users' Anda sudah memiliki kolom 'id_desa_kelurahan').
+            $desa = DB::table('desa_kelurahan')
+                ->where('id_kecamatan', $user->id_kecamatan)
+                ->inRandomOrder()
+                ->first();
+
+            // Gunakan id_desa_kelurahan dari $user jika ada, jika tidak gunakan hasil query $desa di atas.
+            $idDesaKelurahan = $user->id_desa_kelurahan ?? ($desa->id_desa_kelurahan ?? null);
+
             $dataPendamping[] = [
-                // Mengambil data dari tabel users agar sinkron dan logis
-                'nik'                 => substr($user->nik, 0, 16), // Pastikan max 16 karakter sesuai migration
+                // Foreign Keys
+                'id_user'             => $user->id_user,
+                'id_kecamatan'        => $user->id_kecamatan,
+                'id_desa_kelurahan'   => $idDesaKelurahan, // ← Tambahan field baru
+
+                // Sinkronisasi data dari tabel users
+                'nik'                 => substr($user->nik, 0, 16), // Pastikan max 16 karakter
                 'nama_pendamping'     => $user->nama,
                 'alamat'              => $user->alamat,
                 'no_hp'               => $user->no_hp,
                 'email'               => $user->email,
-                'id_kecamatan'        => $user->id_kecamatan,
-                'id_user'             => $user->id_user,
                 
                 // Data acak yang di-generate oleh Faker
                 'jenis_kelamin'       => $faker->randomElement(['L', 'P']),
@@ -43,9 +58,10 @@ class PendampingSeeder extends Seeder
                 'tanggal_selesai'     => null, // Dikosongkan karena diasumsikan masih menjabat
                 
                 // Status dan foto default
-                'status'              => 'Aktif', // Perhatikan huruf kapital, harus sama dengan Enum di migration
+                'status'              => 'Aktif',
                 'foto'                => 'default-pendamping.png',
                 
+                // Timestamps
                 'created_at'          => now(),
                 'updated_at'          => now(),
             ];

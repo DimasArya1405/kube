@@ -88,7 +88,7 @@
                                 Dana Telah Dikonfirmasi
                             </span>
                         @elseif ($pencairan->status_pencairan == 'ditolak')
-                            <span class="px-4 py-2 bg-red-100 text-red-700 rounded-lg font-medium"></span>
+                            <span class="px-4 py-2 bg-red-100 text-red-700 rounded-lg font-medium">
                                 <i class="fas fa-times-circle mr-2"></i>
                                 Dana Telah Ditolak
                             </span>

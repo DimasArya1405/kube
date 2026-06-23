@@ -367,7 +367,10 @@ class PrediksiController extends Controller
 
         $first = $data->first();
         $totalYa = $data->sum('jawaban');
-        $status = $totalYa >= 4 ? 'Berhasil' : 'Gagal';
+        $persentase = ($totalYa / $data->count()) * 100;
+        $status = $persentase >= (4/6*100)
+            ? 'Berhasil'
+            : 'Gagal';
 
         return view('pendamping.prediksi.detail', compact('data', 'first', 'totalYa', 'status'));
     }
@@ -495,26 +498,53 @@ class PrediksiController extends Controller
             )
             ->groupBy('id_prediksi', 'bulan')
             ->get();
+        // ============================
+        // KESIMPULAN TAHUN
+        // ============================
+
+        $totalPersentase = 0;
+        $jumlahBulanPrediksi = $data->count();
 
         $prediksiPerBulan = [];
+
         foreach ($data as $item) {
-            $status = $item->total_ya >= 4 ? 'Berhasil' : 'Gagal';
+
+            // jumlah pertanyaan = 5
+            $persentase = ($item->total_ya / 6) * 100;
+
+            $totalPersentase += $persentase;
+
+            $status = $persentase >= (4/6*100)
+            ? 'Berhasil'
+            : 'Gagal';
 
             $prediksiPerBulan[$item->bulan] = [
                 'id_prediksi' => $item->id_prediksi,
-                'status' => $status
+                'status' => $status,
+                'persentase' => round($persentase, 2)
             ];
         }
 
-        $tahunList = collect(range($tahunMin, $tahunMax))->sortDesc();
+        $rataPerBulan = $jumlahBulanPrediksi > 0
+            ? $totalPersentase / $jumlahBulanPrediksi
+            : 0;
 
-        return view('pendamping.prediksi.track', compact(
-            'kube',
-            'tahun',
-            'prediksiPerBulan',
-            'tahunList'
-        ));
-    }
+        $kesimpulanTahunan = $rataPerBulan >= (4/6*100)
+            ? 'Berhasil'
+            : 'Gagal';
+
+                $tahunList = collect(range($tahunMin, $tahunMax))->sortDesc();
+                return view('pendamping.prediksi.track', compact(
+                'kube',
+                'tahun',
+                'prediksiPerBulan',
+                'tahunList',
+                'totalPersentase',
+                'jumlahBulanPrediksi',
+                'rataPerBulan',
+                'kesimpulanTahunan'
+            ));
+            }
 
     /**
      * CEK BULAN TERSEDIA
@@ -674,7 +704,10 @@ class PrediksiController extends Controller
 
         $first = $data->first();
         $totalYa = $data->sum('jawaban');
-        $status = $totalYa >= 4 ? 'Berhasil' : 'Gagal';
+        $persentase = ($totalYa / $data->count()) * 100;
+        $status = $persentase >= (4/6*100)
+            ? 'Berhasil'
+            : 'Gagal';
 
         return view('admin.analisis_akreditasi.prediksi_kube.detail', compact('data', 'first', 'totalYa', 'status'));
     }
@@ -699,33 +732,79 @@ class PrediksiController extends Controller
         }
 
         $data = DB::table('hasil_prediksi')
-            ->where('id_kube', $id_kube)
-            ->where('tahun', $tahun)
-            ->select(
-                'id_prediksi',
-                'bulan',
-                DB::raw('SUM(jawaban) as total_ya')
-            )
-            ->groupBy('id_prediksi', 'bulan')
-            ->get();
+        ->where('id_kube', $id_kube)
+        ->where('tahun', $tahun)
+        ->select(
+            'id_prediksi',
+            'bulan',
+            DB::raw('SUM(jawaban) as total_ya'),
+            DB::raw('COUNT(*) as total_pertanyaan')
+        )
+        ->groupBy('id_prediksi', 'bulan')
+        ->get();
 
-        $prediksiPerBulan = [];
-        foreach ($data as $item) {
-            $status = $item->total_ya >= 4 ? 'Berhasil' : 'Gagal';
+       $totalPersentase = 0;
+$jumlahBulanPrediksi = $data->count();
 
-            $prediksiPerBulan[$item->bulan] = [
-                'id_prediksi' => $item->id_prediksi,
-                'status' => $status
-            ];
-        }
+$prediksiPerBulan = [];
+
+foreach ($data as $item) {
+
+    $persentase = ($item->total_ya / $item->total_pertanyaan) * 100;
+
+    $totalPersentase += $persentase;
+
+    $status = $persentase >= (4/6*100)
+        ? 'Berhasil'
+        : 'Gagal';
+
+    $prediksiPerBulan[$item->bulan] = [
+        'id_prediksi' => $item->id_prediksi,
+        'status' => $status,
+        'persentase' => round($persentase, 2)
+    ];
+}
+
+    $totalPersentase = 0;
+    $jumlahBulanPrediksi = $data->count();
+
+    $prediksiPerBulan = [];
+
+    foreach ($data as $item) {
+
+        $persentase = ($item->total_ya / $item->total_pertanyaan) * 100;
+
+        $totalPersentase += $persentase;
+
+        $status = $persentase >= (4/6*100)
+            ? 'Berhasil'
+            : 'Gagal';
+
+        $prediksiPerBulan[$item->bulan] = [
+            'id_prediksi' => $item->id_prediksi,
+            'status' => $status,
+            'persentase' => round($persentase, 2)
+        ];
+    }
+
+    $rataPerBulan = $jumlahBulanPrediksi > 0
+        ? $totalPersentase / $jumlahBulanPrediksi
+        : 0;
+
+    $kesimpulanTahunan = $rataPerBulan >= (4/6*100)
+        ? 'Berhasil'
+        : 'Gagal';
 
         $tahunList = collect(range($tahunMin, $tahunMax))->sortDesc();
 
         return view('admin.analisis_akreditasi.prediksi_kube.track', compact(
-            'kube',
-            'tahun',
-            'prediksiPerBulan',
-            'tahunList'
-        ));
-    }
+        'kube',
+        'tahun',
+        'prediksiPerBulan',
+        'tahunList',
+        'jumlahBulanPrediksi',
+        'rataPerBulan',
+        'kesimpulanTahunan'
+    ));
+        }
 }
