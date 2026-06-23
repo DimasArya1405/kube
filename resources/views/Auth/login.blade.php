@@ -48,7 +48,7 @@
                 @if(session('error'))
                 <div class="bg-red-50 text-red-600 p-3 rounded-lg text-sm mb-4 border border-red-100 flex items-center">
                     <i data-lucide="alert-circle" class="h-4 w-4 mr-2"></i>
-                    {{ session('error') }}
+                    {!! session('error') !!}
                 </div>
                 @endif
                 <form method="POST" action="/login" class="space-y-4">

@@ -154,6 +154,20 @@
                         </td>
                         <td class="px-6 py-4 text-center">
                             <div class="flex items-center justify-center gap-2">
+                                {{-- TOMBOL CEPAT: ACCEPT / AKTIFKAN (Hanya muncul jika status nonaktif) --}}
+                                @if($user->status == 'nonaktif')
+                                    <form action="{{ route('admin.users.aktifkan', $user->id_user) }}" method="POST" 
+                                        onsubmit="return confirm('Apakah Anda yakin ingin langsung mengaktifkan akun {{ $user->nama }}?')" class="inline-block m-0">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="group w-9 h-9 flex items-center justify-center rounded-lg text-emerald-600 hover:bg-emerald-50 transition-all duration-200" title="Aktifkan Akun">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform group-hover:scale-110 group-hover:text-emerald-700 transition-all duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                @endif
+
                                 {{-- Detail Button --}}
                                 <button onclick="detailUser('{{ $user->id_user }}')"
                                     class="group w-9 h-9 flex items-center justify-center rounded-lg text-blue-500 hover:bg-blue-50 transition-all duration-200" title="Detail">
@@ -253,7 +267,15 @@
 
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Kata Sandi</label>
-                        <input type="password" name="password" placeholder="Masukkan Kata Sandi" class="w-full border-gray-200 rounded-lg p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all" required>
+                        <div class="relative">
+                            <input type="password" name="password" id="add_password" placeholder="Masukkan Kata Sandi" 
+                                class="w-full border-gray-200 rounded-lg p-3 pr-12 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all text-sm" required>
+                            <button type="button" onclick="toggleAddPassword()" 
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors flex items-center justify-center">
+                                <i data-lucide="eye-off" id="eyeOffIcon" class="w-5 h-5"></i>
+                                <i data-lucide="eye" id="eyeIcon" class="w-5 h-5 hidden"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <div>
@@ -389,6 +411,21 @@
                         </select>
                     </div>
 
+                    <div class="md:col-span-2 border-t pt-4 mt-2">
+                        <label class="block text-xs font-bold text-gray-600 uppercase mb-1 ml-1 tracking-wide">
+                            Ganti Password <span class="text-gray-400 font-normal lowercase italic"></span>
+                        </label>
+                        <div class="relative">
+                            <input type="password" name="password" id="edit_password" placeholder="Masukkan password baru jika ingin diganti" 
+                                class="w-full border-gray-200 rounded-lg p-3 pr-12 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all placeholder:text-gray-400 text-sm">
+                            <button type="button" onclick="toggleEditPassword()" 
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors flex items-center justify-center">
+                                <i data-lucide="eye-off" id="eyeOffIcon" class="w-5 h-5"></i>
+                                <i data-lucide="eye" id="eyeIcon" class="w-5 h-5 hidden"></i>
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="md:col-span-2">
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Alamat Domisili</label>
                         <textarea name="alamat" id="edit_alamat" rows="2" placeholder="Nama jalan, blok, nomor rumah..." class="w-full border-gray-200 rounded-lg p-3 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 border resize-none outline-none transition-all"></textarea>
@@ -426,7 +463,6 @@
                 </button>
             </div>
         </form>
-
     </div>
 </div>
 
@@ -525,7 +561,7 @@
     const selectKecamatan = document.getElementById('selectKecamatan');
     const selectDesa = document.getElementById('selectDesa');
 
-    // Fungsi Global Toggle Modal (Sama dengan sistem pencairan bantuan)
+    // Fungsi Global Toggle Modal 
     function toggleModal(id) {
         const modal = document.getElementById(id);
         if (modal) {
@@ -673,12 +709,44 @@
                     statusPing.className = "";
                     statusDot.className = "relative inline-flex rounded-full h-3 w-3 bg-red-500";
                 }
-                toggleModal('modal-detail-user'); // Menggunakan sistem toggle baru
+                toggleModal('modal-detail-user'); 
             })
             .catch(error => {
                 console.error('Error:', error);
                 alert('Gagal mengambil data user.');
             });
+        }
+
+        function toggleEditPassword() {
+            const passwordField = document.getElementById('edit_password');
+            const eyeIcon = document.getElementById('eyeIcon');
+            const eyeOffIcon = document.getElementById('eyeOffIcon');
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                eyeIcon.classList.remove('hidden');
+                eyeOffIcon.classList.add('hidden');
+            } else {
+                passwordField.type = 'password';
+                eyeIcon.classList.add('hidden');
+                eyeOffIcon.classList.remove('hidden');
+            }
+        }
+
+        function toggleAddPassword() {
+            const passwordField = document.getElementById('add_password');
+            const eyeIcon = document.getElementById('eyeIcon');
+            const eyeOffIcon = document.getElementById('eyeOffIcon');
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                eyeIcon.classList.remove('hidden');
+                eyeOffIcon.classList.add('hidden');
+            } else {
+                passwordField.type = 'password';
+                eyeIcon.classList.add('hidden');
+                eyeOffIcon.classList.remove('hidden');
+            }
         }
 </script>
 

@@ -83,31 +83,48 @@ public function index(Request $request)
     /**
      * Memperbarui data user
      */
-    public function update(Request $request, $id)
-    {
-        $user = User::findOrFail($id);
-        
-        $data = [
-            'nama'              => $request->nama,
-            'nik'               => $request->nik,
-            'email'             => $request->email,
-            'no_hp'             => $request->no_hp,
-            'alamat'            => $request->alamat,
-            'id_kecamatan'      => $request->id_kecamatan,
-            'id_desa_kelurahan' => $request->id_desa_kelurahan,
-            'role'              => $request->role,
-            'status'            => $request->status,
-        ];
+public function update(Request $request, $id)
+{
+    // 1. Ambil data user yang ingin diupdate
+    $user = User::findOrFail($id);
 
-        // Update password hanya jika diisi (opsional, tergantung kebutuhan form)
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
-        }
+    // 2. Jalankan validasi data (password diset 'nullable')
+    $request->validate([
+        'nama' => 'required|max:100',
+        'nik' => 'required|max:30',
+        'email' => 'required|email', 
+        'no_hp' => 'required|max:15',
+        'alamat' => 'required',
+        'id_kecamatan' => 'required',
+        'id_desa_kelurahan' => 'required',
+        'role' => 'required',
+        'status' => 'required',
+        'password' => 'nullable',
+    ]);
 
-        $user->update($data);
+    // 3. Tampung semua data inputan kecuali password terlebih dahulu
+    $data = [
+        'nama' => $request->nama,
+        'nik' => $request->nik,
+        'email' => $request->email,
+        'no_hp' => $request->no_hp,
+        'alamat' => $request->alamat,
+        'id_kecamatan' => $request->id_kecamatan,
+        'id_desa_kelurahan' => $request->id_desa_kelurahan,
+        'role' => $request->role,
+        'status' => $request->status,
+    ];
 
-        return back()->with('success', 'User berhasil diupdate');
+    // 4. LOGIKA NULLABLE: Cek apakah kolom password diisi oleh Admin?
+    if ($request->filled('password')) {
+        // Jika diisi, enkripsi password baru lalu masukkan ke array data
+        $data['password'] = Hash::make($request->password);
     }
+
+    // 5. Eksekusi update data ke database
+    $user->update($data);
+    return redirect()->back()->with('success', 'Data pengguna berhasil diperbarui!');
+}
 
     /**
      * Menghapus data user
@@ -118,5 +135,12 @@ public function index(Request $request)
         $user->delete();
 
         return back()->with('success', 'User berhasil dihapus');
+    }
+
+    public function aktifkan($id)
+    {
+        $user = User::findOrFail($id);
+        $user->update(['status' => 'aktif']);
+        return redirect()->back()->with('success', 'Akun ' . $user->nama . ' telah berhasil diaktifkan!');
     }
 }

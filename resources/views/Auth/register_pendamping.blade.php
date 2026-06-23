@@ -22,12 +22,14 @@
             
             <div class="relative w-full md:w-5/12 bg-gradient-to-br from-slate-100 to-slate-200 p-10 flex flex-col justify-center overflow-hidden border-b md:border-b-0 border-gray-200">
                 <div class="relative z-10">
-                <div class="flex items-center gap-6 mb-8">
-                    <img src="https://caribdt.dinsos.jatengprov.go.id/images/dinsos.png" 
-                         alt="Logo Dinsos" 
-                         class="h-32 w-auto object-contain fallback-image" 
-                         onerror="this.style.display='none'">
-                </div>
+                    <h1 class="text-center font-bold text-slate-700 uppercase tracking-widest mb-4">
+                        Dinas Sosial Kabupaten Cilacap
+                    </h1>
+                    <div class="flex flex-col items-center gap-4 mb-6">
+                        <img src="https://cilacapkab.go.id/v3/wp-content/uploads/2020/08/Logo-Kabupaten-Cilacap-scaled.jpg" 
+                             class="h-36 w-auto object-contain fallback-image" 
+                             onerror="this.style.display='none'">
+                    </div>
                     <h2 class="text-3xl font-extrabold text-slate-800 leading-tight">
                         Daftar <span class="text-cyan-600">Pendamping</span>
                     </h2>
