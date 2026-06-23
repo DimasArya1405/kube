@@ -12,40 +12,49 @@
     </style>
 </head>
 <body class="bg-gray-100">
-    <div class="min-h-screen flex items-center justify-center p-4 relative">
-        <a href="/" class="absolute top-6 left-6 flex items-center gap-2 text-slate-600 hover:text-blue-600 font-medium text-sm bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 transition-all hover:-translate-x-1">
+    <div class="min-h-screen flex items-center justify-center p-4 md:p-8 relative overflow-y-auto">
+        
+        <a href="/" class="absolute top-6 left-6 flex items-center gap-2 text-slate-600 hover:text-blue-600 font-medium text-sm bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 transition-all hover:-translate-x-1 z-20">
             <i data-lucide="arrow-left" class="w-4 h-4"></i>
             <span>Kembali ke Beranda</span>
         </a>
-        <div class="flex flex-col md:flex-row w-full max-w-[1000px] bg-white rounded-xl overflow-hidden shadow-xl">
-            <div class="relative w-full md:w-5/12 bg-gradient-to-br from-slate-100 to-slate-200 p-10 flex flex-col justify-center overflow-hidden border-b md:border-b-0 border-gray-200">
-                <div class="relative z-10">
-                    <h1 class="text-center font-bold text-slate-700 uppercase tracking-widest mb-4">
-                        Dinas Sosial Kabupaten Cilacap
-                    </h1>
-                    <div class="flex flex-col items-center gap-4 mb-6">
-                        <img src="https://cilacapkab.go.id/v3/wp-content/uploads/2020/08/Logo-Kabupaten-Cilacap-scaled.jpg" 
-                             class="h-36 w-auto object-contain fallback-image" 
-                             onerror="this.style.display='none'">
-                    </div>
-                    <h2 class="text-3xl font-extrabold text-slate-800 leading-tight">
-                        Daftar <span class="text-emerald-600">Ketua KUBE</span>
-                    </h2>
-                    <p class="text-xs text-slate-400 mt-1 font-medium">
-                        Lengkapi data akun untuk mulai mengelola kelompok usaha Anda.
-                    </p>
-                    <div class="w-12 h-1 bg-emerald-500 rounded-full mt-4 mb-6"></div>
-                </div>
-                <div class="absolute bottom-6 left-10 flex items-center gap-2 text-slate-400">
-                    <i data-lucide="map-pin" class="w-5 h-5"></i>
-                    <span class="text-[15px] font-medium tracking-wide text-slate-400 uppercase">Dinsos Cilacap</span>
-                </div>
-            </div>
-            <div class="w-full md:w-7/12 p-8 md:p-12 flex flex-col justify-center">
-                <div class="text-center mb-6">
+
+        <div class="flex flex-col md:flex-row w-full max-w-[1000px] bg-white rounded-xl overflow-hidden shadow-xl mt-16 md:mt-0">
+            
+<div class="relative w-full md:w-5/12 bg-gradient-to-br from-slate-100 to-slate-200 p-8 md:p-10 flex flex-col justify-center overflow-hidden border-b md:border-b-0 border-gray-200">
+    <div class="relative z-10">
+        <h1 class="font-bold text-slate-700 text-sm uppercase tracking-widest mb-6 text-center">
+            Dinas Sosial Kabupaten Cilacap
+        </h1>
+        <div class="flex flex-col items-center gap-4 mb-8">
+            <img src="https://cilacapkab.go.id/v3/wp-content/uploads/2020/08/Logo-Kabupaten-Cilacap-scaled.jpg" 
+                 class="h-28 md:h-36 w-auto object-contain fallback-image" 
+                 onerror="this.style.display='none'">
+        </div>
+                <div class="text-left">
+            <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 leading-tight">
+                Daftar <span class="text-emerald-600">Ketua KUBE</span>
+            </h2>
+            <p class="text-xs text-slate-400 mt-2 font-medium">
+                Lengkapi data akun untuk mulai mengelola kelompok usaha Anda.
+            </p>
+            <div class="w-12 h-1 bg-emerald-500 rounded-full mt-4 mb-6"></div>
+        </div>
+    </div>
+    
+    <!-- FOOTER MAP PIN -->
+    <div class="hidden md:flex absolute bottom-6 left-10 items-center gap-2 text-slate-400">
+        <i data-lucide="map-pin" class="w-4 h-4"></i>
+        <span class="text-xs font-semibold tracking-wide uppercase">Dinsos Cilacap</span>
+    </div>
+</div>
+            
+            <div class="w-full md:w-7/12 p-6 md:p-10 flex flex-col justify-center">
+                <div class="text-center md:text-center mb-6">
                     <h3 class="text-2xl font-semibold text-gray-800">Daftar Akun Ketua KUBE</h3>
                     <p class="text-gray-500 mt-1 text-sm">Lengkapi data pendaftaran internal kelompok Anda</p>
                 </div>
+
                 @if ($errors->any())
                 <div class="bg-red-50 text-red-600 p-3 rounded-lg text-sm mb-4 border border-red-100">
                     <ul class="list-disc ml-4">
@@ -55,14 +64,17 @@
                     </ul>
                 </div>
                 @endif
+
                 <form method="POST" action="{{ route('register.ketua.store') }}" class="space-y-3">
                     @csrf
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        
                         <div class="relative">
                             <i data-lucide="user" class="absolute left-3 top-3 w-4 h-4 text-gray-400"></i>
-                            <input type="text" name="nama" id="inputNama" placeholder="Nama Lengkap" required
+                            <input type="text" name="nama" id="inputNama" placeholder="Nama Lengkap"自动完成="off" required
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-sm">
                         </div>
+
                         <div class="relative">
                             <i data-lucide="credit-card" class="absolute left-3 top-3 w-4 h-4 text-gray-400"></i>
                             <input type="text" name="nik" placeholder="NIK" required
@@ -86,40 +98,42 @@
                             </button>
                         </div>
                         
-                        <div class="relative md:col-span-2">
+                        <div class="relative sm:col-span-2">
                             <i data-lucide="phone" class="absolute left-3 top-3 w-4 h-4 text-gray-400"></i>
                             <input type="text" name="no_hp" placeholder="Nomor Handphone" required
                                 class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-sm">
                         </div>
 
-                        <div class="relative md:col-span-2">
+                        <div class="relative sm:col-span-2">
                             <i data-lucide="map-pin" class="absolute left-3 top-3 w-4 h-4 text-gray-400"></i>
                             <textarea name="alamat" placeholder="Alamat Domisili" required
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-sm h-20 resize-none"></textarea>
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-sm h-16 md:h-20 resize-none"></textarea>
                         </div>
 
                         <div class="relative">
                             <i data-lucide="map" class="absolute left-3 top-3 w-4 h-4 text-gray-400 z-10"></i>
                             <select name="id_kecamatan" id="selectKecamatan" required 
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white text-sm text-gray-600 appearance-none">
+                                class="w-full pl-10 pr-8 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white text-sm text-gray-600 appearance-none">
                                 <option value="">Pilih Kecamatan</option>
                                 @foreach($kecamatan as $kec)
                                     <option value="{{ $kec->id_kecamatan }}">{{ $kec->nama_kecamatan }}</option>
                                 @endforeach
                             </select>
+                            <i data-lucide="chevron-down" class="absolute right-3 top-3 w-4 h-4 text-gray-400 pointer-events-none"></i>
                         </div>
 
                         <div class="relative">
                             <i data-lucide="home" class="absolute left-3 top-3 w-4 h-4 text-gray-400 z-10"></i>
                             <select name="id_desa_kelurahan" id="selectDesa" required disabled
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-gray-50 text-sm text-gray-600 appearance-none disabled:bg-gray-100 disabled:cursor-not-allowed">
+                                class="w-full pl-10 pr-8 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-gray-100 text-sm text-gray-600 appearance-none disabled:cursor-not-allowed">
                                 <option value="">Pilih Desa/Kelurahan</option>
                             </select>
+                            <i data-lucide="chevron-down" class="absolute right-3 top-3 w-4 h-4 text-gray-400 pointer-events-none"></i>
                         </div>
                     </div>
 
                     <button type="submit" 
-                        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 rounded-lg transition-colors shadow-lg shadow-emerald-200 mt-2 flex justify-center items-center gap-2">
+                        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 rounded-lg transition-colors shadow-lg shadow-emerald-200 mt-4 flex justify-center items-center gap-2 text-sm md:text-base">
                         <i data-lucide="user-plus" class="w-5 h-5"></i>
                         Daftar Sebagai Ketua KUBE
                     </button>
@@ -134,14 +148,17 @@
     </div>
 
     <script>
+        // Inisialisasi awal ikon Lucide
         lucide.createIcons();
 
+        // Sinkronisasi Nama otomatis masuk ke input password
         const inputNama = document.getElementById('inputNama');
         const inputPassword = document.getElementById('inputPassword');
         inputNama.addEventListener('input', function() {
             inputPassword.value = this.value;
         });
 
+        // Handler Filter Dynamic Select Kecamatan & Desa
         const selectKecamatan = document.getElementById('selectKecamatan');
         const selectDesa = document.getElementById('selectDesa');
 
@@ -172,16 +189,25 @@
                     });
             } else {
                 selectDesa.disabled = true;
+                selectDesa.classList.remove('bg-white');
                 selectDesa.classList.add('bg-gray-100');
             }
         });
 
+        // Perbaikan Fungsi Toggle View Password beserta Ikon Matanya
         function togglePassword() {
-            const passwordField = document.getElementById('inputPassword'); 
+            const passwordField = document.getElementById('inputPassword');
+            const eyeIcon = document.getElementById('eyeIcon');
+            const eyeOffIcon = document.getElementById('eyeOffIcon');
+
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
+                eyeIcon.classList.remove('hidden');
+                eyeOffIcon.classList.add('hidden');
             } else {
                 passwordField.type = 'password';
+                eyeIcon.classList.add('hidden');
+                eyeOffIcon.classList.remove('hidden');
             }
         }
     </script>
