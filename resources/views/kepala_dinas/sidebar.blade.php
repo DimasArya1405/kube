@@ -48,6 +48,7 @@
         <div id="docDinas" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white block text-left w-full">Berita Acara (Probo)</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white block text-left w-full">Laporan Keuangan Global</a>
+            <a href="{{ route('kadis.laporan.kecamatan') }}"class="py-2 px-3 text-indigo-200 hover:text-white block text-left w-full">Laporan Kecamatan</a>
         </div>
     </div>
     

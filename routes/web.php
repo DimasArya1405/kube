@@ -391,7 +391,13 @@ Route::prefix('admin/prediksi-kube')->name('admin.prediksi-kube.')->group(functi
     Route::get('/admin/laporan-kecamatan', [LaporanKecamatanController::class, 'index'])->name('laporan.kecamatan');
     Route::get('/admin/laporan-kecamatan/{id}', [LaporanKecamatanController::class, 'detail'])->name('laporan.kecamatan.detail');
     Route::get('/admin/laporan-kecamatan/pdf/{id}', [LaporanKecamatanController::class, 'exportPdf'])->name('laporan.pdf');
-
+    // LAPORAN KECAMATAN KEPALA DINAS
+    Route::get('/kepala_dinas/laporan-kecamatan/excel',[LaporanKecamatanController::class,'exportExcel'])->name('kadis.laporan.kecamatan.excel');
+    Route::get('/kepala_dinas/laporan-kecamatan/pdf',[LaporanKecamatanController::class,'exportPdfKecamatan'])->name('kadis.laporan.kecamatan.pdf');
+    Route::get('/kepala_dinas/laporan-kecamatan',[LaporanKecamatanController::class,'index'])->name('kadis.laporan.kecamatan');
+    Route::get('/kepala_dinas/laporan-kecamatan/{id}',[LaporanKecamatanController::class,'detail'])->name('kadis.laporan.kecamatan.detail');
+    Route::get('/kepala_dinas/laporan-kecamatan/pdf/{id}',[LaporanKecamatanController::class,'exportPdf'])->name('kadis.laporan.pdf');
+    
     // Route untuk Manajemen Galeri KUBE
 Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri.index');
 Route::post('/galeri', [GaleriController::class, 'store'])->name('galeri.store');
