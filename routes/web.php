@@ -46,15 +46,6 @@ Route::get('/', function () {
     return view('welcome', compact('galeriData'));
 });
 
-
-// DATA USER
-Route::get('/admin/users', [DashboardController::class, 'users'])->name('admin.users');
-Route::post('/admin/users/store', [DashboardController::class, 'store'])->name('admin.users.store');
-Route::get('/admin/users/edit/{id}', [DashboardController::class, 'edit'])->name('admin.users.edit');
-Route::put('/admin/users/update/{id}', [DashboardController::class, 'update'])->name('admin.users.update');
-Route::delete('/admin/users/delete/{id}', [DashboardController::class, 'destroy'])->name('admin.users.delete');
-
-
 // REGISTER
 // Route Register Ketua KUBE
 Route::get('/register/ketua', [AuthController::class, 'showRegisterKetua'])->name('register.ketua');
@@ -89,18 +80,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/ketua_kube/dashboard', [DashboardController::class, 'ketua'])->name('ketua_kube.dashboard');
     Route::get('/pendamping/dashboard', [DashboardController::class, 'pendamping'])->name('pendamping.dashboard');
     Route::get('/koordinator/dashboard', [DashboardController::class, 'koordinator'])->name('dashboard.koordinator');
-    Route::get('/dashboard/tim', [DashboardController::class, 'tim'])->name('dashboard.tim');
     Route::get('/kepala_dinas/dashboard', [DashboardController::class, 'dinas'])->name('dashboard.dinas');
 
     // --- DASHBOARD ADMIN ---
     Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'admin'])->middleware('checkrole:admin')->name('admin.dashboard');
-    // DATA USER
-    Route::get('/users', [DashboardController::class, 'users'])->name('admin.users');
-    Route::post('/users/store', [DashboardController::class, 'store'])->name('admin.users.store');
-    Route::get('/users/edit/{id}', [DashboardController::class, 'edit'])->name('admin.users.edit');
-    Route::put('users/update/{id}', [DashboardController::class, 'update'])->name('admin.users.update');
-    Route::delete('users/delete/{id}', [DashboardController::class, 'destroy'])->name('admin.users.delete');
+    // KELOLA DATA USER
+    Route::get('/users', [UsersController::class, 'index'])->name('admin.users');
+    Route::post('/users/store', [UsersController::class, 'store'])->name('admin.users.store');
+    Route::get('/users/edit/{id}', [UsersController::class, 'edit'])->name('admin.users.edit');
+    Route::put('/users/update/{id}', [UsersController::class, 'update'])->name('admin.users.update');
+    Route::delete('/users/delete/{id}', [UsersController::class, 'destroy'])->name('admin.users.delete');
+    Route::patch('/users/{id}/aktifkan', [UsersController::class, 'aktifkan'])->name('admin.users.aktifkan');
     });
 
     // --- DASHBOARD KOORDINATOR ---
@@ -128,12 +119,6 @@ Route::middleware('auth')->group(function () {
     });
 
 Route::get('/kepala_dinas/dashboard', [KepalaDinasController::class, 'dashboard'])->name('kadis.dashboard');
-    // KELOLA DATA USER
-    Route::get('/admin/users', [UsersController::class, 'index'])->name('admin.users');
-    Route::post('/admin/users/store', [UsersController::class, 'store'])->name('admin.users.store');
-    Route::get('/admin/users/edit/{id}', [UsersController::class, 'edit'])->name('admin.users.edit');
-    Route::put('/admin/users/update/{id}', [UsersController::class, 'update'])->name('admin.users.update');
-    Route::delete('/admin/users/delete/{id}', [UsersController::class, 'destroy'])->name('admin.users.delete');
 
     // KELOLA DATA KUBE & ANGGOTA
     Route::resource('kube', KubeController::class);
