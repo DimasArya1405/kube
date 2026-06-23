@@ -189,9 +189,9 @@ Dashboard / <span class="text-gray-800">Ranking KUBE</span>
                     @endunless
                     <td class="px-4 py-3">
                         @if($item->status === 'Aktif')
-                            <span class="bg-blue-100 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-full">Aktif</span>
+                            <span class="bg-blue-100 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded">Aktif</span>
                         @else
-                            <span class="bg-red-100 text-red-600 text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap">Tidak Aktif</span>
+                            <span class="bg-red-100 text-red-600 text-xs font-semibold px-2.5 py-1 rounded whitespace-nowrap">Tidak Aktif</span>
                         @endif
                     </td>
                     <td class="px-4 py-3 text-center font-bold text-gray-700">
