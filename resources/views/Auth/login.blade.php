@@ -12,45 +12,50 @@
     </style>
 </head>
 <body class="bg-gray-100">
-    <div class="min-h-screen flex items-center justify-center p-4 relative">
-        <a href="/" class="absolute top-6 left-6 flex items-center gap-2 text-slate-600 hover:text-blue-600 font-medium text-sm bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 transition-all hover:-translate-x-1">
+    <div class="min-h-screen flex items-center justify-center p-4 relative overflow-y-auto">
+        
+        <a href="/" class="absolute top-6 left-6 flex items-center gap-2 text-slate-600 hover:text-blue-600 font-medium text-sm bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 transition-all hover:-translate-x-1 z-20">
             <i data-lucide="arrow-left" class="w-4 h-4"></i>
             <span>Kembali ke Beranda</span>
         </a>
-        <div class="flex flex-col md:flex-row w-full max-w-[900px] h-auto md:h-[500px] bg-white rounded-xl overflow-hidden shadow-xl mt-12 md:mt-0">
-    <div class="relative w-full md:w-1/2 bg-gradient-to-br from-slate-100 to-slate-200 p-10 flex flex-col justify-center overflow-hidden">    
-    <div class="relative z-10">
-        <div class="flex items-center gap-6 mb-8">
-            <img src="https://caribdt.dinsos.jatengprov.go.id/images/dinsos.png" 
-                 alt="Logo Dinsos" 
-                 class="h-48 w-auto object-contain fallback-image" 
-                 onerror="this.style.display='none'">
-        </div>
-                <h2 class="text-4xl font-extrabold text-slate-800 leading-tight">Sistem <span class="text-green-600">KUBE</span></h2>
-                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-1">Kelompok Usaha Bersama • Dinsos Cilacap</p>
-                <p class="text-sm text-slate-400 mt-2 font-medium italic">"Pemberdayaan Ekonomi Masyarakat Menuju Cilacap Bercahaya"</p>
-                <div class="w-16 h-1.5 bg-blue-600 rounded-full mt-4 mb-6"></div>
-                <div class="grid grid-cols-2 gap-4 max-w-sm">
+
+        <div class="flex flex-col md:flex-row w-full max-w-[900px] h-auto md:min-h-[500px] bg-white rounded-xl overflow-hidden shadow-xl mt-16 md:mt-0">
+            
+            <div class="relative w-full md:w-1/2 bg-gradient-to-br from-slate-100 to-slate-200 p-8 md:p-10 flex flex-col justify-center overflow-hidden">    
+                <div class="relative z-10">
+                    <div class="flex items-center gap-6 mb-6">
+                        <img src="https://caribdt.dinsos.jatengprov.go.id/images/dinsos.png" 
+                             alt="Logo Dinsos" 
+                             class="h-24 md:h-32 w-auto object-contain fallback-image" 
+                             onerror="this.style.display='none'">
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800 leading-tight">Sistem <span class="text-green-600">KUBE</span></h2>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-1">Kelompok Usaha Bersama • Dinsos Cilacap</p>
+                    <p class="text-sm text-slate-400 mt-2 font-medium italic">"Pemberdayaan Ekonomi Masyarakat Menuju Cilacap Bercahaya"</p>
+                    <div class="w-16 h-1.5 bg-blue-600 rounded-full mt-4 mb-6"></div>
                 </div>
             </div>
-        </div>
-            <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
-                <div class="text-center mb-8">
+            
+            <div class="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-center">
+                <div class="text-center mb-6">
                     <h3 class="text-2xl font-semibold text-gray-800">Selamat Datang</h3>
-                    <p class="text-gray-500 mt-2 text-sm">Silahkan masuk untuk melanjutkan</p>
+                    <p class="text-gray-500 mt-1 text-sm">Silahkan masuk untuk melanjutkan</p>
                 </div>
+
                 @if(session('success'))
-                <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded shadow-sm flex items-center">
+                <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded shadow-sm flex items-center">
                     <i data-lucide="check-circle" class="h-5 w-5 mr-3"></i>
                     <p class="text-sm font-medium italic">{{ session('success') }}</p>
                 </div>
                 @endif
+
                 @if(session('error'))
                 <div class="bg-red-50 text-red-600 p-3 rounded-lg text-sm mb-4 border border-red-100 flex items-center">
                     <i data-lucide="alert-circle" class="h-4 w-4 mr-2"></i>
                     {!! session('error') !!}
                 </div>
                 @endif
+
                 <form method="POST" action="/login" class="space-y-4">
                     @csrf
                     <div>
@@ -87,6 +92,7 @@
                     <a href="/" class="text-blue-600 hover:underline font-medium">Buat Akun</a>
                 </div>
             </div>
+
         </div>
     </div>
 
