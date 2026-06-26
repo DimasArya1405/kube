@@ -63,6 +63,10 @@
                 class="py-2 px-3 text-indigo-200 hover:text-white">
                 Jadwal Kunjungan Pendamping
             </a>
+            <a href="{{ route('pendamping.perkembangan.index') }}"
+                class="py-2 px-3 text-indigo-200 hover:text-white">
+                DATA PERKEMBANGAN USAHA
+            </a>
         </div>
     </div>
 

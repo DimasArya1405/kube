@@ -11,20 +11,21 @@ class DataPerkembanganUsaha extends Model
 
     public $timestamps = true;
 
-    protected $fillable = [
-        'id_laporan',
-        'periode_bulan',
-        'periode_tahun',
-        'omset_pendapatan',
-        'total_pengeluaran',
-        'laba_bersih',
-        'total_omset',
-        'jumlah_tenaga_kerja',
-        'perkembangan_usaha',
-        'hasil_evaluasi',
-        'rekomendasi',
-        'status_hasil',
-    ];
+   protected $fillable = [
+    'id_laporan',
+    'periode_bulan',
+    'periode_tahun',
+    'omset_pendapatan',
+    'total_pengeluaran',
+    'laba_bersih',
+    'selisih_laba',
+    'total_omset',
+    'jumlah_tenaga_kerja',
+    'perkembangan_usaha',
+    'hasil_evaluasi',
+    'rekomendasi',
+    'status_hasil',
+];
 
     public function laporan()
     {

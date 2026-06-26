@@ -33,8 +33,26 @@ public function index()
 
     public function store(Request $request)
     {
+        // Validasi input dasar (opsional tapi sangat disarankan)
+        $request->validate([
+            'nama_pendamping' => 'required',
+            'email' => 'required|email|unique:users,email',
+        ]);
+
         $data = $request->all();
 
+        // 1. OTOMATIS BUAT AKUN LOGIN USER UNTUK PENDAMPING
+        $user = User::create([
+            'name'     => $request->nama_pendamping,
+            'email'    => $request->email,
+            'password' => bcrypt('password123'), // password default
+            'role'     => 'pendamping',
+        ]);
+
+        // 2. MASUKKAN ID USER KE DATA PENDAMPING
+        $data['id_user'] = $user->id;
+
+        // 3. PROSES UPLOAD FOTO
         if ($request->hasFile('foto')) {
             $file     = $request->file('foto');
             $namaFile = time() . '_' . $file->getClientOriginalName();

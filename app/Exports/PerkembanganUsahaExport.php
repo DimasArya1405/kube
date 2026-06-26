@@ -23,11 +23,11 @@ class PerkembanganUsahaExport implements FromCollection, WithHeadings, WithMappi
             'Omset',
             'Total Pengeluaran',
             'Laba Bersih',
-            'Tenaga Kerja',
+            'Selisih Laba',
+            'Total Omset',
             'Perkembangan',
-            'Tingkat Kemandirian',
             'Status',
-            'Evaluasi',
+            'Hasil Evaluasi',
             'Rekomendasi',
             'Tanggal Input',
         ];
@@ -35,29 +35,37 @@ class PerkembanganUsahaExport implements FromCollection, WithHeadings, WithMappi
 
     public function map($item): array
     {
-        $namaKube = '-';
-        if ($item->laporan && $item->laporan->cluster) {
-            $kube = $item->laporan->cluster->kube->first();
-            if ($kube) $namaKube = $kube->nama_kube;
-        }
-
         static $no = 0;
         $no++;
+
+        $namaKube = '-';
+
+        if ($item->laporan && $item->laporan->cluster) {
+            $kube = $item->laporan->cluster->kube->first();
+
+            if ($kube) {
+                $namaKube = $kube->nama_kube;
+            }
+        }
 
         return [
             $no,
             $namaKube,
-            ($item->laporan->periode_bulan ?? '-') . '/' . ($item->laporan->periode_tahun ?? '-'),
+            ($item->periode_bulan ?? '-') . '/' . ($item->periode_tahun ?? '-'),
+
             'Rp ' . number_format($item->omset_pendapatan ?? 0, 0, ',', '.'),
             'Rp ' . number_format($item->total_pengeluaran ?? 0, 0, ',', '.'),
             'Rp ' . number_format($item->laba_bersih ?? 0, 0, ',', '.'),
-            $item->jumlah_tenaga_kerja ?? '-',
+            'Rp ' . number_format($item->selisih_laba ?? 0, 0, ',', '.'),
+            'Rp ' . number_format($item->total_omset ?? 0, 0, ',', '.'),
+
             $item->perkembangan_usaha ?? '-',
-            $item->tingkat_kemandirian ?? '-',
             $item->status_hasil ?? '-',
             $item->hasil_evaluasi ?? '-',
             $item->rekomendasi ?? '-',
-            $item->created_at->format('d M Y'),
+            $item->created_at
+                ? $item->created_at->format('d M Y')
+                : '-',
         ];
     }
 }

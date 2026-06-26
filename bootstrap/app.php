@@ -14,8 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         // Tambahkan baris ini
         $middleware->alias([
-            'checkrole' => \App\Http\Middleware\CheckRole::class,
-        ]);
+    'role'      => \App\Http\Middleware\CheckRole::class,
+    'checkrole' => \App\Http\Middleware\CheckRole::class,
+]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

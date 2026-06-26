@@ -51,7 +51,7 @@
 </form>
     <!-- KIRI -->
     <form method="GET"
-      action="{{ route('perkembangan.index') }}"
+      action="{{ route('pendamping.perkembangan.index') }}"
       class="flex flex-wrap gap-2 items-center mt-4">
 
         <input type="text"
@@ -108,17 +108,21 @@
     <!-- KANAN -->
     <div class="flex gap-3">
 
-        <a href="{{ route('perkembangan.export.pdf') }}"
+        <a href="{{ route('pendamping.perkembangan.export.pdf') }}"
     class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-lg font-medium">
     Ekspor PDF
     </a>
 
-        <a href="{{ route('perkembangan.export.excel') }}"
+        <a href="{{ route('pendamping.perkembangan.export.excel') }}"
     class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-medium">
     Ekspor Excel
     </a>
 
-        
+        <button type="button"
+            onclick="openTambahModal()"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-medium">
+            Tambah Data
+        </button>
 
     </div>
 
@@ -216,6 +220,18 @@
                         <div class="flex justify-center gap-2">
                             <button onclick="openViewModal('{{ $item->id_perkembangan }}')"
                                 class="text-green-500 hover:underline text-xs">Lihat</button>
+                            <button onclick="openEditModal('{{ $item->id_perkembangan }}')"
+                                class="text-blue-500 hover:underline text-xs">Edit</button>
+                      <form action="{{ route('pendamping.perkembangan.delete', $item->id_perkembangan) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+
+                    <button type="submit"
+                        onclick="return confirm('Yakin hapus data ini?')"
+                        class="text-red-500 hover:underline text-xs">
+                        Hapus
+                    </button>
+                </form>
                     </div>
                     </td>
                 </tr>
@@ -483,7 +499,7 @@ function openViewModal(id) {
     document.getElementById('modal-view').classList.remove('hidden');
     document.getElementById('view-loading').classList.remove('hidden');
     document.getElementById('view-content').classList.add('hidden');
-    fetch('/admin/perkembangan-usaha/' + id + '/detail')
+    fetch('/pendamping/perkembangan-usaha/' + id + '/detail')
         .then(function(res) { return res.json(); })
         .then(function(data) {
             document.getElementById('view-loading').classList.add('hidden');
@@ -497,16 +513,16 @@ function openViewModal(id) {
             document.getElementById('view-evaluasi').textContent     = data.hasil_evaluasi;
             document.getElementById('view-rekomendasi').textContent  = data.rekomendasi;
             document.getElementById('view-created-at').textContent   = data.created_at;
-                 var perkembangan = document.getElementById('view-perkembangan');
-                     perkembangan.textContent = data.perkembangan_usaha;
-                     perkembangan.className = 'text-sm font-semibold px-2 py-1 rounded text-xs ';
-                if (data.perkembangan_usaha === 'Meningkat') perkembangan.className += 'bg-green-100 text-green-700';
-                else if (data.perkembangan_usaha === 'Menurun') perkembangan.className += 'bg-red-100 text-red-700';
-                else perkembangan.className += 'bg-gray-100 text-gray-700';
-                var status = document.getElementById('view-status');
-                    status.textContent = data.status_hasil;
-                    status.className = 'text-sm font-semibold px-2 py-1 rounded text-xs ';
-                    status.className += data.status_hasil === 'Tercapai' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700';
+            var perkembangan = document.getElementById('view-perkembangan');
+            perkembangan.textContent = data.perkembangan_usaha;
+            perkembangan.className = 'text-sm font-semibold px-2 py-1 rounded text-xs ';
+            if (data.perkembangan_usaha === 'Meningkat') perkembangan.className += 'bg-green-100 text-green-700';
+            else if (data.perkembangan_usaha === 'Menurun') perkembangan.className += 'bg-red-100 text-red-700';
+            else perkembangan.className += 'bg-gray-100 text-gray-700';
+            var status = document.getElementById('view-status');
+            status.textContent = data.status_hasil;
+            status.className = 'text-sm font-semibold px-2 py-1 rounded text-xs ';
+            status.className += data.status_hasil === 'Tercapai' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700';
         })
         .catch(function() {
             document.getElementById('view-loading').textContent = 'Gagal memuat data.';

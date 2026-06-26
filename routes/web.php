@@ -32,6 +32,7 @@ use App\Http\Controllers\KolaborasiBantuanController;
 use App\Http\Controllers\PenyaluranKolaborasiController;
 use App\Http\Controllers\KepalaDinasController;
 use App\Http\Controllers\PersetujuanBantuanKubeKadisController;
+use App\Http\Middleware\CheckRole;
 use Dflydev\DotAccessData\Data;
 
 // LOGIN
@@ -201,10 +202,49 @@ Route::get('/kepala_dinas/dashboard', [KepalaDinasController::class, 'dashboard'
 
     //PERKEMBANGAN USAHA
 
-    Route::get('/admin/perkembangan-usaha', [DataPerkembanganUsahaController::class, 'index'])->name('perkembangan.index');
-    Route::get('/admin/perkembangan-usaha/periode/{id_cluster}', [DataPerkembanganUsahaController::class, 'getPeriodeByKube'])->name('perkembangan.periode');
-    Route::post('/admin/perkembangan-usaha/store', [DataPerkembanganUsahaController::class, 'store'])->name('perkembangan.store');
-    Route::delete('/admin/perkembangan-usaha/{id}', [DataPerkembanganUsahaController::class, 'destroy'])->name('perkembangan.delete');
+  Route::get('/admin/perkembangan-usaha', [DataPerkembanganUsahaController::class, 'indexAdmin'])->name('perkembangan.index');
+Route::get('/admin/perkembangan-usaha/grafik', [DataPerkembanganUsahaController::class, 'getGrafikData'])
+    ->name('perkembangan.grafik');
+Route::get('/admin/perkembangan-usaha/periode/{id_cluster}', [DataPerkembanganUsahaController::class, 'getPeriodeByKube'])
+    ->name('perkembangan.periode');
+Route::get('/admin/perkembangan-usaha/{id}/detail', [DataPerkembanganUsahaController::class, 'show'])
+    ->name('perkembangan.show');
+Route::get('/admin/perkembangan-usaha/export/pdf', [DataPerkembanganUsahaController::class, 'exportPdf'])
+    ->name('perkembangan.export.pdf');
+Route::get('/admin/perkembangan-usaha/export/excel', [DataPerkembanganUsahaController::class, 'exportExcel'])
+    ->name('perkembangan.export.excel');
+
+Route::prefix('pendamping')
+    ->middleware(['role:pendamping'])
+    ->group(function () {
+
+        
+
+            Route::get('/perkembangan-usaha/grafik', [DataPerkembanganUsahaController::class, 'getGrafikData'])
+            ->name('pendamping.perkembangan.grafik');
+
+        Route::get('/perkembangan-usaha/periode/{id_cluster}', [DataPerkembanganUsahaController::class, 'getPeriodeByKube'])
+            ->name('pendamping.perkembangan.periode');
+
+        Route::get('/perkembangan-usaha/{id}/detail', [DataPerkembanganUsahaController::class, 'show'])
+            ->name('pendamping.perkembangan.show');
+
+        Route::get('/perkembangan-usaha/{id}/edit', [DataPerkembanganUsahaController::class, 'edit'])
+            ->name('pendamping.perkembangan.edit');
+
+        Route::post('/perkembangan-usaha/store', [DataPerkembanganUsahaController::class, 'store'])
+            ->name('pendamping.perkembangan.store');
+
+        Route::put('/perkembangan-usaha/{id}', [DataPerkembanganUsahaController::class, 'update'])
+            ->name('pendamping.perkembangan.update');
+
+        Route::delete('/perkembangan-usaha/{id}', [DataPerkembanganUsahaController::class, 'destroy'])
+            ->name('pendamping.perkembangan.delete');
+
+        Route::get('/perkembangan-usaha/export/pdf', [DataPerkembanganUsahaController::class, 'exportPdf'])->name('pendamping.perkembangan.export.pdf');
+
+        Route::get('/perkembangan-usaha/export/excel', [DataPerkembanganUsahaController::class, 'exportExcel'])->name('pendamping.perkembangan.export.excel');
+    });
 
 // HALAMAN FORM PREDIKSI PENDAMPING & ADMIN
 Route::get('/pendamping/prediksi/form', [PrediksiController::class, 'index'])
@@ -331,7 +371,7 @@ Route::prefix('admin/prediksi-kube')->name('admin.prediksi-kube.')->group(functi
     // KUNJUNGAN PENDAMPING
 
     Route::prefix('pendamping')
-        ->middleware(['role:pendamping'])
+        ->middleware([CheckRole::class . ':pendamping'])
         ->group(function () {
 
             Route::get('/kunjungan_pendamping', [KunjunganPendampingController::class, 'index'])->name('kunjungan.index');
@@ -343,6 +383,11 @@ Route::prefix('admin/prediksi-kube')->name('admin.prediksi-kube.')->group(functi
             Route::patch('/pendamping/kunjungan_pendamping/{id}/selesai', [KunjunganPendampingController::class, 'selesai'])->name('kunjungan.selesai');
             Route::get('/pendamping/kunjungan/export/excel',[KunjunganPendampingController::class, 'exportExcel'])->name('kunjungan.export.excel');
             Route::get('/pendamping/kunjungan/export/pdf',[KunjunganPendampingController::class, 'exportPdf'])->name('kunjungan.export.pdf');
+
+            Route::get('/perkembangan-usaha', [DataPerkembanganUsahaController::class, 'index'])
+            ->name('pendamping.perkembangan.index');
+            Route::post('/perkembangan-usaha/store', [DataPerkembanganUsahaController::class, 'store'])
+            ->name('pendamping.perkembangan.store');
         });
 
 
