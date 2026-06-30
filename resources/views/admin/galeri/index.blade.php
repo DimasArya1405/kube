@@ -221,14 +221,14 @@ Dashboard / <span class="text-gray-800">Galeri KUBE</span>
                     class="w-full border rounded-lg px-4 py-2">
             </div>
 
-            <div class="mb-3">
+            <!-- <div class="mb-3">
                 <label class="text-sm">Tanggal</label>
 
                 <input type="date"
                     name="tanggal"
                     required
                     class="w-full border rounded-lg px-4 py-2">
-            </div>
+            </div> -->
 
             <div class="mb-3">
                 <label class="text-sm">Deskripsi</label>

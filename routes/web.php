@@ -34,6 +34,7 @@ use App\Http\Controllers\KepalaDinasController;
 use App\Http\Controllers\PersetujuanBantuanKubeKadisController;
 use App\Http\Controllers\GaleriController;
 use Dflydev\DotAccessData\Data;
+use App\Http\Controllers\TemplateLaporanController;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -83,6 +84,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('koordinator')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'koordinator'])->middleware('checkrole:koordinator')->name('koordinator.dashboard');
     });
+    Route::get('/admin/galerikube', [GaleriController::class, 'index'])->name('galeri.index');
+
 
     // --- DASHBOARD KEPALA DINAS ---
     Route::prefix('kepala_dinas')->group(function () {
@@ -93,6 +96,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('pendamping')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'pendamping'])->middleware('checkrole:pendamping')->name('pendamping.dashboard');
     });
+    Route::get('/admin/galerikube', [GaleriController::class, 'index'])->name('galeri.index');
+
 
     // --- DASHBOARD KETUA KUBE ---
     Route::prefix('ketua_kube')->group(function () {
@@ -148,7 +153,9 @@ Route::get('/kepala_dinas/dashboard', [KepalaDinasController::class, 'dashboard'
     Route::put('/admin/kategorikube/{id}/edit', [KategoriKubeController::class, 'edit'])->name('kategorikube.edit');
     Route::post('/admin/kategorikube/{id}', [KategoriKubeController::class, 'update'])->name('kategorikube.update');
     Route::get('/admin/kategorikube/delete/{id}', [KategoriKubeController::class, 'destroy'])->name('kategorikube.destroy');
-
+    Route::get('/kategorikube/export/pdf',[KategoriKubeController::class, 'exportPdf'])->name('kategorikube.export.pdf');
+    Route::get('/kategorikube/export/excel',[KategoriKubeController::class, 'exportExcel'])->name('kategorikube.export.excel');
+    
     // GALERI
     Route::get('/admin/galerikube', [GaleriController::class, 'index'])->name('galeri.index');
     Route::post('/admin/galerikube/store', [GaleriController::class, 'store'])->name('galeri.store');
@@ -156,6 +163,8 @@ Route::get('/kepala_dinas/dashboard', [KepalaDinasController::class, 'dashboard'
     Route::get('/admin/galerikube/delete/{id}', [GaleriController::class, 'destroy'])->name('galeri.delete');
     Route::get('/admin/galerikube/detail/{id}', [GaleriController::class, 'show'])->name('galeri.detail');
 
+
+    Route::get('/admin/template-laporan',[TemplateLaporanController::class, 'index'])->name('template-laporan.index');
     // Pembagian Koordinator
     Route::resource('pembagian_koordinator', PembagianKoordinatorController::class);
     Route::get('/get-pendamping/{id_kecamatan}/{selected?}', [PembagianKoordinatorController::class, 'getPendamping']);

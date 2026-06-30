@@ -99,10 +99,12 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
             <div class="ml-auto">
                 
             {{-- Tambah Kunjungan --}}
-            <button data-modal-target="modal-tambah-kunjungan" data-modal-toggle="modal-tambah-kunjungan"
-                class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg">
-                Tambah Kunjungan
-            </button>
+            <button type="button"
+        data-modal-target="modal-tambah-kunjungan"
+        data-modal-toggle="modal-tambah-kunjungan"
+        class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg">
+    Tambah Kunjungan
+</button>   
             </div>
             
 
