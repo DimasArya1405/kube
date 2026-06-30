@@ -3,124 +3,108 @@
 @section('title', 'Perkembangan Usaha - KUBE')
 
 @section('content')
-<div class="bg-yellow-100 p-3 mb-4 rounded">
-    Role Login : {{ auth()->user()->role }}
+
+
+<div class="space-y-6">
+
+    {{-- HEADER --}}
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">
+                Perkembangan Usaha
+            </h1>
+
+            <p class="text-gray-500 mt-1">
+                Kelola data perkembangan usaha seluruh KUBE.
+            </p>
+        </div>
+
+    
+
+    </div>
+
+
+   {{-- CARD --}}
+<div class="flex flex-wrap gap-5 mb-6">
+
+    <div class="w-72 bg-white rounded-xl border border-blue-100 shadow-sm p-5">
+
+        <p class="text-sm text-gray-500">
+            Status Tercapai
+        </p>
+
+        <h2 class="mt-2 text-3xl font-bold text-blue-600">
+            {{ $data->where('status_hasil','Tercapai')->count() }}
+        </h2>
+
+    </div>
+
+    <div class="w-72 bg-white rounded-xl border border-green-100 shadow-sm p-5">
+
+        <p class="text-sm text-gray-500">
+            Perkembangan Meningkat
+        </p>
+
+        <h2 class="mt-2 text-3xl font-bold text-green-600">
+            {{ $data->where('perkembangan_usaha','Meningkat')->count() }}
+        </h2>
+
+    </div>
+
+    <div class="w-72 bg-white rounded-xl border border-yellow-100 shadow-sm p-5">
+
+        <p class="text-sm text-gray-500">
+            Total Omset
+        </p>
+
+        <h2 class="mt-2 text-2xl font-bold text-yellow-600">
+            Rp {{ number_format($data->sum('total_omset'),0,',','.') }}
+        </h2>
+
+    </div>
+
 </div>
 
 
-<div class="mb-6">
+    {{-- TOOLBAR --}}
+    <div class="bg-white rounded-xl border shadow-sm p-4">
 
-    <!-- JUDUL -->
-    <h2 class="text-3xl font-bold text-gray-800">Data Perkembangan Usaha</h2>
-    <h3 class="text-lg font-semibold mt-2 border-b-2 inline-block">
-        Riwayat Data Perkembangan Usaha
-    </h3>
+       <div class="flex items-center justify-between gap-4 mb-6">
 
-    <!-- CARD -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-        <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white p-5 rounded-2xl shadow-lg">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm opacity-80">Status Tercapai</p>
-                    <h3 class="text-3xl font-bold">{{ $data->where('status_hasil','Tercapai')->count() }}</h3>
-                </div>
-                <div class="text-4xl opacity-30">✔</div>
-            </div>
-        </div>
-        <div class="bg-gradient-to-r from-green-500 to-green-600 text-white p-5 rounded-2xl shadow-lg">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm opacity-80">Perkembangan Meningkat</p>
-                    <h3 class="text-3xl font-bold">{{ $data->where('perkembangan_usaha','Meningkat')->count() }}</h3>
-                </div>
-                <div class="text-4xl opacity-30">📈</div>
-            </div>
-        </div>
-        <div class="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-5 rounded-2xl shadow-lg">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm opacity-80">Total Omset</p>
-                    <h3 class="text-xl font-bold">Rp {{ number_format($data->sum('total_omset'), 0, ',', '.') }}</h3>
-                </div>
-                <div class="text-4xl opacity-30">💰</div>
-            </div>
-        </div>
+    {{-- Kiri --}}
+    <div class="flex items-center gap-3">
+
+        {{-- Search --}}
+        <input
+            type="text"
+            placeholder="Cari nama KUBE..."
+            class="w-80 rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500">
+
+        {{-- Status --}}
+        <select class="rounded-xl border border-gray-300 px-4 py-3">
+            <option>Semua Status</option>
+        </select>
+
+        {{-- Perkembangan --}}
+        <select class="rounded-xl border border-gray-300 px-4 py-3">
+            <option>Semua Perkembangan</option>
+        </select>
+
     </div>
 
-   <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
-</form>
-    <!-- KIRI -->
-    <form method="GET"
-      action="{{ route('pendamping.perkembangan.index') }}"
-      class="flex flex-wrap gap-2 items-center mt-4">
+    {{-- Kanan --}}
+    <div class="flex items-center gap-3">
 
-        <input type="text"
-            name="search"
-            placeholder="Cari nama KUBE..."
-            value="{{ request('search') }}"
-            class="border rounded-lg px-4 py-2 text-sm shadow-sm w-60">
+        <button class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg font-medium">
+            PDF
+        </button>
 
-        <select
-    name="status"
-    onchange="this.form.submit()"
-    class="border rounded-lg px-3 py-2 text-sm bg-white shadow-sm">
+        <button class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-medium">
+            Excel
+        </button>
 
-    <option value="">Semua Status</option>
-
-    <option value="Tercapai"
-        {{ request('status') == 'Tercapai' ? 'selected' : '' }}>
-        Tercapai
-    </option>
-
-    <option value="Belum Tercapai"
-        {{ request('status') == 'Belum Tercapai' ? 'selected' : '' }}>
-        Belum Tercapai
-    </option>
-
-</select>
-
-       <select
-    name="perkembangan"
-    onchange="this.form.submit()"
-    class="border rounded-lg px-3 py-2 text-sm bg-white shadow-sm">
-
-    <option value="">Semua Perkembangan</option>
-
-    <option value="Meningkat"
-        {{ request('perkembangan') == 'Meningkat' ? 'selected' : '' }}>
-        Meningkat
-    </option>
-
-    <option value="Tetap"
-        {{ request('perkembangan') == 'Tetap' ? 'selected' : '' }}>
-        Tetap
-    </option>
-
-    <option value="Menurun"
-        {{ request('perkembangan') == 'Menurun' ? 'selected' : '' }}>
-        Menurun
-    </option>
-
-</select>
-
-    </form>
-
-    <!-- KANAN -->
-    <div class="flex gap-3">
-
-        <a href="{{ route('pendamping.perkembangan.export.pdf') }}"
-    class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-lg font-medium">
-    Ekspor PDF
-    </a>
-
-        <a href="{{ route('pendamping.perkembangan.export.excel') }}"
-    class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-medium">
-    Ekspor Excel
-    </a>
-
-        <button type="button"
-            onclick="openTambahModal()"
-            class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-medium">
+        <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium">
             Tambah Data
         </button>
 
@@ -128,119 +112,200 @@
 
 </div>
 
-        <form method="GET" action="#">
-            @if(request('id_cluster'))
-                <input type="hidden" name="id_cluster" value="{{ request('id_cluster') }}">
-            @endif
-            @if(request('status'))
-                <input type="hidden" name="status" value="{{ request('status') }}">
-            @endif
-            @if(request('perkembangan'))
-                <input type="hidden" name="perkembangan" value="{{ request('perkembangan') }}">
-            @endif
-            
     </div>
 
 </div>
-</form>
 <!-- TABLE -->
 <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-sm text-left text-gray-600">
-            <thead class="bg-gray-200 text-gray-600 text-xs uppercase tracking-wider">
-                <tr>
-                    <th class="px-6 py-3">No</th>
-                    <th class="px-6 py-3">Nama KUBE</th>
-                    <th class="px-6 py-3">Periode</th>
-                    <th class="px-6 py-3">Omset</th>
-                    <th class="px-6 py-3">Pengeluaran</th>
-                    <th class="px-6 py-3">Laba Bersih</th>
-                    <th class="px-6 py-3">Selisih Laba</th>
-                    <th class="px-6 py-3">Perkembangan</th>
-                    <th class="px-6 py-3">Status</th>
-                    <th class="px-6 py-3 text-center">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($data as $item)
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="px-6 py-4">{{ $loop->iteration }}</td>
+           <thead class="bg-gray-100 uppercase tracking-wide text-sm text-gray-700">
+    <tr>
+        <th class="px-6 py-4 text-left font-semibold">No</th>
+        <th class="px-6 py-4 text-left font-semibold">Nama KUBE</th>
+        <th class="px-6 py-4 text-left font-semibold">Periode</th>
+        <th class="px-6 py-4 text-left font-semibold">Omset</th>
+        <th class="px-6 py-4 text-left font-semibold">Pengeluaran</th>
+        <th class="px-6 py-4 text-left font-semibold">Laba Bersih</th>
+        <th class="px-6 py-4 text-left font-semibold">Selisih Laba</th>
+        <th class="px-6 py-4 text-left font-semibold">Perkembangan</th>
+        <th class="px-6 py-4 text-left font-semibold">Status</th>
+        <th class="px-6 py-4 text-center font-semibold">Aksi</th>
+    </tr>
+</thead>
+          <tbody class="divide-y divide-gray-200">
+    @forelse ($data as $item)
+        <tr class="border-b border-gray-100 hover:bg-gray-50 transition duration-150">
 
-                    <td class="px-6 py-4 font-semibold text-gray-800">
-                        @php
-                            $namaKube = '-';
-                            if ($item->laporan && $item->laporan->cluster) {
-                                $firstKube = $item->laporan->cluster->kube->first();
-                                if ($firstKube) $namaKube = $firstKube->nama_kube;
-                            }
-                        @endphp
-                        {{ $namaKube }}
-                    </td>
+            {{-- NO --}}
+            <td class="px-6 py-6 text-gray-700">
+                {{ $loop->iteration }}
+            </td>
 
-                    <td class="px-6 py-4">
-                        {{ $item->laporan->periode_bulan ?? '-' }}/{{ $item->laporan->periode_tahun ?? '-' }}
-                    </td>
+            {{-- NAMA KUBE --}}
+            <td class="px-6 py-6">
+                @php
+                    $namaKube = '-';
 
-                    <td class="px-6 py-4">
-                        Rp {{ number_format($item->omset_pendapatan ?? 0, 0, ',', '.') }}
-                    </td>
+                    if ($item->laporan && $item->laporan->cluster) {
+                        $firstKube = $item->laporan->cluster->kube->first();
 
-                    <td class="px-6 py-4">
-                        Rp {{ number_format($item->total_pengeluaran ?? 0, 0, ',', '.') }}
-                    </td>
+                        if ($firstKube) {
+                            $namaKube = $firstKube->nama_kube;
+                        }
+                    }
+                @endphp
 
-                    <td class="px-6 py-4">
-                        <span class="{{ ($item->laba_bersih ?? 0) >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
-                            Rp {{ number_format($item->laba_bersih ?? 0, 0, ',', '.') }}
-                        </span>
-                    </td>
+                <div class="font-semibold text-gray-800">
+                    {{ $namaKube }}
+                </div>
+            </td>
 
-                    <td class="px-6 py-4">
-                            Rp {{ number_format($item->selisih_laba ?? 0, 0, ',', '.') }}
-                        </td>
+            {{-- PERIODE --}}
+            <td class="px-6 py-6 text-gray-600">
+                {{ $item->laporan->periode_bulan ?? '-' }}/{{ $item->laporan->periode_tahun ?? '-' }}
+            </td>
 
+            {{-- OMSET --}}
+            <td class="px-6 py-6 font-medium text-gray-700">
+                Rp {{ number_format($item->omset_pendapatan ?? 0,0,',','.') }}
+            </td>
 
-                    <td class="px-6 py-4">
-                        <span class="px-2 py-1 rounded text-xs
-                            @if($item->perkembangan_usaha == 'Meningkat') bg-green-100 text-green-700
-                            @elseif($item->perkembangan_usaha == 'Menurun') bg-red-100 text-red-700
-                            @else bg-gray-100 text-gray-700 @endif">
-                            {{ $item->perkembangan_usaha }}
-                        </span>
-                    </td>
+            {{-- PENGELUARAN --}}
+            <td class="px-6 py-6 text-gray-700">
+                Rp {{ number_format($item->total_pengeluaran ?? 0,0,',','.') }}
+            </td>
 
-                    <td class="px-6 py-4">
-                        <span class="px-3 py-1 rounded-full text-xs font-semibold
-                            {{ $item->status_hasil == 'Tercapai' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
-                            {{ $item->status_hasil }}
-                        </span>
-                    </td>
+            {{-- LABA --}}
+            <td class="px-6 py-6 font-semibold">
 
-                    <td class="px-6 py-4 text-center">
-                        <div class="flex justify-center gap-2">
-                            <button onclick="openViewModal('{{ $item->id_perkembangan }}')"
-                                class="text-green-500 hover:underline text-xs">Lihat</button>
-                            <button onclick="openEditModal('{{ $item->id_perkembangan }}')"
-                                class="text-blue-500 hover:underline text-xs">Edit</button>
-                      <form action="{{ route('pendamping.perkembangan.delete', $item->id_perkembangan) }}" method="POST">
-                    @csrf
-                    @method('DELETE')
+                @if(($item->laba_bersih ?? 0) >= 0)
 
-                    <button type="submit"
-                        onclick="return confirm('Yakin hapus data ini?')"
-                        class="text-red-500 hover:underline text-xs">
-                        Hapus
+                    <span class="text-green-600">
+                        Rp {{ number_format($item->laba_bersih ?? 0,0,',','.') }}
+                    </span>
+
+                @else
+
+                    <span class="text-red-600">
+                        Rp {{ number_format($item->laba_bersih ?? 0,0,',','.') }}
+                    </span>
+
+                @endif
+
+            </td>
+
+            {{-- SELISIH --}}
+            <td class="px-6 py-6 text-gray-700">
+                Rp {{ number_format($item->selisih_laba ?? 0,0,',','.') }}
+            </td>
+
+            {{-- PERKEMBANGAN --}}
+            <td class="px-6 py-6">
+
+                @if($item->perkembangan_usaha=='Meningkat')
+
+                    <span class="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                        Meningkat
+                    </span>
+
+                @elseif($item->perkembangan_usaha=='Menurun')
+
+                    <span class="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+                        Menurun
+                    </span>
+
+                @else
+
+                    <span class="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">
+                        Tetap
+                    </span>
+
+                @endif
+
+            </td>
+
+            {{-- STATUS --}}
+            <td class="px-6 py-6">
+
+                @if($item->status_hasil=='Tercapai')
+
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">
+                        Tetap
+                    </span>
+
+                @else
+
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">
+                        Belum Tercapai
+                    </span>
+
+                @endif
+
+            </td>
+
+            {{-- AKSI --}}
+            <td class="px-6 py-6">
+
+                <div class="flex justify-center items-center gap-5">
+
+                    {{-- Lihat --}}
+                    <button
+                        onclick="openViewModal('{{ $item->id_perkembangan }}')"
+                        class="text-blue-500 hover:text-blue-700 transition">
+
+                        <i class="fas fa-eye"></i>
+
                     </button>
-                </form>
-                    </div>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="10" class="text-center py-6 text-gray-500">Belum ada data</td>
-                </tr>
-                @endforelse
-            </tbody>
+
+                    {{-- Edit --}}
+                    <button
+                        onclick="openEditModal('{{ $item->id_perkembangan }}')"
+                        class="text-yellow-500 hover:text-yellow-600 transition">
+
+                        <i class="fas fa-pen-to-square"></i>
+
+                    </button>
+
+                    {{-- Hapus --}}
+                    <form
+                        action="{{ route('pendamping.perkembangan.delete',$item->id_perkembangan) }}"
+                        method="POST">
+
+                        @csrf
+                        @method('DELETE')
+
+                        <button
+                            onclick="return confirm('Yakin hapus data ini?')"
+                            class="text-red-500 hover:text-red-700 transition">
+
+                            <i class="fas fa-trash"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+    @empty
+
+        <tr>
+
+            <td colspan="10"
+                class="py-12 text-center text-gray-400 italic">
+
+                Belum ada data perkembangan usaha.
+
+            </td>
+
+        </tr>
+
+    @endforelse
+</tbody>
         </table>
     </div>
 </div>

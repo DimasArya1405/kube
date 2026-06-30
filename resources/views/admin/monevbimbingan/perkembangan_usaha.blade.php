@@ -3,142 +3,113 @@
 @section('title', 'Perkembangan Usaha - KUBE')
 
 @section('content')
-<div class="bg-yellow-100 p-3 mb-4 rounded">
-    Role Login : {{ auth()->user()->role }}
+
+
+
+<div class="space-y-6">
+
+    {{-- HEADER --}}
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">
+                Perkembangan Usaha
+            </h1>
+
+            <p class="text-gray-500 mt-1">
+                Kelola data perkembangan usaha seluruh KUBE.
+            </p>
+        </div>
+
+    </div>
+
+
+   {{-- CARD --}}
+<div class="flex flex-wrap gap-5 mb-6">
+
+    <div class="w-72 bg-white rounded-xl border border-blue-100 shadow-sm p-5">
+
+        <p class="text-sm text-gray-500">
+            Status Tercapai
+        </p>
+
+        <h2 class="mt-2 text-3xl font-bold text-blue-600">
+            {{ $data->where('status_hasil','Tercapai')->count() }}
+        </h2>
+
+    </div>
+
+    <div class="w-72 bg-white rounded-xl border border-green-100 shadow-sm p-5">
+
+        <p class="text-sm text-gray-500">
+            Perkembangan Meningkat
+        </p>
+
+        <h2 class="mt-2 text-3xl font-bold text-green-600">
+            {{ $data->where('perkembangan_usaha','Meningkat')->count() }}
+        </h2>
+
+    </div>
+
+    <div class="w-72 bg-white rounded-xl border border-yellow-100 shadow-sm p-5">
+
+        <p class="text-sm text-gray-500">
+            Total Omset
+        </p>
+
+        <h2 class="mt-2 text-2xl font-bold text-yellow-600">
+            Rp {{ number_format($data->sum('total_omset'),0,',','.') }}
+        </h2>
+
+    </div>
+
 </div>
 
 
-<div class="mb-6">
+    {{-- TOOLBAR --}}
+    <div class="bg-white rounded-xl border shadow-sm p-4">
 
-    <!-- JUDUL -->
-    <h2 class="text-3xl font-bold text-gray-800">Data Perkembangan Usaha</h2>
-    <h3 class="text-lg font-semibold mt-2 border-b-2 inline-block">
-        Riwayat Data Perkembangan Usaha
-    </h3>
+       <div class="flex items-center justify-between gap-4 mb-6">
 
-    <!-- CARD -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-        <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white p-5 rounded-2xl shadow-lg">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm opacity-80">Status Tercapai</p>
-                    <h3 class="text-3xl font-bold">{{ $data->where('status_hasil','Tercapai')->count() }}</h3>
-                </div>
-                <div class="text-4xl opacity-30">✔</div>
-            </div>
-        </div>
-        <div class="bg-gradient-to-r from-green-500 to-green-600 text-white p-5 rounded-2xl shadow-lg">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm opacity-80">Perkembangan Meningkat</p>
-                    <h3 class="text-3xl font-bold">{{ $data->where('perkembangan_usaha','Meningkat')->count() }}</h3>
-                </div>
-                <div class="text-4xl opacity-30">📈</div>
-            </div>
-        </div>
-        <div class="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-5 rounded-2xl shadow-lg">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm opacity-80">Total Omset</p>
-                    <h3 class="text-xl font-bold">Rp {{ number_format($data->sum('total_omset'), 0, ',', '.') }}</h3>
-                </div>
-                <div class="text-4xl opacity-30">💰</div>
-            </div>
-        </div>
-    </div>
+    {{-- Kiri --}}
+    <div class="flex items-center gap-3">
 
-   <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
-</form>
-    <!-- KIRI -->
-    <form method="GET"
-      action="{{ route('perkembangan.index') }}"
-      class="flex flex-wrap gap-2 items-center mt-4">
-
-        <input type="text"
-            name="search"
+        {{-- Search --}}
+        <input
+            type="text"
             placeholder="Cari nama KUBE..."
-            value="{{ request('search') }}"
-            class="border rounded-lg px-4 py-2 text-sm shadow-sm w-60">
+            class="w-80 rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500">
 
-        <select
-    name="status"
-    onchange="this.form.submit()"
-    class="border rounded-lg px-3 py-2 text-sm bg-white shadow-sm">
+        {{-- Status --}}
+        <select class="rounded-xl border border-gray-300 px-4 py-3">
+            <option>Semua Status</option>
+        </select>
 
-    <option value="">Semua Status</option>
+        {{-- Perkembangan --}}
+        <select class="rounded-xl border border-gray-300 px-4 py-3">
+            <option>Semua Perkembangan</option>
+        </select>
 
-    <option value="Tercapai"
-        {{ request('status') == 'Tercapai' ? 'selected' : '' }}>
-        Tercapai
-    </option>
+    </div>
 
-    <option value="Belum Tercapai"
-        {{ request('status') == 'Belum Tercapai' ? 'selected' : '' }}>
-        Belum Tercapai
-    </option>
+    {{-- Kanan --}}
+    <div class="flex items-center gap-3">
 
-</select>
+        <button class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg font-medium">
+            PDF
+        </button>
 
-       <select
-    name="perkembangan"
-    onchange="this.form.submit()"
-    class="border rounded-lg px-3 py-2 text-sm bg-white shadow-sm">
-
-    <option value="">Semua Perkembangan</option>
-
-    <option value="Meningkat"
-        {{ request('perkembangan') == 'Meningkat' ? 'selected' : '' }}>
-        Meningkat
-    </option>
-
-    <option value="Tetap"
-        {{ request('perkembangan') == 'Tetap' ? 'selected' : '' }}>
-        Tetap
-    </option>
-
-    <option value="Menurun"
-        {{ request('perkembangan') == 'Menurun' ? 'selected' : '' }}>
-        Menurun
-    </option>
-
-</select>
-
-    </form>
-
-    <!-- KANAN -->
-    <div class="flex gap-3">
-
-        <a href="{{ route('perkembangan.export.pdf') }}"
-    class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-lg font-medium">
-    Ekspor PDF
-    </a>
-
-        <a href="{{ route('perkembangan.export.excel') }}"
-    class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-medium">
-    Ekspor Excel
-    </a>
-
-        
+        <button class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-medium">
+            Excel
+        </button>
 
     </div>
 
 </div>
 
-        <form method="GET" action="#">
-            @if(request('id_cluster'))
-                <input type="hidden" name="id_cluster" value="{{ request('id_cluster') }}">
-            @endif
-            @if(request('status'))
-                <input type="hidden" name="status" value="{{ request('status') }}">
-            @endif
-            @if(request('perkembangan'))
-                <input type="hidden" name="perkembangan" value="{{ request('perkembangan') }}">
-            @endif
-            
     </div>
 
 </div>
-</form>
 <!-- TABLE -->
 <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
     <div class="overflow-x-auto">
@@ -235,51 +206,8 @@
     </button>
 </div>
 </form>
-<!-- ==================== MODAL TAMBAH ==================== -->
-<div id="modal-tambah" tabindex="-1"
-    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div class="bg-white w-full max-w-lg rounded-lg p-6 relative max-h-screen overflow-y-auto">
-        <button type="button" onclick="closeTambahModal()"
-            class="absolute top-2 right-3 text-gray-500 text-xl">X</button>
-        <h3 class="text-lg font-bold mb-4">Tambah Data</h3>
-<form id="form-tambah"
-      method="POST"
-      action="/pendamping/perkembangan-usaha/store">
-    @csrf
-                <div class="mb-3">
-                <label class="text-sm font-medium">Pilih KUBE</label>
-                <select name="id_cluster" id="select-kube" class="w-full border rounded p-2" required>
-                    <option value=""> --Pilih KUBE --</option>
-                    @foreach ($kubeList as $kube)
-                        <option value="{{ $kube['id_cluster'] }}">{{ $kube['nama_kube'] }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="mb-3">
-                <label class="text-sm font-medium">Pilih Periode</label>
-                <select name="id_laporan" id="select-periode" class="w-full border rounded p-2" required>
-                    <option value="">-- Pilih KUBE dulu --</option>
-                </select>
-            </div>
-          
-            <div class="mb-3">
-                <label class="text-sm font-medium">Evaluasi</label>
-                <textarea name="hasil_evaluasi" class="w-full border rounded p-2" rows="2"></textarea>
-            </div>
-            <div class="mb-3">
-                <label class="text-sm font-medium">Rekomendasi</label>
-                <textarea name="rekomendasi" class="w-full border rounded p-2" rows="2"></textarea>
-            </div>
-            <div class="flex justify-end gap-2 mt-4">
-                
-                <button type="button" onclick="closeTambahModal()" class="px-4 py-2 border rounded">Batal</button>
-<button
-    type="submit"
-    onclick="alert('submit jalan')"
-    class="px-4 py-2 bg-blue-600 text-white rounded">
-    Simpan
-</button>
-            </div>
+
+
 
 <script>
 function openTambahModal() {
