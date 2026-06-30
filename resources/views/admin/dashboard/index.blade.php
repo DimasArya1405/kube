@@ -66,7 +66,48 @@ Dashboard / <span class="text-gray-800">Dashboard KUBE</span>
 </div>
 
 </div>
+<div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h3 class="text-xl font-bold mb-4">
+        Grafik Perkembangan KUBE
+    </h3>
 
+    <div style="height:250px">
+        <canvas id="perkembanganChart"></canvas>
+    </div>
+</div>
+<div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h3 class="text-lg font-bold mb-4">
+        Jumlah KUBE per Kecamatan
+    </h3>
+
+    <div style="height:300px">
+        <canvas id="kecamatanChart"></canvas>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+    <div class="bg-white rounded-xl shadow p-6">
+        <h3 class="text-lg font-bold mb-4">
+            Kategori Usaha
+        </h3>
+
+        <div style="height:250px">
+            <canvas id="kategoriChart"></canvas>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow p-6">
+        <h3 class="text-lg font-bold mb-4">
+            Status KUBE
+        </h3>
+
+        <div style="height:250px">
+            <canvas id="statusChart"></canvas>
+        </div>
+    </div>
+
+</div>
 <!-- GALERI -->
 
 <div class="bg-white rounded-2xl shadow p-8 mb-10">
@@ -116,7 +157,7 @@ Dashboard / <span class="text-gray-800">Dashboard KUBE</span>
             </p>
             
         </div>
-
+    
     </div>
 
     @empty
@@ -128,46 +169,87 @@ Dashboard / <span class="text-gray-800">Dashboard KUBE</span>
     @endforelse
 
 </div>
+
 <div class="h-10"></div>
-<!-- TEMPLATE LAPORAN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<div class="bg-white rounded-2xl shadow p-8 mb-12">
+<script>
+const ctx = document.getElementById('kubeChart');
 
-<h2 class="text-3xl font-bold mb-6">
-    Template Laporan KUBE
-</h2>
+new Chart(document.getElementById('perkembanganChart'), {
+    type: 'line',
+    data: {
+        labels: ['Jan','Feb','Mar','Apr','Mei','Jun'],
+        datasets: [{
+            label: 'Jumlah KUBE',
+            data: [40,55,70,80,90,100]
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+</script>
+<script>
 
-<div class="grid md:grid-cols-2 gap-6">
+// Grafik Kecamatan
+new Chart(document.getElementById('kecamatanChart'), {
+    type: 'bar',
+    data: {
+        labels: [
+            'Kec. A',
+            'Kec. B',
+            'Kec. C',
+            'Kec. D',
+            'Kec. E'
+        ],
+        datasets: [{
+            label: 'Jumlah KUBE',
+            data: [20, 15, 30, 25, 18]
+        }]
+    },
+    options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
 
-    <div class="border rounded-xl p-6">
-        <h3 class="text-xl font-semibold mb-3">
-            Template Laporan Bulanan
-        </h3>
+// Grafik Kategori
+new Chart(document.getElementById('kategoriChart'), {
+    type: 'pie',
+    data: {
+        labels: [
+            'Kuliner',
+            'Pertanian',
+            'Peternakan',
+            'Perdagangan'
+        ],
+        datasets: [{
+            data: [30, 25, 20, 25]
+        }]
+    }
+});
 
-        <p class="text-gray-500 mb-4">
-            Unduh format laporan kegiatan bulanan KUBE.
-        </p>
+// Grafik Status
+new Chart(document.getElementById('statusChart'), {
+    type: 'bar',
+    data: {
+        labels: [
+            'Aktif',
+            'Tidak Aktif'
+        ],
+        datasets: [{
+            label: 'Jumlah',
+            data: [85, 15]
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
 
-        <a href="{{ asset('template/Template_Laporan_Bulanan_KUBE.docx') }}" download
-            class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg">
-            Download Word
-        </a>
-    </div>
-
-    <div class="border rounded-xl p-6">
-        <h3 class="text-xl font-semibold mb-3">
-            Template Laporan Tahunan
-        </h3>
-
-        <p class="text-gray-500 mb-4">
-            Unduh format laporan tahunan KUBE.
-        </p>
-
-        <a href="{{ asset('template/Template_Laporan_Tahunan_KUBE.xlsx') }}" download
-            class="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-lg">
-            Download Excel
-        </a>
-    </div>
-</div>
-</div>
+</script>
 @stop

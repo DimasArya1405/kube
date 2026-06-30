@@ -3,22 +3,24 @@
 namespace App\Http\Controllers;
 use App\Models\Galeri;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class GaleriController extends Controller
 {
     public function index()
-    {
-        $galeri = Galeri::latest()->take(6)->get();
+{
+    $totalGaleri = Galeri::count();
 
-        return view('admin.galeri.index', compact('galeri'));
-    }
+    $galeri = Galeri::latest()->get();
+
+    return view('admin.galeri.index', compact('galeri', 'totalGaleri'));
+}
 
     public function store(Request $request)
     {
         $request->validate([
             'judul' => 'required',
             'gambar' => 'required|image',
-            'tanggal' => 'required',
         ]);
 
         $gambar = time() . '.' . $request->gambar->extension();
@@ -27,9 +29,9 @@ class GaleriController extends Controller
 
         Galeri::create([
             'judul' => $request->judul,
-            'gambar' => $gambar,
-            'tanggal' => $request->tanggal,
             'deskripsi' => $request->deskripsi,
+            'gambar' => $gambar,
+            'tanggal' => now()->format('Y-m-d'),
         ]);
 
         return redirect()->back()->with('success', 'Galeri berhasil ditambahkan');
@@ -49,7 +51,6 @@ class GaleriController extends Controller
         }
 
         $galeri->judul = $request->judul;
-        $galeri->tanggal = $request->tanggal;
         $galeri->deskripsi = $request->deskripsi;
 
         $galeri->save();
