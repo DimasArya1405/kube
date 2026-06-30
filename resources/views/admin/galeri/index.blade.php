@@ -310,15 +310,14 @@ Dashboard / <span class="text-gray-800">Galeri KUBE</span>
             </div>
 
             <div class="mb-3">
+    <label class="text-sm">Tanggal Upload</label>
 
-                <label>Tanggal</label>
-
-                <input type="date"
-                    name="tanggal"
-                    value="{{ $item->tanggal }}"
-                    class="w-full border rounded-lg px-4 py-2">
-
-            </div>
+    <input
+        type="text"
+        value="{{ \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}"
+        class="w-full border rounded-lg px-4 py-2 bg-gray-100"
+        readonly>
+</div>
 
             <div class="mb-3">
 
