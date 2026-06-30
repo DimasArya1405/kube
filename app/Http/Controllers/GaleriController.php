@@ -51,7 +51,6 @@ class GaleriController extends Controller
         }
 
         $galeri->judul = $request->judul;
-        $galeri->tanggal = $request->tanggal;
         $galeri->deskripsi = $request->deskripsi;
 
         $galeri->save();
