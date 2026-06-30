@@ -36,12 +36,13 @@
 {{-- FILTER & SEARCH AREA --}}
 <div class="bg-white mb-6 rounded-lg shadow-sm border p-4">
     <div class="flex flex-col md:flex-row justify-between md:items-end gap-4">
-        <div class="relative w-full md:w-1/3">
+<form action="{{ route('kube.index') }}" method="GET" class="relative w-full md:w-1/3">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </span>
-            <input type="text" class="w-full pl-10 pr-4 py-2.5 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all text-sm placeholder:text-gray-400" placeholder="Cari nama KUBE...">
-        </div>
+            {{-- Tambahkan name="search" dan value supaya teks tidak hilang setelah dicari --}}
+            <input type="text" name="search" value="{{ request('search') }}" class="w-full pl-10 pr-4 py-2.5 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none border transition-all text-sm placeholder:text-gray-400" placeholder="Cari nama KUBE...">
+        </form>
 
         <div class="flex gap-2 w-full md:w-auto">
             <a href="{{ route('kube.export.pdf') }}" class="px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 text-sm transition shadow-sm flex items-center font-bold">
