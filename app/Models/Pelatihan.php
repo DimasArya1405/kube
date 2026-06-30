@@ -41,6 +41,12 @@ class Pelatihan extends Model
         return $this->belongsTo(Mitra::class, 'id_mitra'); 
     }
 
+    public function pendamping()
+    {
+        // Pastikan model Pendamping di-import di atas atau panggil via class
+        return $this->belongsTo(Pendamping::class, 'pendamping_id', 'id'); 
+    }
+
     // Ganti relasi default dengan Accessor untuk mem-parsing ID gabungan
 // Ganti relasi default dengan Accessor untuk mem-parsing ID gabungan
     public function getDaftarPengajarAttribute()
