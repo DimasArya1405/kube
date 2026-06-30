@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kube;
 use App\Models\PencairanBantuan;
 use App\Models\PengajuanKube;
 use Illuminate\Http\Request;
@@ -16,15 +17,14 @@ class PencairanBantuanController extends Controller
             ->whereDoesntHave('pencairanBantuan')
             ->get();
 
-        // Query dasar untuk Tabel Utama
-        $query = PencairanBantuan::with([
+        $pencairanQuery = PencairanBantuan::with([
             'pengajuan_kube.kube',
             'pengajuan_kube.jenisBantuan'
         ]);
 
         // Filter berdasarkan Tahun (diambil dari kolom tanggal_pengajuan di tabel pengajuan_kube)
         if ($request->has('tahun') && $request->tahun != '') {
-            $query->whereHas('pengajuan_kube', function ($q) use ($request) {
+            $pencairanQuery->whereHas('pengajuan_kube', function ($q) use ($request) {
                 $q->whereYear('tanggal_pengajuan', $request->tahun);
             });
         }
@@ -35,12 +35,50 @@ class PencairanBantuanController extends Controller
 
         // Filter berdasarkan Status Pencairan
         if ($request->has('status') && $request->status != '') {
+            $pencairanQuery->where('status_pencairan', $request->status);
+        }
+
+        $pencairan_bantuan = $pencairanQuery->latest()->get();
+        $ringkasan_pencairan = $pencairan_bantuan->groupBy('pengajuan_kube.id_kube');
+
+        $kube_pencairan = Kube::with(['desa', 'clusterUsaha'])
+            ->orderBy('nama_kube')
+            ->get()
+            ->map(function ($kube) use ($ringkasan_pencairan) {
+                $items = $ringkasan_pencairan->get($kube->id_kube, collect());
+
+                $kube->total_pencairan = $items->count();
+                $kube->total_nilai_bantuan = $items->sum(fn ($item) => $item->pengajuan_kube->jumlah_bantuan ?? 0);
+                $kube->pencairan_terakhir = $items->max('created_at');
+
+                return $kube;
+            });
+
+        return view('admin.alur_bantuan.pencairan_bantuan', compact('kube_pencairan', 'pengajuan_bantuan', 'total_menunggu', 'total_cair', 'total_disetujui', 'total_ditolak'));
+    }
+
+    public function detail(Request $request, $id_kube)
+    {
+        $kube = Kube::with(['desa', 'clusterUsaha'])->findOrFail($id_kube);
+
+        $query = PencairanBantuan::with([
+            'pengajuan_kube.kube',
+            'pengajuan_kube.jenisBantuan'
+        ])->whereHas('pengajuan_kube', function ($q) use ($id_kube, $request) {
+            $q->where('id_kube', $id_kube);
+
+            if ($request->has('tahun') && $request->tahun != '') {
+                $q->whereYear('tanggal_pengajuan', $request->tahun);
+            }
+        });
+
+        if ($request->has('status') && $request->status != '') {
             $query->where('status_pencairan', $request->status);
         }
 
         $pencairan_bantuan = $query->latest()->get();
 
-        return view('admin.alur_bantuan.pencairan_bantuan', compact('pencairan_bantuan', 'pengajuan_bantuan', 'total_menunggu', 'total_cair', 'total_disetujui', 'total_ditolak'));
+        return view('admin.alur_bantuan.pencairan_bantuan_detail', compact('kube', 'pencairan_bantuan'));
     }
 
     public function tambah(Request $request, $id)

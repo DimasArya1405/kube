@@ -1,10 +1,10 @@
-@extends('kepala_dinas.layout')
+@extends('admin.layout')
 
 @section('title', 'Detail Pengajuan Bantuan KUBE')
 
 @section('breadcrumb')
 Dashboard /
-<a href="{{ route('kadis.persetujuan_bantuan_kube.index') }}" class="text-blue-600 hover:underline">
+<a href="{{ route('admin.persetujuan_bantuan_kube.index') }}" class="text-blue-600 hover:underline">
     Pengajuan Bantuan KUBE
 </a> /
 <span class="text-gray-800">Detail</span>
@@ -19,13 +19,13 @@ Dashboard /
 
     <div class="flex gap-2">
         @if ($pengajuan_kube->whereIn('status_pengajuan', ['disetujui', 'cair'])->count() > 0)
-        <a href="{{ route('kadis.persetujuan_bantuan_kube.unduh_berita_acara_semua', $pengajuan->id_kube) }}"
+        <a href="{{ route('admin.persetujuan_bantuan_kube.unduh_berita_acara_semua', $pengajuan->id_kube) }}"
             class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
             Unduh BA Semua Disetujui
         </a>
         @endif
 
-        <a href="{{ route('kadis.persetujuan_bantuan_kube.index') }}"
+        <a href="{{ route('admin.persetujuan_bantuan_kube.index') }}"
             class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
             Kembali
         </a>
@@ -106,7 +106,7 @@ Dashboard /
 <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
     <div class="p-6 border-b">
         <h3 class="text-lg font-bold text-gray-800">Daftar Jenis Bantuan Diajukan</h3>
-        <p class="text-sm text-gray-500 mt-1">Setujui atau tolak setiap jenis bantuan secara terpisah.</p>
+        <p class="text-sm text-gray-500 mt-1">Pantau status setiap jenis bantuan dan unduh berita acara jika sudah disetujui.</p>
     </div>
 
     <div class="relative overflow-x-auto">
@@ -157,107 +157,22 @@ Dashboard /
                     </td>
                     <td class="px-6 py-4">
                         <div class="flex gap-2 items-center flex-wrap">
-                            @if (in_array($row->status_pengajuan, ['diajukan', 'menunggu']))
-                            <button type="button"
-                                onclick="document.getElementById('modal-setujui-{{ $row->id_pengajuan_kube }}').classList.remove('hidden')"
-                                class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
-                                Setujui
-                            </button>
-
-                            <button type="button"
-                                onclick="document.getElementById('modal-tolak-{{ $row->id_pengajuan_kube }}').classList.remove('hidden')"
-                                class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
-                                Tolak
-                            </button>
-                            @elseif(in_array($row->status_pengajuan, ['disetujui','cair']))
-                            <a href="{{ route('kadis.persetujuan_bantuan_kube.unduh_berita_acara', $row->id_pengajuan_kube) }}"
+                            @if(in_array($row->status_pengajuan, ['disetujui','cair']))
+                            <a href="{{ route('admin.persetujuan_bantuan_kube.unduh_berita_acara', $row->id_pengajuan_kube) }}"
                                 class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">
                                 Unduh Berita Acara
                             </a>
+                            @elseif(in_array($row->status_pengajuan, ['diajukan', 'menunggu']))
+                            <span class="text-gray-500">Menunggu keputusan Kepala Dinas</span>
                             @else
                             <span class="text-gray-500 italic">Sudah diproses</span>
                             @endif
                         </div>
                     </td>
                 </tr>
-
                 @endforeach
             </tbody>
         </table>
     </div>
 </div>
-
-@foreach ($pengajuan_kube as $row)
-<div id="modal-setujui-{{ $row->id_pengajuan_kube }}"
-    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-2">Setujui Pengajuan</h3>
-        <p class="text-sm text-gray-600 mb-4">
-            Setujui pengajuan bantuan
-            <span class="font-semibold">{{ $row->jenisBantuan->jenis_bantuan ?? '-' }}</span>
-            untuk <span class="font-semibold">{{ $row->kube->nama_kube ?? '-' }}</span>?
-        </p>
-
-        <form action="{{ route('kadis.persetujuan_bantuan_kube.setujui', $row->id_pengajuan_kube) }}" method="POST">
-            @csrf
-            @method('PUT')
-
-            <div class="flex justify-end gap-2">
-                <button type="button"
-                    onclick="document.getElementById('modal-setujui-{{ $row->id_pengajuan_kube }}').classList.add('hidden')"
-                    class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">
-                    Batal
-                </button>
-
-                <button type="submit"
-                    class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-                    Ya, Setujui
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<div id="modal-tolak-{{ $row->id_pengajuan_kube }}"
-    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Tolak Pengajuan</h3>
-        <p class="text-sm text-gray-600 mb-4">
-            Tolak pengajuan bantuan
-            <span class="font-semibold">{{ $row->jenisBantuan->jenis_bantuan ?? '-' }}</span>
-            untuk <span class="font-semibold">{{ $row->kube->nama_kube ?? '-' }}</span>?
-        </p>
-
-        <form action="{{ route('kadis.persetujuan_bantuan_kube.tolak', $row->id_pengajuan_kube) }}" method="POST">
-            @csrf
-            @method('PUT')
-
-            <div class="mb-4">
-                <label for="keterangan-{{ $row->id_pengajuan_kube }}" class="block text-sm font-medium text-gray-700 mb-1">
-                    Keterangan <span class="text-gray-400">(opsional)</span>
-                </label>
-                <textarea
-                    name="keterangan"
-                    id="keterangan-{{ $row->id_pengajuan_kube }}"
-                    rows="4"
-                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-                    placeholder="Masukkan alasan penolakan jika perlu..."></textarea>
-            </div>
-
-            <div class="flex justify-end gap-2">
-                <button type="button"
-                    onclick="document.getElementById('modal-tolak-{{ $row->id_pengajuan_kube }}').classList.add('hidden')"
-                    class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">
-                    Batal
-                </button>
-
-                <button type="submit"
-                    class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
-                    Tolak
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-@endforeach
 @stop

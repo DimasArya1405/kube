@@ -26,7 +26,7 @@ Dashboard / <span class="text-gray-800">Pencairan Bantuan</span>
     <div class="bg-white p-4 rounded-lg shadow border">
         <p class="text-sm text-gray-500">Sudah cair</p>
         <h3 class="text-2xl font-bold text-gray-800">
-            {{ $total_cair ?? $pencairan_bantuan->count() }}
+            {{ $total_cair ?? 0 }}
         </h3>
     </div>
 
@@ -118,54 +118,54 @@ Dashboard / <span class="text-gray-800">Pencairan Bantuan</span>
                 <tr>
                     <th class="px-6 py-3">No</th>
                     <th class="px-6 py-3">Nama Kube</th>
-                    <th class="px-6 py-3">Jenis Bantuan</th>
-                    <th class="px-6 py-3">Tahap</th>
-                    <th class="px-6 py-3">Nilai Bantuan (Rp)</th>
-                    <th class="px-6 py-3">Tanggal Pengajuan</th>
-                    <th class="px-6 py-3">Status</th>
+                    <th class="px-6 py-3">Desa / Kelurahan</th>
+                    <th class="px-6 py-3">Cluster Usaha</th>
+                    <th class="px-6 py-3">Total Pencairan</th>
+                    <th class="px-6 py-3">Total Nilai Bantuan (Rp)</th>
+                    <th class="px-6 py-3">Pencairan Terakhir</th>
+                    <th class="px-6 py-3">Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse ($pencairan_bantuan as $i => $row)
+                @forelse ($kube_pencairan as $i => $row)
                 <tr class="border-b hover:bg-gray-50 transition-colors">
                     <td class="px-6 py-4">{{ $i + 1 }}</td>
                     
                     <td class="px-6 py-4 font-medium text-gray-900">
-                        {{ $row->pengajuan_kube?->kube?->nama_kube ?? '-' }}
+                        {{ $row->nama_kube ?? '-' }}
                     </td>
-                    
+
                     <td class="px-6 py-4">
-                        {{ $row->pengajuan_kube?->jenisBantuan->jenis_bantuan ?? '-' }}
+                        {{ $row->desa->nama_desa_kelurahan ?? '-' }}
                     </td>
-                    
-                    <td class="px-6 py-4 font-mono text-gray-700">
-                        {{ $row->tahap ?? '-' }}
+
+                    <td class="px-6 py-4">
+                        {{ $row->clusterUsaha->nama_cluster ?? '-' }}
                     </td>
-                    
+
+                    <td class="px-6 py-4 font-semibold text-gray-900">
+                        {{ $row->total_pencairan }} pencairan
+                    </td>
+
                     <td class="px-6 py-4 font-mono text-gray-900">
-                        {{ $row->pengajuan_kube?->jumlah_bantuan ? number_format($row->pengajuan_kube->jumlah_bantuan, 0, ',', '.') : '-' }}
+                        {{ number_format($row->total_nilai_bantuan, 0, ',', '.') }}
                     </td>
                     
                     <td class="px-6 py-4 whitespace-nowrap">
-                        {{ $row->pengajuan_kube?->tanggal_pengajuan ? \Carbon\Carbon::parse($row->pengajuan_kube->tanggal_pengajuan)->locale('id')->translatedFormat('d F Y') : '-' }}
+                        {{ $row->pencairan_terakhir ? \Carbon\Carbon::parse($row->pencairan_terakhir)->locale('id')->translatedFormat('d F Y') : '-' }}
                     </td>
-                    
+
                     <td class="px-6 py-4">
-                        @if ($row->status_pencairan == 'menunggu')
-                            <span class="px-2 py-1 rounded text-white bg-yellow-500">Menunggu</span>
-                        @elseif ($row->status_pencairan == 'disetujui')
-                            <span class="px-2 py-1 rounded text-white bg-blue-500">Disetujui</span>
-                        @elseif ($row->status_pencairan == 'ditolak')
-                            <span class="px-2 py-1 rounded text-white bg-red-500">Ditolak</span>
-                        @elseif ($row->status_pencairan == 'cair')
-                            <span class="px-2 py-1 rounded text-white bg-emerald-600">Cair</span>
-                        @endif
+                        <a href="{{ route('admin.pencairan_bantuan.detail', ['id_kube' => $row->id_kube, 'tahun' => request('tahun'), 'status' => request('status')]) }}"
+                            class="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600">
+                            Detail
+                        </a>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" class="px-6 py-10 text-center text-gray-500 italic">
-                        Belum ada data pencairan bantuan.
+                    <td colspan="8" class="px-6 py-10 text-center text-gray-500 italic">
+                        Belum ada data KUBE.
                     </td>
                 </tr>
                 @endforelse

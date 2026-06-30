@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Berita Acara KUBE</title>
+    <title>Berita Acara Semua Bantuan KUBE</title>
     <style>
         body {
             font-family: DejaVu Sans, sans-serif;
@@ -16,24 +16,8 @@
             text-align: center;
         }
 
-        .text-right {
-            text-align: right;
-        }
-
-        .mb-1 {
-            margin-bottom: 8px;
-        }
-
-        .mb-2 {
-            margin-bottom: 12px;
-        }
-
         .mb-3 {
             margin-bottom: 18px;
-        }
-
-        .mb-4 {
-            margin-bottom: 24px;
         }
 
         .title {
@@ -57,8 +41,12 @@
         .table th,
         .table td {
             border: 1px solid #000;
-            padding: 8px;
+            padding: 7px;
             vertical-align: top;
+        }
+
+        .table th {
+            background: #f2f2f2;
         }
 
         .no-border td {
@@ -75,15 +63,10 @@
             width: 50%;
             vertical-align: top;
         }
-
-        .ttd-space {
-            height: 80px;
-        }
     </style>
 </head>
 
 <body>
-
     <div class="text-center mb-3">
         <div class="title">Berita Acara Persetujuan Bantuan KUBE</div>
         <div class="subtitle">Dinas Sosial Kabupaten Cilacap</div>
@@ -98,39 +81,53 @@
 
     <table class="table">
         <tr>
-            <th width="35%">Nama KUBE</th>
-            <td>{{ $pengajuan->kube->nama_kube ?? '-' }}</td>
+            <th width="30%">Nama KUBE</th>
+            <td>{{ $kube->nama_kube ?? '-' }}</td>
         </tr>
         <tr>
-            <th>Jenis Bantuan</th>
-            <td>{{ $pengajuan->jenisBantuan->jenis_bantuan ?? '-' }}</td>
+            <th>Jumlah Jenis Bantuan Disetujui</th>
+            <td>{{ $pengajuan_kube->count() }} jenis bantuan</td>
         </tr>
         <tr>
-            <th>Jumlah Bantuan</th>
-            <td>{{ number_format($pengajuan->jumlah_bantuan ?? 0, 0, ',', '.') }}</td>
+            <th>Total Bantuan</th>
+            <td>{{ number_format($pengajuan_kube->sum('jumlah_bantuan'), 0, ',', '.') }}</td>
         </tr>
-        <tr>
-            <th>Tanggal Pengajuan</th>
-            <td>{{ $tanggalPengajuan ? $tanggalPengajuan->translatedFormat('d F Y') : '-' }}</td>
-        </tr>
-        <tr>
-            <th>Status Pengajuan</th>
-            <td>{{ ucfirst($pengajuan->status_pengajuan ?? '-') }}</td>
-        </tr>
-        <tr>
-            <th>Disetujui Oleh</th>
-            <td>{{ $namaPenandatangan }}</td>
-        </tr>
-        <tr>
-            <th>Jabatan</th>
-            <td>{{ $jabatanPenandatangan }}</td>
-        </tr>
+    </table>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th width="6%">No</th>
+                <th>Jenis Bantuan</th>
+                <th width="20%">Jumlah Bantuan</th>
+                <th>Tujuan Pengajuan</th>
+                <th width="18%">Tanggal Pengajuan</th>
+                <th width="14%">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($pengajuan_kube as $i => $row)
+            <tr>
+                <td class="text-center">{{ $i + 1 }}</td>
+                <td>{{ $row->jenisBantuan->jenis_bantuan ?? '-' }}</td>
+                <td>{{ number_format($row->jumlah_bantuan ?? 0, 0, ',', '.') }}</td>
+                <td>{{ $row->tujuan_pengajuan ?? '-' }}</td>
+                <td>
+                    {{ $row->tanggal_pengajuan
+                        ? \Carbon\Carbon::parse($row->tanggal_pengajuan)->locale('id')->translatedFormat('d F Y')
+                        : '-' }}
+                </td>
+                <td>{{ ucfirst($row->status_pengajuan ?? '-') }}</td>
+            </tr>
+            @endforeach
+        </tbody>
     </table>
 
     <div class="mb-3" style="text-align: justify;">
         Berdasarkan hasil verifikasi dan pemeriksaan administrasi terhadap pengajuan bantuan KUBE tersebut,
-        maka pengajuan ini dinyatakan <strong>{{ strtoupper($pengajuan->status_pengajuan) }}</strong>
-        untuk ditindaklanjuti sesuai dengan ketentuan yang berlaku pada Dinas Sosial Kabupaten Cilacap.
+        maka seluruh jenis bantuan yang tercantum dalam tabel di atas dinyatakan
+        <strong>DISETUJUI</strong> untuk ditindaklanjuti sesuai dengan ketentuan yang berlaku pada
+        Dinas Sosial Kabupaten Cilacap.
     </div>
 
     <div class="mb-3" style="text-align: justify;">
@@ -145,21 +142,12 @@
                 Menyetujui,<br>
                 {{ $jabatanPenandatangan }}
 
-                <div style="margin-top: 15px;">
-                    
-                </div>
-
-                <div style="margin-top: 80px;">
-                    <strong><u>{{ $namaPenandatangan }}</u></strong>
+                <div style="margin-top: 95px;">
+                    <strong><u>......................................</u></strong>
                 </div>
             </td>
         </tr>
-        <tr>
-            <td></td>
-            <td class="ttd-space"></td>
-        </tr>
     </table>
-
 </body>
 
 </html>

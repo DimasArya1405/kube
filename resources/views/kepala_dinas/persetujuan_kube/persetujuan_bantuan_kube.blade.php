@@ -118,11 +118,10 @@ Dashboard / <span class="text-gray-800">Pengajuan Bantuan KUBE</span>
                 <tr>
                     <th class="px-6 py-3">No</th>
                     <th class="px-6 py-3">Nama Kube</th>
-                    <th class="px-6 py-3">Jenis Bantuan</th>
-                    <th class="px-6 py-3">Jumlah Bantuan</th>
-                    <th class="px-6 py-3">Status Pengajuan</th>
-                    <th class="px-6 py-3">Disetujui/Ditolak Oleh</th>
-                    <th class="px-6 py-3">Tanggal Pengajuan</th>
+                    <th class="px-6 py-3">Jumlah Jenis Pengajuan</th>
+                    <!-- <th class="px-6 py-3">Total Bantuan</th>
+                    <th class="px-6 py-3">Status Ringkasan</th> -->
+                    <th class="px-6 py-3">Tanggal Pengajuan Terakhir</th>
                     <th class="px-6 py-3">Aksi</th>
                 </tr>
             </thead>
@@ -136,140 +135,41 @@ Dashboard / <span class="text-gray-800">Pengajuan Bantuan KUBE</span>
                     </td>
 
                     <td class="px-6 py-4">
-                        {{ $row->jenisBantuan->jenis_bantuan ?? '-' }}
+                        {{ $row->jumlah_pengajuan }} jenis bantuan
+                    </td>
+
+                    <!-- <td class="px-6 py-4">
+                        {{ number_format($row->total_jumlah_bantuan, 0, ',', '.') }}
                     </td>
 
                     <td class="px-6 py-4">
-                        {{ number_format($row->jumlah_bantuan, 0, ',', '.') }}
-                    </td>
-
-                    <td class="px-6 py-4">
-                        @if ($row->status_pengajuan == 'diajukan')
-                        <span class="px-2 py-1 rounded text-white bg-yellow-500">Diajukan</span>
-                        @elseif ($row->status_pengajuan == 'menunggu')
+                        @if ($row->status_ringkasan == 'menunggu')
                         <span class="px-2 py-1 rounded text-white bg-blue-500">Menunggu</span>
-                        @elseif ($row->status_pengajuan == 'disetujui')
+                        @elseif ($row->status_ringkasan == 'disetujui')
                         <span class="px-2 py-1 rounded text-white bg-green-500">Disetujui</span>
-                        @elseif ($row->status_pengajuan == 'ditolak')
+                        @elseif ($row->status_ringkasan == 'ditolak')
                         <span class="px-2 py-1 rounded text-white bg-red-500">Ditolak</span>
-                        @elseif ($row->status_pengajuan == 'cair')
+                        @elseif ($row->status_ringkasan == 'cair')
                         <span class="px-2 py-1 rounded text-white bg-emerald-600">Cair</span>
+                        @else
+                        <span class="px-2 py-1 rounded text-white bg-gray-500">Diproses</span>
                         @endif
-                    </td>
+                    </td> -->
 
                     <td class="px-6 py-4">
-                        {{ $row->penyetuju->nama ?? '-' }}
-                    </td>
-
-                    <td class="px-6 py-4">
-                        {{ \Carbon\Carbon::parse($row->tanggal_pengajuan)->locale('id')->translatedFormat('d F Y') }}
+                        {{ \Carbon\Carbon::parse($row->tanggal_pengajuan_terakhir)->locale('id')->translatedFormat('d F Y') }}
                     </td>
 
                     <td class="px-6 py-4">
                         <div class="flex gap-2 items-center flex-wrap">
-                            <a href="{{ route('kadis.persetujuan_bantuan_kube.detail', $row->id_pengajuan_kube) }}"
+                            <a href="{{ route('kadis.persetujuan_bantuan_kube.detail', $row->id_kube) }}"
                                 class="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600">
                                 Detail
                             </a>
-
-                            @if (in_array($row->status_pengajuan, ['diajukan', 'menunggu']))
-                            <button type="button"
-                                onclick="document.getElementById('modal-setujui-{{ $row->id_pengajuan_kube }}').classList.remove('hidden')"
-                                class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
-                                Setujui
-                            </button>
-
-                            <button type="button"
-                                onclick="document.getElementById('modal-tolak-{{ $row->id_pengajuan_kube }}').classList.remove('hidden')"
-                                class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
-                                Tolak
-                            </button>
-                            @else
-                            @if(in_array($row->status_pengajuan, ['disetujui','cair']))
-                            <a href="{{ route('kadis.persetujuan_bantuan_kube.unduh_berita_acara', $row->id_pengajuan_kube) }}"
-                                class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-1">
-                                <i class="bi bi-download"></i>
-                                Unduh Berita Acara
-                            </a>
-                            @else
-                            <span class="text-gray-500 italic">Sudah diproses</span>
-                            @endif
-                            @endif
+                            <!-- <span class="text-gray-500">Proses per jenis ada di detail</span> -->
                         </div>
                     </td>
                 </tr>
-
-                {{-- Modal Setujui --}}
-                <div id="modal-setujui-{{ $row->id_pengajuan_kube }}"
-                    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Setujui Pengajuan</h3>
-                        <p class="text-sm text-gray-600 mb-4">
-                            Apakah kamu yakin ingin menyetujui pengajuan bantuan untuk
-                            <span class="font-semibold">{{ $row->kube->nama_kube ?? '-' }}</span>?
-                        </p>
-
-                        <form action="{{ route('kadis.persetujuan_bantuan_kube.setujui', $row->id_pengajuan_kube) }}" method="POST">
-                            @csrf
-                            @method('PUT')
-
-                            <div class="flex justify-end gap-2">
-                                <button type="button"
-                                    onclick="document.getElementById('modal-setujui-{{ $row->id_pengajuan_kube }}').classList.add('hidden')"
-                                    class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">
-                                    Batal
-                                </button>
-
-                                <button type="submit"
-                                    class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-                                    Ya, Setujui
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                {{-- Modal Tolak --}}
-                <div id="modal-tolak-{{ $row->id_pengajuan_kube }}"
-                    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Tolak Pengajuan</h3>
-                        <p class="text-sm text-gray-600 mb-4">
-                            Apakah kamu yakin ingin menolak pengajuan bantuan untuk
-                            <span class="font-semibold">{{ $row->kube->nama_kube ?? '-' }}</span>?
-                        </p>
-
-                        <form action="{{ route('kadis.persetujuan_bantuan_kube.tolak', $row->id_pengajuan_kube) }}" method="POST">
-                            @csrf
-                            @method('PUT')
-
-                            <div class="mb-4">
-                                <label for="keterangan-{{ $row->id_pengajuan_kube }}" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Keterangan <span class="text-gray-400">(opsional)</span>
-                                </label>
-                                <textarea
-                                    name="keterangan"
-                                    id="keterangan-{{ $row->id_pengajuan_kube }}"
-                                    rows="4"
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-                                    placeholder="Masukkan alasan penolakan jika perlu..."></textarea>
-                            </div>
-
-                            <div class="flex justify-end gap-2">
-                                <button type="button"
-                                    onclick="document.getElementById('modal-tolak-{{ $row->id_pengajuan_kube }}').classList.add('hidden')"
-                                    class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">
-                                    Batal
-                                </button>
-
-                                <button type="submit"
-                                    class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
-                                    Tolak
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
                 @empty
                 <tr>
                     <td colspan="7" class="px-6 py-4 text-center text-gray-500">

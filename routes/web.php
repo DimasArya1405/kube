@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnggotaKubeController;
+use App\Http\Controllers\AdminPengajuanBantuanBaruController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
@@ -70,6 +71,7 @@ Route::middleware('auth')->group(function () {
 
     // KEPALA DINAS
     Route::get('/kadis/pencairan_bantuan/index', [KadisPencairanBantuanController::class, 'index'])->name('kadis.pencairan_bantuan.index');
+    Route::get('/kadis/pencairan_bantuan/detail/{id_kube}', [KadisPencairanBantuanController::class, 'detail'])->name('kadis.pencairan_bantuan.detail');
     Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
     Route::get('/dashboard/ketua', [DashboardController::class, 'ketua'])->name('ketua_kube.dashboard');
     Route::get('/dashboard/pendamping', [DashboardController::class, 'pendamping'])->name('pendamping.dashboard');
@@ -187,6 +189,7 @@ Route::get('/kepala_dinas/dashboard', [KepalaDinasController::class, 'dashboard'
     // PENCAIRAN BANTUAN
     Route::get('/admin/pencairan_bantuan', [PencairanBantuanController::class, 'index'])->name('admin.pencairan_bantuan.index');
     Route::post('/admin/pencairan_bantuan/tambah/{id}', [PencairanBantuanController::class, 'tambah'])->name('admin.pencairan_bantuan.tambah');
+    Route::get('/admin/pencairan_bantuan/detail/{id_kube}', [PencairanBantuanController::class, 'detail'])->name('admin.pencairan_bantuan.detail');
     Route::get('/admin/pencairan_bantuan/accept/{id}', [PencairanBantuanController::class, 'accept'])->name('admin.pencairan_bantuan.accept');
     Route::get('/admin/pencairan_bantuan/reject/{id}', [PencairanBantuanController::class, 'reject'])->name('admin.pencairan_bantuan.reject');
     Route::get('/admin/jenis_bantuan', [JenisBantuanController::class, 'index'])->name('admin.alur_bantuan.jenis_bantuan.index');
@@ -328,12 +331,17 @@ Route::prefix('admin/prediksi-kube')->name('admin.prediksi-kube.')->group(functi
     Route::post('/pengajuan-kube/store', [PengajuanKubeController::class, 'store'])->name('pengajuan.store');
     Route::get('/pengajuan-kube', [PengajuanKubeController::class, 'index'])->name('pengajuan.index');
 
+    Route::get('/admin/pengajuan-bantuan-baru', [AdminPengajuanBantuanBaruController::class, 'index'])->name('admin.pengajuan_bantuan_baru.index');
+    Route::get('/admin/pengajuan-bantuan-baru/create', [AdminPengajuanBantuanBaruController::class, 'create'])->name('admin.pengajuan_bantuan_baru.create');
+    Route::post('/admin/pengajuan-bantuan-baru/store', [AdminPengajuanBantuanBaruController::class, 'store'])->name('admin.pengajuan_bantuan_baru.store');
+
     // KELOLA DATA PERSETUJUAN KUBE (ADMIN)
     Route::get('/admin/persetujuan-bantuan-kube', [PersetujuanPengajuanKubeController::class, 'index'])->name('admin.persetujuan_bantuan_kube.index');
     Route::put('/admin/persetujuan-bantuan-kube/setujui/{id}', [PersetujuanPengajuanKubeController::class, 'setujui'])->name('admin.persetujuan_bantuan_kube.setujui');
     Route::put('/admin/persetujuan-bantuan-kube/tolak/{id}', [PersetujuanPengajuanKubeController::class, 'tolak'])->name('admin.persetujuan_bantuan_kube.tolak');
     Route::get('/admin/persetujuan-bantuan-kube/{id}/detail', [PersetujuanPengajuanKubeController::class, 'detail'])->name('admin.persetujuan_bantuan_kube.detail');
     Route::get('/admin/persetujuan-bantuan-kube/{id}/unduh-berita-acara', [PersetujuanPengajuanKubeController::class, 'unduhBeritaAcara'])->name('admin.persetujuan_bantuan_kube.unduh_berita_acara');
+    Route::get('/admin/persetujuan-bantuan-kube/{id_kube}/unduh-berita-acara-semua', [PersetujuanPengajuanKubeController::class, 'unduhBeritaAcaraSemua'])->name('admin.persetujuan_bantuan_kube.unduh_berita_acara_semua');
 
     // KELOLA DATA PERSETUJUAN KUBE (KADIS)
     Route::get('/kepala-dinas/persetujuan-bantuan-kube', [PersetujuanBantuanKubeKadisController::class, 'index'])->name('kadis.persetujuan_bantuan_kube.index');
@@ -341,6 +349,7 @@ Route::prefix('admin/prediksi-kube')->name('admin.prediksi-kube.')->group(functi
     Route::put('/kepala-dinas/persetujuan-bantuan-kube/tolak/{id}', [PersetujuanBantuanKubeKadisController::class, 'tolak'])->name('kadis.persetujuan_bantuan_kube.tolak');
     Route::get('/kepala-dinas/persetujuan-bantuan-kube/{id}/detail', [PersetujuanBantuanKubeKadisController::class, 'detail'])->name('kadis.persetujuan_bantuan_kube.detail');
     Route::get('/kepala-dinas/persetujuan-bantuan-kube/{id}/unduh-berita-acara', [PersetujuanBantuanKubeKadisController::class, 'unduhBeritaAcara'])->name('kadis.persetujuan_bantuan_kube.unduh_berita_acara');
+    Route::get('/kepala-dinas/persetujuan-bantuan-kube/{id_kube}/unduh-berita-acara-semua', [PersetujuanBantuanKubeKadisController::class, 'unduhBeritaAcaraSemua'])->name('kadis.persetujuan_bantuan_kube.unduh_berita_acara_semua');
 
     // RANKING KUBE
     Route::get('/ranking-kube', [RankingKubeController::class, 'index'])->name('ranking.kube');
