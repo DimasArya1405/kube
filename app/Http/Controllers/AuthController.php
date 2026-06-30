@@ -31,8 +31,8 @@ class AuthController extends Controller
             // ================= CEK STATUS NONAKTIF =================
             if ($user->status == 'nonaktif') {
                 Auth::logout(); 
-            return back()->with('error', 'Akun Anda dinonaktifkan. Silakan hubungi admin melalui 
-            <a href="https://wa.me/628123456789" target="_blank" class="text-green-600 hover:text-green-800 font-bold underline inline-flex items-center gap-1">WhatsApp Resmi<i data-lucide="external-link" class="w-3.5 h-3.5 inline"></i></a>');            
+            return back()->with('error', 'Akun Anda belum diaktifkan. Silakan hubungi admin melalui 
+            <a href="https://wa.me/628123456789" target="_blank" class="text-green-600 hover:text-green-800 font-bold underline inline-flex items-center gap-1">WhatsApp<i data-lucide="external-link" class="w-3.5 h-3.5 inline"></i></a>');            
             }
             // =======================================================
             $role = $user->role;

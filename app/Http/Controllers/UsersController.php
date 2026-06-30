@@ -7,6 +7,8 @@ use App\Models\Kecamatan;
 use App\Models\DesaKelurahan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail; 
+use App\Mail\AkunDiaktifkanMail;
 
 class UsersController extends Controller
 {
@@ -141,6 +143,9 @@ public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
         $user->update(['status' => 'aktif']);
+        if ($user->email) {
+            Mail::to($user->email)->send(new AkunDiaktifkanMail($user));
+        }
         return redirect()->back()->with('success', 'Akun ' . $user->nama . ' telah berhasil diaktifkan!');
     }
 }
