@@ -108,4 +108,16 @@
             <a href="{{ route('rekap_kube.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Rekap KUBE (Fia)</a>
         </div>
     </div>
+    <div class="relative">
+    <a href="{{ route('template-laporan.index') }}"
+       class="w-full flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 rounded-xl transition-all text-indigo-100 hover:text-white">
+
+        <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
+
+        <span class="font-medium text-sm">
+            Template Laporan
+        </span>
+
+    </a>
+</div>
 </nav>
