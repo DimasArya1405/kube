@@ -15,7 +15,7 @@
         /* HEADER */
         .header {
             width: 100%;
-            border-bottom: 3px solid #4f46e5;
+            border-bottom: 3px solid #000;
             padding-bottom: 10px;
             margin-bottom: 15px;
         }
@@ -35,7 +35,7 @@
         .title-header h1 {
             margin: 0;
             font-size: 18px;
-            color: #4f46e5;
+            color: #000;
         }
 
         .title-header p {
@@ -52,46 +52,11 @@
 
         /* FILTER */
         .filter-box {
-            border: 1px solid #ddd;
-            border-left: 4px solid #4f46e5;
+            border: 1px solid #000;
+            border-left: 4px solid #000;
             padding: 10px;
             margin-bottom: 15px;
             background: #f9fafb;
-        }
-
-        /* CARD TABLE */
-        .card-table {
-            width: 100%;
-            margin-bottom: 15px;
-            border-collapse: collapse;
-        }
-
-        .card-table td {
-            width: 20%;
-            padding: 5px;
-        }
-
-        .card {
-            border-radius: 6px;
-            padding: 10px;
-            text-align: center;
-            color: white;
-        }
-
-        .bg1 { background: #06b6d4; } /* cyan */
-        .bg2 { background: #22c55e; } /* green */
-        .bg3 { background: #ef4444; } /* red */
-        .bg4 { background: #3b82f6; } /* blue */
-        .bg5 { background: #8b5cf6; } /* purple */
-
-        .card-title {
-            font-size: 10px;
-        }
-
-        .card-value {
-            font-size: 14px;
-            font-weight: bold;
-            margin-top: 4px;
         }
 
         /* TABLE */
@@ -102,14 +67,14 @@
         }
 
         table.data th {
-            background: #4f46e5;
+            background: #000;
             color: white;
             font-size: 11px;
             padding: 7px;
         }
 
         table.data td {
-            border: 1px solid #ddd;
+            border: 1px solid #000;
             padding: 6px;
             font-size: 11px;
         }
@@ -126,11 +91,11 @@
             font-weight: bold;
         }
 
-        .aktif { background: #d1fae5; color: #065f46; }
+        .aktif    { background: #d1fae5; color: #065f46; }
         .nonaktif { background: #fee2e2; color: #7f1d1d; }
-        .naik { background: #d1fae5; color: #065f46; }
-        .turun { background: #fee2e2; color: #7f1d1d; }
-        .tetap { background: #e5e7eb; color: #374151; }
+        .naik     { background: #d1fae5; color: #065f46; }
+        .turun    { background: #fee2e2; color: #7f1d1d; }
+        .tetap    { background: #e5e7eb; color: #374151; }
 
         /* FOOTER */
         .footer {
@@ -144,23 +109,7 @@
 <body>
 
 <!-- HEADER -->
-<div class="header">
-    <table class="header-table">
-        <tr>
-            <td width="20%">
-                <!-- GANTI LOGO -->
-                <img src="{{ public_path('logo.png') }}" class="logo">
-            </td>
 
-            <td class="title-header">
-                <h1>Laporan Data Kube PerKecamatan</h1>
-                <p>{{ date('d F Y') }}</p>
-            </td>
-
-            <td width="20%"></td>
-        </tr>
-    </table>
-</div>
 
 <div class="title">
     DATA KUBE BERDASARKAN PENGAJUAN YANG DISETUJUI
@@ -172,50 +121,6 @@
     Tahun : {{ $filterTahun }} <br>
     Cluster : {{ $filterCluster }}
 </div>
-
-<!-- CARD (FIX SEJAJAR 🔥) -->
-<table class="card-table">
-    <tr>
-        <td>
-            <div class="card bg1">
-                <div class="card-title">TOTAL KUBE</div>
-                <div class="card-value">{{ $totalKube }}</div>
-            </div>
-        </td>
-
-        <td>
-            <div class="card bg2">
-                <div class="card-title">KUBE AKTIF</div>
-                <div class="card-value">{{ $kubeAktif }}</div>
-            </div>
-        </td>
-
-        <td>
-            <div class="card bg3">
-                <div class="card-title">KUBE NONAKTIF</div>
-                <div class="card-value">{{ $kubeNonaktif }}</div>
-            </div>
-        </td>
-
-        <td>
-            <div class="card bg4">
-                <div class="card-title">TOTAL OMSET</div>
-                <div class="card-value">
-                    Rp {{ number_format($totalOmset,0,',','.') }}
-                </div>
-            </div>
-        </td>
-
-        <td>
-            <div class="card bg5">
-                <div class="card-title">TOTAL LABA</div>
-                <div class="card-value">
-                    Rp {{ number_format($totalLaba,0,',','.') }}
-                </div>
-            </div>
-        </td>
-    </tr>
-</table>
 
 <!-- TABLE -->
 <table class="data">
@@ -252,11 +157,11 @@
             </td>
 
             <td align="right">
-                Rp {{ number_format($d->total_omset,0,',','.') }}
+                Rp {{ number_format($d->total_omset, 0, ',', '.') }}
             </td>
 
             <td align="center">
-                @if($d->status == 'aktif')
+                @if($d->status == 'Aktif')
                     <span class="badge aktif">Aktif</span>
                 @else
                     <span class="badge nonaktif">Tidak Aktif</span>

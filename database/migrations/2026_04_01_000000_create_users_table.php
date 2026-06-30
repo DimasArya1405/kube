@@ -14,53 +14,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            // Primary Key
             $table->id('id_user');
-
-            // Role
-            $table->enum('role', [
-                'admin',
-                'ketua_kube',
-                'pendamping',
-                'koordinator',
-                'kepala_dinas'
-            ]);
-
-            // Data user
+            $table->enum('role', [ 'admin', 'ketua_kube', 'pendamping', 'koordinator', 'kepala_dinas'])->nullable();
             $table->string('nama', 100);
             $table->string('email', 100);
             $table->string('password', 100);
-
-            // Status
             $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
-
-            // Kontak & alamat
             $table->string('no_hp', 15)->nullable();
             $table->text('alamat')->nullable();
-
-            // Relasi wilayah
             $table->unsignedBigInteger('id_kecamatan');
             $table->unsignedBigInteger('id_desa_kelurahan');
-
-            // Identitas
             $table->string('nik', 30)->nullable();
-
-            // Timestamp
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
-
-            // Foreign Key
-            $table->foreign('id_kecamatan')
-                ->references('id_kecamatan')
-                ->on('kecamatan')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-
-            $table->foreign('id_desa_kelurahan')
-                ->references('id_desa_kelurahan')
-                ->on('desa_kelurahan')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+            $table->foreign('id_kecamatan')->references('id_kecamatan')->on('kecamatan')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_desa_kelurahan')->references('id_desa_kelurahan')->on('desa_kelurahan')->onDelete('cascade')->onUpdate('cascade');
         });
 
         // ==========================================
@@ -92,8 +60,8 @@ return new class extends Migration
                 'no_hp' => '082222222222',
                 'alamat' => 'Jl. Melati No. 2, Kota A',
                 'nik' => '3201012345670002',
-                'id_kecamatan' => 1, 
-                'id_desa_kelurahan' => 1,
+                'id_kecamatan' => 2, 
+                'id_desa_kelurahan' => 2,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -107,8 +75,8 @@ return new class extends Migration
                 'no_hp' => '083333333333',
                 'alamat' => 'Jl. Anggrek No. 3, Kota A',
                 'nik' => '3201012345670003',
-                'id_kecamatan' => 1, 
-                'id_desa_kelurahan' => 1,
+                'id_kecamatan' => 3, 
+                'id_desa_kelurahan' => 3,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -122,8 +90,8 @@ return new class extends Migration
                 'no_hp' => '084444444444',
                 'alamat' => 'Jl. Kenanga No. 4, Kota A',
                 'nik' => '3201012345670004',
-                'id_kecamatan' => 1, 
-                'id_desa_kelurahan' => 1,
+                'id_kecamatan' => 4, 
+                'id_desa_kelurahan' => 4,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -137,8 +105,8 @@ return new class extends Migration
                 'no_hp' => '085555555555',
                 'alamat' => 'Jl. Kamboja No. 5, Kota A',
                 'nik' => '3201012345670005',
-                'id_kecamatan' => 1, 
-                'id_desa_kelurahan' => 1,
+                'id_kecamatan' => 5, 
+                'id_desa_kelurahan' => 5,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

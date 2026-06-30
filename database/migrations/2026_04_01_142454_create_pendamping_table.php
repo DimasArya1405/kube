@@ -9,8 +9,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pendamping', function (Blueprint $table) {
-            $table->id('id_pendamping'); // primary key auto increment
+            $table->id('id_pendamping');
 
+            $table->unsignedBigInteger('id_user');
             $table->string('nik', 16);
             $table->string('nama_pendamping', 100);
 
@@ -26,28 +27,34 @@ return new class extends Migration
             $table->string('pendidikan_terakhir', 50);
 
             $table->unsignedBigInteger('id_kecamatan');
-            $table->unsignedBigInteger('id_user'); // Tambahan baru
+            $table->unsignedBigInteger('id_desa_kelurahan');      // ← tambahan
 
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai')->nullable();
 
-            $table->enum('status', ['Aktif', 'Tidak Aktif']);
+            $table->enum('status', ['Aktif', 'Tidak Aktif'])->default('Aktif');
 
             $table->string('foto', 255)->nullable();
 
-            $table->timestamps(); // Ganti dateTime manual dengan ini (Otomatis bikin created_at & updated_at)
+            $table->timestamps();
 
-            // Foreign Key untuk Kecamatan
-            $table->foreign('id_kecamatan')
-                ->references('id_kecamatan')
-                ->on('kecamatan')
-                ->onDelete('cascade');
-                
-            // Foreign Key untuk User (JANGAN LUPA DITAMBAHKAN)
+            // Foreign Key - User
             $table->foreign('id_user')
                 ->references('id_user')
-                ->on('users')
-                ->onDelete('cascade');
+                ->on('users');
+                // ->onDelete('cascade');
+
+            // Foreign Key - Kecamatan
+            $table->foreign('id_kecamatan')
+                ->references('id_kecamatan')
+                ->on('kecamatan');
+                // ->onDelete('cascade');
+
+            // Foreign Key - Desa
+            $table->foreign('id_desa_kelurahan')
+                ->references('id_desa_kelurahan')
+                ->on('desa_kelurahan');
+                // ->onDelete('cascade');
         });
     }
 

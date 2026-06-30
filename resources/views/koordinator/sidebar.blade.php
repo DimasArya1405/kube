@@ -59,7 +59,7 @@
             <i data-lucide="chevron-down" id="analisisKoordIcon" class="w-4 h-4 transition-transform duration-300"></i>
         </button>
         <div id="analisisKoordMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
-            <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Ranking KUBE Kecamatan</a>
+            <a href="{{ route('ranking.kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Ranking KUBE Kecamatan</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Rekap KUBE Aktif/Vakum</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white">Cetak Berita Acara</a>
         </div>

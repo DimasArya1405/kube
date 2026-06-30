@@ -19,6 +19,44 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
 </div>
 
 
+{{-- SUMMARY BOX --}}
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+
+    {{-- Total Jadwal --}}
+    <div class="bg-white p-4 rounded-lg shadow border">
+        <p class="text-sm text-gray-500">
+            Total Jadwal
+        </p>
+
+        <h3 class="text-2xl font-bold text-gray-800">
+            {{ $totalJadwal ?? 0 }}
+        </h3>
+    </div>
+
+    {{-- Terjadwal --}}
+    <div class="bg-yellow-50 p-4 rounded-lg shadow border border-yellow-200">
+        <p class="text-sm text-yellow-600">
+            Terjadwal
+        </p>
+
+        <h3 class="text-2xl font-bold text-yellow-700">
+            {{ $totalTerjadwal ?? 0 }}
+        </h3>
+    </div>
+
+    {{-- Selesai --}}
+    <div class="bg-green-50 p-4 rounded-lg shadow border border-green-200">
+        <p class="text-sm text-green-600">
+            Selesai
+        </p>
+
+        <h3 class="text-2xl font-bold text-green-700">
+            {{ $totalSelesai ?? 0 }}
+        </h3>
+    </div>
+
+</div>
+
 {{-- FILTER TAHUN & STATUS (Layout grid horizontal disamakan dengan kode pertama) --}}
 <div class="bg-white mb-4 rounded-lg shadow-sm border p-4">
     <form action="{{ route('admin.kunjungan.index') }}" method="GET">
@@ -83,6 +121,26 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
                 </select>
             </div>
 
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    KUBE
+                </label>
+
+                <select name="id_pembagian"
+                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[220px] text-sm">
+
+                    <option value="">Semua KUBE</option>
+
+                    @foreach($kubeFilter as $item)
+                    <option value="{{ $item->id_pembagian }}"
+                        {{ request('id_pembagian') == $item->id_pembagian ? 'selected' : '' }}>
+                        {{ $item->kube->nama_kube }}
+                    </option>
+                    @endforeach
+
+                </select>
+            </div>
+
             {{-- Tombol --}}
             <div class="flex gap-2">
 
@@ -93,11 +151,11 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
             </div>
 
             <a href="{{ route('admin.kunjungan.index') }}"
-                    class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 text-sm transition">
-                    Reset
-                </a>
-            
-            
+                class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 text-sm transition">
+                Reset
+            </a>
+
+
 
         </div>
 
@@ -119,22 +177,22 @@ Dashboard / <span class="text-gray-800">Data Kunjungan Pendamping</span>
     </div>
 
     {{-- Ekspor PDF --}}
-            <a href="{{ route('kunjungan.export.pdf') }}"
-                class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                </svg>
-                Ekspor PDF
-            </a>
+    <a href="{{ route('kunjungan.export.pdf') }}"
+        class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+        </svg>
+        Ekspor PDF
+    </a>
 
-            {{-- Ekspor Excel --}}
-            <a href="{{ route('kunjungan.export.excel') }}"
-                class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6M3 17V7a2 2 0 012-2h14a2 2 0 012 2v10" />
-                </svg>
-                Ekspor Excel
-            </a>
+    {{-- Ekspor Excel --}}
+    <a href="{{ route('kunjungan.export.excel') }}"
+        class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6M3 17V7a2 2 0 012-2h14a2 2 0 012 2v10" />
+        </svg>
+        Ekspor Excel
+    </a>
 
 
 

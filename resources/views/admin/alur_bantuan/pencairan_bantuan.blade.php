@@ -62,7 +62,7 @@ Dashboard / <span class="text-gray-800">Pencairan Bantuan</span>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Filter Tahun</label>
                 <select name="tahun"
-                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[200px] text-sm">
+                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-200px text-sm">
                     <option value="">Semua Tahun</option>
                     @php
                         $tahunSekarang = date('Y');
@@ -78,7 +78,7 @@ Dashboard / <span class="text-gray-800">Pencairan Bantuan</span>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
                 <select name="status"
-                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[200px] text-sm">
+                    class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-200px text-sm">
                     <option value="">Semua Status</option>
                     <option value="menunggu" {{ request('status') == 'menunggu' ? 'selected' : '' }}>Menunggu</option>
                     <option value="disetujui" {{ request('status') == 'disetujui' ? 'selected' : '' }}>Disetujui</option>
@@ -211,7 +211,7 @@ Dashboard / <span class="text-gray-800">Pencairan Bantuan</span>
                                 {{ \Carbon\Carbon::parse($row->tanggal_pengajuan)->locale('id')->translatedFormat('d M Y') }}
                             </td>
                             <td class="px-4 py-4">
-                                <form action="{{ route('admin.pencairan_bantuan.tambah', $row->id_pengajuan_kube) }}"
+                                {{-- <form action="{{ route('admin.pencairan_bantuan.tambah', $row->id_pengajuan_kube) }}"
                                     method="POST"
                                     onsubmit="return confirm('Apakah anda yakin ingin membuat pencairan untuk {{ $row->kube->nama_kube }}?')">
                                     @csrf
@@ -219,7 +219,14 @@ Dashboard / <span class="text-gray-800">Pencairan Bantuan</span>
                                         class="px-3 py-1 rounded-md text-sm bg-green-500 text-white hover:bg-green-700 transition duration-200 ease-in-out">
                                         Buat Pencairan
                                     </button>
-                                </form>
+                                </form> --}}
+                               
+    <button type="button" 
+        onclick="bukaKonfirmasiPencairan('{{ $row->id_pengajuan_kube }}', '{{ $row->kube->nama_kube ?? '-' }}', '{{ route('admin.pencairan_bantuan.tambah', $row->id_pengajuan_kube) }}')"
+        class="px-3 py-1 rounded-md text-sm bg-green-500 text-white hover:bg-green-700 transition duration-200 ease-in-out">
+        Buat Pencairan
+    </button>
+
                             </td>
                         </tr>
                     @empty
@@ -250,6 +257,51 @@ Dashboard / <span class="text-gray-800">Pencairan Bantuan</span>
     </div>
 </div>
 
+{{-- SUB MODAL --}}
+{{-- ================= SUB-MODAL PILIH TAHAP ================= --}}
+<div id="modal-pilih-tahap" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-gray-950/40 p-4 backdrop-blur-xs">
+    <div class="fixed inset-0" onclick="toggleModal('modal-pilih-tahap')"></div>
+    
+    <div class="relative bg-white rounded-lg shadow-2xl w-full max-w-md z-10 p-6 border animate-fade-in">
+        <h4 class="text-lg font-bold text-gray-800 mb-2">Pilih Tahap Pencairan</h4>
+        <p class="text-sm text-gray-500 mb-4">Silakan tentukan tahap pencairan untuk KUBE: <span id="text-nama-kube" class="font-semibold text-gray-700"></span></p>
+        
+        <form id="form-pencairan-tahap" action="" method="POST">
+            @csrf
+            
+            <label class="block text-sm font-medium text-gray-700 mb-2">Tahap Pencairan</label>
+            <div class="grid grid-cols-3 gap-3 mb-6">
+                <label class="flex items-center justify-center gap-2 border rounded-lg p-3 cursor-pointer hover:bg-gray-50 peer-checked:border-blue-500 has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50/50">
+                    <input type="radio" name="tahap" value="1" required class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                    <span class="text-sm font-medium text-gray-900">Tahap 1</span>
+                </label>
+
+                <label class="flex items-center justify-center gap-2 border rounded-lg p-3 cursor-pointer hover:bg-gray-50 has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50/50">
+                    <input type="radio" name="tahap" value="2" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                    <span class="text-sm font-medium text-gray-900">Tahap 2</span>
+                </label>
+
+                <label class="flex items-center justify-center gap-2 border rounded-lg p-3 cursor-pointer hover:bg-gray-50 has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50/50">
+                    <input type="radio" name="tahap" value="3" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                    <span class="text-sm font-medium text-gray-900">Tahap 3</span>
+                </label>
+            </div>
+
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="toggleModal('modal-pilih-tahap')" 
+                    class="px-4 py-2 bg-gray-100 text-gray-700 text-sm rounded-lg hover:bg-gray-200 transition">
+                    Batal
+                </button>
+                <button type="submit" 
+                    class="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition shadow-sm font-medium">
+                    Proses Pencairan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{{-- SUB MODAL --}}
+
 @push('scripts')
     <script>
         function toggleModal(modalId) {
@@ -257,6 +309,21 @@ Dashboard / <span class="text-gray-800">Pencairan Bantuan</span>
             if (modal) {
                 modal.classList.toggle('hidden');
             }
+        }
+
+        function bukaKonfirmasiPencairan(id, namaKube, urlAction) {
+            // Set text nama kube di sub-modal
+            document.getElementById('text-nama-kube').innerText = namaKube;
+            
+            // Set action URL form secara dinamis
+            const form = document.getElementById('form-pencairan-tahap');
+            form.setAttribute('action', urlAction);
+            
+            // Reset pilihan radio button sebelumnya (jika ada)
+            form.reset();
+            
+            // Tampilkan sub-modal pilih tahap
+            toggleModal('modal-pilih-tahap');
         }
     </script>
 @endpush

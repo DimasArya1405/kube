@@ -22,19 +22,39 @@ class KoordinatorSeeder extends Seeder
             ->take(10)
             ->get();
 
+        // Ambil daftar id_kecamatan yang valid untuk foreign key
+        $kecamatanIds = DB::table('kecamatan')->pluck('id_kecamatan')->toArray();
+
         $dataKoordinator = [];
 
         foreach ($koordinatorUsers as $user) {
+            // Pilih kecamatan: pakai milik user jika ada, kalau tidak random dari tabel kecamatan
+            $idKecamatan = $user->id_kecamatan ?? $faker->randomElement($kecamatanIds);
+
+            // Ambil desa yang sesuai dengan kecamatan terpilih, agar foreign key valid
+            $idDesa = DB::table('desa_kelurahan')
+                ->where('id_kecamatan', $idKecamatan)
+                ->inRandomOrder()
+                ->value('id_desa_kelurahan');
+
             $dataKoordinator[] = [
-                'id_user'       => $user->id_user,
-                // Foto diset default, atau Anda bisa gunakan $faker->imageUrl() jika ingin gambar acak
-                'foto'          => 'default.png', 
-                'jenis_kelamin' => $faker->randomElement(['L', 'P']),
-                // Umur diacak antara 25 sampai 45 tahun yang lalu
-                'tanggal_lahir' => $faker->dateTimeBetween('-45 years', '-25 years')->format('Y-m-d'),
-                'status'        => $faker->randomElement(['aktif', 'non-aktif']),
-                'created_at'    => now(),
-                'updated_at'    => now(),
+                'id_user'             => $user->id_user,
+                'nik'                 => $user->nik ?? $faker->unique()->numerify('################'),
+                'nama_koordinator'    => $user->nama ?? $faker->name(),
+                'jenis_kelamin'       => $faker->randomElement(['L', 'P']),
+                'tempat_lahir'        => $faker->city(),
+                'tanggal_lahir'       => $faker->dateTimeBetween('-45 years', '-25 years')->format('Y-m-d'),
+                'alamat'              => $user->alamat ?? $faker->address(),
+                'no_hp'               => $user->no_hp ?? $faker->numerify('08##########'),
+                'email'               => $user->email ?? $faker->unique()->safeEmail(),
+                'pendidikan_terakhir' => $faker->randomElement(['SD', 'SMP', 'SMA/SMK', 'D3', 'S1', 'S2']),
+                'id_kecamatan'        => $idKecamatan,
+                'id_desa_kelurahan'   => $idDesa,
+                'wilayah'             => $faker->citySuffix(),
+                'status'              => $faker->randomElement(['Aktif', 'Tidak Aktif']),
+                'foto'                => 'default.png',
+                'created_at'          => now(),
+                'updated_at'          => now(),
             ];
         }
 

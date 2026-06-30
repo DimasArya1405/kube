@@ -31,19 +31,34 @@ use App\Http\Controllers\PembagianPendampingController;
 use App\Http\Controllers\KolaborasiBantuanController;
 use App\Http\Controllers\PenyaluranKolaborasiController;
 use App\Http\Controllers\KepalaDinasController;
+use App\Http\Controllers\ketua_kube\PencairanBantuanController as Ketua_kubePencairanBantuanController;
 use App\Http\Controllers\PersetujuanBantuanKubeKadisController;
 use App\Http\Controllers\GaleriController;
 use Dflydev\DotAccessData\Data;
 use App\Http\Controllers\TemplateLaporanController;
+use App\Models\Galeri;
 
 // LOGIN
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/', function () {return redirect('/login');});
+
+Route::get('/', function () { 
+    $galeriData = Galeri::latest()->take(6)->get();
+    return view('welcome', compact('galeriData'));
+});
 
 // REGISTER
-Route::get('/register', [AuthController::class, 'showRegister']);
-Route::post('/register', [AuthController::class, 'register']);
+// Route Register Ketua KUBE
+Route::get('/register/ketua', [AuthController::class, 'showRegisterKetua'])->name('register.ketua');
+Route::post('/register/ketua', [AuthController::class, 'registerKetua'])->name('register.ketua.store');
+
+// Route Register Pendamping
+Route::get('/register/pendamping', [AuthController::class, 'showRegisterPendamping'])->name('register.pendamping');
+Route::post('/register/pendamping', [AuthController::class, 'registerPendamping'])->name('register.pendamping.store');
+
+// Route Register Koordinator
+Route::get('/register/koordinator', [AuthController::class, 'showRegisterKoordinator'])->name('register.koordinator');
+Route::post('/register/koordinator', [AuthController::class, 'registerKoordinator'])->name('register.koordinator.store');
 
 // LOGOUT
 Route::post('/logout', [AuthController::class, 'logout']);
@@ -66,18 +81,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/ketua_kube/dashboard', [DashboardController::class, 'ketua'])->name('ketua_kube.dashboard');
     Route::get('/pendamping/dashboard', [DashboardController::class, 'pendamping'])->name('pendamping.dashboard');
     Route::get('/koordinator/dashboard', [DashboardController::class, 'koordinator'])->name('dashboard.koordinator');
-    Route::get('/dashboard/tim', [DashboardController::class, 'tim'])->name('dashboard.tim');
     Route::get('/kepala_dinas/dashboard', [DashboardController::class, 'dinas'])->name('dashboard.dinas');
 
     // --- DASHBOARD ADMIN ---
     Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'admin'])->middleware('checkrole:admin')->name('admin.dashboard');
-    // DATA USER
-    Route::get('/users', [DashboardController::class, 'users'])->name('admin.users');
-    Route::post('/users/store', [DashboardController::class, 'store'])->name('admin.users.store');
-    Route::get('/users/edit/{id}', [DashboardController::class, 'edit'])->name('admin.users.edit');
-    Route::put('users/update/{id}', [DashboardController::class, 'update'])->name('admin.users.update');
-    Route::delete('users/delete/{id}', [DashboardController::class, 'destroy'])->name('admin.users.delete');
+    // KELOLA DATA USER
+    Route::get('/users', [UsersController::class, 'index'])->name('admin.users');
+    Route::post('/users/store', [UsersController::class, 'store'])->name('admin.users.store');
+    Route::get('/users/edit/{id}', [UsersController::class, 'edit'])->name('admin.users.edit');
+    Route::put('/users/update/{id}', [UsersController::class, 'update'])->name('admin.users.update');
+    Route::delete('/users/delete/{id}', [UsersController::class, 'destroy'])->name('admin.users.delete');
+    Route::patch('/users/{id}/aktifkan', [UsersController::class, 'aktifkan'])->name('admin.users.aktifkan');
     });
 
     // --- DASHBOARD KOORDINATOR ---
@@ -101,16 +116,14 @@ Route::middleware('auth')->group(function () {
 
     // --- DASHBOARD KETUA KUBE ---
     Route::prefix('ketua_kube')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'ketua'])->middleware('checkrole:ketua_kube')->name('ketua_kube.dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'ketua'])
+            ->middleware('checkrole:ketua_kube')
+            ->name('ketua_kube.dashboard');
+        Route::get('/ketua-kube/pencairan-bantuan', [Ketua_kubePencairanBantuanController::class, 'index'])->name('ketua_kube.pencairan_bantuan.index');
+        Route::get('/ketua-kube/pencairan-bantuan/konfirmasi/{id}', [Ketua_kubePencairanBantuanController::class, 'konfirmasi'])->name('ketua_kube.pencairan_bantuan.konfirmasi');
     });
 
 Route::get('/kepala_dinas/dashboard', [KepalaDinasController::class, 'dashboard'])->name('kadis.dashboard');
-    // KELOLA DATA USER
-    Route::get('/admin/users', [UsersController::class, 'index'])->name('admin.users');
-    Route::post('/admin/users/store', [UsersController::class, 'store'])->name('admin.users.store');
-    Route::get('/admin/users/edit/{id}', [UsersController::class, 'edit'])->name('admin.users.edit');
-    Route::put('/admin/users/update/{id}', [UsersController::class, 'update'])->name('admin.users.update');
-    Route::delete('/admin/users/delete/{id}', [UsersController::class, 'destroy'])->name('admin.users.delete');
 
     // KELOLA DATA KUBE & ANGGOTA
     Route::resource('kube', KubeController::class);
@@ -123,8 +136,15 @@ Route::get('/kepala_dinas/dashboard', [KepalaDinasController::class, 'dashboard'
 
     // PEMBAGIAN PENDAMPING
     Route::resource('pembagian_pendamping', PembagianPendampingController::class);
+
+    Route::patch('/pembagian_pendamping/{id}/selesai', [PembagianPendampingController::class, 'tandaiSelesai'])->name('pembagian_pendamping.selesai');
+    Route::get('/pembagian_pendamping/export/excel', [PembagianPendampingController::class, 'exportExcel'])->name('pembagian_pendamping.export.excel');
+    Route::get('/pembagian-pendamping/export-pdf', [PembagianPendampingController::class, 'exportPdf'])->name('pembagian_pendamping.export.pdf');
+
+    Route::get('/bimbingan-pdf', [BimbinganKubeController::class, 'pdf'])->name('bimbingan.pdf');
     Route::patch('/pembagian_pendamping/{id}/selesai', [App\Http\Controllers\PembagianPendampingController::class, 'tandaiSelesai'])->name('pembagian_pendamping.selesai');
     Route::get('/pembagian_pendamping/export/excel', [App\Http\Controllers\PembagianPendampingController::class, 'exportExcel'])->name('pembagian_pendamping.export.excel');
+
 
     // BIMBINGAN KUBE OLEH PENDAMPING (Tambahan Baru)
     // Ini akan otomatis menghandle route bimbingan.index, bimbingan.create, bimbingan.store, dll.
@@ -184,10 +204,10 @@ Route::get('/kepala_dinas/dashboard', [KepalaDinasController::class, 'dashboard'
 
     // KELOLA DATA KOORDINATOR
     Route::get('/admin/koordinator', [KoordinatorController::class, 'index'])->name('koordinator.index');
+    Route::post('/admin/koordinator/store', [KoordinatorController::class, 'store'])->name('koordinator.store');
     Route::get('/admin/koordinator/export/pdf', [KoordinatorController::class, 'exportPdf'])->name('koordinator.export.pdf');
     Route::get('/admin/koordinator/export/excel', [KoordinatorController::class, 'exportExcel'])->name('koordinator.export.excel');
     Route::get('/admin/koordinator/{id}', [KoordinatorController::class, 'show'])->name('koordinator.show');
-    Route::post('/admin/koordinator/store', [KoordinatorController::class, 'store'])->name('koordinator.store');
     Route::put('/admin/koordinator/{id}', [KoordinatorController::class, 'update'])->name('koordinator.update');
     Route::delete('/admin/koordinator/{id}', [KoordinatorController::class, 'destroy'])->name('koordinator.delete');
 
@@ -286,14 +306,33 @@ Route::prefix('admin/prediksi-kube')->name('admin.prediksi-kube.')->group(functi
     Route::get('/laporan-keuangan/export/pdf-detail/{id}', [KeuanganController::class, 'exportPdfDetail'])->name('laporan.export.pdf.detail');
 
     // MONITORING
-    Route::get('/monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
-    Route::post('/monitoringbantuan/store', [MonitoringController::class, 'store'])->name('monitoring.store');
-    Route::delete('/monitoringbantuan/delete/{id}', [MonitoringController::class, 'delete'])->name('monitoring.delete');
-    Route::get('/monitoring/edit/{id}', [MonitoringController::class, 'edit'])->name('monitoring.edit');
-    Route::post('/monitoring/update/{id}', [MonitoringController::class, 'update'])->name('monitoring.update');
-    Route::get('/monitoring/detail/{id}', [MonitoringController::class, 'detail'])->name('monitoring.detail');
-    Route::get('/monitoring/pdf', [MonitoringController::class, 'exportPdf'])->name('monitoring.pdf');
-// PENGAJUAN KUBE
+    Route::middleware(['auth'])->group(function () {
+
+    Route::get('/monitoring', [MonitoringController::class, 'index'])
+        ->name('monitoring.index');
+
+    Route::post('/monitoringbantuan/store', [MonitoringController::class, 'store'])
+        ->name('monitoring.store');
+
+    Route::delete('/monitoringbantuan/delete/{id}', [MonitoringController::class, 'delete'])
+        ->name('monitoring.delete');
+
+    // Route::get('/monitoring/edit/{id}', [MonitoringController::class, 'edit'])
+    //     ->name('monitoring.edit');
+
+    Route::post('/monitoring/update/{id}', [MonitoringController::class, 'update'])
+        ->name('monitoring.update');
+
+    // Route::get('/monitoring/detail/{id}', [MonitoringController::class, 'detail'])
+    //     ->name('monitoring.detail');
+
+    // Tambahkan ini
+    Route::get('/monitoring/create/{id_pencairan}', [MonitoringController::class, 'create'])->name('monitoring.create');
+    Route::get('/monitoring/pdf', [MonitoringController::class, 'exportPdf'])
+        ->name('monitoring.pdf');
+    Route::post('/monitoring/store', [MonitoringController::class, 'store'])->name('monitoring.store');
+});
+
     Route::get('/pengajuan-kube/create', [PengajuanKubeController::class, 'create'])->name('pengajuan.create');
     Route::post('/pengajuan-kube/store', [PengajuanKubeController::class, 'store'])->name('pengajuan.store');
     Route::get('/pengajuan-kube', [PengajuanKubeController::class, 'index'])->name('pengajuan.index');
@@ -302,6 +341,8 @@ Route::prefix('admin/prediksi-kube')->name('admin.prediksi-kube.')->group(functi
     Route::get('/admin/persetujuan-bantuan-kube', [PersetujuanPengajuanKubeController::class, 'index'])->name('admin.persetujuan_bantuan_kube.index');
     Route::put('/admin/persetujuan-bantuan-kube/setujui/{id}', [PersetujuanPengajuanKubeController::class, 'setujui'])->name('admin.persetujuan_bantuan_kube.setujui');
     Route::put('/admin/persetujuan-bantuan-kube/tolak/{id}', [PersetujuanPengajuanKubeController::class, 'tolak'])->name('admin.persetujuan_bantuan_kube.tolak');
+    Route::get('/admin/persetujuan-bantuan-kube/{id}/detail', [PersetujuanPengajuanKubeController::class, 'detail'])->name('admin.persetujuan_bantuan_kube.detail');
+    Route::get('/admin/persetujuan-bantuan-kube/{id}/unduh-berita-acara', [PersetujuanPengajuanKubeController::class, 'unduhBeritaAcara'])->name('admin.persetujuan_bantuan_kube.unduh_berita_acara');
 
     // KELOLA DATA PERSETUJUAN KUBE (KADIS)
     Route::get('/kepala-dinas/persetujuan-bantuan-kube', [PersetujuanBantuanKubeKadisController::class, 'index'])->name('kadis.persetujuan_bantuan_kube.index');
@@ -341,11 +382,25 @@ Route::prefix('admin/prediksi-kube')->name('admin.prediksi-kube.')->group(functi
  
         });
 
-
     // LAPORAN KECAMATAN
     Route::get('/admin/laporan-kecamatan/excel',[LaporanKecamatanController::class,'exportExcel'])->name('laporan.kecamatan.excel');
     Route::get('/admin/laporan-kecamatan/pdf',[LaporanKecamatanController::class,'exportPdfKecamatan'])->name('laporan.kecamatan.pdf');
     Route::get('/admin/laporan-kecamatan', [LaporanKecamatanController::class, 'index'])->name('laporan.kecamatan');
     Route::get('/admin/laporan-kecamatan/{id}', [LaporanKecamatanController::class, 'detail'])->name('laporan.kecamatan.detail');
     Route::get('/admin/laporan-kecamatan/pdf/{id}', [LaporanKecamatanController::class, 'exportPdf'])->name('laporan.pdf');
+    // LAPORAN KECAMATAN KEPALA DINAS
+    Route::get('/kepala_dinas/laporan-kecamatan/excel',[LaporanKecamatanController::class,'exportExcel'])->name('kadis.laporan.kecamatan.excel');
+    Route::get('/kepala_dinas/laporan-kecamatan/pdf',[LaporanKecamatanController::class,'exportPdfKecamatan'])->name('kadis.laporan.kecamatan.pdf');
+    Route::get('/kepala_dinas/laporan-kecamatan',[LaporanKecamatanController::class,'index'])->name('kadis.laporan.kecamatan');
+    Route::get('/kepala_dinas/laporan-kecamatan/{id}',[LaporanKecamatanController::class,'detail'])->name('kadis.laporan.kecamatan.detail');
+    Route::get('/kepala_dinas/laporan-kecamatan/pdf/{id}',[LaporanKecamatanController::class,'exportPdf'])->name('kadis.laporan.pdf');
+    
+    // Route untuk Manajemen Galeri KUBE
+Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri.index');
+Route::post('/galeri', [GaleriController::class, 'store'])->name('galeri.store');
+Route::get('/galeri/{id}', [GaleriController::class, 'show'])->name('galeri.detail');
+Route::post('/galeri/update/{id}', [GaleriController::class, 'update'])->name('galeri.update');
+
+// Dibuat GET sesuai dengan tag <a> di file index.blade.php kamu
+Route::get('/galeri/delete/{id}', [GaleriController::class, 'destroy'])->name('galeri.destroy');
 });

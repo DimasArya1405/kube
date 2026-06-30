@@ -38,7 +38,34 @@ Dashboard / <span class="text-gray-800">Track Record</span>
 </div>
 
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+<div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
 
+    <div class="bg-white border rounded-xl p-5 shadow-sm">
+        <p class="text-sm text-gray-500">Jumlah Bulan Diprediksi</p>
+        <h3 class="text-2xl font-bold text-gray-800 mt-1">
+            {{ $jumlahBulanPrediksi }}
+        </h3>
+    </div>
+
+    <div class="bg-white border rounded-xl p-5 shadow-sm">
+        <p class="text-sm text-gray-500">Rata-rata Persentase</p>
+        <h3 class="text-2xl font-bold text-blue-600 mt-1">
+            {{ number_format($rataPerBulan, 2, ',', '.') }}%
+        </h3>
+    </div>
+
+    <div class="bg-white border rounded-xl p-5 shadow-sm">
+        <p class="text-sm text-gray-500">Kesimpulan Tahun {{ $tahun }}</p>
+
+        <h3 class="text-2xl font-bold mt-1
+            {{ $kesimpulanTahunan == 'Berhasil'
+                ? 'text-green-600'
+                : 'text-red-600' }}">
+            {{ $kesimpulanTahunan }}
+        </h3>
+    </div>
+
+</div>
     {{-- TABEL --}}
     <div class="overflow-x-auto">
         <table class="min-w-full text-sm text-left border border-gray-200 rounded-lg overflow-hidden">
