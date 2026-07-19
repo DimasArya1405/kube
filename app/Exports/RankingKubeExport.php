@@ -12,6 +12,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 
 class RankingKubeExport implements
     FromCollection,
@@ -24,12 +25,14 @@ class RankingKubeExport implements
     protected $data;
     protected $filterAktif;
     protected $adaFilter;
+    protected $hideNominal;
 
-    public function __construct($data, $filterAktif = [])
+    public function __construct($data, $filterAktif = [], $hideNominal = false)
     {
         $this->data        = $data;
         $this->filterAktif = $filterAktif;
         $this->adaFilter   = count($filterAktif) > 0;
+        $this->hideNominal = $hideNominal;
     }
 
     public function collection()
@@ -48,11 +51,14 @@ class RankingKubeExport implements
 
     public function headings(): array
     {
-        $heads = [
-            'No', 'Nama KUBE', 'Cluster', 'Kecamatan',
-            'Total Omset', 'Total Pengeluaran', 'Total Laba Bersih',
-            'Status', 'Peringkat (Keseluruhan)',
-        ];
+        $heads = ['No', 'Nama KUBE', 'Cluster', 'Kecamatan'];
+
+        if (!$this->hideNominal) {
+            $heads = array_merge($heads, ['Total Omset', 'Total Pengeluaran', 'Total Laba Bersih']);
+        }
+
+        $heads[] = 'Status';
+        $heads[] = 'Peringkat (Keseluruhan)';
 
         if ($this->adaFilter) {
             $heads[] = 'Peringkat (Filter)';
@@ -66,23 +72,59 @@ class RankingKubeExport implements
         static $no = 0;
         $no++;
 
-        $data = [
-            $no,
-            $row->nama_kube,
-            $row->nama_cluster,
-            $row->nama_kecamatan,
-            $row->total_omset,
-            $row->total_pengeluaran,
-            $row->total_laba_bersih,
-            $row->status,
-            $row->ranking_overall,
-        ];
+        $data = [$no, $row->nama_kube, $row->nama_cluster, $row->nama_kecamatan];
+
+        if (!$this->hideNominal) {
+            $data[] = $row->total_omset;
+            $data[] = $row->total_pengeluaran;
+            $data[] = $row->total_laba_bersih;
+        }
+
+        $data[] = $row->status;
+        $data[] = $row->ranking_overall;
 
         if ($this->adaFilter) {
             $data[] = $row->ranking_filter;
         }
 
         return $data;
+    }
+
+    /**
+     * Hitung kolom-kolom penting secara dinamis berdasarkan apakah nominal
+     * dan filter ditampilkan, supaya tidak ada huruf kolom hardcoded yang
+     * jadi salah posisi ketika kolom nominal disembunyikan.
+     */
+    protected function columnMap(): array
+    {
+        // Urutan kolom dasar: No, Nama, Cluster, Kecamatan
+        $index = 4;
+
+        $omsetCol = $pengeluaranCol = $labaCol = null;
+        if (!$this->hideNominal) {
+            $omsetCol       = Coordinate::stringFromColumnIndex(++$index);
+            $pengeluaranCol = Coordinate::stringFromColumnIndex(++$index);
+            $labaCol        = Coordinate::stringFromColumnIndex(++$index);
+        }
+
+        $statusCol = Coordinate::stringFromColumnIndex(++$index);
+        $rankCol   = Coordinate::stringFromColumnIndex(++$index);
+
+        $rankFilterCol = null;
+        if ($this->adaFilter) {
+            $rankFilterCol = Coordinate::stringFromColumnIndex(++$index);
+        }
+
+        return [
+            'no'           => 'A',
+            'omset'        => $omsetCol,
+            'pengeluaran'  => $pengeluaranCol,
+            'laba'         => $labaCol,
+            'status'       => $statusCol,
+            'rank'         => $rankCol,
+            'rankFilter'   => $rankFilterCol,
+            'last'         => Coordinate::stringFromColumnIndex($index),
+        ];
     }
 
     public function styles(Worksheet $sheet)
@@ -110,7 +152,8 @@ class RankingKubeExport implements
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 $sheet        = $event->sheet->getDelegate();
-                $lastCol      = $this->adaFilter ? 'J' : 'I';
+                $cols         = $this->columnMap();
+                $lastCol      = $cols['last'];
                 $headingRow   = $this->adaFilter ? 4 : 3;
                 $firstDataRow = $headingRow + 1;
                 $totalRows    = $this->data->count() + $headingRow;
@@ -156,21 +199,23 @@ class RankingKubeExport implements
                     $sheet->getColumnDimension($col)->setAutoSize(true);
                 }
 
-                // ── Format mata uang kolom E, F, G ──────────────────────────
-                $sheet->getStyle("E{$firstDataRow}:G{$totalRows}")
-                    ->getNumberFormat()
-                    ->setFormatCode('"Rp "#,##0');
+                // ── Format mata uang & SUM (hanya jika nominal ditampilkan) ──
+                if (!$this->hideNominal) {
+                    $sheet->getStyle("{$cols['omset']}{$firstDataRow}:{$cols['laba']}{$totalRows}")
+                        ->getNumberFormat()
+                        ->setFormatCode('"Rp "#,##0');
+                }
 
                 // ── Alignment kolom: No, Status, Peringkat ───────────────────
                 $sheet->getStyle("A{$firstDataRow}:A{$totalRows}")
                     ->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-                $sheet->getStyle("H{$firstDataRow}:H{$totalRows}")
+                $sheet->getStyle("{$cols['status']}{$firstDataRow}:{$cols['status']}{$totalRows}")
                     ->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-                $sheet->getStyle("I{$firstDataRow}:I{$totalRows}")
+                $sheet->getStyle("{$cols['rank']}{$firstDataRow}:{$cols['rank']}{$totalRows}")
                     ->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
                 if ($this->adaFilter) {
-                    $sheet->getStyle("J{$firstDataRow}:J{$totalRows}")
+                    $sheet->getStyle("{$cols['rankFilter']}{$firstDataRow}:{$cols['rankFilter']}{$totalRows}")
                         ->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
                 }
 
@@ -187,14 +232,23 @@ class RankingKubeExport implements
                 // ── Baris TOTAL ──────────────────────────────────────────────
                 $totalRow = $totalRows + 1;
 
-                // Merge kolom A–D untuk label "TOTAL"
-                $sheet->mergeCells("A{$totalRow}:D{$totalRow}");
+                // Merge label "TOTAL" dari kolom A sampai sebelum kolom nominal
+                // (atau sampai sebelum kolom Status kalau nominal disembunyikan)
+                $labelEndCol = $this->hideNominal ? 'D' : 'D';
+                $sheet->mergeCells("A{$totalRow}:{$labelEndCol}{$totalRow}");
                 $sheet->setCellValue("A{$totalRow}", 'TOTAL');
 
-                // SUM otomatis untuk Omset, Pengeluaran, Laba Bersih
-                $sheet->setCellValue("E{$totalRow}", "=SUM(E{$firstDataRow}:E{$totalRows})");
-                $sheet->setCellValue("F{$totalRow}", "=SUM(F{$firstDataRow}:F{$totalRows})");
-                $sheet->setCellValue("G{$totalRow}", "=SUM(G{$firstDataRow}:G{$totalRows})");
+                if (!$this->hideNominal) {
+                    // SUM otomatis untuk Omset, Pengeluaran, Laba Bersih
+                    $sheet->setCellValue("{$cols['omset']}{$totalRow}", "=SUM({$cols['omset']}{$firstDataRow}:{$cols['omset']}{$totalRows})");
+                    $sheet->setCellValue("{$cols['pengeluaran']}{$totalRow}", "=SUM({$cols['pengeluaran']}{$firstDataRow}:{$cols['pengeluaran']}{$totalRows})");
+                    $sheet->setCellValue("{$cols['laba']}{$totalRow}", "=SUM({$cols['laba']}{$firstDataRow}:{$cols['laba']}{$totalRows})");
+
+                    // Format mata uang di baris total
+                    $sheet->getStyle("{$cols['omset']}{$totalRow}:{$cols['laba']}{$totalRow}")
+                        ->getNumberFormat()
+                        ->setFormatCode('"Rp "#,##0');
+                }
 
                 // Style baris total: biru gelap, teks putih, bold
                 $sheet->getStyle("A{$totalRow}:{$lastCol}{$totalRow}")->applyFromArray([
@@ -212,11 +266,6 @@ class RankingKubeExport implements
                         'vertical'   => Alignment::VERTICAL_CENTER,
                     ],
                 ]);
-
-                // Format mata uang di baris total
-                $sheet->getStyle("E{$totalRow}:G{$totalRow}")
-                    ->getNumberFormat()
-                    ->setFormatCode('"Rp "#,##0');
 
                 $sheet->getRowDimension($totalRow)->setRowHeight(20);
 

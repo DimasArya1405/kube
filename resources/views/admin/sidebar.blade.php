@@ -52,6 +52,7 @@
         </button>
         <div id="bantuanMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
             <a href="{{ route('pengajuan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Pengajuan KUBE (Putri)</a>
+            <a href="{{ route('admin.pengajuan_bantuan_baru.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Pengajuan Bantuan Baru</a>
             <a href="{{route('admin.persetujuan_bantuan_kube.index')}}" class="py-2 px-3 text-indigo-200 hover:text-white">Persetujuan (Probo)</a>
             <a href="{{route('admin.pencairan_bantuan.index')}}" class="py-2 px-3 text-indigo-200 hover:text-white">Tahap Pencairan (Dimas)</a>
             <a href="/admin/mitra" class="py-2 px-3 text-indigo-200 hover:text-white">Mitra & Kolaborasi (Amel)</a>
@@ -107,4 +108,16 @@
             <a href="{{ route('rekap_kube.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Rekap KUBE (Fia)</a>
         </div>
     </div>
+    <div class="relative">
+    <a href="{{ route('template-laporan.index') }}"
+       class="w-full flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 rounded-xl transition-all text-indigo-100 hover:text-white">
+
+        <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
+
+        <span class="font-medium text-sm">
+            Template Laporan
+        </span>
+
+    </a>
+</div>
 </nav>

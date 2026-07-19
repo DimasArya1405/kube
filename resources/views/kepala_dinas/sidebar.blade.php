@@ -1,6 +1,6 @@
 <nav class="flex-1 px-4 mt-4 space-y-2 overflow-y-auto custom-scrollbar">
     
-    <a href="{{ route('kadis.dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group bg-indigo-800 text-white border-l-4 border-white shadow-inner">
+    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group bg-indigo-800 text-white border-l-4 border-white shadow-inner">
         <i data-lucide="pie-chart" class="w-5 h-5 flex-shrink-0"></i>
         <span class="font-medium text-sm text-left w-full">Dashboard Statistik</span>
     </a>
@@ -31,7 +31,7 @@
             <i data-lucide="chevron-down" id="analisisIcon" class="w-4 h-4 transition-transform duration-300 flex-shrink-0"></i>
         </button>
         <div id="analisisDinas" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
-            <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white block text-left w-full">Ranking Kecamatan (Shela)</a>
+            <a href="{{ route('ranking.kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white block text-left w-full">Ranking KUBE (Shela)</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white block text-left w-full">Prediksi Kelulusan (Aulia)</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white block text-left w-full">Rekap KUBE Aktif/Vakum</a>
         </div>
@@ -48,6 +48,7 @@
         <div id="docDinas" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white block text-left w-full">Berita Acara (Probo)</a>
             <a href="#" class="py-2 px-3 text-indigo-200 hover:text-white block text-left w-full">Laporan Keuangan Global</a>
+            <a href="{{ route('kadis.laporan.kecamatan') }}"class="py-2 px-3 text-indigo-200 hover:text-white block text-left w-full">Laporan Kecamatan</a>
         </div>
     </div>
     

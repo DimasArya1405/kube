@@ -166,6 +166,10 @@
                 class="py-2 px-3 text-indigo-200 hover:text-white">
                 Prediksi KUBE
             </a>
+            <a href="{{ route('ranking.kube') }}"
+        class="py-2 px-3 text-indigo-200 hover:text-white">
+        Ranking KUBE
+    </a>
 
         </div>
     </div>

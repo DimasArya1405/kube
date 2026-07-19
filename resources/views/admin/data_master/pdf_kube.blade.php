@@ -1,52 +1,85 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Laporan Lengkap KUBE</title>
     <style>
-        body {
-            font-family: sans-serif;
-            font-size: 12px;
+        /* Pengaturan Dasar */
+        body { 
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+            font-size: 12px; 
+            color: #374151; /* text-gray-700 */
+            line-height: 1.5;
         }
 
+        /* Pengaturan Judul Halaman */
+        .header-title { 
+            text-align: center; 
+            margin-bottom: 20px; 
+            color: #111827; /* text-gray-900 */
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Pengaturan Judul Sub-Seksi */
+        .section-title {
+            font-weight: bold;
+            background-color: #e5e7eb; /* bg-gray-200 */
+            color: #1f2937; /* text-gray-800 */
+            padding: 6px 10px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-left: 4px solid #2563eb; /* bg-blue-600 sebagai aksen seksi */
+        }
+
+        /* Pengaturan Tabel */
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-bottom: 25px; 
+        }
+
+        /* Pengaturan Header Tabel */
+        th { 
+            background-color: #2563eb; /* bg-blue-600 */
+            color: #ffffff; 
+            text-align: left; 
+            padding: 10px 8px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid #1d4ed8; /* bg-blue-700 untuk border header */
+        }
+
+        /* Pengaturan Sel Tabel */
+        td { 
+            border: 1px solid #d1d5db; /* border-gray-300 */
+            padding: 8px; 
+            vertical-align: middle;
+        }
+
+        /* Baris Selang-seling (Zebra) untuk Tabel Data Anggota */
+        tbody tr:nth-child(even) {
+            background-color: #f9fafb; /* bg-gray-50 */
+        }
+
+        /* Pengaturan Pemisah Halaman Cetak */
         .page-break {
             page-break-after: always;
         }
 
-        /* Bikin halaman baru tiap ganti KUBE */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
+        /* Kelas Bantuan (Helper) */
+        .text-center { 
+            text-align: center; 
         }
-
-        th,
-        td {
-            border: 1px solid #dddddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        .header-title {
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            font-weight: bold;
-            background-color: #e2e8f0;
-            padding: 5px;
-            margin-bottom: 10px;
+        .text-gray {
+            color: #9ca3af; /* text-gray-400 */
         }
     </style>
 </head>
-
 <body>
 
     @foreach($kubes as $k)
@@ -91,27 +124,27 @@
         <table>
             <thead>
                 <tr>
-                    <th style="text-align:center; width:5%;">No</th>
+                    <th class="text-center" width="5%">No</th>
                     <th>Nama Anggota</th>
-                    <th style="text-align:center;">NIK</th>
-                    <th style="text-align:center;">Jabatan</th>
-                    <th style="text-align:center;">No. HP</th>
-                    <th>Alamat</th>
+                    <th class="text-center" width="15%">NIK</th>
+                    <th class="text-center" width="15%">Jabatan</th>
+                    <th class="text-center" width="15%">No. HP</th>
+                    <th width="35%">Alamat</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($k->anggota as $index => $anggota)
                 <tr>
-                    <td style="text-align:center;">{{ $index + 1 }}</td>
+                    <td class="text-center">{{ $index + 1 }}</td>
                     <td>{{ $anggota->nama_anggota }}</td>
-                    <td style="text-align:center;">{{ $anggota->nik }}</td>
-                    <td style="text-align:center;">{{ $anggota->jabatan }}</td>
-                    <td style="text-align:center;">{{ $anggota->no_hp }}</td>
+                    <td class="text-center">{{ $anggota->nik }}</td>
+                    <td class="text-center">{{ $anggota->jabatan }}</td>
+                    <td class="text-center">{{ $anggota->no_hp }}</td>
                     <td>{{ $anggota->alamat }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" style="text-align:center; color:gray;">Belum ada data anggota.</td>
+                    <td colspan="6" class="text-center text-gray">Belum ada data anggota.</td>
                 </tr>
                 @endforelse
             </tbody>
@@ -120,5 +153,4 @@
     @endforeach
 
 </body>
-
 </html>

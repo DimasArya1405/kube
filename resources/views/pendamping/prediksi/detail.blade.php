@@ -78,7 +78,7 @@ Dashboard / <span class="text-gray-800">Detail Prediksi</span>
         <div class="bg-yellow-50 border border-yellow-100 rounded-xl p-4">
             <p class="text-sm text-gray-500 mb-1">Persentase</p>
             <h3 class="text-2xl font-bold text-yellow-600">
-                {{ $data->count() > 0 ? number_format(($totalYa / $data->count()) * 100, 0) : 0 }}%
+                {{ $data->count() > 0 ? number_format(($totalYa / $data->count()) * 100, 2, ',', '.') : 0 }}%
             </h3>
         </div>
 

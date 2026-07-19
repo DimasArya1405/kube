@@ -12,132 +12,184 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\KeuanganExport;
 use Maatwebsite\Excel\Facades\Excel;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf; //  Benar
 
 class KeuanganController extends Controller
 {
-public function index(Request $request) 
-{
-    $userId = auth()->id(); 
-    $user = auth()->user();
-    
-    $clusters = ClusterUsaha::all();
-    $selectedKubeId = $request->query('id_kube');
-    $daftarKube = Kube::all(); 
-    $kubeMilikSaya = null;
-    $searchResult = null;
-    if ($user->role === 'admin' && $request->filled('search')) {
-        $searchTerm = $request->query('search');
-        $searchResult = Kube::where('nama_kube', 'like', '%' . $searchTerm . '%')->get();
-    }
-
-    $query = Keuangan::with(['cluster', 'kube']);
-    if ($user->role === 'admin') {
-        if ($request->filled('search')) {
-            $query->whereNull('id_laporan'); 
-        } elseif ($selectedKubeId) {
-            $query->where('id_kube', $selectedKubeId);
-        } else {
-            $query->whereNull('id_laporan'); 
-        }
-    } else {
-        $kubeMilikSaya = Kube::where('id_user', $userId)->first();
+    public function index(Request $request) 
+    {
+        $userId = auth()->id(); 
+        $user = auth()->user();
         
-        if ($kubeMilikSaya) {
-            $query->where('id_kube', $kubeMilikSaya->id_kube);
-            $selectedKubeId = $kubeMilikSaya->id_kube;
-        } else {
-            $query->whereNull('id_laporan');
+        $clusters = ClusterUsaha::all();
+        $selectedKubeId = $request->query('id_kube');
+        $daftarKube = Kube::all(); 
+        $kubeMilikSaya = null;
+        $searchResult = null;
+        $search = $request->query('search');
+        $filterBulan = $request->query('bulan');
+        $filterTahun = $request->query('tahun');
+   if ($user->role === 'admin' && $request->filled('search')) {
+            $searchResult = Kube::where('nama_kube', 'like', '%' . $search . '%')->get();
         }
-    }
-    $laporan = $query->orderBy('periode_tahun', 'desc')
-                     ->orderBy('periode_bulan', 'desc')
-                     ->get();
 
-    // Statistik
-    $totalOmset = $laporan->sum('omset_pendapatan');
-    $totalLaba = $laporan->sum('laba_bersih');
-    $latest = $laporan->first();
-    $perkembangan = $latest ? $latest->progres_keuangan : "Belum ada Data";
-    $kubeDisetujui = DB::table('pengajuan_kube')
-        ->join('kube', 'pengajuan_kube.id_kube', '=', 'kube.id_kube')
-        ->where('pengajuan_kube.status_pengajuan', 'disetujui')
-        ->when($user->role !== 'admin', function($q) use ($userId) {
-            return $q->where('pengajuan_kube.id_user', $userId);
-        })
-        ->select('pengajuan_kube.id_pengajuan_kube', 'kube.nama_kube as nama_tampilan')
-        ->get();
+       
+        $query = Keuangan::with(['cluster', 'kube']);
 
-    if ($user->role === 'admin') {
-        return view('admin.monevbimbingan.laporan_keuangan', compact(
+        if ($user->role === 'admin') {
+            if ($selectedKubeId) {
+                $query->where('id_kube', $selectedKubeId);
+            } else {
+                    if (!$request->filled('search') && !$filterBulan && !$filterTahun) {
+                    $query->whereNull('id_laporan'); 
+                }
+            }
+        } else {
+               $kubeMilikSaya = Kube::where('id_user', $userId)->first();
+            
+            if ($kubeMilikSaya) {
+                $query->where('id_kube', $kubeMilikSaya->id_kube);
+                $selectedKubeId = $kubeMilikSaya->id_kube;
+            } else {
+                $query->whereNull('id_laporan');
+            }
+        }
+
+        if ($request->filled('search')) {
+            $searchLower = strtolower(trim($search));
+            
+            $bulanKeAngka = [
+                'jan' => 1, 'januari' => 1, 'january' => 1,
+                'feb' => 2, 'februari' => 2, 'february' => 2,
+                'mar' => 3, 'maret' => 3, 'march' => 3,
+                'apr' => 4, 'april' => 4,
+                'mei' => 5, 'may' => 5,
+                'jun' => 6, 'juni' => 6, 'june' => 6,
+                'jul' => 7, 'juli' => 7, 'july' => 7,
+                'agu' => 8, 'agustus' => 8, 'august' => 8, 'aug' => 8,
+                'sep' => 9, 'september' => 9,
+                'okt' => 10, 'oktober' => 10, 'october' => 10, 'oct' => 10,
+                'nov' => 11, 'november' => 11,
+                'des' => 12, 'desember' => 12, 'december' => 12, 'dec' => 12
+            ];
+
+            $targetAngkaBulan = isset($bulanKeAngka[$searchLower]) ? $bulanKeAngka[$searchLower] : null;
+
+            $query->where(function($q) use ($search, $targetAngkaBulan) {
+                $q->where('progres_keuangan', 'like', '%' . $search . '%')
+                  ->orWhere('periode_tahun', 'like', '%' . $search . '%');
+
+                if ($targetAngkaBulan !== null) {
+                    $q->orWhere('periode_bulan', $targetAngkaBulan);
+                }
+
+                if (is_numeric($search)) {
+                    $q->orWhere('periode_bulan', (int)$search);
+                }
+
+                $q->orWhereHas('kube', function($kubeQuery) use ($search) {
+                    $kubeQuery->where('nama_kube', 'like', '%' . $search . '%');
+                });
+            });
+        }
+
+        if ($request->filled('bulan')) {
+            $bulanDropdownMap = [
+                'Januari' => 1, 'Februari' => 2, 'Maret' => 3, 'April' => 4, 'Mei' => 5, 'Juni' => 6,
+                'Juli' => 7, 'Agustus' => 8, 'September' => 9, 'Oktober' => 10, 'November' => 11, 'Desember' => 12
+            ];
+            
+            $valueBulan = isset($bulanDropdownMap[$filterBulan]) ? $bulanDropdownMap[$filterBulan] : $filterBulan;
+            $query->where('periode_bulan', $valueBulan);
+        }
+        
+        if ($request->filled('tahun')) {
+            $query->where('periode_tahun', $filterTahun);
+        }
+
+        $laporan = $query->orderBy('periode_tahun', 'desc')
+                        ->orderBy('periode_bulan', 'desc')
+                        ->get();
+
+        $totalOmset = $laporan->sum('omset_pendapatan');
+        $totalLaba = $laporan->sum('laba_bersih');
+        $latest = $laporan->first();
+        $perkembangan = $latest ? $latest->progres_keuangan : "Belum ada Data";
+
+         $kubeDisetujui = DB::table('kube')
+            ->when($user->role !== 'admin', function($q) use ($userId) {
+                return $q->where('id_user', $userId);
+            })
+            ->select('id_kube', 'nama_kube')
+            ->get();
+
+        $payload = compact(
             'laporan', 'clusters', 'kubeDisetujui', 'totalOmset', 
             'totalLaba', 'perkembangan', 'daftarKube', 'selectedKubeId', 'searchResult'
-        ));
-    } else {
-        // KHUSUS KETUA
-        return view('ketua_kube.monevbimbingan.laporan_keuangan', compact(
-            'laporan', 'clusters', 'kubeDisetujui', 'totalOmset', 
-            'totalLaba', 'perkembangan', 'daftarKube', 'selectedKubeId', 'kubeMilikSaya', 'searchResult'
-        ));
-    }
-}
-   public function store(Request $request) 
-{
-    
-    $userId = auth()->id();
-    $user = auth()->user();
+        );
 
-    $request->validate([
-        'id_persetujuan' => 'required',
-        'id_cluster' => 'required',
-        'omset_pendapatan' => 'required|numeric|min:0',
-        'total_pengeluaran' => 'required|numeric|min:0',
-        'periode_bulan' => 'required|integer|between:1,12',
-        'periode_tahun' => 'required|integer',
-        'tanggal_laporan' => 'required|date'
-    ]);
-    $pengajuan = DB::table('pengajuan_kube')
-        ->where('id_pengajuan_kube', $request->id_persetujuan)
-        ->when($user->role !== 'admin', function($q) use ($userId) {
-            return $q->where('id_user', $userId);
-        })
-        ->first();
-    
-    if (!$pengajuan) {
-        return redirect()->back()->with('error', 'Akses ditolak! Anda tidak berhak mengisi laporan ini.');
+        if ($user->role === 'admin') {
+            return view('admin.monevbimbingan.laporan_keuangan', $payload);
+        } else {
+            $payload['kubeMilikSaya'] = $kubeMilikSaya;
+            return view('ketua_kube.monevbimbingan.laporan_keuangan', $payload);
+        }
     }
 
-    $laba = $request->omset_pendapatan - $request->total_pengeluaran;
-    
-    $lalu = Keuangan::where('id_kube', $pengajuan->id_kube)
-        ->orderBy('periode_tahun', 'desc')
-        ->orderBy('periode_bulan', 'desc')
-        ->first();
+    public function store(Request $request) 
+    {
+        $userId = auth()->id();
+        $user = auth()->user();
+      $request->validate([
+            'id_kube' => 'required',
+            'id_cluster' => 'required',
+            'omset_pendapatan' => 'required|numeric|min:0',
+            'total_pengeluaran' => 'required|numeric|min:0',
+            'periode_bulan' => 'required|integer|between:1,12',
+            'periode_tahun' => 'required|integer',
+            'tanggal_laporan' => 'required|date'
+        ]);
+        $kube = Kube::where('id_kube', $request->id_kube)
+            ->when($user->role !== 'admin', function($q) use ($userId) {
+                return $q->where('id_user', $userId);
+            })
+            ->first();
+        
+        if (!$kube) {
+            return redirect()->back()->with('error', 'Akses ditolak! Anda tidak memiliki wewenang pada kelompok KUBE ini.');
+        }
 
-    $progres = 'Tetap';
-    if ($lalu) {
-        if ($laba > $lalu->laba_bersih) $progres = 'Meningkat';
-        elseif ($laba < $lalu->laba_bersih) $progres = 'Menurun';
+        $laba = $request->omset_pendapatan - $request->total_pengeluaran;
+        
+        $lalu = Keuangan::where('id_kube', $kube->id_kube)
+            ->orderBy('periode_tahun', 'desc')
+            ->orderBy('periode_bulan', 'desc')
+            ->first();
+
+        $progres = 'Tetap';
+        if ($lalu) {
+            if ($laba > $lalu->laba_bersih) $progres = 'Meningkat';
+            elseif ($laba < $lalu->laba_bersih) $progres = 'Menurun';
+        }
+
+        $data = $request->all();
+        $data['id_kube'] = $kube->id_kube;
+        $data['laba_bersih'] = $laba;
+        $data['total_omset'] = $request->omset_pendapatan; 
+        $data['progres_keuangan'] = $progres;
+        $data['status_validasi'] = 'Draft';
+
+        if ($request->hasFile('lampiran_keuangan')) {
+            $file = $request->file('lampiran_keuangan');
+            $namaFile = time() . "_" . str_replace(' ', '_', $file->getClientOriginalName());
+            $file->move(public_path('uploads/keuangan'), $namaFile);
+            $data['lampiran_keuangan'] = $namaFile;
+        }
+
+        Keuangan::create($data);
+        
+        return redirect()->back()->with('success', 'Laporan berhasil disimpan!');
     }
-
-    $data = $request->all();
-    $data['id_kube'] = $pengajuan->id_kube;
-    $data['laba_bersih'] = $laba;
-    $data['total_omset'] = $request->omset_pendapatan; 
-    $data['progres_keuangan'] = $progres;
-    $data['status_validasi'] = 'Draft';
-
-    if ($request->hasFile('lampiran_keuangan')) {
-        $file = $request->file('lampiran_keuangan');
-        $namaFile = time() . "_" . str_replace(' ', '_', $file->getClientOriginalName());
-        $file->move(public_path('uploads/keuangan'), $namaFile);
-        $data['lampiran_keuangan'] = $namaFile;
-    }
-
-    Keuangan::create($data);
-    
-    return redirect()->back()->with('success', 'Laporan berhasil disimpan!');
-}
 
     public function update(Request $request, $id) 
     {
@@ -148,7 +200,6 @@ public function index(Request $request)
 
         $laba = $request->omset_pendapatan - $request->total_pengeluaran;
         
-        // Update data
         $updateData = $request->except(['lampiran_keuangan']);
         $updateData['laba_bersih'] = $laba;
         $updateData['total_omset'] = $request->omset_pendapatan;
@@ -204,58 +255,59 @@ public function index(Request $request)
     {
         return Excel::download(new KeuanganExport, 'Rekapitulasi_Keuangan.xlsx');
     }
+
     public function cetak($id)
-{
-    $laporan = Keuangan::with(['kube', 'cluster'])->findOrFail($id);
-    return view('ketua_kube.monevbimbingan.cetak', compact('laporan'));
-}
+    {
+        $laporan = Keuangan::with(['kube', 'cluster'])->findOrFail($id);
+        return view('ketua_kube.monevbimbingan.cetak', compact('laporan'));
+    }
 
-public function exportExcelAll()
-{
-    return Excel::download(new KeuanganExport(), 'Rekap_Semua_Laporan_Keuangan_KUBE.xlsx');
-}
+    public function exportExcelAll()
+    {
+        return Excel::download(new KeuanganExport(), 'Rekap_Semua_Laporan_Keuangan_KUBE.xlsx');
+    }
 
-public function exportPdfAll()
-{
-    $laporans = Keuangan::with(['kube', 'cluster'])->orderBy('tanggal_laporan', 'desc')->get();
-    $namaKube = 'Semua KUBE';
-    
-    $pdf = Pdf::loadView('admin.monevbimbingan.laporan_pdf', compact('laporans', 'namaKube'))->setPaper('a4', 'landscape');
-    return $pdf->download('Rekap_Semua_Laporan_Keuangan_KUBE.pdf');
-}
+    public function exportPdfAll()
+    {
+        $laporans = Keuangan::with(['kube', 'cluster'])->orderBy('tanggal_laporan', 'desc')->get();
+        $namaKube = 'Semua KUBE';
+        
+        $pdf = Pdf::loadView('admin.monevbimbingan.laporan_pdf', compact('laporans', 'namaKube'))->setPaper('a4', 'landscape');
+        return $pdf->download('Rekap_Semua_Laporan_Keuangan_KUBE.pdf');
+    }
 
-public function exportExcelSingle($id_kube)
-{
-    $kube = Kube::findOrFail($id_kube);
-    $fileName = 'Laporan_Excel_' . str_replace(' ', '_', $kube->nama_kube) . '.xlsx';
-    return \Maatwebsite\Excel\Facades\Excel::download(new KeuanganExport($id_kube), $fileName);
-}
+    public function exportExcelSingle($id_kube)
+    {
+        $kube = Kube::findOrFail($id_kube);
+        $fileName = 'Laporan_Excel_' . str_replace(' ', '_', $kube->nama_kube) . '.xlsx';
+        return \Maatwebsite\Excel\Facades\Excel::download(new KeuanganExport($id_kube), $fileName);
+    }
 
-public function exportPdfSingle($id_kube)
-{
-    $kube = Kube::findOrFail($id_kube);
-    $laporans = Keuangan::with(['kube', 'cluster'])
-        ->where('id_kube', $id_kube) 
-        ->orderBy('tanggal_laporan', 'desc')
-        ->get();
+    public function exportPdfSingle($id_kube)
+    {
+        $kube = Kube::findOrFail($id_kube);
+        $laporans = Keuangan::with(['kube', 'cluster'])
+            ->where('id_kube', $id_kube) 
+            ->orderBy('tanggal_laporan', 'desc')
+            ->get();
 
-    $namaKube = $kube->nama_kube;
-    $pdf = Pdf::loadView('admin.monevbimbingan.laporan_pdf', compact('laporans', 'namaKube'))
-              ->setPaper('a4', 'landscape');
+        $namaKube = $kube->nama_kube;
+        $pdf = Pdf::loadView('admin.monevbimbingan.laporan_pdf', compact('laporans', 'namaKube'))
+                  ->setPaper('a4', 'landscape');
 
-    return $pdf->download('Laporan_PDF_' . str_replace(' ', '_', $namaKube) . '.pdf');
-}
-public function exportPdfDetail($id)
-{
-    $laporanTunggal = Keuangan::with(['kube', 'cluster'])->findOrFail($id);
-    
-    $namaKube = $laporanTunggal->kube->nama_kube ?? 'KUBE';
-    $periode = $laporanTunggal->periode_bulan . '_' . $laporanTunggal->periode_tahun;
-    $laporans = collect([$laporanTunggal]);
-    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.monevbimbingan.laporan_pdf', compact('laporans', 'namaKube'))
-              ->setPaper('a4', 'portrait');
+        return $pdf->download('Laporan_PDF_' . str_replace(' ', '_', $namaKube) . '.pdf');
+    }
 
-    return $pdf->stream('Laporan_Detail_' . str_replace(' ', '_', $namaKube) . '_' . $periode . '.pdf');
-}
+    public function exportPdfDetail($id)
+    {
+        $laporanTunggal = Keuangan::with(['kube', 'cluster'])->findOrFail($id);
+        
+        $namaKube = $laporanTunggal->kube->nama_kube ?? 'KUBE';
+        $periode = $laporanTunggal->periode_bulan . '_' . $laporanTunggal->periode_tahun;
+        $laporans = collect([$laporanTunggal]);
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.monevbimbingan.laporan_pdf', compact('laporans', 'namaKube'))
+                  ->setPaper('a4', 'portrait');
 
+        return $pdf->stream('Laporan_Detail_' . str_replace(' ', '_', $namaKube) . '_' . $periode . '.pdf');
+    }
 }

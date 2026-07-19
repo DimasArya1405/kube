@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             KubeSeeder::class,
             KoordinatorSeeder::class,
             PendampingSeeder::class,
+            JenisBantuanSeeder::class
         ]);
     }
 }

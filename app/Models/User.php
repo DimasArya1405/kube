@@ -49,4 +49,27 @@ class User extends Authenticatable
     {
         return $this->belongsTo(DesaKelurahan::class, 'id_desa_kelurahan', 'id_desa_kelurahan');
     }
+
+public function pendamping()
+{
+    // Mengubungkan user ke tabel pendamping berdasarkan id_pendamping yang ada di tabel users
+    return $this->belongsTo(Pendamping::class, 'id_pendamping');
+}
+
+/**
+ * Mengambil data KUBE yang aktif dibina oleh Pendamping ini
+ */
+public function kubeBinaan()
+{
+    // Melalui model Pendamping, kita ambil relasi ke KUBE (jika ada tabel pivot pembagian_pendamping)
+    // Atau jika relasinya langsung ditaruh di User, sesuaikan di bawah ini:
+    return $this->hasOneThrough(
+        Kube::class,
+        \App\Models\PembagianPendamping::class, // Model dari tabel pembagian_pendamping kamu
+        'id_pendamping', // Foreign key di tabel pembagian_pendamping
+        'id_kube',       // Foreign key di tabel kube
+        'id_pendamping', // Local key di tabel users
+        'id_kube'        // Local key di tabel pembagian_pendamping
+    )->where('status', 'Aktif'); // Pastikan hanya mengambil yang statusnya Aktif
+}
 }

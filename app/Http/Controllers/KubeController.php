@@ -35,11 +35,14 @@ class KubeController extends Controller
     //     return view('admin.data_master.kube', compact('kubes', 'desas', 'clusters', 'calonKetua'));
     // }
 
-    public function index()
+public function index(Request $request) // <-- Tambahkan Request $request di sini
     {
         $desas = DesaKelurahan::orderBy('nama_desa_kelurahan', 'asc')->get();
         $clusters = ClusterUsaha::all();
-        $role = Auth::user()->role; // Cek siapa yang lagi login
+        $role = Auth::user()->role; 
+        
+        // Tangkap kata kunci pencarian
+        $search = $request->input('search');
 
         // ================= LOGIKA UNTUK ADMIN =================
         if ($role == 'admin') {
@@ -48,7 +51,12 @@ class KubeController extends Controller
                 'clusterUsaha.kategori',
                 'pembagianPendamping.pendamping',
                 'pembagianPendamping.pembagianKoordinator.koordinator'
-            ])->get();
+            ])
+            // 🔥 TAMBAHAN LOGIKA PENCARIAN 🔥
+            ->when($search, function ($query) use ($search) {
+                return $query->where('nama_kube', 'like', '%' . $search . '%');
+            })
+            ->get();
 
             $calonKetua = User::where('role', 'ketua_kube')->get();
 
@@ -57,19 +65,20 @@ class KubeController extends Controller
 
         // ================= LOGIKA UNTUK KEPALA DINAS =================
         elseif ($role == 'kepala_dinas') {
-            // Kepala Dinas melihat SEMUA data (sama seperti Admin)
             $kubes = Kube::with([
                 'desa.kecamatan',
                 'clusterUsaha.kategori',
                 'pembagianPendamping.pendamping',
                 'pembagianPendamping.pembagianKoordinator.koordinator'
-            ])->latest()->get();
+            ])
+            // 🔥 TAMBAHAN LOGIKA PENCARIAN 🔥
+            ->when($search, function ($query) use ($search) {
+                return $query->where('nama_kube', 'like', '%' . $search . '%');
+            })
+            ->latest()->get();
 
-            // Tetap di-load agar variabel di compact() tidak error di view
             $calonKetua = User::where('role', 'ketua_kube')->get();
 
-            // Arahkan ke file Blade khusus Kepala Dinas 
-            // Pastikan di view ini tombol Edit/Hapus/Tambah dihilangkan (Read-Only)
             return view('kepala_dinas.monitoring_program.kube', compact('kubes', 'desas', 'clusters', 'calonKetua'));
         }
 
@@ -77,7 +86,6 @@ class KubeController extends Controller
         elseif ($role == 'koordinator') {
             $nikLogin = Auth::user()->nik;
 
-            // Tarik KUBE yang punya relasi pembagian AKTIF sampai ke tingkat Koordinator
             $kubes = Kube::whereHas('pembagianPendampingAktif', function ($q) use ($nikLogin) {
                 $q->whereHas('pembagianKoordinator', function ($qKoor) use ($nikLogin) {
                     $qKoor->where(function ($query) {
@@ -88,7 +96,12 @@ class KubeController extends Controller
                             $qUser->where('nik', $nikLogin);
                         });
                 });
-            })->with([
+            })
+            // 🔥 TAMBAHAN LOGIKA PENCARIAN 🔥
+            ->when($search, function ($query) use ($search) {
+                return $query->where('nama_kube', 'like', '%' . $search . '%');
+            })
+            ->with([
                 'desa.kecamatan',
                 'clusterUsaha.kategori',
                 'pembagianPendampingAktif.pendamping',
@@ -104,12 +117,16 @@ class KubeController extends Controller
         elseif ($role == 'pendamping') {
             $nikLogin = Auth::user()->nik;
 
-            // Tarik KUBE yang punya relasi pembagian AKTIF dengan pendamping
             $kubes = Kube::whereHas('pembagianPendampingAktif', function ($q) use ($nikLogin) {
                 $q->whereHas('pendamping', function ($queryPendamping) use ($nikLogin) {
                     $queryPendamping->where('nik', $nikLogin);
                 });
-            })->with([
+            })
+            // 🔥 TAMBAHAN LOGIKA PENCARIAN 🔥
+            ->when($search, function ($query) use ($search) {
+                return $query->where('nama_kube', 'like', '%' . $search . '%');
+            })
+            ->with([
                 'desa.kecamatan',
                 'clusterUsaha.kategori',
                 'pembagianPendampingAktif.pendamping',
@@ -121,7 +138,6 @@ class KubeController extends Controller
             return view('pendamping.kube_binaan.kube', compact('kubes', 'desas', 'clusters', 'calonKetua'));
         }
 
-        // Kalau ada role lain yang nyasar ke rute ini
         return abort(403, 'Anda tidak memiliki akses ke halaman ini.');
     }
 

@@ -2,442 +2,325 @@
 
 @section('title', 'Monitoring Bantuan - KUBE')
 
-@section('breadcrumb')
-Dashboard / <span class="text-gray-800">Monitoring Bantuan</span>
-@stop
-
 @section('content')
 <div class="mb-8 flex justify-between items-end">
     <div>
         <h2 class="text-3xl font-bold text-gray-800">Monitoring Bantuan</h2>
         <p class="text-gray-500 mt-1">Kelola data monitoring bantuan KUBE.</p>
     </div>
-    <div>
-        @if(auth()->user()->role == 'pendamping')
-        <button type="button" onclick="openTambahModal()"
-            class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md transition shadow-sm font-medium text-sm">
-            Tambah Monitoring
-        </button>
-        @endif
-    </div>
+    {{-- TOMBOL TAMBAH - Konsisten pakai atribut data-modal --}}
+    @if(auth()->user()->role == 'pendamping')
+    <button type="button" onclick="toggleModal('modal-tambah')"
+        class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md transition shadow-sm font-medium text-sm">
+        Tambah Monitoring
+    </button>
+@endif
 </div>
 
 {{-- 🔥 SUMMARY BOX --}}
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-    {{-- Sesuai --}}
     <div class="bg-green-50 p-4 rounded-lg shadow border border-green-200">
         <p class="text-sm text-green-600 font-medium">Sesuai</p>
-        <h3 class="text-2xl font-bold text-green-700">
-            {{ $monitoring->where('kesesuaian','sesuai')->count() }}
-        </h3>
+        <h3 class="text-2xl font-bold text-green-700">{{ $monitoringList->where('kesesuaian','sesuai')->count() }}</h3>
     </div>
-
-    {{-- Tidak Sesuai --}}
     <div class="bg-red-50 p-4 rounded-lg shadow border border-red-200">
         <p class="text-sm text-red-600 font-medium">Tidak Sesuai</p>
-        <h3 class="text-2xl font-bold text-red-700">
-            {{ $monitoring->where('kesesuaian','tidak sesuai')->count() }}
-        </h3>
+        <h3 class="text-2xl font-bold text-red-700">{{ $monitoringList->where('kesesuaian','tidak sesuai')->count() }}</h3>
     </div>
 </div>
 
-{{-- 🛠️ TOOLBAR & SEARCH --}}
-<div class="bg-white mb-4 rounded-lg shadow-sm border p-4">
-    <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
-        
-        {{-- SEARCH INPUT --}}
-        <div class="relative w-full flex-1">
-            <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
-                <i data-lucide="search" class="w-4 h-4"></i>
-            </span>
-            <input type="text" id="searchInput" placeholder="Cari data monitoring berdasarkan jenis bantuan, nama KUBE, pendamping, kesesuaian atau catatan..."
-                class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
+<div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+    {{-- Search Bar --}}
+    <div class="relative flex-1 w-full md:w-auto">
+        <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+            </svg>
+        </span>
+        <input type="text" id="searchInput" placeholder="Cari nama KUBE, jenis bantuan..."
+               onkeyup="searchTable()"
+               class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+    </div>
 
-        {{-- ACTION BUTTONS --}}
-        <div class="flex items-center gap-2 w-full md:w-auto justify-end shrink-0">
+    {{-- Ekspor PDF --}}
     <a href="{{ route('monitoring.pdf') }}"
-        class="flex items-center justify-center bg-red-500 hover:bg-red-600 text-white text-sm px-5 py-2 rounded-lg transition shadow-sm font-medium">
+       class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition duration-200">
+        <i data-lucide="file-text" class="w-4 h-4"></i>
         Ekspor PDF
     </a>
-</div>
-
-    </div>
 </div>
 
 {{-- 📊 TABEL UTAMA --}}
 <div class="bg-white mb-6 rounded-lg shadow-sm border overflow-hidden">
     <div class="relative overflow-x-auto">
         <table class="w-full text-sm text-left text-gray-500">
-            <thead class="text-sm text-gray-700 bg-gray-200">
-                <tr>
-                    <th class="px-6 py-3 text-center">Foto</th>
-                    <th class="px-6 py-3">Jenis Bantuan</th>
-                    <th class="px-6 py-3">Nama KUBE</th>
-                    <th class="px-6 py-3">Pendamping</th>
-                    <th class="px-6 py-3">Tanggal</th>
-                    <th class="px-6 py-3">Kesesuaian</th>
-                    <th class="px-6 py-3">Catatan</th>
-                    <th class="px-6 py-3 text-center">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($monitoring as $item)
-                <tr class="border-b hover:bg-gray-50 transition-colors searchable-row">
-                    
-                    <td class="px-6 py-4 flex justify-center">
-                        @if($item->foto_monitoring)
-                            <img src="{{ asset('storage/'.$item->foto_monitoring) }}"
-                                class="rounded shadow-sm cursor-pointer border hover:scale-105 transition duration-200"
-                                style="width:50px;height:50px;object-fit:cover"
-                                onclick="showImage('{{ asset('storage/'.$item->foto_monitoring) }}')">
-                        @else
-                            <span class="text-gray-400 font-mono">-</span>
-                        @endif
-                    </td>
+    <thead class="text-sm text-gray-700 bg-gray-200">
+        <tr>
+            <th class="px-6 py-3 text-center">Foto</th>
+            <th class="px-6 py-3">Jenis Bantuan</th>
+            <th class="px-6 py-3">Nama KUBE</th>
+            <th class="px-6 py-3">Tanggal</th>
+            <th class="px-6 py-3">Kesesuaian</th>
+            <th class="px-6 py-3">Catatan</th> <th class="px-6 py-3 text-center">Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse($monitoringList as $item)
+        <tr class="border-b hover:bg-gray-50 searchable-row">
+            <td class="px-6 py-4 flex justify-center">
+                @if($item->foto_monitoring)
+                    <img src="{{ asset('storage/'.$item->foto_monitoring) }}" class="w-12 h-12 rounded object-cover cursor-pointer border" onclick="showImage('{{ asset('storage/'.$item->foto_monitoring) }}')">
+                @else
+                    <span class="text-gray-400">-</span>
+                @endif
+            </td>
+            <td class="px-6 py-4">{{ $item->jenisBantuan->jenis_bantuan ?? '-' }}</td>
+            <td class="px-6 py-4">{{ $item->kube->nama_kube ?? '-' }}</td>
+            <td class="px-6 py-4">{{ date('d-m-Y', strtotime($item->tanggal_monitoring)) }}</td>
+            <td class="px-6 py-4">
+                <span class="px-3 py-1 text-xs font-semibold rounded-full {{ $item->kesesuaian == 'sesuai' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
+                    {{ ucfirst($item->kesesuaian) }}
+                </span>
+            </td>
+            <td class="px-6 py-4 text-gray-600 max-w-[200px] truncate">
+                {{ $item->catatan ?? '-' }} </td>
+            <td class="px-6 py-4 text-center">
+                <div class="flex items-center justify-center gap-2">
+                    <button type="button" onclick='openDetailModal(@json($item))' class="text-blue-500 hover:text-blue-700"><i data-lucide="eye" class="w-5 h-5"></i></button>
+                    @if(auth()->user()->role == 'pendamping')
+                        <button type="button" onclick='openEditModal(@json($item))' class="text-amber-500 hover:text-amber-600"><i data-lucide="square-pen" class="w-5 h-5"></i></button>
+                    @endif
+                </div>
+            </td>
+        </tr>
+        @empty
+        <tr><td colspan="7" class="px-6 py-10 text-center text-gray-500">Belum ada data.</td></tr>
+        @endforelse
+    </tbody>
+</table>
+    </div>
+</div>
 
-                    <td class="px-6 py-4 font-medium text-gray-900">
-                        {{ $item->jenisBantuan->jenis_bantuan ?? '-' }}
-                    </td>
 
-                    <td class="px-6 py-4 text-gray-800">
-                        {{ $item->kube->nama_kube ?? '-' }}
-                    </td>
-
-                    <td class="px-6 py-4 text-gray-700">
-                        {{ $item->pendamping->nama_pendamping ?? '-' }}
-                    </td>
-
-                    <td class="px-6 py-4 whitespace-nowrap font-mono text-gray-700">
-                        {{ date('d-m-Y', strtotime($item->tanggal_monitoring)) }}
-                    </td>
-
-                    <td class="px-6 py-4 whitespace-nowrap">
-    @if($item->kesesuaian == 'sesuai')
-        {{-- Badge Sesuai (Hijau Oval Sempurna) --}}
-        <span class="px-4 py-1.5 text-xs font-semibold rounded-full bg-green-100 text-green-700 border border-green-200">
-            Sesuai
-        </span>
-    @else
-        {{-- Badge Tidak Sesuai (Merah Oval Sempurna) --}}
-        <span class="px-4 py-1.5 text-xs font-semibold rounded-full bg-red-100 text-red-700 border border-red-200">
-            Tidak Sesuai
-        </span>
-    @endif
-</td>
-
-                    <td class="px-6 py-4 max-w-xs truncate text-gray-600">
-                        {{ $item->catatan ?? '-' }}
-                    </td>
-
-                    {{-- 📊 BAGIAN KOLOM AKSI PADA TABEL --}}
-<td class="px-6 py-4 text-center">
-    <div class="flex items-center justify-center gap-4"> {{-- Gap diganti ke 4 agar jaraknya pas dan rapi seperti di gambar --}}
+{{-- MODAL FORM MONITORING --}}
+<div id="modal-form-monitoring" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-lg max-h-[80vh] flex flex-col">
+        <div class="p-6 border-b flex justify-between items-center">
+            <h3 class="text-lg font-bold">Tambah Data Monitoring</h3>
+            <button onclick="toggleModal('modal-form-monitoring')" class="text-gray-400 hover:text-gray-600 text-xl">✕</button>
+        </div>
         
-        {{-- Icon Detail (Mata) --}}
-        <button type="button" onclick='openDetailModal(@json($item))'
-            class="text-blue-500 hover:text-blue-700 transition" title="Detail">
-            <i data-lucide="eye" class="w-5 h-5"></i>
-        </button>
-
-        {{-- Icon Edit (Kotak Pensil - DISAMAKAN SESUAI GAMBAR) --}}
-        @if(auth()->user()->role == 'pendamping')
-        <button type="button" onclick='openEditModal(@json($item))'
-            class="text-amber-500 hover:text-amber-600 transition" title="Edit">
-            <i data-lucide="square-pen" class="w-5 h-5"></i>
-        </button>
-        @endif
-
-        {{-- Icon Hapus (Tempat Sampah) --}}
-        <form action="{{ route('monitoring.delete',$item->id_monitoring) }}" method="POST" 
-              onsubmit="return confirm('Apakah Anda yakin ingin menghapus data monitoring ini?')" class="inline">
+        <form id="form-monitoring" action="{{ route('monitoring.store') }}" method="POST" enctype="multipart/form-data" class="p-6 overflow-y-auto">
             @csrf
-            @method('DELETE')
-            <button type="submit" class="text-red-500 hover:text-red-700 transition" title="Hapus">
-                <i data-lucide="trash-2" class="w-5 h-5"></i>
-            </button>
-        </form>
-        
-    </div>
-</td>
+            {{-- ID Pencairan akan diisi lewat JavaScript --}}
+            <input type="hidden" name="id_pencairan" id="input-id-pencairan">
 
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="8" class="px-6 py-10 text-center text-gray-500 italic">
-                        Belum ada data monitoring bantuan.
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-</div>
-
-{{-- MODAL TAMBAH MONITORING (Id disesuaikan & sistem toggle murni class hidden) --}}
-<div id="modal-tambah-monitoring" tabindex="-1"
-    class="hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full bg-black bg-opacity-40 backdrop-blur-sm">
-
-    <div class="relative p-4 w-full max-w-lg">
-        <div class="bg-white rounded-lg shadow-xl overflow-hidden">
-
-            {{-- HEADER --}}
-            <div class="flex items-center justify-between p-4 border-b">
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-800">Tambah Monitoring</h3>
-                    <p class="text-xs text-gray-400 mt-0.5">Isi data monitoring dengan lengkap.</p>
-                </div>
-                <button type="button" onclick="closeTambahModal()"
-                    class="text-gray-400 hover:bg-gray-200 rounded-lg w-8 h-8 flex items-center justify-center font-bold">
-                    ✕
-                </button>
+            <div class="mb-4">
+                <label class="block text-sm font-medium">Tanggal Monitoring</label>
+                <input type="date" name="tanggal_monitoring" class="w-full border p-2 rounded" required>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium">Kesesuaian</label>
+                <select name="kesesuaian" class="w-full border p-2 rounded" required>
+                    <option value="sesuai">Sesuai</option>
+                    <option value="tidak sesuai">Tidak Sesuai</option>
+                </select>
             </div>
 
-            {{-- FORM --}}
-            <form action="{{ route('monitoring.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-
-                <div class="p-5 space-y-3">
-                    {{-- JENIS --}}
-                    <div>
-                        <label class="text-sm font-medium text-gray-700 block mb-1">Jenis Bantuan</label>
-                        <select name="id_jenis_bantuan"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                            @foreach($jenis as $j)
-                            <option value="{{ $j->id_jenis_bantuan }}">{{ $j->jenis_bantuan }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    {{-- KUBE --}}
-                    <div>
-                        <label class="text-sm font-medium text-gray-700 block mb-1">KUBE</label>
-                        <input type="text" value="KUBE Fa Santoso Tbk"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-gray-100 text-gray-600 focus:outline-none" readonly>
-                        <input type="hidden" name="id_kube" value="1">
-                    </div>
-
-                    {{-- PENDAMPING --}}
-                    <div>
-                        <label class="text-sm font-medium text-gray-700 block mb-1">Pendamping</label>
-                        <input type="text" value="Rana"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-gray-100 text-gray-600 focus:outline-none" readonly>
-                        <input type="hidden" name="id_pendamping" value="1">
-                    </div>
-
-                    {{-- TANGGAL --}}
-                    <div>
-                        <label class="text-sm font-medium text-gray-700 block mb-1">Tanggal Monitoring</label>
-                        <input type="date" name="tanggal_monitoring"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                    </div>
-
-                    {{-- KESESUAIAN --}}
-                    <div>
-                        <label class="text-sm font-medium text-gray-700 block mb-1">Kesesuaian</label>
-                        <select name="kesesuaian"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                            <option value="sesuai">Sesuai</option>
-                            <option value="tidak sesuai">Tidak Sesuai</option>
-                        </select>
-                    </div>
-
-                    {{-- CATATAN --}}
-                    <div>
-                        <label class="text-sm font-medium text-gray-700 block mb-1">Catatan</label>
-                        <textarea name="catatan" rows="3"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"></textarea>
-                    </div>
-
-                    {{-- FOTO --}}
-                    <div>
-                        <label class="text-sm font-medium text-gray-700 block mb-1">Foto</label>
-                        <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
-                            <input type="file" name="foto_monitoring" id="fotoMonitoring" class="hidden" accept="image/*">
-                            <input type="text" id="fotoMonitoringLabel" readonly
-                                class="flex-1 px-3 py-2 text-sm text-gray-500 cursor-pointer focus:outline-none"
-                                onclick="document.getElementById('fotoMonitoring').click()">
-                            <button type="button"
-                                onclick="document.getElementById('fotoMonitoring').click()"
-                                class="bg-gray-400 hover:bg-gray-300 text-black text-sm px-4 py-2 transition font-medium">
-                                Pilih File
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- BUTTON ACTIONS (Ditambahkan bg-gray-50 agar matching dengan modal edit) --}}
-                <div class="p-4 border-t flex justify-end gap-2 bg-gray-50 rounded-b-lg">
-                    <button type="button" onclick="closeTambahModal()"
-                        class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg text-sm transition font-medium">
-                        Batal
-                    </button>
-                    <button type="submit"
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition font-medium">
-                        Simpan
-                    </button>
-                </div>
-
-            </form>
-
-        </div>
-    </div>
-</div>
-
-{{-- MODAL PREVIEW FOTO --}}
-<div id="imageModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[60] backdrop-blur-xs">
-    <img id="previewImage" class="max-h-[80%] rounded shadow-2xl border-4 border-white">
-</div>
-
-{{-- MODAL DETAIL MONITORING --}}
-<div id="modal-detail-monitoring"
-    class="hidden fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center backdrop-blur-sm">
-    <div class="bg-white rounded-xl shadow-xl w-full max-w-lg">
-        <div class="p-5 border-b flex justify-between items-center">
-            <h3 class="font-bold text-lg text-gray-800">Detail Monitoring</h3>
-            <button onclick="closeDetailModal()" class="text-gray-400 hover:text-gray-600 font-bold text-lg">✕</button>
-        </div>
-        <div class="p-5 space-y-3">
-            <div>
-                <label class="text-sm font-medium text-gray-700 block mb-1">Jenis Bantuan</label>
-                <input id="detail_jenis" class="w-full border rounded-lg p-2 bg-gray-100 text-sm focus:outline-none" readonly>
+            <div class="mb-4">
+                <label class="block text-sm font-medium">Catatan</label>
+                <textarea name="catatan" class="w-full border p-2 rounded"></textarea>
             </div>
-            <div>
-                <label class="text-sm font-medium text-gray-700 block mb-1">Tanggal</label>
-                <input id="detail_tanggal" class="w-full border rounded-lg p-2 bg-gray-100 text-sm focus:outline-none" readonly>
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium">Foto Monitoring</label>
+                <input type="file" name="foto_monitoring" class="w-full border p-2 rounded" accept="image/*">
             </div>
-            <div>
-                <label class="text-sm font-medium text-gray-700 block mb-1">Kesesuaian</label>
-                <input id="detail_kesesuaian" class="w-full border rounded-lg p-2 bg-gray-100 text-sm focus:outline-none" readonly>
-            </div>
-            <div>
-                <label class="text-sm font-medium text-gray-700 block mb-1">Catatan</label>
-                <textarea id="detail_catatan" class="w-full border rounded-lg p-2 bg-gray-100 text-sm focus:outline-none" readonly></textarea>
-            </div>
-            <div>
-                <label class="text-sm font-medium text-gray-700 block mb-1">Foto</label>
-                <img id="detail_foto" class="w-full rounded-lg mt-2 max-h-[350px] object-cover border shadow-sm">
-            </div>
-        </div>
+
+<button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 font-bold transition">
+    Simpan Monitoring
+</button>        
+</form>
     </div>
 </div>
 
 {{-- MODAL EDIT MONITORING --}}
-<div id="modal-edit-monitoring"
-    class="hidden fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center backdrop-blur-sm">
-    <div class="bg-white rounded-xl shadow-xl w-full max-w-lg">
-        <div class="p-5 border-b flex justify-between items-center">
-            <h3 class="font-bold text-lg text-gray-800">Edit Monitoring</h3>
-            <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 font-bold text-lg">✕</button>
+<div id="modal-edit" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-lg max-h-[80vh] flex flex-col">
+        <div class="p-6 border-b flex justify-between items-center">
+            <h3 class="text-lg font-bold">Edit Data Monitoring</h3>
+            <button onclick="toggleModal('modal-edit')" class="text-gray-400 hover:text-gray-600 text-xl">✕</button>
         </div>
-        <form id="editForm" method="POST" enctype="multipart/form-data">
-            @csrf
-            <div class="p-5 space-y-3">
-                <div>
-                    <label class="text-sm font-medium text-gray-700 block mb-1">Jenis Bantuan</label>
-                    <select name="id_jenis_bantuan" id="edit_jenis" class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-400">
-                        @foreach($jenis as $j)
-                        <option value="{{ $j->id_jenis_bantuan }}">{{ $j->jenis_bantuan }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div>
-                    <label class="text-sm font-medium text-gray-700 block mb-1">Tanggal Monitoring</label>
-                    <input type="date" name="tanggal_monitoring" id="edit_tanggal" class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-400">
-                </div>
-                <div>
-                    <label class="text-sm font-medium text-gray-700 block mb-1">Kesesuaian</label>
-                    <select name="kesesuaian" id="edit_kesesuaian" class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-400">
-                        <option value="sesuai">Sesuai</option>
-                        <option value="tidak sesuai">Tidak Sesuai</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="text-sm font-medium text-gray-700 block mb-1">Catatan</label>
-                    <textarea name="catatan" id="edit_catatan" class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-400"></textarea>
-                </div>
-                <div>
-                    <label class="text-sm font-medium text-gray-700 block mb-1">Foto Saat Ini</label>
-                    <img id="edit_preview" class="w-32 rounded border shadow-sm mb-2 object-cover">
-                </div>
-                <div>
-                    <label class="text-sm font-medium text-gray-700 block mb-1">Ganti Foto</label>
-                    <input type="file" name="foto_monitoring" class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-400">
-                </div>
+        
+        <form id="form-edit" method="POST" enctype="multipart/form-data" class="p-6 overflow-y-auto">
+    @csrf
+    {{-- Input ID Monitoring --}}
+    <input type="hidden" name="id" id="edit-id">
+    
+    {{-- WAJIB: Tambahkan input ini agar validasi 'required' di controller terpenuhi --}}
+    <input type="hidden" name="id_jenis_bantuan" id="edit-id-jenis-bantuan">
+
+    <div class="mb-4">
+        <label class="block text-sm font-medium">Tanggal Monitoring</label>
+        <input type="date" name="tanggal_monitoring" id="edit-tanggal" class="w-full border p-2 rounded" required>
+    </div>
+    
+    <div class="mb-4">
+        <label class="block text-sm font-medium">Kesesuaian</label>
+        <select name="kesesuaian" id="edit-kesesuaian" class="w-full border p-2 rounded" required>
+            <option value="sesuai">Sesuai</option>
+            <option value="tidak sesuai">Tidak Sesuai</option>
+        </select>
+    </div>
+
+    <div class="mb-4">
+        <label class="block text-sm font-medium">Catatan</label>
+        <textarea name="catatan" id="edit-catatan" class="w-full border p-2 rounded"></textarea>
+    </div>
+
+    <div class="mb-4">
+        <label class="block text-sm font-medium">Ganti Foto (Opsional)</label>
+        <input type="file" name="foto_monitoring" class="w-full border p-2 rounded" accept="image/*">
+    </div>
+
+<button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 font-bold transition">
+    Update Monitoring
+</button></form>
+    </div>
+</div>
+
+{{-- MODAL DETAIL MONITORING --}}
+<div id="modal-detail" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-lg p-6">
+        <div class="flex justify-between items-center border-b pb-4 mb-4">
+            <h3 class="text-lg font-bold">Detail Monitoring</h3>
+            <button onclick="toggleModal('modal-detail')" class="text-gray-400 hover:text-gray-600">✕</button>
+        </div>
+        
+        <div id="detail-content" class="space-y-3">
+            <div class="flex justify-center mb-4">
+                <img id="detail-foto" src="" class="w-40 h-40 object-cover rounded border">
             </div>
-            <div class="p-4 border-t flex justify-end gap-2 bg-gray-50 rounded-b-xl">
-                <button type="button" onclick="closeEditModal()" class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg text-sm transition">
-                    Batal
+            <p><strong>Jenis Bantuan:</strong> <span id="detail-jenis"></span></p>
+            <p><strong>Nama KUBE:</strong> <span id="detail-kube"></span></p>
+            <p><strong>Tanggal:</strong> <span id="detail-tanggal"></span></p>
+            <p><strong>Nilai Bantuan:</strong> <span id="detail-nilai"></span></p>
+            <p><strong>Catatan:</strong> <span id="detail-catatan"></span></p>
+        </div>
+    </div>
+</div>
+
+{{-- MODAL PILIH KUBE (Sistem Modal Terpusat) --}}
+<div id="modal-tambah" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[80vh] flex flex-col">
+        <div class="p-6 border-b flex justify-between items-center">
+            <h3 class="text-lg font-bold">Pilih KUBE untuk Dimonitoring</h3>
+            <button onclick="toggleModal('modal-tambah')" class="text-gray-400 hover:text-gray-600 text-xl">✕</button>
+        </div>
+        <div class="p-6 overflow-y-auto">
+            <table class="w-full text-sm text-left">
+    <thead class="bg-gray-100">
+        <tr>
+            <th class="p-3">Nama KUBE</th>
+            <th class="p-3">Jenis Bantuan</th>
+            <th class="p-3">Nilai Bantuan</th>
+            <th class="p-3">Tanggal Cair</th> <th class="p-3 text-center">Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($pencairanTersedia as $row)
+        <tr class="border-b">
+            <td class="p-3">{{ $row->nama_kube }}</td>
+            <td class="p-3">{{ $row->jenis_bantuan }}</td>
+            <td class="p-3">Rp {{ number_format($row->jumlah_bantuan, 0, ',', '.') }}</td>
+            <td class="p-3">{{ date('d-m-Y', strtotime($row->tanggal_cair)) }}</td> <td class="p-3 text-center">
+                <button type="button" 
+                        onclick="bukaFormMonitoring('{{ $row->id_pencairan }}')" 
+                        class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-xs">
+                    Lakukan Monitoring
                 </button>
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition">
-                    Update
-                </button>
-            </div>
-        </form>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+        </div>
     </div>
 </div>
 
 <script>
-// Pencarian Real-time Tabel
-document.getElementById('searchInput').addEventListener('keyup', function(){
-    let val = this.value.toLowerCase();
-    document.querySelectorAll('.searchable-row').forEach(row=>{
-        row.style.display = row.textContent.toLowerCase().includes(val) ? '' : 'none';
-    });
-});
-
-// Modal Preview Gambar Besar
-function showImage(src){
-    document.getElementById('previewImage').src = src;
-    document.getElementById('imageModal').classList.remove('hidden');
-}
-document.getElementById('imageModal').onclick = function(){
-    this.classList.add('hidden');
-}
-
-// Custom text penamaan file upload
-document.getElementById('fotoMonitoring').addEventListener('change', function() {
-    let filename = this.files[0] ? this.files[0].name : '';
-    document.getElementById('fotoMonitoringLabel').value = filename;
-});
-
-// Penanganan Modal TAMBAH MONITORING (Menggunakan fungsi murni agar tidak bentrok)
-function openTambahModal() {
-    document.getElementById('modal-tambah-monitoring').classList.remove('hidden');
-}
-function closeTambahModal() {
-    document.getElementById('modal-tambah-monitoring').classList.add('hidden');
-}
-
-// Penanganan Modal DETAIL
-function openDetailModal(data) {
-    document.getElementById('detail_jenis').value = data.jenis_bantuan?.jenis_bantuan || '';
-    document.getElementById('detail_tanggal').value = data.tanggal_monitoring;
-    document.getElementById('detail_kesesuaian').value = data.kesesuaian;
-    document.getElementById('detail_catatan').value = data.catatan ?? '';
-    if(data.foto_monitoring) {
-        document.getElementById('detail_foto').src = "/storage/" + data.foto_monitoring;
+    // Fungsi Toggle Modal yang universal
+    function toggleModal(id) {
+        document.getElementById(id).classList.toggle('hidden');
     }
-    document.getElementById('modal-detail-monitoring').classList.remove('hidden');
-}
-function closeDetailModal() {
-    document.getElementById('modal-detail-monitoring').classList.add('hidden');
+
+    function bukaFormMonitoring(id) {
+        document.getElementById('input-id-pencairan').value = id;
+        toggleModal('modal-tambah');
+        toggleModal('modal-form-monitoring');
+    }
+
+    function openDetailModal(item) {
+        console.log("Data Item:", item);
+
+        const imgElement = document.getElementById('detail-foto');
+        if (item.foto_monitoring) {
+            imgElement.src = "{{ asset('storage/') }}/" + item.foto_monitoring;
+            imgElement.classList.remove('hidden');
+        } else {
+            imgElement.src = "";
+            imgElement.classList.add('hidden');
+        }
+        
+        document.getElementById('detail-jenis').innerText = item.jenis_bantuan?.jenis_bantuan || '-';
+        document.getElementById('detail-kube').innerText = item.kube?.nama_kube || '-';
+        document.getElementById('detail-tanggal').innerText = item.tanggal_monitoring || '-';
+        document.getElementById('detail-catatan').innerText = item.catatan || '-';
+        
+        let nilai = 0;
+        if (item.pencairan && item.pencairan.pengajuan) {
+            nilai = item.pencairan.pengajuan.jumlah_bantuan;
+        } else if (item.pengajuan) {
+            nilai = item.pengajuan.jumlah_bantuan;
+        }
+        
+        document.getElementById('detail-nilai').innerText = 'Rp ' + parseInt(nilai || 0).toLocaleString('id-ID');
+
+        toggleModal('modal-detail');
+    } // <--- Tutup kurung kurawal openDetailModal di sini
+
+    // Sekarang fungsi ini berdiri sendiri di luar
+    function openEditModal(item) {
+    // Pastikan item.id_monitoring sesuai dengan primary key di database Anda (bisa jadi item.id)
+    const id = item.id_monitoring || item.id; 
+    
+    document.getElementById('form-edit').action = "/monitoring/update/" + id;
+    
+    document.getElementById('edit-id').value = id;
+    document.getElementById('edit-tanggal').value = item.tanggal_monitoring;
+    document.getElementById('edit-kesesuaian').value = item.kesesuaian;
+    document.getElementById('edit-catatan').value = item.catatan || '';
+    
+    // ISI DATA PENTING INI:
+    document.getElementById('edit-id-jenis-bantuan').value = item.id_jenis_bantuan;
+    
+    toggleModal('modal-edit');
 }
 
-// Penanganan Modal EDIT
-function openEditModal(data) {
-    document.getElementById('editForm').action = "/monitoring/update/" + data.id_monitoring;
-    document.getElementById('edit_jenis').value = data.id_jenis_bantuan;
-    document.getElementById('edit_tanggal').value = data.tanggal_monitoring;
-    document.getElementById('edit_kesesuaian').value = data.kesesuaian;
-    document.getElementById('edit_catatan').value = data.catatan ?? '';
-    if(data.foto_monitoring) {
-        document.getElementById('edit_preview').src = "/storage/" + data.foto_monitoring;
+    function searchTable() {
+        const input = document.getElementById("searchInput");
+        const filter = input.value.toLowerCase();
+        const table = document.querySelector("table");
+        // Mengambil semua baris di dalam tbody
+        const rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+
+        for (let i = 0; i < rows.length; i++) {
+            const text = rows[i].textContent.toLowerCase();
+            // Jika teks baris mengandung kata kunci, tampilkan, jika tidak sembunyikan
+            rows[i].style.display = text.includes(filter) ? "" : "none";
+        }
     }
-    document.getElementById('modal-edit-monitoring').classList.remove('hidden');
-}
-function closeEditModal() {
-    document.getElementById('modal-edit-monitoring').classList.add('hidden');
-}
+
 </script>
-@stop
+@endsection
