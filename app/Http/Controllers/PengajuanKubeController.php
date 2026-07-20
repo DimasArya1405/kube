@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class PengajuanKubeController extends Controller
 {
-    // 🔹 FORM CREATE
+    // FORM CREATE
     public function create()
     {
         $jenisBantuan = JenisBantuan::all();
@@ -20,21 +20,19 @@ class PengajuanKubeController extends Controller
         return view('admin.pengajuan_kube.create', compact('jenisBantuan', 'kube'));
     }
 
-    // 🔹 STORE (FINAL MULTI ITEM)
+    // STORE (FITUR LAMA PUTRI)
     public function store(Request $request)
     {
         $request->validate([
             'id_kube' => 'required',
-            'items'   => 'required'
+            'items' => 'required'
         ]);
 
         DB::beginTransaction();
 
         try {
-
             $items = json_decode($request->items, true);
 
-            // ✅ 1x pengajuan (HEADER)
             $pengajuan = PengajuanKube::create([
                 'id_kube' => $request->id_kube,
                 'tanggal_pengajuan' => now(),
@@ -42,19 +40,16 @@ class PengajuanKubeController extends Controller
                 'status_penerima' => 'menunggu'
             ]);
 
-            // ❗ validasi tambahan (biar aman)
             if (!$items || count($items) == 0) {
                 throw new \Exception('Item pengajuan kosong');
             }
 
-            // ✅ loop detail (MULTI ITEM)
             foreach ($items as $item) {
-
                 DetailPengajuan::create([
-                    'pengajuan_id'      => $pengajuan->id_pengajuan_kube,
-                    'id_jenis_bantuan'  => $item['id_jenis'],null, // 🔥 penting!
-                    'nama_item'         => $item['nama'],
-                    'jumlah'            => $item['jumlah']
+                    'pengajuan_id' => $pengajuan->id_pengajuan_kube,
+                    'id_jenis_bantuan' => $item['id_jenis'],
+                    'nama_item' => $item['nama'],
+                    'jumlah' => $item['jumlah']
                 ]);
             }
 
@@ -62,9 +57,7 @@ class PengajuanKubeController extends Controller
 
             return redirect()->route('pengajuan.index')
                 ->with('success', 'Pengajuan berhasil disimpan!');
-
         } catch (\Exception $e) {
-
             DB::rollBack();
 
             return back()
@@ -73,12 +66,12 @@ class PengajuanKubeController extends Controller
         }
     }
 
-    // 🔹 INDEX (LIST)
+    // INDEX (LIST)
     public function index()
     {
         $data = PengajuanKube::with('kube', 'detail.jenisBantuan')
-                ->latest()
-                ->get();
+            ->latest()
+            ->get();
 
         return view('admin.pengajuan_kube.index', compact('data'));
     }

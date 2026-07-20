@@ -1,104 +1,255 @@
 @extends('admin.layout')
 
-@section('title', 'Data User - KUBE')
+@section('title', 'Dashboard KUBE')
 
 @section('breadcrumb')
-Dashboard / <span class="text-gray-800">Data User</span>
+Dashboard / <span class="text-gray-800">Dashboard KUBE</span>
 @stop
 
 @section('content')
-<div class="mb-8 flex justify-between items-end">
+
+<!-- HERO SECTION -->
+
+<div class="bg-gradient-to-r from-blue-700 to-cyan-600 rounded-3xl p-10 text-white mb-8">
+
+<div class="grid md:grid-cols-2 gap-8 items-center">
+
     <div>
-        <h2 class="text-3xl font-bold text-gray-800">Manajemen User</h2>
-        <p class="text-gray-500 mt-1">Pantau dan kelola seluruh akun pengguna KUBE.</p>
+        <h1 class="text-5xl font-bold mb-5">
+            Kelompok Usaha Bersama (KUBE)
+        </h1>
+
+        <p class="text-lg leading-8 mb-6">
+            Program pemberdayaan masyarakat untuk meningkatkan kesejahteraan
+            melalui usaha produktif yang dilakukan secara berkelompok.
+            Bergabunglah bersama KUBE dan wujudkan kemandirian ekonomi masyarakat.
+        </p>
     </div>
 
-    <button data-modal-target="modal-tambah-user" data-modal-toggle="modal-tambah-user" class="block text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition duration-200" type="button">
-        Tambah User Baru
-    </button>
+    <div>
+        <img src="{{ asset('images/pendamping-kube5.jpeg') }}"
+            class="w-full h-[350px] object-cover rounded-2xl shadow-xl">
+    </div>
+
 </div>
 
-<div class="bg-white mb-6 rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-    <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-sm border border-default">
-        <table class="w-full text-sm text-left rtl:text-right text-body">
-            <thead class="text-sm text-body bg-gray-200 border-b rounded-sm border-default">
-                <tr>
-                    <th scope="col" class="px-6 py-3 font-medium">Product name</th>
-                    <th scope="col" class="px-6 py-3 font-medium">Color</th>
-                    <th scope="col" class="px-6 py-3 font-medium">Category</th>
-                    <th scope="col" class="px-6 py-3 font-medium">Price</th>
-                    <th scope="col" class="px-6 py-3 font-medium">Stock</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="bg-neutral-primary border-b border-default">
-                    <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">Apple MacBook Pro 17"</th>
-                    <td class="px-6 py-4">Silver</td>
-                    <td class="px-6 py-4">Laptop</td>
-                    <td class="px-6 py-4">$2999</td>
-                    <td class="px-6 py-4">231</td>
-                </tr>
-                <tr class="bg-neutral-primary border-b border-default">
-                    <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">Microsoft Surface Pro</th>
-                    <td class="px-6 py-4">White</td>
-                    <td class="px-6 py-4">Laptop PC</td>
-                    <td class="px-6 py-4">$1999</td>
-                    <td class="px-6 py-4">423</td>
-                </tr>
-            </tbody>
-        </table>
+</div>
+
+<!-- STATISTIK -->
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+
+<div class="bg-white rounded-2xl shadow p-6 text-center">
+    <div class="text-5xl mb-3">🏢</div>
+    <h3 class="text-4xl font-bold text-cyan-700">100</h3>
+    <p class="text-gray-500">Total KUBE</p>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-6 text-center">
+    <div class="text-5xl mb-3">🌱</div>
+    <h3 class="text-4xl font-bold text-green-600">90</h3>
+    <p class="text-gray-500">KUBE Aktif</p>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-6 text-center">
+    <div class="text-5xl mb-3">👨‍💼</div>
+    <h3 class="text-4xl font-bold text-blue-600">25</h3>
+    <p class="text-gray-500">Pendamping</p>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-6 text-center">
+    <div class="text-5xl mb-3">📁</div>
+    <h3 class="text-4xl font-bold text-red-500">12</h3>
+    <p class="text-gray-500">Kategori Usaha</p>
+</div>
+
+</div>
+
+</div>
+<div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h3 class="text-xl font-bold mb-4">
+        Grafik Perkembangan KUBE
+    </h3>
+
+    <div style="height:250px">
+        <canvas id="perkembanganChart"></canvas>
+    </div>
+</div>
+<div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h3 class="text-lg font-bold mb-4">
+        Jumlah KUBE per Kecamatan
+    </h3>
+
+    <div style="height:300px">
+        <canvas id="kecamatanChart"></canvas>
     </div>
 </div>
 
-<div id="modal-tambah-user" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-    <div class="relative p-4 w-full max-w-md max-h-full">
-        <div class="relative bg-white rounded-lg shadow-sm border border-gray-200">
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900">
-                    Tambah User Baru
-                </h3>
-                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-toggle="modal-tambah-user">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                    </svg>
-                    <span class="sr-only">Close modal</span>
-                </button>
-            </div>
-            <form class="p-4 md:p-5">
-                <div class="grid gap-4 mb-4 grid-cols-2">
-                    <div class="col-span-2">
-                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Nama Lengkap</label>
-                        <input type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5" placeholder="Masukkan nama user" required>
-                    </div>
-                    <div class="col-span-2">
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
-                        <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5" placeholder="user@kube.com" required>
-                    </div>
-                    <div class="col-span-2 sm:col-span-1">
-                        <label for="role" class="block mb-2 text-sm font-medium text-gray-900">Role</label>
-                        <select id="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                            <option selected="">Pilih Role</option>
-                            <option value="admin">Admin</option>
-                            <option value="petugas">Petugas</option>
-                            <option value="ketua">Ketua KUBE</option>
-                        </select>
-                    </div>
-                    <div class="col-span-2 sm:col-span-1">
-                        <label for="status" class="block mb-2 text-sm font-medium text-gray-900">Status</label>
-                        <select id="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                            <option value="aktif">Aktif</option>
-                            <option value="nonaktif">Non-aktif</option>
-                        </select>
-                    </div>
-                </div>
-                <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-full justify-center">
-                    <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
-                    </svg>
-                    Simpan Data User
-                </button>
-            </form>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+    <div class="bg-white rounded-xl shadow p-6">
+        <h3 class="text-lg font-bold mb-4">
+            Kategori Usaha
+        </h3>
+
+        <div style="height:250px">
+            <canvas id="kategoriChart"></canvas>
         </div>
     </div>
+
+    <div class="bg-white rounded-xl shadow p-6">
+        <h3 class="text-lg font-bold mb-4">
+            Status KUBE
+        </h3>
+
+        <div style="height:250px">
+            <canvas id="statusChart"></canvas>
+        </div>
+    </div>
+
 </div>
+<!-- GALERI -->
+
+<div class="bg-white rounded-2xl shadow p-8 mb-10">
+
+<div class="flex justify-between items-center mb-6">
+
+    <h2 class="text-3xl font-bold">
+        Galeri Kegiatan KUBE
+    </h2>
+
+    <div class="flex justify-between items-center mb-6">
+
+    @if(Auth::user()->role == 'admin')
+
+    <a href="{{ route('galeri.index') }}"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+        Kelola Galeri
+    </a>
+    @endif
+</div>
+
+</div>
+<!-- CARD GALERI -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    @forelse($galeri as $item)
+
+    <div class="rounded-2xl overflow-hidden shadow border">
+
+        <a href="{{ route('galeri.detail', $item->id_galeri) }}">
+        <img src="{{ asset('images/' . $item->gambar) }}"
+                class="w-full h-56 object-cover hover:scale-105 transition duration-300">
+        </a>
+
+        <div class="p-4">
+
+            <h3 class="font-semibold text-lg">
+                {{ $item->judul }}
+            </h3>
+
+            <p class="text-sm text-gray-500 mt-2">
+                {{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}
+            </p>
+
+            <p class="text-sm text-gray-600 mt-2">
+                {{ $item->deskripsi }}
+            </p>
+            
+        </div>
+    
+    </div>
+
+    @empty
+
+    <div class="col-span-3 text-center py-10 text-gray-500">
+        Belum ada data galeri.
+    </div>
+
+    @endforelse
+
+</div>
+
+<div class="h-10"></div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const ctx = document.getElementById('kubeChart');
+
+new Chart(document.getElementById('perkembanganChart'), {
+    type: 'line',
+    data: {
+        labels: ['Jan','Feb','Mar','Apr','Mei','Jun'],
+        datasets: [{
+            label: 'Jumlah KUBE',
+            data: [40,55,70,80,90,100]
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+</script>
+<script>
+
+// Grafik Kecamatan
+new Chart(document.getElementById('kecamatanChart'), {
+    type: 'bar',
+    data: {
+        labels: [
+            'Kec. A',
+            'Kec. B',
+            'Kec. C',
+            'Kec. D',
+            'Kec. E'
+        ],
+        datasets: [{
+            label: 'Jumlah KUBE',
+            data: [20, 15, 30, 25, 18]
+        }]
+    },
+    options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+
+// Grafik Kategori
+new Chart(document.getElementById('kategoriChart'), {
+    type: 'pie',
+    data: {
+        labels: [
+            'Kuliner',
+            'Pertanian',
+            'Peternakan',
+            'Perdagangan'
+        ],
+        datasets: [{
+            data: [30, 25, 20, 25]
+        }]
+    }
+});
+
+// Grafik Status
+new Chart(document.getElementById('statusChart'), {
+    type: 'bar',
+    data: {
+        labels: [
+            'Aktif',
+            'Tidak Aktif'
+        ],
+        datasets: [{
+            label: 'Jumlah',
+            data: [85, 15]
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+
+</script>
 @stop

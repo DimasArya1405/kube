@@ -102,7 +102,7 @@ class LaporanKecamatanController extends Controller
             ->join('kategori','cluster_usaha.id_kategori','=','kategori.id_kategori')
 
             ->leftJoin('pengajuan_kube','kube.id_kube','=','pengajuan_kube.id_kube')
-            ->leftJoin('laporan_keuangan','pengajuan_kube.id_pengajuan_kube','=','laporan_keuangan.id_persetujuan')
+            ->leftJoin('laporan_keuangan','kube.id_kube','=','laporan_keuangan.id_kube')
             ->leftJoin('data_perkembangan_usaha','laporan_keuangan.id_laporan','=','data_perkembangan_usaha.id_laporan')
 
             ->leftJoin('pembagian_pendamping','kube.id_kube','=','pembagian_pendamping.id_kube')
@@ -112,7 +112,7 @@ class LaporanKecamatanController extends Controller
 
         // FILTER
         if(!empty($request->tahun)){
-            $query->whereYear('kube.tanggal_terbentuk',$request->tahun);
+           $query->where('laporan_keuangan.periode_tahun', $request->tahun);
         }
 
         if(!empty($request->kecamatan)){
@@ -139,7 +139,18 @@ class LaporanKecamatanController extends Controller
                 DB::raw('COALESCE(SUM(laporan_keuangan.total_omset),0) as total_omset'),
                 DB::raw('COALESCE(SUM(laporan_keuangan.laba_bersih),0) as laba_bersih'),
 
-                DB::raw('MAX(data_perkembangan_usaha.perkembangan_usaha) as perkembangan_usaha'),
+                DB::raw("
+                    (
+                        SELECT dpu.perkembangan_usaha
+                        FROM data_perkembangan_usaha dpu
+                        JOIN laporan_keuangan lk
+                            ON lk.id_laporan = dpu.id_laporan
+                        WHERE lk.id_kube = kube.id_kube
+                        ORDER BY dpu.periode_tahun DESC,
+                                dpu.periode_bulan DESC
+                        LIMIT 1
+                    ) as perkembangan_usaha
+                    "),
 
                 'kube.status'
             )
@@ -170,19 +181,19 @@ class LaporanKecamatanController extends Controller
     // =======================
     public function index(Request $request)
     {
-        $tahun = Kube::selectRaw('YEAR(COALESCE(tanggal_terbentuk, created_at)) as tahun')
-            ->distinct()
-            ->orderBy('tahun','desc')
-            ->get();
-
+        $tahun = DB::table('laporan_keuangan')
+    ->select('periode_tahun as tahun')
+    ->distinct()
+    ->orderBy('tahun', 'desc')
+    ->get();
         $kecamatan = Kecamatan::all();
         $cluster = ClusterUsaha::all();
 
         $data = $this->getFilteredData($request);
 
         $totalKube = $data->count();
-        $kubeAktif = $data->where('status','aktif')->count();
-        $kubeNonaktif = $data->where('status','!=','aktif')->count();
+       $kubeAktif = $data->where('status','Aktif')->count();
+        $kubeNonaktif = $data->where('status','!=','Aktif')->count();
         $totalOmset = $data->sum('total_omset');
         $totalLaba = $data->sum('laba_bersih');
 

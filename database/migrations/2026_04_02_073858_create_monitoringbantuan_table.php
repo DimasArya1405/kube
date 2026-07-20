@@ -14,6 +14,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_jenis_bantuan');
             $table->unsignedBigInteger('id_kube');
             $table->unsignedBigInteger('id_pendamping');
+            $table->unsignedBigInteger('id_pencairan');
 
             $table->date('tanggal_monitoring');
 

@@ -1,46 +1,99 @@
-@extends('admin.layout')
+@extends('ketua_kube.layout')
 
 @section('content')
 <div class="p-4 bg-gray-50 min-h-screen font-sans">
-    {{-- Header Section --}}
-    <div class="flex flex-col md:flex-row md:items-center justify-between mb-5 gap-3">
-        <div>
-            <h1 class="text-xl font-bold text-gray-800 tracking-tight">Keuangan KUBE</h1>
-            <p class="text-[11px] text-gray-500">
-                {{ (auth()->user()->role === 'admin' && !isset($selectedKubeId)) ? 'Pilih kelompok untuk memantau keuangan.' : 'Monitoring omset dan laba bulanan KUBE.' }}
-            </p>
-        </div>
-@if(auth()->user()->role !== 'admin' || isset($selectedKubeId))
-        <div class="flex flex-wrap items-center gap-2">
-            @php
-                $idKubeExport = $selectedKubeId ?? request('id_kube');
-            @endphp
+    <div class="flex flex-col lg:flex-row lg:items-start justify-between mb-6 gap-4">
+        <div class="flex-1 space-y-4">
+            <div>
+                <h1 class="text-xl font-bold text-gray-800 tracking-tight mb-1">Keuangan KUBE</h1>
+                <p class="text-[11px] text-gray-500">
+                    {{ (auth()->user()->role === 'admin' && !isset($selectedKubeId)) ? 'Pilih kelompok untuk memantau keuangan.' : 'Monitoring omset dan laba bulanan KUBE.' }}
+                </p>
+            </div>
+            @if(auth()->user()->role !== 'admin' && isset($kubeMilikSaya))
+                <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm max-w-xl">
+                    <h2 class="text-[11px] font-bold text-gray-800 uppercase tracking-wider mb-3.5 border-b border-gray-100 pb-2 flex items-center gap-1.5">
+                        INFORMASI DASAR KUBE
+                    </h2>
+                    
+                    <div class="space-y-2.5 text-xs text-gray-700">
+                        <div class="flex items-center">
+                            <span class="w-36 text-gray-400 font-medium shrink-0">Nama KUBE</span>
+                            <span class="text-gray-300 mr-2">:</span>
+                            <span class="font-semibold text-gray-800">{{ $kubeMilikSaya->nama_kube }}</span>
+                        </div>
 
-            @if($idKubeExport)
-                <a href="{{ route('laporan.export.pdf.single', $idKubeExport) }}" class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all">
-                    <span>📄</span> Ekspor PDF
-                </a>
-                <a href="{{ route('laporan.export.excel.single', $idKubeExport) }}" class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all">
-                    <span>📊</span> Ekspor Excel
-                </a>
-            @else
-                <a href="{{ route('laporan.export.pdf.all') }}" class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all">
-                    <span>📄</span> Ekspor PDF Semua
-                </a>
-                <a href="{{ route('laporan.export.excel.all') }}" class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all">
-                    <span>📊</span> Ekspor Excel Semua
-                </a>
-            @endif
+                                        <div class="flex items-center">
+                        <span class="w-36 text-gray-400 font-medium shrink-0">Wilayah / Kecamatan</span>
+                        <span class="text-gray-300 mr-2">:</span>
+                        <span class="font-medium text-gray-800 ">
+                            {{ $kubeMilikSaya->desa->kecamatan->nama_kecamatan ?? 'Kecamatan Tidak Diisi' }}
+                        </span>
+                    </div>
 
-            @if(auth()->user()->role !== 'admin')
-                <button data-modal-target="modal-tambah-lk" data-modal-toggle="modal-tambah-lk"
-                    class="flex items-center gap-2 bg-sky-700 hover:bg-sky-900 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all">
-                    + Tambah Laporan
-                </button>
+                        <div class="flex items-center">
+                            <span class="w-36 text-gray-400 font-medium shrink-0">Status</span>
+                            <span class="text-gray-300 mr-2">:</span>
+                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-100">
+                                Ketua KUBE
+                            </span>
+                        </div>
+                    </div>
+                </div>
             @endif
-        </div>
+        </div> 
+
+     @if(auth()->user()->role !== 'admin' || isset($selectedKubeId))
+    <div class="flex flex-wrap items-center gap-2 shrink-0 lg:mt-1">
+        @php
+            $idKubeExport = $selectedKubeId ?? request('id_kube');
+        @endphp
+
+        @if($idKubeExport)
+            {{-- TOMBOL SINGLE KUBE --}}
+            <a href="{{ route('laporan.export.pdf.single', $idKubeExport) }}" 
+                class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+                <span>Ekspor PDF</span>
+            </a>
+
+            <a href="{{ route('laporan.export.excel.single', $idKubeExport) }}" 
+                class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414A1 1 0 0119 9.414V19a2 2 0 01-2 2z" />
+                </svg>
+                <span>Ekspor Excel</span>
+            </a>
+        @else
+            {{-- TOMBOL SEMUA KUBE --}}
+            <a href="{{ route('laporan.export.pdf.all') }}" 
+                class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+                <span>Ekspor PDF Semua</span>
+            </a>
+
+            <a href="{{ route('laporan.export.excel.all') }}" 
+                class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414A1 1 0 0119 9.414V19a2 2 0 01-2 2z" />
+                </svg>
+                <span>Ekspor Excel Semua</span>
+            </a>
         @endif
-    </div>
+                @if(auth()->user()->role !== 'admin')
+                    <button data-modal-target="modal-tambah-lk" data-modal-toggle="modal-tambah-lk"
+                        class="flex items-center gap-2 bg-sky-700 hover:bg-sky-900 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all">
+                        Tambah Laporan
+                    </button>
+                @endif
+            </div>
+        @endif
+
+    </div> 
 
     @if(auth()->user()->role === 'admin' && !isset($selectedKubeId))
     <div class="max-w-4xl mx-auto py-8">
@@ -67,46 +120,32 @@
     </div>
     @endif
 
-    @if(auth()->user()->role !== 'admin' || isset($selectedKubeId))
-     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+ 
+   @if(auth()->user()->role !== 'admin' || isset($selectedKubeId))
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         
-        {{-- Card 1: Total Omset --}}
-        <div class="group bg-white border border-gray-100/50 rounded-[2rem] p-6 shadow-sm hover:shadow-xl hover:shadow-sky-500/10 hover:-translate-y-2 transition-all duration-300">
-            <div class="flex items-center justify-between mb-4">
-            </div>
-            <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] mb-1">Total Omset</p>
-            <div class="flex items-baseline gap-1">
-                <span class="text-xs font-bold text-gray-300">Rp</span>
-                <h3 class="text-2xl font-black text-slate-800 tracking-tight">
-                    {{ number_format($totalOmset, 0, ',', '.') }}
-                </h3>
-            </div>
+        <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm min-h-[100px] flex flex-col justify-center">
+            <p class="text-sm font-medium text-gray-500 mb-1">Total Omset</p>
+            <h3 class="text-2xl font-bold text-slate-800 tracking-tight">
+                <span class="text-xs font-semibold text-gray-400 mr-0.5">Rp</span>{{ number_format($totalOmset, 0, ',', '.') }}
+            </h3>
         </div>
 
-        {{-- Card 2: Laba Bersih --}}
-        <div class="group bg-white border border-gray-100/50 rounded-[2rem] p-6 shadow-sm hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-2 transition-all duration-300">
-            <div class="flex items-center justify-between mb-4">
-            </div>
-            <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] mb-1">Laba Bersih</p>
-            <div class="flex items-baseline gap-1">
-                <span class="text-xs font-bold text-gray-300">Rp</span>
-                <h3 class="text-2xl font-black text-emerald-600 tracking-tight">
-                    {{ number_format($totalLaba, 0, ',', '.') }}
-                </h3>
-            </div>
+        <div class="bg-emerald-50/40 border border-emerald-100 rounded-xl p-5 shadow-sm min-h-[100px] flex flex-col justify-center">
+            <p class="text-sm font-medium text-emerald-600 mb-1">Laba Bersih</p>
+            <h3 class="text-2xl font-bold text-emerald-700 tracking-tight">
+                <span class="text-xs font-semibold text-emerald-400 mr-0.5">Rp</span>{{ number_format($totalLaba, 0, ',', '.') }}
+            </h3>
         </div>
 
-        {{-- Card 3: Perkembangan --}}
-        <div class="group bg-white border border-gray-100/50 rounded-[2rem] p-6 shadow-sm hover:shadow-xl hover:shadow-sky-500/10 hover:-translate-y-2 transition-all duration-300">
-            <div class="flex items-center justify-between mb-4">
-            </div>
-            <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] mb-1">Perkembangan</p>
-            <div class="flex items-center gap-2">
-                <div class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+        <div class="bg-blue-50/40 border border-blue-100 rounded-xl p-5 shadow-sm min-h-[100px] flex flex-col justify-center sm:col-span-2 lg:col-span-1">
+            <p class="text-sm font-medium text-blue-600 mb-1">Perkembangan</p>
+            <div class="flex items-center gap-2 mt-1">
+                <div class="relative flex h-2 w-2 shrink-0">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                 </div>
-                <h3 class="text-sm font-black text-sky-700 uppercase tracking-tight">
+                <h3 class="text-base font-bold text-blue-800 uppercase tracking-tight truncate">
                     {{ $perkembangan }}
                 </h3>
             </div>
@@ -114,11 +153,96 @@
 
     </div>
 
+
+
     {{-- Table --}}
     <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead class="bg-gray-50 border-b border-gray-100">
+<div class="bg-white border border-gray-200 rounded-xl p-4 mb-5 shadow-sm">
+    <form action="{{ url()->current() }}" method="GET" id="filter-form" class="flex flex-col md:flex-row items-center justify-between gap-3">
+        @if(request('id_kube'))
+            <input type="hidden" name="id_kube" value="{{ request('id_kube') }}">
+        @endif
+        <div class="relative w-full md:w-72">
+            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </div>
+            <input type="text" name="search" id="search-input" value="{{ request('search') }}" autocomplete="off"
+                class="w-full ps-9 pe-4 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-700 focus:ring-purple-500 focus:border-purple-500 transition-all placeholder:text-gray-400" 
+                placeholder="{{ auth()->user()->role === 'admin' ? 'Ketik nama kelompok / bulan...' : 'Ketik omset, bulan, status...' }}">
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
+            
+            {{-- Dropdown Bulan --}}
+            <div class="w-full sm:w-32">
+                <select name="bulan" onchange="this.form.submit()" 
+                    class="w-full px-2.5 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-700 focus:ring-purple-500 focus:border-purple-500 transition-all cursor-pointer">
+                    <option value="">Semua Bulan</option>
+                    @foreach(['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $bulan)
+                        <option value="{{ $bulan }}" {{ request('bulan') === $bulan ? 'selected' : '' }}>{{ $bulan }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Dropdown Tahun --}}
+            <div class="w-full sm:w-28">
+                <select name="tahun" onchange="this.form.submit()" 
+                    class="w-full px-2.5 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-700 focus:ring-purple-500 focus:border-purple-500 transition-all cursor-pointer">
+                    <option value="">Semua Tahun</option>
+                    @for($i = 2024; $i <= 2030; $i++)
+                        <option value="{{ $i }}" {{ request('tahun') == $i ? 'selected' : '' }}>{{ $i }}</option>
+                    @endfor
+                </select>
+            </div>
+
+            @if(request('search') || request('bulan') || request('tahun'))
+                <div class="flex items-center shrink-0">
+                    <a href="{{ url()->current() }}{{ request('id_kube') ? '?id_kube='.request('id_kube') : '' }}" 
+                        class="bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-medium px-3 py-1.5 rounded-lg transition-all text-center w-full sm:w-auto">
+                        Reset
+                    </a>
+                </div>
+            @endif
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let timer;
+        const searchInput = document.getElementById('search-input');
+        const filterForm = document.getElementById('filter-form');
+
+        if (searchInput && filterForm) {
+            searchInput.addEventListener('input', function() {
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    localStorage.setItem('search_cursor_pos', searchInput.selectionStart);
+                    localStorage.setItem('is_searching', 'true');
+                    filterForm.submit();
+                }, 200); 
+            });
+            const isSearching = localStorage.getItem('is_searching');
+            if (isSearching === 'true' && searchInput.value !== '') {
+                searchInput.focus();
+                const savedPos = localStorage.getItem('search_cursor_pos');
+                if (savedPos) {
+                    searchInput.setSelectionRange(savedPos, savedPos);
+                } else {
+                    const length = searchInput.value.length;
+                    searchInput.setSelectionRange(length, length);
+                }
+                localStorage.removeItem('is_searching');
+                localStorage.removeItem('search_cursor_pos');
+            }
+        }
+    });
+</script>    
+            <table class="w-full text-sm text-left text-gray-500">
+                <thead class="text-sm text-gray-900 bg-gray-200">
                     <tr>
                         <th class="px-4 py-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Tgl Lapor</th>
                         <th class="px-4 py-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest">KUBE & Cluster</th>
@@ -131,21 +255,27 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50">
-                    @forelse($laporan as $row)
-                    <tr class="hover:bg-gray-50/50 transition">
-                        <td class="px-4 py-2.5 text-xs text-gray-600">
-                            {{ \Carbon\Carbon::parse($row->tanggal_laporan)->translatedFormat('d/m/y') }}
-                        </td>
-                        <td class="px-4 py-2.5">
-                            @php
-                                $dataKube = \DB::table('pengajuan_kube')
-                                    ->join('kube', 'pengajuan_kube.id_kube', '=', 'kube.id_kube')
-                                    ->where('pengajuan_kube.id_pengajuan_kube', $row->id_persetujuan)
-                                    ->first();
-                            @endphp
-                            <div class="font-bold text-gray-700 text-xs">{{ $dataKube->nama_kube ?? 'N/A' }}</div>
-                            <div class="text-[10px] text-gray-400 font-medium uppercase">{{ $row->cluster->nama_cluster ?? '-' }}</div>
-                        </td>
+                  @forelse($laporan as $row)
+<tr class="hover:bg-gray-50/50 transition">
+    <td class="px-4 py-2.5 text-xs text-gray-600">
+        {{ \Carbon\Carbon::parse($row->tanggal_laporan)->translatedFormat('d/m/y') }}
+    </td>
+    <td class="px-4 py-2.5">
+        @php
+            $dataKube = \DB::table('kube')->where('id_kube', $row->id_persetujuan)->first();
+      if (!$dataKube) {
+                $dataKube = \DB::table('pengajuan_kube')
+                    ->join('kube', 'pengajuan_kube.id_kube', '=', 'kube.id_kube')
+                    ->where('pengajuan_kube.id_pengajuan_kube', $row->id_persetujuan)
+                    ->select('kube.*')
+                    ->first();
+            }
+            $namaKubeFix = $dataKube->nama_kube ?? ($row->kube->nama_kube ?? 'N/A');
+        @endphp
+
+        <div class="font-bold text-gray-700 text-xs">{{ $namaKubeFix }}</div>
+        <div class="text-[10px] text-gray-400 font-medium uppercase">{{ $row->cluster->nama_cluster ?? '-' }}</div>
+    </td>
                         <td class="px-4 py-2.5 text-center">
                             <span class="px-2 py-0.5 bg-gray-100 rounded text-[10px] font-bold text-gray-500 uppercase">
                                 {{ date('M y', mktime(0, 0, 0, $row->periode_bulan, 10)) }}
@@ -182,34 +312,51 @@
                         <td class="px-4 py-2.5">
                             <div class="flex justify-center gap-1.5">
                                 <button type="button" onclick="showDetail(this)"
-                                data-id="{{ $row->id_laporan }}"
-                                data-id="{{ $row->id_laporan ?? $row->id_laporan ?? $row->id }}"
-                                    data-kube="{{ $dataKube->nama_kube ?? 'N/A' }}"
-                                    data-cluster="{{ $row->cluster->nama_cluster ?? '-' }}"
-                                    data-periode="{{ date('F Y', mktime(0, 0, 0, $row->periode_bulan, 10)) }}"
-                                    data-tgl="{{ \Carbon\Carbon::parse($row->tanggal_laporan)->translatedFormat('d F Y') }}"
-                                    data-omset="Rp {{ number_format($row->omset_pendapatan, 0, ',', '.') }}"
-                                    data-pengeluaran="Rp {{ number_format($row->total_pengeluaran, 0, ',', '.') }}"
-                                    data-laba="Rp {{ number_format($row->laba_bersih, 0, ',', '.') }}"
-                                    data-ket="{{ $row->keterangan ?? '-' }}"
-                                    class="p-1.5 text-sky-400 hover:bg-sky-50 rounded-md transition text-xs">👁️</button>
+    data-id="{{ $row->id_laporan ?? $row->id }}"
+    data-kube="{{ $namaKubeFix }}"
+    data-cluster="{{ $row->cluster->nama_cluster ?? '-' }}"
+    data-periode="{{ date('F Y', mktime(0, 0, 0, $row->periode_bulan, 10)) }}"
+    data-tgl="{{ \Carbon\Carbon::parse($row->tanggal_laporan)->translatedFormat('d F Y') }}"
+    data-omset="Rp {{ number_format($row->omset_pendapatan, 0, ',', '.') }}"
+    data-pengeluaran="Rp {{ number_format($row->total_pengeluaran, 0, ',', '.') }}"
+    data-laba="Rp {{ number_format($row->laba_bersih, 0, ',', '.') }}"
+    data-ket="{{ $row->keterangan ?? '-' }}"
+    class="p-1.5 text-gray-600 hover:bg-sky-50 rounded-md transition text-xs">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+    </svg>
+</button>
 
                                 @if(auth()->user()->role !== 'admin')
-                                <button onclick="openEditModal(this)"
-                                    data-id="{{ $row->id_laporan }}"
-                                    data-kube="{{ $row->id_persetujuan }}"
-                                    data-cluster="{{ $row->id_cluster }}"
-                                    data-omset="{{ $row->omset_pendapatan }}"
-                                    data-pengeluaran="{{ $row->total_pengeluaran }}"
-                                    data-bulan="{{ $row->periode_bulan }}"
-                                    data-tahun="{{ $row->periode_tahun }}"
-                                    data-tgl="{{ $row->tanggal_laporan }}"
-                                    data-ket="{{ $row->keterangan }}"
-                                    class="p-1.5 text-amber-500 hover:bg-amber-50 rounded-md transition text-xs">✏️</button>
+                                <button type="button" onclick="openEditModal(this)"
+    data-id="{{ $row->id_laporan }}"
+    data-kube="{{ $row->id_persetujuan }}"
+    data-cluster="{{ $row->id_cluster }}"
+    data-omset="{{ $row->omset_pendapatan }}"
+    data-pengeluaran="{{ $row->total_pengeluaran }}"
+    data-bulan="{{ $row->periode_bulan }}"
+    data-tahun="{{ $row->periode_tahun }}"
+    data-tgl="{{ $row->tanggal_laporan }}"
+    data-ket="{{ $row->keterangan }}"
+  
+    class="p-1.5 text-amber-500 hover:bg-amber-50 rounded-md transition text-xs">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+    </svg>
+</button>
 
                                 <form id="delete-form-{{ $row->id_laporan }}" action="{{ route('laporan.destroy', $row->id_laporan) }}" method="POST" class="inline">
                                     @csrf @method('DELETE')
-                                    <button type="button" onclick="confirmDelete('{{ $row->id_laporan }}')" class="p-1.5 text-red-400 hover:bg-red-50 rounded-md transition text-xs">🗑️</button>
+                                    <button type="button" onclick="confirmDelete('{{ $row->id_laporan }}')" 
+    class="p-1.5 text-red-400 hover:bg-red-50 rounded-md transition text-xs">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+    </svg>
+</button>
                                 </form>
                                 @endif
                             </div>
@@ -250,22 +397,29 @@
                 @csrf
 
                 <div class="p-6 space-y-3.5 overflow-y-auto max-h-[60vh] scrollbar-thin scrollbar-thumb-slate-200">
+                    
                     <div class="space-y-1">
                         <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Kelompok KUBE</label>
-                        <div class="flex items-center justify-between w-full bg-slate-100 border border-slate-200/50 rounded-xl px-4 py-2">
-                            <div class="flex flex-col">
-                                <span class="text-[11px] font-bold text-slate-700 uppercase">
-                                    {{ $kubeMilikSaya->nama_kube ?? 'KUBE TIDAK DITEMUKAN' }}
-                                </span>
-                                <span class="text-[8px] text-slate-500">ID: {{ $kubeMilikSaya->id_kube ?? '-' }}</span>
-                            </div>
-                            <span class="text-[9px] bg-slate-200 text-slate-500 px-2 py-0.5 rounded-md font-black">TERKUNCI</span>
-                        </div>
                         
-                        @php 
-                            $id_pengajuan = $kubeDisetujui->first()->id_pengajuan_kube ?? ''; 
-                        @endphp
-                        <input type="hidden" name="id_persetujuan" value="{{ $id_pengajuan }}">
+                        @if(auth()->user()->role === 'admin')
+                            <select name="id_kube" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-[10px] font-bold focus:ring-2 focus:ring-sky-500" required>
+                                <option value="">-- Pilih Kelompok KUBE --</option>
+                                @foreach($kubeDisetujui as $kd)
+                             <option value="{{ $kd->id_kube }}">{{ $kd->nama_kube }}</option>
+                                @endforeach
+                            </select>
+                        @else
+                            <div class="flex items-center justify-between w-full bg-slate-100 border border-slate-200/50 rounded-xl px-4 py-2">
+                                <div class="flex flex-col">
+                                    <span class="text-[11px] font-bold text-slate-700 uppercase">
+                                        {{ $kubeMilikSaya->nama_kube ?? 'KUBE TIDAK DITEMUKAN' }}
+                                    </span>
+                                    <span class="text-[8px] text-slate-500">ID: {{ $kubeMilikSaya->id_kube ?? '-' }}</span>
+                                </div>
+                                <span class="text-[9px] bg-slate-200 text-slate-500 px-2 py-0.5 rounded-md font-black">TERKUNCI</span>
+                            </div>
+                                   <input type="hidden" name="id_kube" value="{{ $kubeMilikSaya->id_kube ?? '' }}">
+                        @endif
                     </div>
 
                     <div class="grid grid-cols-3 gap-3">
@@ -275,6 +429,8 @@
                                 <option value="">Pilih</option>
                                 @foreach($clusters as $c) 
                                     <option value="{{ $c->id_cluster }}">{{ $c->nama_cluster }}</option> 
+                                
+```php
                                 @endforeach
                             </select>
                         </div>
@@ -300,6 +456,7 @@
                         </div>
                     </div>
 
+                    {{-- OMSET & PENGELUARAN --}}
                     <div class="grid grid-cols-2 gap-3">
                         <div class="p-2.5 bg-emerald-50/75 rounded-2xl border border-emerald-100 focus-within:border-emerald-400 transition-all">
                             <label class="text-[8px] font-black text-emerald-600 uppercase block text-center mb-0.5">Omset (Rp)</label>
@@ -311,6 +468,7 @@
                         </div>
                     </div>
 
+                    {{-- TANGGAL LAPORAN & LAMPIRAN --}}
                     <div class="grid grid-cols-2 gap-3">
                         <div class="space-y-1">
                             <label class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Tanggal Laporan Berkas</label>
@@ -324,12 +482,14 @@
                         </div>
                     </div>
 
+                    {{-- KETERANGAN TAMBAHAN --}}
                     <div class="space-y-1">
                         <label class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Keterangan Tambahan</label>
                         <textarea name="keterangan" rows="2" placeholder="Contoh: Pembelian bahan baku..." class="w-full bg-slate-50 border-none rounded-xl text-[10px] p-2.5 resize-none focus:ring-2 focus:ring-sky-500 placeholder:text-slate-300"></textarea>
                     </div>
                 </div>
 
+                {{-- SUBMIT BUTTON --}}
                 <div class="p-6 border-t border-slate-50 bg-white shrink-0">
                     <button type="submit" class="w-full h-10 bg-sky-500 hover:bg-sky-600 text-white font-black rounded-2xl text-[10px] uppercase tracking-widest shadow-lg shadow-sky-100 transition-all active:scale-[0.98]">
                         Simpan Laporan Keuangan
@@ -339,7 +499,6 @@
         </div>
     </div>
 </div>
-
 
 <div id="modal-edit-lk" class="hidden fixed inset-0 z-[100] flex justify-center items-center w-full h-screen bg-slate-900/40 backdrop-blur-sm p-4">
     <div class="relative w-full max-w-md my-auto">
@@ -378,7 +537,7 @@
                         @else
                             <select name="id_persetujuan" id="edit-kube" class="w-full bg-slate-50 border-none rounded-xl px-3 py-2 text-[10px] font-bold focus:ring-2 focus:ring-sky-500" required>
                                 @foreach($kubeDisetujui as $k) 
-                                    <option value="{{ $k->id_pengajuan_kube }}">{{ $k->nama_tampilan }}</option> 
+                                    <option value="{{ $k->id_kube}}">{{ $k->nama_tampilan }}</option> 
                                 @endforeach
                             </select>
                         @endif
@@ -514,7 +673,6 @@
         modal.classList.add('hidden');
         modal.classList.remove('flex');
     }
-
 function openEditModal(button) {
     const id = button.getAttribute('data-id');
     const kube = button.getAttribute('data-kube');
@@ -524,6 +682,7 @@ function openEditModal(button) {
     const bulan = button.getAttribute('data-bulan');
     const tahun = button.getAttribute('data-tahun');
     const ket = button.getAttribute('data-ket');
+    const tanggal = button.getAttribute('data-tgl'); 
 
     const form = document.getElementById('form-edit-lk');
     form.action = `/laporan-keuangan/${id}`; 
@@ -535,6 +694,12 @@ function openEditModal(button) {
     document.getElementById('edit-bulan').value = bulan;
     document.getElementById('edit-tahun').value = tahun;
 
+    if (tanggal) {
+        document.getElementById('edit-tgl').value = tanggal.split(' ')[0];
+    } else {
+        document.getElementById('edit-tgl').value = '';
+    }
+
     const editKubeSelect = document.getElementById('edit-kube');
     if (editKubeSelect) {
         editKubeSelect.value = kube;
@@ -542,7 +707,6 @@ function openEditModal(button) {
 
     document.getElementById('modal-edit-lk').classList.remove('hidden');
 }
-
 function closeEditModal() {
     document.getElementById('modal-edit-lk').classList.add('hidden');
 }
@@ -585,5 +749,7 @@ function printLaporan(url) {
     }
 }
 </script>
+
+
   <iframe id="print-frame" class="hidden" style="display:none;"></iframe>
 @endsection

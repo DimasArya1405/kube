@@ -16,6 +16,9 @@ class RankingKubeController extends Controller
         $kecamatan = $request->kecamatan;
         $status    = $request->status;
 
+        // Ketua KUBE tidak boleh melihat nominal (omset, pengeluaran, laba bersih)
+        $hideNominal = auth()->user()->role === 'ketua_kube';
+
         $tahunList     = ViewRankingKube::select('tahun')->distinct()->orderByDesc('tahun')->pluck('tahun');
         $kategoriList  = ViewRankingKube::select('id_kategori', 'nama_kategori')->distinct()->get();
         $kecamatanList = ViewRankingKube::select('id_kecamatan', 'nama_kecamatan')->distinct()->get();
@@ -68,12 +71,31 @@ class RankingKubeController extends Controller
         // ── Periode per KUBE ──────────────────────────────────────────────────
         $this->attachPeriode($filtered, $tahun, $kategori, $kecamatan, $status);
 
-        $top10 = $overall->take(10);
+        // Top 10 mengikuti hasil filter, bukan keseluruhan data, supaya
+        // chart dan tabel di bawahnya selalu konsisten dengan filter yang dipilih.
+        $top10 = $filtered->take(10);
+
+        // ── Keamanan: untuk Ketua KUBE, betul-betul hapus field nominal dari
+        //    objek sebelum dikirim ke view, supaya tidak bisa dibaca lewat
+        //    "View Page Source" / devtools meskipun di Blade disembunyikan.
+        if ($hideNominal) {
+            $this->stripNominal($overall);
+            $this->stripNominal($filtered);
+            $top10 = collect(); // chart top 10 tidak relevan tanpa nominal
+        }
 
         return view('admin.analisis_akreditasi.ranking_kube', compact(
             'overall', 'filtered', 'top10',
-            'tahunList', 'kategoriList', 'kecamatanList'
+            'tahunList', 'kategoriList', 'kecamatanList', 'hideNominal'
         ));
+    }
+
+    // ── Helper: hapus field nominal dari tiap item collection ──────────────────
+    private function stripNominal($collection): void
+    {
+        $collection->each(function ($item) {
+            unset($item->total_omset, $item->total_pengeluaran, $item->total_laba_bersih);
+        });
     }
 
     // ── Helper: attach field `periode` ke collection $filtered ────────────────
@@ -169,17 +191,28 @@ class RankingKubeController extends Controller
 
     public function exportPdf(Request $request)
     {
-        $filtered = $this->getFiltered($request);
+        $filtered    = $this->getFiltered($request);
+        $hideNominal = auth()->user()->role === 'ketua_kube';
 
-        $pdf = Pdf::loadView('admin.analisis_akreditasi.ranking_kube_pdf', compact('filtered'))
+        if ($hideNominal) {
+            $this->stripNominal($filtered);
+        }
+
+        $pdf = Pdf::loadView('admin.analisis_akreditasi.ranking_kube_pdf', compact('filtered', 'hideNominal'))
             ->setPaper('a4', 'landscape');
 
-        return $pdf->stream('ranking-kube.pdf');
+        // Download langsung, bukan dibuka inline di browser
+        return $pdf->download('ranking-kube-' . now()->format('Ymd') . '.pdf');
     }
 
     public function exportExcel(Request $request)
     {
-        $filtered = $this->getFiltered($request);
+        $filtered    = $this->getFiltered($request);
+        $hideNominal = auth()->user()->role === 'ketua_kube';
+
+        if ($hideNominal) {
+            $this->stripNominal($filtered);
+        }
 
         $filterAktif = collect([
             'Kecamatan' => $request->kecamatan ? $filtered->first()?->nama_kecamatan : null,
@@ -189,7 +222,7 @@ class RankingKubeController extends Controller
         ])->filter()->toArray();
 
         return Excel::download(
-            new RankingKubeExport($filtered, $filterAktif),
+            new RankingKubeExport($filtered, $filterAktif, $hideNominal),
             'ranking-kube-' . now()->format('Ymd') . '.xlsx'
         );
     }

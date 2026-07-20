@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Kube;
-use App\Models\Pendamping;
 
 class BimbinganKube extends Model
 {
@@ -13,6 +11,9 @@ class BimbinganKube extends Model
 
     public $incrementing = true;
     protected $keyType = 'int';
+
+    // 🔥 TAMBAH INI (biar gak error timestamp kalau tabel gak punya)
+    public $timestamps = false;
 
     protected $fillable = [
         'id_jadwal',
@@ -27,13 +28,13 @@ class BimbinganKube extends Model
         'lampiran'
     ];
 
-    // Relasi ke KUBE
+    // 🔥 RELASI KE KUBE
     public function kube()
     {
         return $this->belongsTo(Kube::class, 'id_kube', 'id_kube');
     }
 
-    // ✅ FIX: Relasi ke Pendamping (BUKAN User)
+    // 🔥 RELASI KE PENDAMPING
     public function pendamping()
     {
         return $this->belongsTo(Pendamping::class, 'id_pendamping', 'id_pendamping');

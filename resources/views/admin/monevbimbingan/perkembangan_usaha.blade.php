@@ -19,6 +19,21 @@
             <p class="text-gray-500 mt-1">
                 Kelola data perkembangan usaha seluruh KUBE.
             </p>
+
+
+<div class="space-y-6">
+
+    {{-- HEADER --}}
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">
+                Perkembangan Usaha
+            </h1>
+
+            <p class="text-gray-500 mt-1">
+                Kelola data perkembangan usaha seluruh KUBE.
+            </p>
         </div>
 
     </div>
@@ -80,30 +95,23 @@
             placeholder="Cari nama KUBE..."
             class="w-80 rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500">
 
-        {{-- Status --}}
-        <select class="rounded-xl border border-gray-300 px-4 py-3">
-            <option>Semua Status</option>
-        </select>
-
-        {{-- Perkembangan --}}
-        <select class="rounded-xl border border-gray-300 px-4 py-3">
-            <option>Semua Perkembangan</option>
-        </select>
-
     </div>
 
     {{-- Kanan --}}
     <div class="flex items-center gap-3">
 
-        <button class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg font-medium">
-            PDF
-        </button>
+        <a href="{{ route('perkembangan.export.pdf') }}"
+   class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg font-medium">
+    Export PDF
+</a>
 
-        <button class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-medium">
-            Excel
-        </button>
+        <a href="{{ route('perkembangan.export.excel') }}"
+   class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-medium">
+    Export Excel
+</a>
 
     </div>
+
 
 </div>
 

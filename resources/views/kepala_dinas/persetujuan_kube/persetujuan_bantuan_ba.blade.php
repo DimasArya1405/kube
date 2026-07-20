@@ -107,7 +107,7 @@
         </tr>
         <tr>
             <th>Jumlah Bantuan</th>
-            <td>Rp {{ number_format($pengajuan->jumlah_bantuan ?? 0, 0, ',', '.') }}</td>
+            <td>{{ number_format($pengajuan->jumlah_bantuan ?? 0, 0, ',', '.') }}</td>
         </tr>
         <tr>
             <th>Tanggal Pengajuan</th>

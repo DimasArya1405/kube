@@ -28,7 +28,7 @@ class KoordinatorExport implements
     {
         $this->filterStatus = $filterStatus;
 
-        $query = Koordinator::with(['user']); // hapus 'kecamatan'
+        $query = Koordinator::with(['user', 'kecamatan', 'desa']);
         if ($filterStatus) {
             $query->where('status', $filterStatus);
         }
@@ -39,13 +39,19 @@ class KoordinatorExport implements
     {
         return $this->data->map(function ($item) {
             return [
-                'Nama'          => $item->user->nama ?? '-',
-                'NIK'           => "\t" . ($item->user->nik ?? '-'),
-                'No HP'         => "\t" . ($item->user->no_hp ?? '-'),
-                'Alamat'        => $item->user->alamat ?? '-',
-                'Jenis Kelamin' => $item->jenis_kelamin === 'L' ? 'Laki-laki' : ($item->jenis_kelamin === 'P' ? 'Perempuan' : '-'),
-                'Tanggal Lahir' => $item->tanggal_lahir ? date('d-m-Y', strtotime($item->tanggal_lahir)) : '-',
-                'Status'        => ucfirst($item->status),
+                'Nama'           => $item->nama_koordinator ?? '-',
+                'NIK'            => "\t" . ($item->nik ?? '-'),
+                'Jenis Kelamin'  => $item->jenis_kelamin === 'L' ? 'Laki-laki' : ($item->jenis_kelamin === 'P' ? 'Perempuan' : '-'),
+                'Tempat Lahir'   => $item->tempat_lahir ?? '-',
+                'Tanggal Lahir'  => $item->tanggal_lahir ? date('d-m-Y', strtotime($item->tanggal_lahir)) : '-',
+                'No HP'          => "\t" . ($item->no_hp ?? '-'),
+                'Email'          => $item->email ?? '-',
+                'Pendidikan'     => $item->pendidikan_terakhir ?? '-',
+                'Kecamatan'      => $item->kecamatan->nama_kecamatan ?? '-',
+                'Desa/Kelurahan' => $item->desa->nama_desa_kelurahan ?? '-',
+                'Wilayah'        => $item->wilayah ?? '-',
+                'Alamat'         => $item->alamat ?? '-',
+                'Status'         => $item->status,
             ];
         });
     }
@@ -54,7 +60,11 @@ class KoordinatorExport implements
 
     public function headings(): array
     {
-        return ['Nama', 'NIK', 'No HP', 'Alamat', 'Jenis Kelamin', 'Tanggal Lahir', 'Status'];
+        return [
+            'Nama', 'NIK', 'Jenis Kelamin', 'Tempat Lahir', 'Tanggal Lahir',
+            'No HP', 'Email', 'Pendidikan', 'Kecamatan', 'Desa/Kelurahan',
+            'Wilayah', 'Alamat', 'Status',
+        ];
     }
 
     public function styles(Worksheet $sheet)
@@ -73,7 +83,8 @@ class KoordinatorExport implements
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 $sheet        = $event->sheet->getDelegate();
-                $lastCol      = 'G'; // 7 kolom: A-G
+                $lastCol      = 'M'; // 13 kolom: A-M
+                $statusCol    = 'M'; // kolom Status sekarang di M
                 $headingRow   = 3;
                 $firstDataRow = 4;
                 $totalRows    = $this->data->count() + $headingRow;
@@ -102,7 +113,7 @@ class KoordinatorExport implements
                 }
 
                 // ── Alignment status ─────────────────────────────────────────
-                $sheet->getStyle("G{$firstDataRow}:G{$totalRows}")
+                $sheet->getStyle("{$statusCol}{$firstDataRow}:{$statusCol}{$totalRows}")
                     ->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
                 // ── Zebra striping ───────────────────────────────────────────
@@ -122,22 +133,22 @@ class KoordinatorExport implements
 
                 // ── Warna status ─────────────────────────────────────────────
                 for ($row = $firstDataRow; $row <= $totalRows; $row++) {
-                    $status = $sheet->getCell("G{$row}")->getValue();
-                    $color  = strtolower($status) === 'aktif' ? 'FF15803D' : 'FFDC2626';
-                    $sheet->getStyle("G{$row}")->applyFromArray([
+                    $status = $sheet->getCell("{$statusCol}{$row}")->getValue();
+                    $color  = $status === 'Aktif' ? 'FF1D4ED8' : 'FFDC2626';
+                    $sheet->getStyle("{$statusCol}{$row}")->applyFromArray([
                         'font' => ['bold' => true, 'color' => ['argb' => $color]],
                     ]);
                 }
 
                 // ── Ringkasan teks di bawah tabel ────────────────────────────
-                $aktif    = $this->data->where('status', 'aktif')->count();
-                $nonAktif = $this->data->where('status', 'non-aktif')->count();
+                $aktif    = $this->data->where('status', 'Aktif')->count();
+                $nonAktif = $this->data->where('status', 'Tidak Aktif')->count();
                 $total    = $this->data->count();
 
                 $summaryRow = $totalRows + 2;
                 $sheet->mergeCells("A{$summaryRow}:{$lastCol}{$summaryRow}");
                 $sheet->setCellValue("A{$summaryRow}",
-                    "Aktif: {$aktif}     Non-Aktif: {$nonAktif}     Total: {$total}"
+                    "Aktif: {$aktif}     Tidak Aktif: {$nonAktif}     Total: {$total}"
                 );
                 $sheet->getStyle("A{$summaryRow}")->applyFromArray([
                     'font'      => ['bold' => true, 'size' => 11],

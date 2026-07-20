@@ -8,175 +8,175 @@ use App\Models\JenisBantuan;
 use App\Models\Kube;
 use App\Models\Pendamping;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 class MonitoringController extends Controller
 {
     // ✅ TAMPIL DATA
-    public function index()
-    {
-        $monitoring = Monitoring::with(['jenisBantuan','kube','pendamping'])->get();
-        $jenis = JenisBantuan::all();
-        $kube = Kube::all();
-        $pendamping = Pendamping::all();
-
-        return view('pendamping.dashboard.monitoringbantuan', compact('monitoring','jenis','kube','pendamping'));
-    }
-
-    
-    // ✅ SIMPAN DATA
-    public function store(Request $request)
+public function index()
 {
-    $request->validate([
-        'id_jenis_bantuan' => 'required',
-        'tanggal_monitoring' => 'required',
-        'kesesuaian' => 'required'
-    ]);
+    $user = auth()->user();
+    $pendamping = \App\Models\Pendamping::where('email', $user->email)->first();
+    $idPendamping = $pendamping ? $pendamping->id_pendamping : null;
 
-    $foto = null;
+    // UPDATE DI SINI: Tambahkan 'pencairan' ke dalam with()
+    $monitoringList = \App\Models\Monitoring::with(['jenisBantuan', 'kube', 'pendamping', 'pencairan', 'pengajuan'])
+    ->when($idPendamping, function($query) use ($idPendamping) {
+        return $query->where('id_pendamping', $idPendamping);
+    })
+    ->get();
 
-    if ($request->hasFile('foto_monitoring')) {
-        $foto = $request->file('foto_monitoring')->store('monitoring', 'public');
+    // ... (sisa kode $sudahDimonitoring dan $pencairanTersedia biarkan sama) ...
+    $sudahDimonitoring = \App\Models\Monitoring::pluck('id_pencairan')->toArray();
+
+    $pencairanTersedia = \DB::table('pencairan_bantuan')
+    ->join('pengajuan_kube', 'pencairan_bantuan.id_pengajuan', '=', 'pengajuan_kube.id_pengajuan_kube')
+    ->join('kube', 'pengajuan_kube.id_kube', '=', 'kube.id_kube')
+    ->join('jenis_bantuan', 'pengajuan_kube.id_jenis_bantuan', '=', 'jenis_bantuan.id_jenis_bantuan')
+    ->join('pembagian_pendamping', 'kube.id_kube', '=', 'pembagian_pendamping.id_kube')
+    ->select(
+        'pencairan_bantuan.*', 
+        'kube.nama_kube', 
+        'jenis_bantuan.jenis_bantuan', 
+        'pengajuan_kube.jumlah_bantuan'
+    )
+    ->where('pencairan_bantuan.status_pencairan', 'cair')
+    ->where('pembagian_pendamping.id_pendamping', $idPendamping)
+    ->whereNotIn('pencairan_bantuan.id_pencairan', $sudahDimonitoring)
+    ->get();
+
+    $jenis = \App\Models\JenisBantuan::all();
+
+    return view('pendamping.dashboard.monitoringbantuan', compact('monitoringList', 'pencairanTersedia', 'jenis'));
+}
+    // ✅ SIMPAN DATA
+    // ✅ SIMPAN DATA (Di dalam MonitoringController.php)
+public function store(Request $request)
+{
+    // 1. Tambahkan proteksi: Cek apakah user yang login memiliki role 'pendamping'
+    if (auth()->user()->role !== 'pendamping') {
+        return redirect()->back()->with('error', 'Akses ditolak! Hanya pendamping yang dapat menambah data.');
     }
 
-    Monitoring::create([
-        'id_jenis_bantuan' => $request->id_jenis_bantuan,
-        'id_kube' => 1, // 🔥 FIXED
-        'id_pendamping' => 1, // 🔥 FIXED
-        'tanggal_monitoring' => $request->tanggal_monitoring,
-        'kesesuaian' => $request->kesesuaian,
-        'catatan' => $request->catatan,
-        'foto_monitoring' => $foto
+    // 2. Validasi input
+    $request->validate([
+        'id_pencairan'      => 'required', 
+        'tanggal_monitoring' => 'required|date',
+        'kesesuaian'         => 'required',
+        'foto_monitoring'    => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
     ]);
 
-    return redirect()->back()->with('success','Berhasil ditambahkan');
+    // 3. Ambil info dari tabel pencairan berdasarkan id yang dipilih
+    $pencairan = \DB::table('pencairan_bantuan')
+        ->join('pengajuan_kube', 'pencairan_bantuan.id_pengajuan', '=', 'pengajuan_kube.id_pengajuan_kube')
+        ->where('pencairan_bantuan.id_pencairan', $request->id_pencairan)
+        ->first();
+
+    // Pastikan data pencairan ditemukan untuk mencegah error
+    if (!$pencairan) {
+        return redirect()->back()->with('error', 'Data pencairan tidak ditemukan.');
+    }
+
+    // 4. Cari pendamping aktif untuk KUBE tersebut
+    $pembagian = \DB::table('pembagian_pendamping')
+        ->where('id_kube', $pencairan->id_kube)
+        ->where('status', 'Aktif')
+        ->first();
+
+    $foto = $request->hasFile('foto_monitoring') ? $request->file('foto_monitoring')->store('monitoring', 'public') : null;
+
+    // 5. Simpan data
+    Monitoring::create([
+        'id_pencairan'       => $request->id_pencairan,
+        'id_jenis_bantuan'   => $pencairan->id_jenis_bantuan,
+        'id_kube'            => $pencairan->id_kube,
+        'id_pendamping'      => $pembagian ? $pembagian->id_pendamping : auth()->user()->pendamping->id_pendamping,
+        'tanggal_monitoring' => $request->tanggal_monitoring,
+        'kesesuaian'         => $request->kesesuaian,
+        'catatan'            => $request->catatan,
+        'foto_monitoring'    => $foto
+    ]);
+
+    return redirect()->back()->with('success', 'Data monitoring berhasil dibuat!');
 }
-//     public function store(Request $request)
-// {
-//     $request->validate([
-//         'id_jenis_bantuan' => 'required',
-//         'id_kube' => 'required',
-//         'id_pendamping' => 'required',
-//         'tanggal_monitoring' => 'required',
-//         'kesesuaian' => 'required'
-//     ]);
-
-//     $foto = null;
-
-//     if ($request->hasFile('foto_monitoring')) {
-//         $foto = $request->file('foto_monitoring')->store('monitoring', 'public');
-//     }
-
-//     Monitoring::create([
-//         'id_jenis_bantuan' => $request->id_jenis_bantuan,
-//         'id_kube' => $request->id_kube,
-//         'id_pendamping' => $request->id_pendamping,
-//         'tanggal_monitoring' => $request->tanggal_monitoring,
-//         'kesesuaian' => $request->kesesuaian,
-//         'catatan' => $request->catatan,
-//         'foto_monitoring' => $foto
-//     ]);
-
-//     return redirect()->back()->with('success','Berhasil ditambahkan');
-// }
 
     // ✅ DELETE
     public function delete($id)
     {
         $data = Monitoring::findOrFail($id);
 
-        if($data->foto_monitoring){
-            \Storage::disk('public')->delete($data->foto_monitoring);
+        if ($data->foto_monitoring) {
+            Storage::disk('public')->delete($data->foto_monitoring);
         }
 
         $data->delete();
 
-        return redirect()->back()->with('success','Data berhasil dihapus');
+        return redirect()->back()->with('success', 'Data berhasil dihapus');
     }
 
-    // ✅ FORM EDIT
-public function edit($id)
-{
-    $data = Monitoring::findOrFail($id);
-    $jenis = JenisBantuan::all();
-    $kube = Kube::all();
-    $pendamping = Pendamping::all();
-
-    return view('pendamping.dashboard.monitoring_edit', compact('data','jenis','kube','pendamping'));
-}
-
-// ✅ UPDATE
-public function update(Request $request, $id)
+    // ✅ UPDATE
+   public function update(Request $request, $id)
 {
     $data = Monitoring::findOrFail($id);
 
+    $request->validate([
+        'id_jenis_bantuan'   => 'required',
+        'tanggal_monitoring' => 'required|date',
+        'kesesuaian'         => 'required',
+        'foto_monitoring'    => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+    ]);
+
+    // Handle foto
+    $foto = $data->foto_monitoring; // Default foto lama
     if ($request->hasFile('foto_monitoring')) {
-
-        if($data->foto_monitoring){
-            \Storage::disk('public')->delete($data->foto_monitoring);
+        if ($data->foto_monitoring) {
+            Storage::disk('public')->delete($data->foto_monitoring);
         }
-
         $foto = $request->file('foto_monitoring')->store('monitoring', 'public');
-    } else {
-        $foto = $data->foto_monitoring;
     }
 
     $data->update([
-        'id_jenis_bantuan' => $request->id_jenis_bantuan,
-        'id_kube' => 1, // 🔥 FIXED
-        'id_pendamping' => 1, // 🔥 FIXED
+        'id_jenis_bantuan'   => $request->id_jenis_bantuan,
         'tanggal_monitoring' => $request->tanggal_monitoring,
-        'kesesuaian' => $request->kesesuaian,
-        'catatan' => $request->catatan,
-        'foto_monitoring' => $foto
+        'kesesuaian'         => $request->kesesuaian,
+        'catatan'            => $request->catatan,
+        'foto_monitoring'    => $foto
     ]);
 
-    return redirect('/monitoring')->with('success','Berhasil diupdate');
+    return redirect()->back()->with('success', 'Berhasil diupdate');
 }
-// public function update(Request $request, $id)
-// {
-//     $data = Monitoring::findOrFail($id);
 
-//     if ($request->hasFile('foto_monitoring')) {
-
-//         // hapus lama
-//         if($data->foto_monitoring){
-//             \Storage::disk('public')->delete($data->foto_monitoring);
-//         }
-
-//         $foto = $request->file('foto_monitoring')->store('monitoring', 'public');
-//     } else {
-//         $foto = $data->foto_monitoring;
-//     }
-
-//     $data->update([
-//         'id_jenis_bantuan' => $request->id_jenis_bantuan,
-//         'id_kube' => $request->id_kube,
-//         'id_pendamping' => $request->id_pendamping,
-//         'tanggal_monitoring' => $request->tanggal_monitoring,
-//         'kesesuaian' => $request->kesesuaian,
-//         'catatan' => $request->catatan,
-//         'foto_monitoring' => $foto
-//     ]);
-
-//     return redirect('/monitoring')->with('success','Berhasil diupdate');
-// }
-
-// ✅ DETAIL
-public function detail($id)
+    // ✅ EXPORT PDF
+    public function exportPdf()
 {
-    $data = Monitoring::with(['jenisBantuan','kube','pendamping'])->findOrFail($id);
+    $user = auth()->user();
+    $query = \App\Models\Monitoring::with(['jenisBantuan', 'kube', 'pendamping']);
 
-    return view('pendamping.dashboard.monitoring_detail', compact('data'));
+    // Filter PDF berdasarkan akses
+    if ($user->role === 'pendamping') {
+        $pendamping = \App\Models\Pendamping::where('email', $user->email)->first();
+        if ($pendamping) {
+            $query->where('id_pendamping', $pendamping->id_pendamping);
+        }
+    }
+
+    $monitoring = $query->get();
+
+    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pendamping.dashboard.monitoring_pdf', compact('monitoring'))
+                    ->setPaper('a4', 'landscape');
+
+    return $pdf->download('laporan_monitoring_' . now()->format('Y-m-d') . '.pdf');
 }
 
-public function exportPdf()
+    public function create($id_pencairan)
 {
-    $monitoring = Monitoring::with(['jenisBantuan','kube','pendamping'])->get();
+    // Ambil data pencairan untuk ditampilkan di form
+    $pencairan = \DB::table('pencairan_bantuan')
+        ->join('pengajuan_kube', 'pencairan_bantuan.id_pengajuan', '=', 'pengajuan_kube.id_pengajuan_kube')
+        ->join('kube', 'pengajuan_kube.id_kube', '=', 'kube.id_kube')
+        ->where('pencairan_bantuan.id_pencairan', $id_pencairan)
+        ->first();
 
-    $pdf = Pdf::loadView('pendamping.dashboard.monitoring_pdf', compact('monitoring'))
-                ->setPaper('a4', 'landscape');
-
-    return $pdf->download('monitoring_bantuan.pdf');
+    return view('pendamping.dashboard.create_monitoring', compact('pencairan'));
 }
-
 }

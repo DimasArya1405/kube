@@ -13,34 +13,48 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
         <h2 class="text-3xl font-bold text-gray-800">Data Mitra</h2>
         <p class="text-gray-500 mt-1">Kelola data mitra kolaborasi KUBE</p>
     </div>
+    <div>
+        {{-- Button Tambah --}}
+        <button data-modal-target="modal-tambah-mitra" data-modal-toggle="modal-tambah-mitra"
+            class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md transition shadow-sm font-medium">
+            Tambah Mitra
+        </button>
+    </div>
 </div>
 
 {{-- SUMMARY CARDS --}}
-<div class="flex gap-4 mb-6">
-    <div class="bg-blue-500 text-white rounded-lg px-6 py-4 text-center min-w-[150px]">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white p-4 rounded-lg shadow border">
         <p class="text-sm font-medium">Total Mitra</p>
-        <p class="text-4xl font-bold mt-1">{{ $mitras->count() }}</p>
+        <h3 class="text-2xl font-bold text-gray-800">{{ $mitras->count() }}</h3>
     </div>
-    <div class="bg-green-400 text-white rounded-lg px-6 py-4 text-center min-w-[150px]">
-        <p class="text-sm font-medium">Mitra Aktif</p>
-        <p class="text-4xl font-bold mt-1">{{ $mitras->where('status','Aktif')->count() }}</p>
+    <div class="bg-green-50 p-4 rounded-lg shadow border border-green-200">
+        <p class="text-sm text-green-600">Mitra Aktif</p>
+        <h3 class="text-4xl font-bold mt-1">{{ $mitras->where('status','Aktif')->count() }}</h3>
     </div>
-    <div class="bg-orange-400 text-white rounded-lg px-6 py-4 text-center min-w-[150px]">
-        <p class="text-sm font-medium">Mitra Tidak Aktif</p>
-        <p class="text-4xl font-bold mt-1">{{ $mitras->where('status','Tidak Aktif')->count() }}</p>
+    <div class="bg-red-50 p-4 rounded-lg shadow border border-red-200">
+        <p class="text-sm text-red-600">Mitra Tidak Aktif</p>
+        <h3 class="text-2xl font-bold text-red-700">{{ $mitras->where('status','Tidak Aktif')->count() }}</h3>
     </div>
 </div>
 
 {{-- TOOLBAR --}}
 <div class="flex flex-wrap items-center gap-3 mb-4">
     {{-- Search --}}
-    <div class="relative flex-1 min-w-[200px]">
+    <div class="relative flex-1 min-w-200px">
         <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
             <i data-lucide="search" class="h-4 w-4"></i>
         </span>
         <input type="text" id="searchInput" placeholder="Cari nama mitra...."
             class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
     </div>
+    <select id="filterStatus" onchange="filterByStatus(this.value)"
+        class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <option value="" {{ request('status') == '' ? 'selected' : '' }}>Semua Status</option>
+        <option value="Aktif" {{ request('status') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
+        <option value="Tidak Aktif" {{ request('status') == 'Tidak Aktif' ? 'selected' : '' }}>Non-Aktif</option>
+    </select>
+
 
     {{-- Ekspor PDF --}}
     <a href="{{ route('mitra.pdf') }}"
@@ -60,12 +74,6 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
         Ekspor Excel
     </a>
 
-    {{-- Button Tambah --}}
-    <button data-modal-target="modal-tambah-mitra" data-modal-toggle="modal-tambah-mitra"
-        class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all">
-        + Tambah Mitra
-    </button>
-   
 </div>
 
 {{-- TABLE --}}
@@ -112,11 +120,11 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
                             <p class="text-[10px] text-gray-400 mt-1 uppercase font-semibold italic">Kolaborasi</p>
                         </div>
                     </td>
-                    <td class="px-4 py-3">
+                    <td class="px-6 py-4">
                         @if($item->status == 'Aktif')
-                        <span class="bg-green-100 text-green-700 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Aktif</span>
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium ">Aktif</span>
                         @else
-                        <span class="bg-gray-100 text-gray-600 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Non-Aktif</span>
+                        <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-medium ">Non-Aktif</span>
                         @endif
                     </td>
                     <td class="px-4 py-3 text-center">
@@ -153,18 +161,29 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
 </div>
 
 {{-- MODAL TAMBAH MITRA --}}
-<div id="modal-tambah-mitra" tabindex="-1" class="hidden fixed inset-0 z-50 flex items-center justify-center ">
-    <div class="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl overflow-hidden">
+<div id="modal-tambah-mitra" class="hidden fixed inset-0 z-50 items-center justify-center bg-gray-950/50 p-4 backdrop-blur-sm">
+    
+    {{-- Background Overlay untuk menutup modal saat diklik di luar area --}}
+    <div class="fixed inset-0" data-modal-toggle="modal-tambah-mitra"></div>
+
+    <div class="relative bg-white rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col z-10">
+        
         {{-- Header --}}
-        <div class="flex items-center justify-between p-4 border-b">
-            <h3 class="text-xl font-bold text-gray-800">Tambah Mitra Baru</h3>
-            <button type="button" data-modal-toggle="modal-tambah-mitra" class="text-gray-400 hover:text-red-500 text-xl font-bold">✕</button>
+        <div class="p-6 border-b flex justify-between items-center">
+            <h3 class="text-xl font-semibold text-gray-800">Tambah Mitra Baru</h3>
+            <button type="button" data-modal-toggle="modal-tambah-mitra" class="text-gray-400 hover:text-gray-600 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
         </div>
 
         {{-- Form --}}
-        <form action="{{ route('mitra.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('mitra.store') }}" method="POST" enctype="multipart/form-data" class="flex flex-col flex-1 overflow-hidden">
             @csrf
-            <div class="p-6 overflow-y-auto max-h-[75vh]">
+            
+            {{-- Body Content (Scrollable area) --}}
+            <div class="p-6 overflow-x-auto overflow-y-auto flex-1">
                 <div class="grid grid-cols-2 gap-4">
 
                     {{-- Baris 1: Nama Mitra (Full Width) --}}
@@ -173,7 +192,7 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
                         <input type="text" name="nama_mitra" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none" required>
                     </div>
 
-                    {{-- Baris 2: Jenis Usaha & Status --}}
+                    {{-- Baris 2: Jenis Usaha & Telepon --}}
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Jenis Usaha</label>
                         <select name="jenis_mitra" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none" required>
@@ -184,101 +203,127 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1"></label>
-                        <input type="hidden" name="status" value="Aktif">
-                    </div>
-
-                    {{-- Baris 3: Telepon & Email --}}
-                    <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Telepon</label>
                         <input type="text" name="no_telp" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none" required>
                     </div>
+
+                    {{-- Baris 3: Email & Dokumen Pendukung (MOU) diletakkan Berdampingan Sejajar --}}
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Email</label>
                         <input type="email" name="email" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none" required>
                     </div>
-
-                    {{-- Baris 4: Alamat & Masa Berlaku --}}
-                    <div class="row-span-1">
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Alamat</label>
-                        <textarea name="alamat" rows="4" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none" required></textarea>
-                    </div>
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Masa Berlaku</label>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <span class="text-[10px] text-gray-500 italic">Dari Tanggal</span>
-                                <input type="date" name="tgl_mou" class="w-full border border-gray-300 rounded-lg px-2 py-2 text-xs outline-none" required>
-                            </div>
-                            <div>
-                                <span class="text-[10px] text-gray-500 italic">Masa (Tahun)</span>
-                                <input type="number" name="masa_berlaku" min="1" oninput="if(this.value <1) this.value = 1;" placeholder="Thn" class="w-full border border-gray-300 rounded-lg px-2 py-2 text-xs outline-none" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Baris 5: Nama PIC & Telepon PIC --}}
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Nama PIC</label>
-                        <input type="text" name="nama_pic" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Telepon</label>
-                        <input type="text" name="telp_pic" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none" required>
-                    </div>
-
-                    {{-- Baris 6: Dokumen Pendukung (MOU) --}}
-                    <div class="col-span-2">
                         <label class="block text-sm font-bold text-gray-700 mb-1">Dokumen Pendukung</label>
-                        <div class="flex items-center border-2 border-dashed {{ $errors->has('mou') ? 'border-red-500 bg-red-50' : 'border-gray-300' }} rounded-lg p-4 justify-center flex-col hover:bg-gray-50 transition-colors cursor-pointer" onclick="document.getElementById('mouInput').click()">
-                            <i data-lucide="upload-cloud" class="w-8 h-8 {{ $errors->has('mou') ? 'text-red-500' : 'text-gray-400' }} mb-2"></i>
+                        <div class="flex items-center border {{ $errors->has('mou') ? 'border-red-500 bg-red-50' : 'border-gray-300' }} rounded-lg overflow-hidden bg-white">
+                            {{-- Input File Asli (Tersembunyi) --}}
                             <input type="file" name="mou" id="mouInput" class="hidden" accept=".pdf,.jpg,.jpeg,.png" required>
-                            <input type="text" id="mouLabel" readonly placeholder= "{{ $errors->has('mou') ? 'Gagal Upload!' : 'Silahkan Upload MOU'}}"
-                                class="text-center text-sm {{ $errors->has('mou') ? 'text-red-600 font-bold' : 'text-gray-500' }} bg-transparent outline-none cursor-pointer w-full">
+
+                            {{-- Input Text Palsu untuk Label Nama File --}}
+                            <input type="text" id="mouLabel" readonly 
+                                placeholder="{{ $errors->has('mou') ? 'Gagal Upload!' : 'Silahkan Upload MOU (.pdf, .jpg, .png)' }}"
+                                class="flex-1 px-3 py-2 text-sm {{ $errors->has('mou') ? 'text-red-600 font-bold' : 'text-gray-500' }} cursor-pointer bg-transparent outline-none"
+                                onclick="document.getElementById('mouInput').click()">
+
+                            {{-- Tombol Pilih File --}}
+                            <button type="button"
+                                onclick="document.getElementById('mouInput').click()"
+                                class="bg-teal-500 hover:bg-teal-600 text-white text-sm font-semibold px-4 py-2 transition-colors whitespace-nowrap">
+                                Pilih File
+                            </button>
                         </div>
-                        {{-- Pesan Error --}}
+                        {{-- Pesan Error Validasi Laravel --}}
                         @if ($errors->has('mou'))
-                            <div class="text-red-600 text-xs mt-2 font-bold flex items-center gap-1">
+                            <div class="text-red-600 text-xs mt-1.5 font-bold flex items-center gap-1">
                                 <span class="bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">!</span>
                                 {{ $errors->first('mou') }}
                             </div>
                         @endif
                     </div>
+
+                    {{-- Baris 4: Nama PIC & Telepon PIC --}}
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Nama PIC</label>
+                        <input type="text" name="nama_pic" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Telepon PIC</label>
+                        <input type="text" name="telp_pic" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none" required>
+                    </div>
+
+                    {{-- Baris 5: Alamat & Masa Berlaku --}}
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Alamat</label>
+                        <textarea name="alamat" rows="4" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none resize-none" required></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Masa Berlaku</label>
+                        <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                            <div>
+                                <span class="text-[10px] text-gray-500 font-semibold uppercase block mb-1">Dari Tanggal</span>
+                                <input type="date" name="tgl_mou" class="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs outline-none bg-white focus:ring-2 focus:ring-blue-400" required>
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-gray-500 font-semibold uppercase block mb-1">Masa (Tahun)</span>
+                                <input type="number" name="masa_berlaku" min="1" oninput="if(this.value <1) this.value = 1;" placeholder="Thn" class="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs outline-none bg-white focus:ring-2 focus:ring-blue-400" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Data Status Hidden (Tetap disertakan tanpa merusak sistem) --}}
+                    <input type="hidden" name="status" value="Aktif">
+                    
                 </div>
             </div>
-
+            
             {{-- Footer Buttons --}}
-            <div class="flex justify-end gap-4 p-6 border-t bg-gray-50">
-                <button type="button" data-modal-toggle="modal-tambah-mitra" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-10 rounded-lg transition-all">Batal</button>
-                <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-10 rounded-lg shadow-lg transition-all">Simpan</button>
+            <div class="p-4 border-t bg-gray-50 flex justify-end gap-3">
+                <button type="button" data-modal-toggle="modal-tambah-mitra" 
+                    class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                    Batal
+                </button>
+                <button type="submit" 
+                    class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 shadow-md transition">
+                    Simpan Mitra
+                </button>
             </div>
         </form>
     </div>
 </div>
 
 {{-- MODAL EDIT MITRA --}}
-    <div id="modal-edit-mitra" tabindex="-1" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-    <div class="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl overflow-hidden">
+<div id="modal-edit-mitra" tabindex="-1" class="hidden fixed inset-0 z-50 items-center justify-center bg-gray-950/50 p-4 backdrop-blur-sm">
+    
+    {{-- Background Overlay untuk menutup modal saat diklik di luar area --}}
+    <div class="fixed inset-0" onclick="closeEditModal()"></div>
+
+    <div class="relative bg-white rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col z-10">
+        
         {{-- Header --}}
-        <div class="flex items-center justify-between p-4 border-b bg-gray-50">
-            <h3 class="text-xl font-bold text-gray-800">Edit Data Mitra</h3>
-            <button type="button" onclick="closeEditModal()" class="text-gray-400 hover:text-red-500 text-xl font-bold">✕</button>
+        <div class="p-6 border-b flex justify-between items-center">
+            <h3 class="text-xl font-semibold text-gray-800">Edit Data Mitra</h3>
+            <button type="button" onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
         </div>
 
         {{-- Form Edit --}}
-        <form id="editForm" method="POST" enctype="multipart/form-data">
+        <form id="editForm" method="POST" enctype="multipart/form-data" class="flex flex-col flex-1 overflow-hidden">
             @csrf
             @method('PUT')
-            <div class="p-6 overflow-y-auto max-h-[75vh]">
+            
+            {{-- Body Content (Scrollable area) --}}
+            <div class="p-6 overflow-x-auto overflow-y-auto flex-1">
                 <div class="grid grid-cols-2 gap-4">
-                    
-                    {{-- Nama Mitra --}}
+
+                    {{-- Baris 1: Nama Mitra (Full Width) --}}
                     <div class="col-span-2">
                         <label class="block text-sm font-bold text-gray-700 mb-1">Nama Mitra</label>
                         <input type="text" name="nama_mitra" id="edit_nama_mitra" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none" required>
                     </div>
 
-                    {{-- Jenis Usaha & Status --}}
+                    {{-- Baris 2: Jenis Usaha & Telepon Resmi --}}
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Jenis Usaha</label>
                         <select name="jenis_mitra" id="edit_jenis_mitra" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none" required>
@@ -288,41 +333,38 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
                             <option value="Pemerintah">Pemerintah</option>
                         </select>
                     </div>
-                    <div class="invisible">
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Status</label>
-                        <input type="hidden" name="status" id="edit_status">
-                    </div>
-
-                    {{-- Telepon & Email --}}
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Telepon Resmi</label>
                         <input type="text" name="no_telp" id="edit_no_telp" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none" required>
                     </div>
+
+                    {{-- Baris 3: Email Resmi & Update Dokumen Pendukung (Berjajar di Samping Email) --}}
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Email Resmi</label>
                         <input type="email" name="email" id="edit_email" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none" required>
                     </div>
-
-                    {{-- Alamat & Masa Berlaku --}}
-                    <div class="row-span-1">
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Alamat</label>
-                        <textarea name="alamat" id="edit_alamat" rows="4" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none" required></textarea>
-                    </div>
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Masa Berlaku</label>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <span class="text-[10px] text-gray-400 italic">Mulai Tanggal</span>
-                                <input type="date" name="tgl_mou" id="edit_tgl_mou" class="w-full border border-gray-300 rounded-lg px-2 py-2 text-xs outline-none" required>
-                            </div>
-                            <div>
-                                <span class="text-[10px] text-gray-400 italic">Durasi (Tahun)</span>
-                                <input type="number" name="masa_berlaku" id="edit_masa_berlaku" min="1" oninput="if(this.value < 1) this.value = 1;" placeholder="Thn" class="w-full border border-gray-300 rounded-lg px-2 py-2 text-xs outline-none" required>
-                            </div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Update Dokumen <span class="text-[11px] font-normal text-gray-400">(Kosongkan jika tetap)</span></label>
+                        <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden bg-white">
+                            {{-- Input File Asli Tersembunyi --}}
+                            <input type="file" name="mou" id="mouEditInput" class="hidden" accept=".pdf,.jpg,.jpeg,.png">
+
+                            {{-- Input Text Palsu untuk Label Nama File --}}
+                            <input type="text" id="mouEditLabel" readonly 
+                                placeholder="Klik untuk ganti file MOU" 
+                                class="flex-1 px-3 py-2 text-sm text-gray-500 cursor-pointer bg-transparent outline-none"
+                                onclick="document.getElementById('mouEditInput').click()">
+
+                            {{-- Tombol Pilih File --}}
+                            <button type="button"
+                                onclick="document.getElementById('mouEditInput').click()"
+                                class="bg-teal-500 hover:bg-teal-600 text-white text-sm font-semibold px-4 py-2 transition-colors whitespace-nowrap">
+                                Pilih File
+                            </button>
                         </div>
                     </div>
 
-                    {{-- PIC --}}
+                    {{-- Baris 4: Nama PIC & Telepon PIC --}}
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Nama PIC</label>
                         <input type="text" name="nama_pic" id="edit_nama_pic" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none" required>
@@ -332,27 +374,39 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
                         <input type="text" name="telp_pic" id="edit_telp_pic" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none" required>
                     </div>
 
-                    {{-- Dokumen MOU --}}
-                    <div class="col-span-2">
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Update Dokumen (Kosongkan jika tetap)</label>
-                        <div class="flex items-center border-2 border-dashed border-gray-300 rounded-lg p-4 justify-center flex-col hover:bg-gray-50 transition-colors cursor-pointer bg-gray-50/50" onclick="document.getElementById('mouEditInput').click()">
-                            <i data-lucide="upload-cloud" class="w-6 h-6 text-gray-400 mb-1"></i>
-                            <input type="file" name="mou" id="mouEditInput" class="hidden" accept=".pdf,.jpg,.jpeg,.png">
-                            <input type="text" id="mouEditLabel" readonly placeholder="Klik untuk ganti file MOU" 
-                                class="text-center text-xs text-gray-500 bg-transparent outline-none cursor-pointer w-full font-medium">
+                    {{-- Baris 5: Alamat & Masa Berlaku --}}
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Alamat</label>
+                        <textarea name="alamat" id="edit_alamat" rows="4" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none resize-none" required></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Masa Berlaku</label>
+                        <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                            <div>
+                                <span class="text-[10px] text-gray-500 font-semibold uppercase block mb-1">Mulai Tanggal</span>
+                                <input type="date" name="tgl_mou" id="edit_tgl_mou" class="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs outline-none bg-white focus:ring-2 focus:ring-blue-400" required>
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-gray-500 font-semibold uppercase block mb-1">Durasi (Tahun)</span>
+                                <input type="number" name="masa_berlaku" id="edit_masa_berlaku" min="1" oninput="if(this.value < 1) this.value = 1;" placeholder="Thn" class="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs outline-none bg-white focus:ring-2 focus:ring-blue-400" required>
+                            </div>
                         </div>
                     </div>
+
+                    {{-- Input Data Status Hidden (Tetap dipertahankan di luar layout utama) --}}
+                    <input type="hidden" name="status" id="edit_status">
+                    
                 </div>
             </div>
-
+            
             {{-- Footer Buttons --}}
-            <div class="flex justify-end gap-3 p-4 border-t bg-gray-50">
+            <div class="p-4 border-t bg-gray-50 flex justify-end gap-3">
                 <button type="button" onclick="closeEditModal()" 
-                    class="bg-gray-400 hover:bg-gray-500 text-white font-bold px-10 py-2 rounded-lg transition-all">
+                    class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
                     Batal
                 </button>
                 <button type="submit" 
-                    class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-10 py-2 rounded-lg shadow-lg transition-all">
+                    class="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 shadow-md transition">
                     Update Mitra
                 </button>
             </div>
@@ -361,84 +415,103 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
 </div>
 
 {{-- MODAL DETAIL MITRA --}}
-<div id="modal-detail-mitra" tabindex="-1" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-    <div class="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl overflow-hidden">
+<div id="modal-detail-mitra" tabindex="-1" class="hidden fixed inset-0 z-50 items-center justify-center bg-gray-950/50 p-4 backdrop-blur-sm">
+    
+    {{-- Background Overlay untuk menutup modal saat diklik di luar area --}}
+    <div class="fixed inset-0" onclick="closeDetailModal()"></div>
+
+    <div class="relative bg-white rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col z-10">
+        
         {{-- Header --}}
-        <div class="flex items-center justify-between p-4 border-b bg-blue-50">
-            <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+        <div class="p-6 border-b flex justify-between items-center">
+            <h3 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
                 <i data-lucide="info" class="w-5 h-5 text-blue-600"></i> Detail Informasi Mitra
             </h3>
-            <button type="button" onclick="closeDetailModal()" class="text-gray-400 hover:text-red-500 text-xl font-bold">✕</button>
+            <button type="button" onclick="closeDetailModal()" class="text-gray-400 hover:text-gray-600 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
         </div>
 
-        <div class="p-6 overflow-y-auto max-h-[75vh]">
+        {{-- Body Content (Scrollable area) --}}
+        <div class="p-6 overflow-x-auto overflow-y-auto flex-1">
             <div class="grid grid-cols-2 gap-4">
+                
+                {{-- Baris 1: Nama Mitra (Full Width) --}}
                 <div class="col-span-2">
-                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Nama Mitra</label>
-                    <input type="text" id="detail_nama_mitra" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-semibold text-gray-800 outline-none" readonly>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Nama Mitra</label>
+                    <input type="text" id="detail_nama_mitra" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm font-semibold text-gray-800 outline-none" readonly>
                 </div>
                 
+                {{-- Baris 2: Jenis Usaha & Status --}}
                 <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Jenis Usaha</label>
-                    <input type="text" id="detail_jenis_mitra" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 outline-none" readonly>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Jenis Usaha</label>
+                    <input type="text" id="detail_jenis_mitra" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-800 outline-none" readonly>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Status</label>
-                    <input type="text" id="detail_status" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-bold outline-none" readonly>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Status</label>
+                    <input type="text" id="detail_status" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm font-bold outline-none" readonly>
                 </div>
 
-                <div><label class="block text-xs font-bold text-gray-400 uppercase mb-1">Telepon</label><input type="text" id="detail_no_telp" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none" readonly></div>
-                <div><label class="block text-xs font-bold text-gray-400 uppercase mb-1">Email</label><input type="text" id="detail_email" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none" readonly></div>
+                {{-- Baris 3: Telepon Resmi & Email Resmi --}}
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Telepon Resmi</label>
+                    <input type="text" id="detail_no_telp" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-800 outline-none" readonly>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Email Resmi</label>
+                    <input type="text" id="detail_email" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-800 outline-none" readonly>
+                </div>
                 
-                <div class="col-span-2">
-                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Alamat</label>
-                    <textarea id="detail_alamat" rows="2" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none resize-none" readonly></textarea>
+                {{-- Baris 4: Nama PIC & Telepon PIC --}}
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Nama PIC</label>
+                    <input type="text" id="detail_nama_pic" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-800 outline-none" readonly>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Telepon PIC</label>
+                    <input type="text" id="detail_telp_pic" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-800 outline-none" readonly>
                 </div>
 
-                <div><label class="block text-xs font-bold text-gray-400 uppercase mb-1">Tanggal MoU</label><input type="text" id="detail_tgl_mou" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none" readonly></div>
-                <div><label class="block text-xs font-bold text-gray-400 uppercase mb-1">Masa Berlaku</label><input type="text" id="detail_masa_berlaku" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none" readonly></div>
-                
-                <div><label class="block text-xs font-bold text-gray-400 uppercase mb-1">Nama PIC</label><input type="text" id="detail_nama_pic" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none" readonly></div>
-                <div><label class="block text-xs font-bold text-gray-400 uppercase mb-1">Telp PIC</label><input type="text" id="detail_telp_pic" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none" readonly></div>
-                
-                <div class="col-span-2">
-                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Dokumen MOU</label>
-                    <div id="detail_mou_container" class="mt-1">
+                {{-- Baris 5: Alamat & Masa Berlaku --}}
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Alamat</label>
+                    <textarea id="detail_alamat" rows="4" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-800 outline-none resize-none" readonly></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Masa Berlaku</label>
+                    <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                        <div>
+                            <span class="text-[10px] text-gray-500 font-semibold uppercase block mb-1">Mulai Tanggal</span>
+                            <input type="text" id="detail_tgl_mou" class="w-full bg-white border border-gray-300 rounded-lg px-2 py-1.5 text-xs text-gray-800 outline-none" readonly>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-gray-500 font-semibold uppercase block mb-1">Durasi (Tahun)</span>
+                            <input type="text" id="detail_masa_berlaku" class="w-full bg-white border border-gray-300 rounded-lg px-2 py-1.5 text-xs text-gray-800 outline-none" readonly>
+                        </div>
                     </div>
                 </div>
+                
+                {{-- Baris 6: Dokumen MOU (Full Width di bagian bawah) --}}
+                <div class="col-span-2">
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Dokumen Pendukung / MOU</label>
+                    <div id="detail_mou_container" class="p-3 bg-gray-50 border border-gray-200 rounded-lg">
+                        {{-- Elemen link/file akan di-inject otomatis ke sini oleh JS bawaanmu --}}
+                    </div>
+                </div>
+
             </div>
         </div>
 
-        {{-- Footer --}}
-        <div class="flex justify-end p-4 border-t bg-gray-50">
-            <button type="button" onclick="closeDetailModal()" class="bg-gray-800 hover:bg-gray-900 text-white font-bold px-8 py-2 rounded-lg transition-all">
+        {{-- Footer Buttons --}}
+        <div class="p-4 border-t bg-gray-50 flex justify-end gap-3">
+            <button type="button" onclick="closeDetailModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
                 Tutup
             </button>
         </div>
     </div>
 </div>
-
-<div id="modalDeleteMitra" tabindex="-1" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-black bg-opacity-50 p-4">
-    <div class="relative w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden">
-        <div class="p-6 text-center">
-            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-4">
-                <i data-lucide="alert-triangle" class="h-10 w-10 text-red-600"></i>
-            </div>
-            <h3 class="text-xl font-bold text-gray-800 mb-2">Konfirmasi Hapus</h3>
-            <p class="text-sm text-gray-500 mb-6" id="textDeleteNameMitra"></p>
-            
-            <div class="flex gap-3">
-                <button type="button" onclick="closeDeleteModalMitra()" class="flex-1 px-4 py-2 bg-gray-100 text-gray-800 font-bold rounded-lg">Batal</button>
-                <form id="formDeleteMitra" method="POST" class="flex-1">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="w-full px-4 py-2 bg-red-600 text-white font-bold rounded-lg shadow-md">Ya, Hapus</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 
 <script>
@@ -614,6 +687,21 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
         const modal = document.getElementById('modalDeleteMitra');
         modal.classList.replace('flex', 'hidden');
     }
-</script>
 
+    function filterByStatus(status) {
+        // Mengambil URL saat ini tanpa query string lawas
+        let url = new URL(window.location.href);
+        
+        if (status) {
+            // Jika memilih 'aktif' atau 'non-aktif', set query string (?status=aktif)
+            url.searchParams.set('status', status);
+        } else {
+            // Jika memilih 'Semua Status', hapus parameter status dari URL
+            url.searchParams.delete('status');
+        }
+        
+        // Alihkan halaman ke URL yang baru
+        window.location.href = url.toString();
+    }
+</script>
 @stop

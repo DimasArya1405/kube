@@ -81,33 +81,28 @@
             placeholder="Cari nama KUBE..."
             class="w-80 rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500">
 
-        {{-- Status --}}
-        <select class="rounded-xl border border-gray-300 px-4 py-3">
-            <option>Semua Status</option>
-        </select>
-
-        {{-- Perkembangan --}}
-        <select class="rounded-xl border border-gray-300 px-4 py-3">
-            <option>Semua Perkembangan</option>
-        </select>
 
     </div>
 
     {{-- Kanan --}}
     <div class="flex items-center gap-3">
 
-        <button class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg font-medium">
-            PDF
-        </button>
+        <a href="{{ route('pendamping.perkembangan.export.pdf') }}"
+   class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg font-medium">
+    Export PDF
+</a>
 
-        <button class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-medium">
-            Excel
-        </button>
+        <a href="{{ route('pendamping.perkembangan.export.excel') }}"
+   class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-medium">
+    Export Excel
+</a>
 
-        <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium">
-            Tambah Data
-        </button>
-
+        <button
+    type="button"
+    onclick="openTambahModal()"
+    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium">
+    Tambah Data
+</button>
     </div>
 
 </div>
@@ -315,7 +310,6 @@
         Grafik Perkembangan
     </button>
 </div>
-</form>
 <!-- ==================== MODAL TAMBAH ==================== -->
 <div id="modal-tambah" tabindex="-1"
     class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">
@@ -635,24 +629,34 @@ function openEditModal(id) {
         });
 }
 
-document.getElementById('edit-select-kube').addEventListener('change', function () {
-    var idCluster = this.value;
-    var selectPeriode = document.getElementById('edit-select-periode');
-    selectPeriode.innerHTML = '<option value="">-- Memuat... --</option>';
-    if (!idCluster) {
-        selectPeriode.innerHTML = '<option value="">-- Pilih KUBE dulu --</option>';
-        return;
-    }
-    fetch('/pendamping/perkembangan-usaha/periode/' + idCluster)
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-            selectPeriode.innerHTML = '<option value="">-- Pilih Periode --</option>';
-            data.forEach(function(item) {
-                selectPeriode.innerHTML += '<option value="' + item.id_laporan + '">' + item.periode_bulan + '/' + item.periode_tahun + '</option>';
-            });
-        });
-});
+const editSelectKube = document.getElementById('edit-select-kube');
 
+if (editSelectKube) {
+    editSelectKube.addEventListener('change', function () {
+        var idCluster = this.value;
+        var selectPeriode = document.getElementById('edit-select-periode');
+
+        selectPeriode.innerHTML = '<option value="">-- Memuat... --</option>';
+
+        if (!idCluster) {
+            selectPeriode.innerHTML = '<option value="">-- Pilih KUBE dulu --</option>';
+            return;
+        }
+
+        fetch('/pendamping/perkembangan-usaha/periode/' + idCluster)
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                selectPeriode.innerHTML = '<option value="">-- Pilih Periode --</option>';
+
+                data.forEach(function(item) {
+                    selectPeriode.innerHTML +=
+                        '<option value="' + item.id_laporan + '">' +
+                        item.periode_bulan + '/' + item.periode_tahun +
+                        '</option>';
+                });
+            });
+    });
+}
 // ── GRAFIK ──
 var grafikInstance = null;
 

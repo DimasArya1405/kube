@@ -1,10 +1,10 @@
-@extends('admin.layout')
+@extends('kepala_dinas.layout')
 
 @section('title', 'Detail Pengajuan Bantuan KUBE')
 
 @section('breadcrumb')
 Dashboard /
-<a href="{{ route('admin.persetujuan_bantuan_kube.index') }}" class="text-blue-600 hover:underline">
+<a href="{{ route('kadis.persetujuan_bantuan_kube.index') }}" class="text-blue-600 hover:underline">
     Pengajuan Bantuan KUBE
 </a> /
 <span class="text-gray-800">Detail</span>
@@ -14,25 +14,41 @@ Dashboard /
 <div class="mb-6 flex justify-between items-center">
     <div>
         <h2 class="text-3xl font-bold text-gray-800">Detail Pengajuan Bantuan KUBE</h2>
-        <p class="text-gray-500 mt-1">Informasi lengkap data pengajuan bantuan KUBE.</p>
+        <p class="text-gray-500 mt-1">Informasi KUBE dan daftar jenis bantuan yang diajukan.</p>
     </div>
 
-    <a href="{{ route('admin.persetujuan_bantuan_kube.index') }}"
-        class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
-        Kembali
-    </a>
+    <div class="flex gap-2">
+        @if ($pengajuan_kube->whereIn('status_pengajuan', ['disetujui', 'cair'])->count() > 0)
+        <a href="{{ route('kadis.persetujuan_bantuan_kube.unduh_berita_acara_semua', $pengajuan->id_kube) }}"
+            class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+            Unduh BA Semua Disetujui
+        </a>
+        @endif
+
+        <a href="{{ route('kadis.persetujuan_bantuan_kube.index') }}"
+            class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
+            Kembali
+        </a>
+    </div>
 </div>
 
-<div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+@if (session('success'))
+<div class="mb-4 p-4 rounded-lg bg-green-100 text-green-700">
+    {{ session('success') }}
+</div>
+@endif
+
+@if (session('error'))
+<div class="mb-4 p-4 rounded-lg bg-red-100 text-red-700">
+    {{ session('error') }}
+</div>
+@endif
+
+<div class="bg-white rounded-lg shadow-sm border overflow-hidden mb-6">
     <div class="p-6">
+        <h3 class="text-lg font-bold text-gray-800 mb-4">Informasi KUBE</h3>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-            <div class="md:col-span-2">
-                <h3 class="text-lg font-bold text-gray-800 mt-6 mb-3">
-                    Informasi Pengajuan Bantuan KUBE
-                </h3>
-            </div>
-
             <div>
                 <label class="block text-sm font-semibold text-gray-600 mb-1">Nama KUBE</label>
                 <div class="border rounded px-4 py-2 bg-gray-50">
@@ -43,103 +59,7 @@ Dashboard /
             <div>
                 <label class="block text-sm font-semibold text-gray-600 mb-1">Pengaju</label>
                 <div class="border rounded px-4 py-2 bg-gray-50">
-                    {{ $pengajuan->user->nama ?? '-' }}
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold text-gray-600 mb-1">Jenis Bantuan</label>
-                <div class="border rounded px-4 py-2 bg-gray-50">
-                    {{ $pengajuan->jenisBantuan->jenis_bantuan ?? '-' }}
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold text-gray-600 mb-1">Jumlah Bantuan</label>
-                <div class="border rounded px-4 py-2 bg-gray-50">
-                    Rp {{ number_format($pengajuan->jumlah_bantuan, 0, ',', '.') }}
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold text-gray-600 mb-1">Tujuan Pengajuan</label>
-                <div class="border rounded px-4 py-2 bg-gray-50">
-                    {{ $pengajuan->tujuan_pengajuan ?? '-' }}
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold text-gray-600 mb-1">Tanggal Pengajuan</label>
-                <div class="border rounded px-4 py-2 bg-gray-50">
-                    {{ \Carbon\Carbon::parse($pengajuan->tanggal_pengajuan)->locale('id')->translatedFormat('d F Y') }}
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold text-gray-600 mb-1">Tanggal Disetujui</label>
-                <div class="border rounded px-4 py-2 bg-gray-50">
-                    {{ $pengajuan->tanggal_disetujui 
-                        ? \Carbon\Carbon::parse($pengajuan->tanggal_disetujui)->locale('id')->translatedFormat('d F Y') 
-                        : '-' }}
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold text-gray-600 mb-1">Disetujui / Ditolak Oleh</label>
-                <div class="border rounded px-4 py-2 bg-gray-50">
-                    {{ $pengajuan->penyetuju->nama ?? '-' }}
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold text-gray-600 mb-1">Status Pengajuan</label>
-                <div class="border rounded px-4 py-2 bg-gray-50">
-                    @if ($pengajuan->status_pengajuan == 'diajukan')
-                    <span class="px-2 py-1 rounded text-white bg-yellow-500">Diajukan</span>
-                    @elseif ($pengajuan->status_pengajuan == 'menunggu')
-                    <span class="px-2 py-1 rounded text-white bg-blue-500">Menunggu</span>
-                    @elseif ($pengajuan->status_pengajuan == 'disetujui')
-                    <span class="px-2 py-1 rounded text-white bg-green-500">Disetujui</span>
-                    @elseif ($pengajuan->status_pengajuan == 'ditolak')
-                    <span class="px-2 py-1 rounded text-white bg-red-500">Ditolak</span>
-                    @elseif ($pengajuan->status_pengajuan == 'cair')
-                    <span class="px-2 py-1 rounded text-white bg-emerald-600">Cair</span>
-                    @endif
-                </div>
-            </div>
-
-            <!-- <div>
-                <label class="block text-sm font-semibold text-gray-600 mb-1">Status Penerima</label>
-                <div class="border rounded px-4 py-2 bg-gray-50">
-                    @if ($pengajuan->status_penerima == 'menunggu')
-                    <span class="px-2 py-1 rounded text-white bg-blue-500">Menunggu</span>
-                    @elseif ($pengajuan->status_penerima == 'diterima')
-                    <span class="px-2 py-1 rounded text-white bg-green-500">Diterima</span>
-                    @elseif ($pengajuan->status_penerima == 'ditolak')
-                    <span class="px-2 py-1 rounded text-white bg-red-500">Ditolak</span>
-                    @endif
-                </div>
-            </div> -->
-
-            @if ($pengajuan->status_pengajuan == 'ditolak')
-            <div class="md:col-span-2">
-                <label class="block text-sm font-semibold text-gray-600 mb-1">Keterangan</label>
-                <div class="border rounded px-4 py-2 bg-gray-50 min-h-[80px]">
-                    {{ $pengajuan->keterangan ?? '-' }}
-                </div>
-            </div>
-            @endif
-
-            <div class="md:col-span-2">
-                <h3 class="text-lg font-bold text-gray-800 mt-6 mb-3">
-                    Informasi KUBE
-                </h3>
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold text-gray-600 mb-1">Nama KUBE</label>
-                <div class="border rounded px-4 py-2 bg-gray-50">
-                    {{ $pengajuan->kube->nama_kube ?? '-' }}
+                    {{ $pengajuan->users->nama ?? '-' }}
                 </div>
             </div>
 
@@ -160,9 +80,9 @@ Dashboard /
             <div>
                 <label class="block text-sm font-semibold text-gray-600 mb-1">Tanggal Terbentuk</label>
                 <div class="border rounded px-4 py-2 bg-gray-50">
-                    {{ $pengajuan->kube && $pengajuan->kube->tanggal_terbentuk 
-            ? \Carbon\Carbon::parse($pengajuan->kube->tanggal_terbentuk)->locale('id')->translatedFormat('d F Y') 
-            : '-' }}
+                    {{ $pengajuan->kube && $pengajuan->kube->tanggal_terbentuk
+                        ? \Carbon\Carbon::parse($pengajuan->kube->tanggal_terbentuk)->locale('id')->translatedFormat('d F Y')
+                        : '-' }}
                 </div>
             </div>
 
@@ -173,7 +93,6 @@ Dashboard /
                 </div>
             </div>
 
-            {{-- 🔥 INI YANG KAMU MINTA --}}
             <div class="md:col-span-2">
                 <label class="block text-sm font-semibold text-gray-600 mb-1">Keterangan KUBE</label>
                 <div class="border rounded px-4 py-2 bg-gray-50 min-h-[80px]">
@@ -183,4 +102,162 @@ Dashboard /
         </div>
     </div>
 </div>
+
+<div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+    <div class="p-6 border-b">
+        <h3 class="text-lg font-bold text-gray-800">Daftar Jenis Bantuan Diajukan</h3>
+        <p class="text-sm text-gray-500 mt-1">Setujui atau tolak setiap jenis bantuan secara terpisah.</p>
+    </div>
+
+    <div class="relative overflow-x-auto">
+        <table class="w-full text-sm text-left text-gray-500">
+            <thead class="text-sm text-gray-700 bg-gray-200">
+                <tr>
+                    <th class="px-6 py-3">No</th>
+                    <th class="px-6 py-3">Jenis Bantuan</th>
+                    <th class="px-6 py-3">Jumlah Bantuan</th>
+                    <th class="px-6 py-3">Tujuan Pengajuan</th>
+                    <th class="px-6 py-3">Status</th>
+                    <th class="px-6 py-3">Disetujui/Ditolak Oleh</th>
+                    <th class="px-6 py-3">Tanggal Pengajuan</th>
+                    <th class="px-6 py-3">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($pengajuan_kube as $i => $row)
+                <tr class="border-b">
+                    <td class="px-6 py-4">{{ $i + 1 }}</td>
+                    <td class="px-6 py-4 font-medium text-gray-900">
+                        {{ $row->jenisBantuan->jenis_bantuan ?? '-' }}
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ number_format($row->jumlah_bantuan, 0, ',', '.') }}
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ $row->tujuan_pengajuan ?? '-' }}
+                    </td>
+                    <td class="px-6 py-4">
+                        @if ($row->status_pengajuan == 'diajukan')
+                        <span class="px-2 py-1 rounded text-white bg-yellow-500">Diajukan</span>
+                        @elseif ($row->status_pengajuan == 'menunggu')
+                        <span class="px-2 py-1 rounded text-white bg-blue-500">Menunggu</span>
+                        @elseif ($row->status_pengajuan == 'disetujui')
+                        <span class="px-2 py-1 rounded text-white bg-green-500">Disetujui</span>
+                        @elseif ($row->status_pengajuan == 'ditolak')
+                        <span class="px-2 py-1 rounded text-white bg-red-500">Ditolak</span>
+                        @elseif ($row->status_pengajuan == 'cair')
+                        <span class="px-2 py-1 rounded text-white bg-emerald-600">Cair</span>
+                        @endif
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ $row->penyetuju->nama ?? '-' }}
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ \Carbon\Carbon::parse($row->tanggal_pengajuan)->locale('id')->translatedFormat('d F Y') }}
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex gap-2 items-center flex-wrap">
+                            @if (in_array($row->status_pengajuan, ['diajukan', 'menunggu']))
+                            <button type="button"
+                                onclick="document.getElementById('modal-setujui-{{ $row->id_pengajuan_kube }}').classList.remove('hidden')"
+                                class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
+                                Setujui
+                            </button>
+
+                            <button type="button"
+                                onclick="document.getElementById('modal-tolak-{{ $row->id_pengajuan_kube }}').classList.remove('hidden')"
+                                class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
+                                Tolak
+                            </button>
+                            @elseif(in_array($row->status_pengajuan, ['disetujui','cair']))
+                            <a href="{{ route('kadis.persetujuan_bantuan_kube.unduh_berita_acara', $row->id_pengajuan_kube) }}"
+                                class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">
+                                Unduh Berita Acara
+                            </a>
+                            @else
+                            <span class="text-gray-500 italic">Sudah diproses</span>
+                            @endif
+                        </div>
+                    </td>
+                </tr>
+
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@foreach ($pengajuan_kube as $row)
+<div id="modal-setujui-{{ $row->id_pengajuan_kube }}"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-2">Setujui Pengajuan</h3>
+        <p class="text-sm text-gray-600 mb-4">
+            Setujui pengajuan bantuan
+            <span class="font-semibold">{{ $row->jenisBantuan->jenis_bantuan ?? '-' }}</span>
+            untuk <span class="font-semibold">{{ $row->kube->nama_kube ?? '-' }}</span>?
+        </p>
+
+        <form action="{{ route('kadis.persetujuan_bantuan_kube.setujui', $row->id_pengajuan_kube) }}" method="POST">
+            @csrf
+            @method('PUT')
+
+            <div class="flex justify-end gap-2">
+                <button type="button"
+                    onclick="document.getElementById('modal-setujui-{{ $row->id_pengajuan_kube }}').classList.add('hidden')"
+                    class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">
+                    Batal
+                </button>
+
+                <button type="submit"
+                    class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                    Ya, Setujui
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="modal-tolak-{{ $row->id_pengajuan_kube }}"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Tolak Pengajuan</h3>
+        <p class="text-sm text-gray-600 mb-4">
+            Tolak pengajuan bantuan
+            <span class="font-semibold">{{ $row->jenisBantuan->jenis_bantuan ?? '-' }}</span>
+            untuk <span class="font-semibold">{{ $row->kube->nama_kube ?? '-' }}</span>?
+        </p>
+
+        <form action="{{ route('kadis.persetujuan_bantuan_kube.tolak', $row->id_pengajuan_kube) }}" method="POST">
+            @csrf
+            @method('PUT')
+
+            <div class="mb-4">
+                <label for="keterangan-{{ $row->id_pengajuan_kube }}" class="block text-sm font-medium text-gray-700 mb-1">
+                    Keterangan <span class="text-gray-400">(opsional)</span>
+                </label>
+                <textarea
+                    name="keterangan"
+                    id="keterangan-{{ $row->id_pengajuan_kube }}"
+                    rows="4"
+                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                    placeholder="Masukkan alasan penolakan jika perlu..."></textarea>
+            </div>
+
+            <div class="flex justify-end gap-2">
+                <button type="button"
+                    onclick="document.getElementById('modal-tolak-{{ $row->id_pengajuan_kube }}').classList.add('hidden')"
+                    class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">
+                    Batal
+                </button>
+
+                <button type="submit"
+                    class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                    Tolak
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+@endforeach
 @stop
