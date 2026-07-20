@@ -1,77 +1,10 @@
+@php
+    $internal = request()->routeIs('kube.*', 'laporan.*', 'galeri.*'); $bantuan = request()->routeIs('pengajuan.*', 'ketua_kube.pencairan_bantuan.*'); $evaluasi = request()->routeIs('monitoring.*', 'kunjungan.*', 'perkembangan.*', 'bimbingan.*', 'pelatihan.*', 'ranking.kube*');
+    $active = 'bg-indigo-800 text-white shadow-inner'; $inactive = 'text-indigo-100 hover:bg-indigo-600 hover:text-white'; $subActive = 'bg-indigo-700 text-white border-l-2 border-white'; $subInactive = 'text-indigo-200 hover:bg-indigo-700/60 hover:text-white';
+@endphp
 <nav class="flex-1 px-4 mt-4 space-y-2 overflow-y-auto custom-scrollbar">
-    <a href="{{ route('ketua_kube.dashboard') }}"
-        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group
-       {{ request()->routeIs('ketua_kube.dashboard') 
-          ? 'bg-indigo-800 text-white border-l-4 border-white shadow-inner' 
-          : 'text-indigo-100 hover:bg-indigo-600 hover:text-white' }}">
-        <i data-lucide="layout-grid" class="w-5 h-5"></i>
-        <span class="font-medium">Dashboard</span>
-    </a>
-
-    <div class="relative">
-        <button onclick="toggleDropdown('masterMenu', 'masterIcon')" class="w-full flex items-center justify-between px-4 py-3 hover:bg-indigo-600 rounded-xl transition-all text-indigo-100 hover:text-white group">
-            <div class="flex items-center gap-3">
-                <i data-lucide="database" class="w-5 h-5"></i>
-                <span class="font-medium text-start text-sm">Manajemen Internal</span>
-            </div>
-            <i data-lucide="chevron-down" id="masterIcon" class="w-4 h-4 transition-transform duration-300"></i>
-        </button>
-        <div id="masterMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
-                <a href="{{ url('/detail_kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Detail Kube (Yana)</a>
-                <a href="" class="py-2 px-3 text-indigo-200 hover:text-white">Laporan Keuangan</a>
-                <a href="" class="py-2 px-3 text-indigo-200 hover:text-white">Dokumentasi Kegiatan</a>
-        </div>
-    </div>
-
-    <div class="relative">
-        <button onclick="toggleDropdown('taskMenu', 'taskIcon')" class="w-full flex items-center justify-between px-4 py-3 hover:bg-indigo-600 rounded-xl transition-all text-indigo-100 hover:text-white group">
-            <div class="flex items-center gap-3">
-                <i data-lucide="map-pin" class="w-5 h-5"></i>
-                <span class="font-medium text-start text-sm">Bantuan dan Pengajuan</span>
-            </div>
-            <i data-lucide="chevron-down" id="taskIcon" class="w-4 h-4 transition-transform duration-300"></i>
-        </button>
-        <div id="taskMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
-            <a href="" class="py-2 px-3 text-indigo-200 hover:text-white">Pengajuan Bantuan</a>
-            <a href="{{route('ketua_kube.pencairan_bantuan.index')}}" class="py-2 px-3 text-indigo-200 hover:text-white">Pencairan Bantuan</a>
-        </div>
-    </div>
-
-    <div class="relative">
-        <button onclick="toggleDropdown('bantuanMenu', 'bantuanIcon')" class="w-full flex items-center justify-between px-4 py-3 hover:bg-indigo-600 rounded-xl transition-all text-indigo-100 hover:text-white group">
-            <div class="flex items-center gap-3">
-                <i data-lucide="clipboard-check" class="w-5 h-5"></i>
-                <span class="font-medium text-sm">Pembinaan</span>
-            </div>
-            <i data-lucide="chevron-down" id="bantuanIcon" class="w-4 h-4 transition-transform duration-300"></i>
-        </button>
-        <div id="bantuanMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
-            <a href="{{ route('pengajuan.create') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Jadwal Bimbingan</a>
-            <a href="{{route('admin.persetujuan_bantuan_kube.index')}}" class="py-2 px-3 text-indigo-200 hover:text-white">Log Kunjungan</a>
-            <a href="{{ route('pengajuan.create') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Pengajuan KUBE (Putri)</a>
-            <a href="{{route('admin.persetujuan_bantuan_kube.index')}}" class="py-2 px-3 text-indigo-200 hover:text-white">Persetujuan (Probo)</a>
-            <a href="{{route('admin.pencairan_bantuan.index')}}" class="py-2 px-3 text-indigo-200 hover:text-white">Tahap Pencairan (Dimas)</a>
-            <a href="/admin/mitra" class="py-2 px-3 text-indigo-200 hover:text-white">Mitra & Kolaborasi (Amel)</a>
-        </div>
-    </div>
-
-    <div class="relative">
-        <button onclick="toggleDropdown('monevMenu', 'monevIcon')" class="w-full flex items-center justify-between px-4 py-3 hover:bg-indigo-600 rounded-xl transition-all text-indigo-100 hover:text-white group">
-            <div class="flex items-center gap-3">
-                <i data-lucide="activity" class="w-5 h-5"></i>
-                <span class="font-medium text-sm text-start">Hasil dan Evaluasi</span>
-            </div>
-            <i data-lucide="chevron-down" id="monevIcon" class="w-4 h-4 transition-transform duration-300"></i>
-        </button>
-        <div id="monevMenu" class="hidden flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[12px] text-[11px] uppercase tracking-widest font-bold">
-            <a href="{{ route('monitoring.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Monitoring Bantuan (Noni)</a>
-            <a href="{{ route('laporan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Laporan Keuangan (Fassha)</a>
-            <a href="{{ route('kunjungan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Kunjungan (Meilita)</a>
-            <a href="{{ route('perkembangan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Perkembangan Usaha (Ferina)</a>
-            <a href="{{ route('bimbingan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Bimbingan (Shalshabilla)</a>
-            <a href="{{ route('pelatihan.index') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Pelatihan KUBE (Devia)</a>
-            <a href="{{ route('ranking.kube') }}" class="py-2 px-3 text-indigo-200 hover:text-white">Ranking KUBE</a>
-
-        </div>
-    </div>
-  </nav>
+    <a href="{{ route('ketua_kube.dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs('ketua_kube.dashboard') ? 'bg-indigo-800 text-white border-l-4 border-white shadow-inner' : $inactive }}"><i data-lucide="layout-grid" class="w-5 h-5"></i><span class="font-medium">Dashboard</span></a>
+    <div class="relative"><button type="button" onclick="toggleDropdown('masterMenu', 'masterIcon')" class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all {{ $internal ? $active : $inactive }}"><span class="flex items-center gap-3"><i data-lucide="database" class="w-5 h-5"></i><span class="font-medium text-sm">Manajemen Internal</span></span><i data-lucide="chevron-down" id="masterIcon" class="w-4 h-4 transition-transform {{ $internal ? 'rotate-180' : '' }}"></i></button><div id="masterMenu" class="{{ $internal ? '' : 'hidden' }} flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold"><a href="{{ url('/detail_kube') }}" class="py-2 px-3 rounded-lg {{ request()->routeIs('kube.*') ? $subActive : $subInactive }}">Detail KUBE</a><a href="{{ route('laporan.index') }}" class="py-2 px-3 rounded-lg {{ request()->routeIs('laporan.*') ? $subActive : $subInactive }}">Laporan Keuangan</a><a href="{{ route('galeri.index') }}" class="py-2 px-3 rounded-lg {{ request()->routeIs('galeri.*') ? $subActive : $subInactive }}">Dokumentasi Kegiatan</a></div></div>
+    <div class="relative"><button type="button" onclick="toggleDropdown('taskMenu', 'taskIcon')" class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all {{ $bantuan ? $active : $inactive }}"><span class="flex items-center gap-3"><i data-lucide="map-pin" class="w-5 h-5"></i><span class="font-medium text-sm">Bantuan dan Pengajuan</span></span><i data-lucide="chevron-down" id="taskIcon" class="w-4 h-4 transition-transform {{ $bantuan ? 'rotate-180' : '' }}"></i></button><div id="taskMenu" class="{{ $bantuan ? '' : 'hidden' }} flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold"><a href="{{ route('pengajuan.index') }}" class="py-2 px-3 rounded-lg {{ request()->routeIs('pengajuan.*') ? $subActive : $subInactive }}">Pengajuan Bantuan</a><a href="{{ route('ketua_kube.pencairan_bantuan.index') }}" class="py-2 px-3 rounded-lg {{ request()->routeIs('ketua_kube.pencairan_bantuan.*') ? $subActive : $subInactive }}">Pencairan Bantuan</a></div></div>
+    <div class="relative"><button type="button" onclick="toggleDropdown('monevMenu', 'monevIcon')" class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all {{ $evaluasi ? $active : $inactive }}"><span class="flex items-center gap-3"><i data-lucide="activity" class="w-5 h-5"></i><span class="font-medium text-sm">Hasil dan Evaluasi</span></span><i data-lucide="chevron-down" id="monevIcon" class="w-4 h-4 transition-transform {{ $evaluasi ? 'rotate-180' : '' }}"></i></button><div id="monevMenu" class="{{ $evaluasi ? '' : 'hidden' }} flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold"><a href="{{ route('monitoring.index') }}" class="py-2 px-3 rounded-lg {{ request()->routeIs('monitoring.*') ? $subActive : $subInactive }}">Monitoring Bantuan</a><a href="{{ route('kunjungan.index') }}" class="py-2 px-3 rounded-lg {{ request()->routeIs('kunjungan.*') ? $subActive : $subInactive }}">Kunjungan</a><a href="{{ route('perkembangan.index') }}" class="py-2 px-3 rounded-lg {{ request()->routeIs('perkembangan.*') ? $subActive : $subInactive }}">Perkembangan Usaha</a><a href="{{ route('bimbingan.index') }}" class="py-2 px-3 rounded-lg {{ request()->routeIs('bimbingan.*') ? $subActive : $subInactive }}">Bimbingan</a><a href="{{ route('pelatihan.index') }}" class="py-2 px-3 rounded-lg {{ request()->routeIs('pelatihan.*') ? $subActive : $subInactive }}">Pelatihan KUBE</a><a href="{{ route('ranking.kube') }}" class="py-2 px-3 rounded-lg {{ request()->routeIs('ranking.kube*') ? $subActive : $subInactive }}">Ranking KUBE</a></div></div>
+</nav>

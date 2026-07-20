@@ -5,7 +5,6 @@
 @section('content')
 
 
-
 <div class="space-y-6">
 
     {{-- HEADER --}}
@@ -20,6 +19,8 @@
                 Kelola data perkembangan usaha seluruh KUBE.
             </p>
         </div>
+
+    
 
     </div>
 
@@ -80,23 +81,29 @@
             placeholder="Cari nama KUBE..."
             class="w-80 rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500">
 
+
     </div>
 
     {{-- Kanan --}}
     <div class="flex items-center gap-3">
 
-        <a href="{{ route('perkembangan.export.pdf') }}"
+        <a href="{{ route('pendamping.perkembangan.export.pdf') }}"
    class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg font-medium">
     Export PDF
 </a>
 
-        <a href="{{ route('perkembangan.export.excel') }}"
+        <a href="{{ route('pendamping.perkembangan.export.excel') }}"
    class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-medium">
     Export Excel
 </a>
 
+        <button
+    type="button"
+    onclick="openTambahModal()"
+    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium">
+    Tambah Data
+</button>
     </div>
-
 
 </div>
 
@@ -107,88 +114,193 @@
 <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-sm text-left text-gray-600">
-            <thead class="bg-gray-200 text-gray-600 text-xs uppercase tracking-wider">
-                <tr>
-                    <th class="px-6 py-3">No</th>
-                    <th class="px-6 py-3">Nama KUBE</th>
-                    <th class="px-6 py-3">Periode</th>
-                    <th class="px-6 py-3">Omset</th>
-                    <th class="px-6 py-3">Pengeluaran</th>
-                    <th class="px-6 py-3">Laba Bersih</th>
-                    <th class="px-6 py-3">Selisih Laba</th>
-                    <th class="px-6 py-3">Perkembangan</th>
-                    <th class="px-6 py-3">Status</th>
-                    <th class="px-6 py-3 text-center">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($data as $item)
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="px-6 py-4">{{ $loop->iteration }}</td>
+           <thead class="bg-gray-100 uppercase tracking-wide text-sm text-gray-700">
+    <tr>
+        <th class="px-6 py-4 text-left font-semibold">No</th>
+        <th class="px-6 py-4 text-left font-semibold">Nama KUBE</th>
+        <th class="px-6 py-4 text-left font-semibold">Periode</th>
+        <th class="px-6 py-4 text-left font-semibold">Omset</th>
+        <th class="px-6 py-4 text-left font-semibold">Pengeluaran</th>
+        <th class="px-6 py-4 text-left font-semibold">Laba Bersih</th>
+        <th class="px-6 py-4 text-left font-semibold">Selisih Laba</th>
+        <th class="px-6 py-4 text-left font-semibold">Perkembangan</th>
+        <th class="px-6 py-4 text-left font-semibold">Status</th>
+        <th class="px-6 py-4 text-center font-semibold">Aksi</th>
+    </tr>
+</thead>
+          <tbody class="divide-y divide-gray-200">
+    @forelse ($data as $item)
+        <tr class="border-b border-gray-100 hover:bg-gray-50 transition duration-150">
 
-                    <td class="px-6 py-4 font-semibold text-gray-800">
-                        @php
-                            $namaKube = '-';
-                            if ($item->laporan && $item->laporan->cluster) {
-                                $firstKube = $item->laporan->cluster->kube->first();
-                                if ($firstKube) $namaKube = $firstKube->nama_kube;
-                            }
-                        @endphp
-                        {{ $namaKube }}
-                    </td>
+            {{-- NO --}}
+            <td class="px-6 py-6 text-gray-700">
+                {{ $loop->iteration }}
+            </td>
 
-                    <td class="px-6 py-4">
-                        {{ $item->laporan->periode_bulan ?? '-' }}/{{ $item->laporan->periode_tahun ?? '-' }}
-                    </td>
+            {{-- NAMA KUBE --}}
+            <td class="px-6 py-6">
+                @php
+                    $namaKube = '-';
 
-                    <td class="px-6 py-4">
-                        Rp {{ number_format($item->omset_pendapatan ?? 0, 0, ',', '.') }}
-                    </td>
+                    if ($item->laporan && $item->laporan->cluster) {
+                        $firstKube = $item->laporan->cluster->kube->first();
 
-                    <td class="px-6 py-4">
-                        Rp {{ number_format($item->total_pengeluaran ?? 0, 0, ',', '.') }}
-                    </td>
+                        if ($firstKube) {
+                            $namaKube = $firstKube->nama_kube;
+                        }
+                    }
+                @endphp
 
-                    <td class="px-6 py-4">
-                        <span class="{{ ($item->laba_bersih ?? 0) >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
-                            Rp {{ number_format($item->laba_bersih ?? 0, 0, ',', '.') }}
-                        </span>
-                    </td>
+                <div class="font-semibold text-gray-800">
+                    {{ $namaKube }}
+                </div>
+            </td>
 
-                    <td class="px-6 py-4">
-                            Rp {{ number_format($item->selisih_laba ?? 0, 0, ',', '.') }}
-                        </td>
+            {{-- PERIODE --}}
+            <td class="px-6 py-6 text-gray-600">
+                {{ $item->laporan->periode_bulan ?? '-' }}/{{ $item->laporan->periode_tahun ?? '-' }}
+            </td>
 
+            {{-- OMSET --}}
+            <td class="px-6 py-6 font-medium text-gray-700">
+                Rp {{ number_format($item->omset_pendapatan ?? 0,0,',','.') }}
+            </td>
 
-                    <td class="px-6 py-4">
-                        <span class="px-2 py-1 rounded text-xs
-                            @if($item->perkembangan_usaha == 'Meningkat') bg-green-100 text-green-700
-                            @elseif($item->perkembangan_usaha == 'Menurun') bg-red-100 text-red-700
-                            @else bg-gray-100 text-gray-700 @endif">
-                            {{ $item->perkembangan_usaha }}
-                        </span>
-                    </td>
+            {{-- PENGELUARAN --}}
+            <td class="px-6 py-6 text-gray-700">
+                Rp {{ number_format($item->total_pengeluaran ?? 0,0,',','.') }}
+            </td>
 
-                    <td class="px-6 py-4">
-                        <span class="px-3 py-1 rounded-full text-xs font-semibold
-                            {{ $item->status_hasil == 'Tercapai' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
-                            {{ $item->status_hasil }}
-                        </span>
-                    </td>
+            {{-- LABA --}}
+            <td class="px-6 py-6 font-semibold">
 
-                    <td class="px-6 py-4 text-center">
-                        <div class="flex justify-center gap-2">
-                            <button onclick="openViewModal('{{ $item->id_perkembangan }}')"
-                                class="text-green-500 hover:underline text-xs">Lihat</button>
-                    </div>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="10" class="text-center py-6 text-gray-500">Belum ada data</td>
-                </tr>
-                @endforelse
-            </tbody>
+                @if(($item->laba_bersih ?? 0) >= 0)
+
+                    <span class="text-green-600">
+                        Rp {{ number_format($item->laba_bersih ?? 0,0,',','.') }}
+                    </span>
+
+                @else
+
+                    <span class="text-red-600">
+                        Rp {{ number_format($item->laba_bersih ?? 0,0,',','.') }}
+                    </span>
+
+                @endif
+
+            </td>
+
+            {{-- SELISIH --}}
+            <td class="px-6 py-6 text-gray-700">
+                Rp {{ number_format($item->selisih_laba ?? 0,0,',','.') }}
+            </td>
+
+            {{-- PERKEMBANGAN --}}
+            <td class="px-6 py-6">
+
+                @if($item->perkembangan_usaha=='Meningkat')
+
+                    <span class="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                        Meningkat
+                    </span>
+
+                @elseif($item->perkembangan_usaha=='Menurun')
+
+                    <span class="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+                        Menurun
+                    </span>
+
+                @else
+
+                    <span class="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">
+                        Tetap
+                    </span>
+
+                @endif
+
+            </td>
+
+            {{-- STATUS --}}
+            <td class="px-6 py-6">
+
+                @if($item->status_hasil=='Tercapai')
+
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">
+                        Tetap
+                    </span>
+
+                @else
+
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">
+                        Belum Tercapai
+                    </span>
+
+                @endif
+
+            </td>
+
+            {{-- AKSI --}}
+            <td class="px-6 py-6">
+
+                <div class="flex justify-center items-center gap-5">
+
+                    {{-- Lihat --}}
+                    <button
+                        onclick="openViewModal('{{ $item->id_perkembangan }}')"
+                        class="text-blue-500 hover:text-blue-700 transition">
+
+                        <i class="fas fa-eye"></i>
+
+                    </button>
+
+                    {{-- Edit --}}
+                    <button
+                        onclick="openEditModal('{{ $item->id_perkembangan }}')"
+                        class="text-yellow-500 hover:text-yellow-600 transition">
+
+                        <i class="fas fa-pen-to-square"></i>
+
+                    </button>
+
+                    {{-- Hapus --}}
+                    <form
+                        action="{{ route('pendamping.perkembangan.delete',$item->id_perkembangan) }}"
+                        method="POST">
+
+                        @csrf
+                        @method('DELETE')
+
+                        <button
+                            onclick="return confirm('Yakin hapus data ini?')"
+                            class="text-red-500 hover:text-red-700 transition">
+
+                            <i class="fas fa-trash"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+    @empty
+
+        <tr>
+
+            <td colspan="10"
+                class="py-12 text-center text-gray-400 italic">
+
+                Belum ada data perkembangan usaha.
+
+            </td>
+
+        </tr>
+
+    @endforelse
+</tbody>
         </table>
     </div>
 </div>
@@ -198,9 +310,51 @@
         Grafik Perkembangan
     </button>
 </div>
-</form>
-
-
+<!-- ==================== MODAL TAMBAH ==================== -->
+<div id="modal-tambah" tabindex="-1"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div class="bg-white w-full max-w-lg rounded-lg p-6 relative max-h-screen overflow-y-auto">
+        <button type="button" onclick="closeTambahModal()"
+            class="absolute top-2 right-3 text-gray-500 text-xl">X</button>
+        <h3 class="text-lg font-bold mb-4">Tambah Data</h3>
+<form id="form-tambah"
+      method="POST"
+      action="/pendamping/perkembangan-usaha/store">
+    @csrf
+                <div class="mb-3">
+                <label class="text-sm font-medium">Pilih KUBE</label>
+                <select name="id_cluster" id="select-kube" class="w-full border rounded p-2" required>
+                    <option value=""> --Pilih KUBE --</option>
+                    @foreach ($kubeList as $kube)
+                        <option value="{{ $kube['id_cluster'] }}">{{ $kube['nama_kube'] }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="text-sm font-medium">Pilih Periode</label>
+                <select name="id_laporan" id="select-periode" class="w-full border rounded p-2" required>
+                    <option value="">-- Pilih KUBE dulu --</option>
+                </select>
+            </div>
+          
+            <div class="mb-3">
+                <label class="text-sm font-medium">Evaluasi</label>
+                <textarea name="hasil_evaluasi" class="w-full border rounded p-2" rows="2"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="text-sm font-medium">Rekomendasi</label>
+                <textarea name="rekomendasi" class="w-full border rounded p-2" rows="2"></textarea>
+            </div>
+            <div class="flex justify-end gap-2 mt-4">
+                
+                <button type="button" onclick="closeTambahModal()" class="px-4 py-2 border rounded">Batal</button>
+<button
+    type="submit"
+    onclick="alert('submit jalan')"
+    class="px-4 py-2 bg-blue-600 text-white rounded">
+    Simpan
+</button>
+            </div>
 
 <script>
 function openTambahModal() {
@@ -404,7 +558,7 @@ function openViewModal(id) {
     document.getElementById('modal-view').classList.remove('hidden');
     document.getElementById('view-loading').classList.remove('hidden');
     document.getElementById('view-content').classList.add('hidden');
-    fetch('/admin/perkembangan-usaha/' + id + '/detail')
+    fetch('/pendamping/perkembangan-usaha/' + id + '/detail')
         .then(function(res) { return res.json(); })
         .then(function(data) {
             document.getElementById('view-loading').classList.add('hidden');
@@ -418,16 +572,16 @@ function openViewModal(id) {
             document.getElementById('view-evaluasi').textContent     = data.hasil_evaluasi;
             document.getElementById('view-rekomendasi').textContent  = data.rekomendasi;
             document.getElementById('view-created-at').textContent   = data.created_at;
-                 var perkembangan = document.getElementById('view-perkembangan');
-                     perkembangan.textContent = data.perkembangan_usaha;
-                     perkembangan.className = 'text-sm font-semibold px-2 py-1 rounded text-xs ';
-                if (data.perkembangan_usaha === 'Meningkat') perkembangan.className += 'bg-green-100 text-green-700';
-                else if (data.perkembangan_usaha === 'Menurun') perkembangan.className += 'bg-red-100 text-red-700';
-                else perkembangan.className += 'bg-gray-100 text-gray-700';
-                var status = document.getElementById('view-status');
-                    status.textContent = data.status_hasil;
-                    status.className = 'text-sm font-semibold px-2 py-1 rounded text-xs ';
-                    status.className += data.status_hasil === 'Tercapai' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700';
+            var perkembangan = document.getElementById('view-perkembangan');
+            perkembangan.textContent = data.perkembangan_usaha;
+            perkembangan.className = 'text-sm font-semibold px-2 py-1 rounded text-xs ';
+            if (data.perkembangan_usaha === 'Meningkat') perkembangan.className += 'bg-green-100 text-green-700';
+            else if (data.perkembangan_usaha === 'Menurun') perkembangan.className += 'bg-red-100 text-red-700';
+            else perkembangan.className += 'bg-gray-100 text-gray-700';
+            var status = document.getElementById('view-status');
+            status.textContent = data.status_hasil;
+            status.className = 'text-sm font-semibold px-2 py-1 rounded text-xs ';
+            status.className += data.status_hasil === 'Tercapai' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700';
         })
         .catch(function() {
             document.getElementById('view-loading').textContent = 'Gagal memuat data.';
@@ -475,24 +629,34 @@ function openEditModal(id) {
         });
 }
 
-document.getElementById('edit-select-kube').addEventListener('change', function () {
-    var idCluster = this.value;
-    var selectPeriode = document.getElementById('edit-select-periode');
-    selectPeriode.innerHTML = '<option value="">-- Memuat... --</option>';
-    if (!idCluster) {
-        selectPeriode.innerHTML = '<option value="">-- Pilih KUBE dulu --</option>';
-        return;
-    }
-    fetch('/pendamping/perkembangan-usaha/periode/' + idCluster)
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-            selectPeriode.innerHTML = '<option value="">-- Pilih Periode --</option>';
-            data.forEach(function(item) {
-                selectPeriode.innerHTML += '<option value="' + item.id_laporan + '">' + item.periode_bulan + '/' + item.periode_tahun + '</option>';
-            });
-        });
-});
+const editSelectKube = document.getElementById('edit-select-kube');
 
+if (editSelectKube) {
+    editSelectKube.addEventListener('change', function () {
+        var idCluster = this.value;
+        var selectPeriode = document.getElementById('edit-select-periode');
+
+        selectPeriode.innerHTML = '<option value="">-- Memuat... --</option>';
+
+        if (!idCluster) {
+            selectPeriode.innerHTML = '<option value="">-- Pilih KUBE dulu --</option>';
+            return;
+        }
+
+        fetch('/pendamping/perkembangan-usaha/periode/' + idCluster)
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                selectPeriode.innerHTML = '<option value="">-- Pilih Periode --</option>';
+
+                data.forEach(function(item) {
+                    selectPeriode.innerHTML +=
+                        '<option value="' + item.id_laporan + '">' +
+                        item.periode_bulan + '/' + item.periode_tahun +
+                        '</option>';
+                });
+            });
+    });
+}
 // ── GRAFIK ──
 var grafikInstance = null;
 
