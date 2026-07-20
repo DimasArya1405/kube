@@ -18,8 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('id_mitra');
             $table->foreign('id_mitra')->references('id_mitra')->on('mitra')->onDelete('cascade');
             
-            $table->string('id_kube');
-            $table->foreign('id_kube')->references('id_kube')->on('kube')->onDelete('cascade');
+            $table->unsignedBigInteger('id_kube');
+            // $table->foreign('id_kube')->references('id_kube')->on('kube')->onDelete('cascade');
 
             $table->string('jenis_bantuan', 100);
             $table->string('nama_bantuan', 255);
