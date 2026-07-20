@@ -585,7 +585,8 @@ Dashboard / <span class="text-gray-800">Bantuan Kolaborasi</span>
 </div>
 
 {{-- MODAL KONFIRMASI HAPUS --}}
-<div id="modalDelete" class="hidden fixed inset-0 z-9999 items-center justify-center">
+<!-- Tambahkan class 'flex' di sini 👇 -->
+<div id="modalDelete" class="hidden fixed inset-0 z-[9999] flex items-center justify-center">
     <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"></div>
     
     <div class="relative bg-white rounded-xl shadow-xl max-w-sm w-full mx-4 p-6 transition-all">

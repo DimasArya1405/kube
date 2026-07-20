@@ -7,6 +7,7 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
 @stop
 
 @section('content')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <div class="mb-6 flex justify-between items-end">
     <div>
@@ -545,6 +546,8 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
             });
         }
 
+
+
         // --- 2. PENANGANAN SEARCH ---
         const searchInput = document.getElementById('searchInput');
         if (searchInput) {
@@ -566,17 +569,38 @@ Dashboard / <span class="text-gray-800">Data Mitra</span>
 
                 const id = this.getAttribute('data-id');
                 const nama = this.getAttribute('data-nama');
-                const modal = document.getElementById('modalDeleteMitra');
-                const textLabel = document.getElementById('textDeleteNameMitra');
-                const form = document.getElementById('formDeleteMitra');
-
                 const baseUrl = window.location.origin + window.location.pathname.split('/mitra')[0];
-                form.action = baseUrl + "/mitra/" + id;
-                textLabel.innerText = `Apakah Anda yakin ingin menghapus mitra "${nama}"?`;
+                const actionUrl = baseUrl + "/mitra/" + id;
 
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-                if(window.lucide) lucide.createIcons();
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: `Data Mitra "${nama}" ini akan dihapus secara permanen!`,
+                    icon: 'warning',
+                    iconColor: '#f8bb86',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ef4444',
+                    cancelButtonColor: '#9ca3af',
+                    confirmButtonText: 'Ya, Hapus Data!',
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true,
+                    customClass: {
+                        popup: 'rounded-2xl',
+                        confirmButton: 'px-5 py-2.5 rounded-xl font-bold text-white',
+                        cancelButton: 'px-5 py-2.5 rounded-xl font-bold text-white'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const form = document.createElement('form');
+                        form.action = actionUrl;
+                        form.method = 'POST';
+                        form.innerHTML = `
+                            @csrf
+                            @method('DELETE')
+                        `;
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
+                });
             }, true);
         });
     });

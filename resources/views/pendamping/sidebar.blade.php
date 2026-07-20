@@ -62,9 +62,8 @@
             class="{{ $usulan ? '' : 'hidden' }} flex flex-col mt-2 ml-4 space-y-1 border-l border-indigo-500/50 pl-4 text-[11px] uppercase tracking-widest font-bold">
             <a href="{{ route('pengajuan.index') }}"
                 class="py-2 px-3 rounded-lg {{ request()->routeIs('pengajuan.*') ? $subActive : $subInactive }}">Status
-                Usulan Bantuan</a><a href="{{ route('laporan.index') }}"
-                class="py-2 px-3 rounded-lg {{ request()->routeIs('laporan.*') ? $subActive : $subInactive }}">Rekap
-                Laporan Bulanan</a></div>
+                Usulan Bantuan</a>
+            </div>
     </div>
     <div class="relative"><button type="button"
             onclick="toggleDropdown('analisisPendampingMenu', 'analisisPendampingIcon')"

@@ -1,4 +1,4 @@
-@extends('koordinator.layout')
+@extends('pendamping.layout')
 
 @section('breadcrumb')
     Data Master / <span class="text-gray-800">Data KUBE</span>

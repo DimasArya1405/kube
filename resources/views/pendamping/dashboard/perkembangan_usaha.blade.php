@@ -1,4 +1,4 @@
-@extends('admin.layout')
+@extends('pendamping.layout')
 
 @section('title', 'Perkembangan Usaha - KUBE')
 

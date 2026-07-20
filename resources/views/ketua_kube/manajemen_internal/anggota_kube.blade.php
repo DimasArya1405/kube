@@ -1,4 +1,4 @@
-@extends('admin.layout')
+@extends('ketua_kube.layout')
 
 @section('breadcrumb')
 Data Master / <span class="text-gray-800">Data Anggota KUBE</span>

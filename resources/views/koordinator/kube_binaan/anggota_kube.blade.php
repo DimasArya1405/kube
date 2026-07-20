@@ -1,4 +1,4 @@
-@extends('pendamping.layout')
+@extends('koordinator.layout')
 
 @section('breadcrumb')
 Data Master / <span class="text-gray-800">Data Anggota KUBE</span>
